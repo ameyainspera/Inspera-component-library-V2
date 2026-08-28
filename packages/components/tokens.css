@@ -37,7 +37,7 @@
   --blue-300: #B3D9FF;
   --blue-400: #7ABDFF;
   --blue-500: #3399FF;
-  --blue-600: #007BF5;
+  --blue-600: #007AF5;
   --blue-700: #0059B3;
   --blue-800: #004080;
   --blue-900: #002E5C;
@@ -172,7 +172,21 @@
   --shadow-100: 0px 4px 4px rgba(39, 39, 39, 0.08), 0px 2px 4px rgba(39, 39, 39, 0.12);
   --shadow-200: 0px 8px 8px rgba(39, 39, 39, 0.08), 0px 4px 6px rgba(39, 39, 39, 0.12);
   --shadow-300: 0px 8px 16px rgba(39, 39, 39, 0.08), 0px 6px 8px rgba(39, 39, 39, 0.12);
+  --shadow-400: 0px 8px 24px rgba(39, 39, 39, 0.08), 0px 6px 12px rgba(39, 39, 39, 0.12);
   --shadow-500: 0px 10px 32px rgba(39, 39, 39, 0.1), 0px 6px 14px rgba(39, 39, 39, 0.12);
+  --shadow-600: 0px 12px 42px rgba(39, 39, 39, 0.12), 0px 8px 18px rgba(39, 39, 39, 0.12);
+
+  /* Effects */
+  --effect-state-focus: 0px 0px 0px 3px var(--blue-300); /* Standard input focus ring */
+  --effect-state-focus-standalone: 0px 0px 0px 3px var(--blue-600); /* High-contrast standalone focus */
+  --effect-state-error: 0px 0px 0px 3px var(--red-300); /* Error ring */
+  --effect-state-hover-light: 0px 0px 0px 3px var(--gray-500); /* Hover outline */
+  --effect-state-focus-on-dark: 0px 0px 0px 3px var(--green-300); /* Focus ring on a dark container */
+  --effect-button-shadow: inset 0px -1px 0px rgba(0, 0, 0, 0.2), 0px 1px 0px rgba(0, 0, 0, 0.08); /* Standard button elevation highlight */
+  --effect-link-underline-dark: inset 0px -1px 0px var(--gray-700); /* Link underline on light ground */
+  --effect-link-underline-blue: inset 0px -1px 0px var(--blue-800); /* Primary link underline */
+  --effect-link-underline-light: inset 0px -1px 0px var(--white); /* Link underline on dark ground */
+  --effect-invert-hack: inset 1000px 0px 0px var(--white); /* Overrides the browser autofill background on inputs */
 
   /* Border width */
   --border-width-default: 1px;

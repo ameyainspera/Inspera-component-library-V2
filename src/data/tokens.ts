@@ -29,7 +29,7 @@ export const palette: Record<string, Record<string, string>> = {
   },
   blue: {
     100: '#F0F7FF', 200: '#DBEDFF', 300: '#B3D9FF', 400: '#7ABDFF', 500: '#3399FF',
-    600: '#007BF5', 700: '#0059B3', 800: '#004080', 900: '#002E5C',
+    600: '#007AF5', 700: '#0059B3', 800: '#004080', 900: '#002E5C',
   },
   green: {
     100: '#F2FDF8', 200: '#E0FAEF', 300: '#BDF4DD', 400: '#8DECC5', 500: '#50E2A5',
@@ -74,7 +74,9 @@ export const shadows = [
   { token: '100', value: '0px 4px 4px rgba(39, 39, 39, 0.08), 0px 2px 4px rgba(39, 39, 39, 0.12)' },
   { token: '200', value: '0px 8px 8px rgba(39, 39, 39, 0.08), 0px 4px 6px rgba(39, 39, 39, 0.12)' },
   { token: '300', value: '0px 8px 16px rgba(39, 39, 39, 0.08), 0px 6px 8px rgba(39, 39, 39, 0.12)' },
+  { token: '400', value: '0px 8px 24px rgba(39, 39, 39, 0.08), 0px 6px 12px rgba(39, 39, 39, 0.12)' },
   { token: '500', value: '0px 10px 32px rgba(39, 39, 39, 0.1), 0px 6px 14px rgba(39, 39, 39, 0.12)' },
+  { token: '600', value: '0px 12px 42px rgba(39, 39, 39, 0.12), 0px 8px 18px rgba(39, 39, 39, 0.12)' },
 ]
 
 /**
@@ -222,6 +224,40 @@ export const controlTokens: SystemToken[] = [
 // Non-colour tokens. Without these an AI invents its own — z-index 99999,
 // a one-off 350ms transition, a breakpoint nobody else uses.
 // ---------------------------------------------------------------------------
+/**
+ * Effect styles, exported from the Figma library.
+ *
+ * The five `state-*` rings are focus and validation indicators. Figma's CSS
+ * export drops the spread radius — every one arrives as `0px 0px 0px`, which
+ * paints nothing — so the spread here is the value the components already
+ * render (3px), marked pending until the Figma panel confirms it.
+ *
+ * Their colours are palette colours: focus is blue-300, error red-300,
+ * hover-light gray-500, focus-on-dark green-300.
+ */
+export interface EffectToken {
+  name: string
+  value: string
+  note?: string
+  pending?: string[]
+}
+
+export const effects: EffectToken[] = [
+  { name: 'state-focus', value: '0px 0px 0px 3px var(--blue-300)', note: 'Standard input focus ring', pending: ['spread'] },
+  { name: 'state-focus-standalone', value: '0px 0px 0px 3px var(--blue-600)', note: 'High-contrast standalone focus', pending: ['spread'] },
+  { name: 'state-error', value: '0px 0px 0px 3px var(--red-300)', note: 'Error ring', pending: ['spread'] },
+  { name: 'state-hover-light', value: '0px 0px 0px 3px var(--gray-500)', note: 'Hover outline', pending: ['spread'] },
+  { name: 'state-focus-on-dark', value: '0px 0px 0px 3px var(--green-300)', note: 'Focus ring on a dark container', pending: ['spread'] },
+
+  { name: 'button-shadow', value: 'inset 0px -1px 0px rgba(0, 0, 0, 0.2), 0px 1px 0px rgba(0, 0, 0, 0.08)', note: 'Standard button elevation highlight' },
+
+  { name: 'link-underline-dark', value: 'inset 0px -1px 0px var(--gray-700)', note: 'Link underline on light ground' },
+  { name: 'link-underline-blue', value: 'inset 0px -1px 0px var(--blue-800)', note: 'Primary link underline' },
+  { name: 'link-underline-light', value: 'inset 0px -1px 0px var(--white)', note: 'Link underline on dark ground' },
+
+  { name: 'invert-hack', value: 'inset 1000px 0px 0px var(--white)', note: 'Overrides the browser autofill background on inputs' },
+]
+
 export const borderWidths = [
   { token: 'default', value: '1px' },
   { token: 'strong', value: '2px' },

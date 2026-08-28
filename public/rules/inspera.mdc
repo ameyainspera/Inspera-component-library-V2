@@ -82,7 +82,7 @@ Each family runs 100 (lightest) to 900 (darkest). 600–900 are safe for text on
 a light background; 100–300 are surface tints.
 
 - **gray** — 100 `#F7F7F7` · 200 `#EDEDED` · 300 `#D9D9D9` · 400 `#BCBCBC` · 500 `#949494` · 600 `#7A7A7A` · 700 `#595959` · 800 `#404040` · 900 `#272727`
-- **blue** — 100 `#F0F7FF` · 200 `#DBEDFF` · 300 `#B3D9FF` · 400 `#7ABDFF` · 500 `#3399FF` · 600 `#007BF5` · 700 `#0059B3` · 800 `#004080` · 900 `#002E5C`
+- **blue** — 100 `#F0F7FF` · 200 `#DBEDFF` · 300 `#B3D9FF` · 400 `#7ABDFF` · 500 `#3399FF` · 600 `#007AF5` · 700 `#0059B3` · 800 `#004080` · 900 `#002E5C`
 - **green** — 100 `#F2FDF8` · 200 `#E0FAEF` · 300 `#BDF4DD` · 400 `#8DECC5` · 500 `#50E2A5` · 600 `#1BA76D` · 700 `#147B50` · 800 `#106542` · 900 `#0D4F33`
 - **red** — 100 `#FEF1F1` · 200 `#FCDEDE` · 300 `#F9B8B8` · 400 `#F58484` · 500 `#F04242` · 600 `#E21212` · 700 `#A50D0D` · 800 `#760A0A` · 900 `#550707`
 - **yellow** — 100 `#FFFCF0` · 200 `#FFF8DC` · 300 `#FEF0B3` · 400 `#FEE67C` · 500 `#FDD835` · 600 `#F2C602` · 700 `#B19102` · 800 `#7E6701` · 900 `#5B4A01`
@@ -228,7 +228,89 @@ cards and `500` for dialogs.
 | `shadow.100` | `var(--shadow-100)` | `0px 4px 4px rgba(39, 39, 39, 0.08), 0px 2px 4px rgba(39, 39, 39, 0.12)` |
 | `shadow.200` | `var(--shadow-200)` | `0px 8px 8px rgba(39, 39, 39, 0.08), 0px 4px 6px rgba(39, 39, 39, 0.12)` |
 | `shadow.300` | `var(--shadow-300)` | `0px 8px 16px rgba(39, 39, 39, 0.08), 0px 6px 8px rgba(39, 39, 39, 0.12)` |
+| `shadow.400` | `var(--shadow-400)` | `0px 8px 24px rgba(39, 39, 39, 0.08), 0px 6px 12px rgba(39, 39, 39, 0.12)` |
 | `shadow.500` | `var(--shadow-500)` | `0px 10px 32px rgba(39, 39, 39, 0.1), 0px 6px 14px rgba(39, 39, 39, 0.12)` |
+| `shadow.600` | `var(--shadow-600)` | `0px 12px 42px rgba(39, 39, 39, 0.12), 0px 8px 18px rgba(39, 39, 39, 0.12)` |
+
+### Effects
+
+Focus rings, validation rings, the button highlight and link underlines. Apply
+as `box-shadow`. Their colours are palette colours.
+
+| Token | CSS variable | Value | Use |
+| --- | --- | --- | --- |
+| `state-focus` | `var(--effect-state-focus)` | `0px 0px 0px 3px var(--blue-300)` | Standard input focus ring · unconfirmed: spread |
+| `state-focus-standalone` | `var(--effect-state-focus-standalone)` | `0px 0px 0px 3px var(--blue-600)` | High-contrast standalone focus · unconfirmed: spread |
+| `state-error` | `var(--effect-state-error)` | `0px 0px 0px 3px var(--red-300)` | Error ring · unconfirmed: spread |
+| `state-hover-light` | `var(--effect-state-hover-light)` | `0px 0px 0px 3px var(--gray-500)` | Hover outline · unconfirmed: spread |
+| `state-focus-on-dark` | `var(--effect-state-focus-on-dark)` | `0px 0px 0px 3px var(--green-300)` | Focus ring on a dark container · unconfirmed: spread |
+| `button-shadow` | `var(--effect-button-shadow)` | `inset 0px -1px 0px rgba(0, 0, 0, 0.2), 0px 1px 0px rgba(0, 0, 0, 0.08)` | Standard button elevation highlight |
+| `link-underline-dark` | `var(--effect-link-underline-dark)` | `inset 0px -1px 0px var(--gray-700)` | Link underline on light ground |
+| `link-underline-blue` | `var(--effect-link-underline-blue)` | `inset 0px -1px 0px var(--blue-800)` | Primary link underline |
+| `link-underline-light` | `var(--effect-link-underline-light)` | `inset 0px -1px 0px var(--white)` | Link underline on dark ground |
+| `invert-hack` | `var(--effect-invert-hack)` | `inset 1000px 0px 0px var(--white)` | Overrides the browser autofill background on inputs |
+
+### Motion
+
+Motion explains a state change; it does not decorate. Under
+`prefers-reduced-motion: reduce`, drop non-essential transitions.
+
+| Token | CSS variable | Value | Use |
+| --- | --- | --- | --- |
+| `duration.instant` | `var(--duration-instant)` | 0ms | No transition |
+| `duration.fast` | `var(--duration-fast)` | 100ms | Hover and focus |
+| `duration.normal` | `var(--duration-normal)` | 200ms | Menus, popovers |
+| `duration.slow` | `var(--duration-slow)` | 300ms | Dialogs, drawers |
+| `easing.standard` | `var(--easing-standard)` | `cubic-bezier(0.2, 0, 0, 1)` | Default |
+| `easing.enter` | `var(--easing-enter)` | `cubic-bezier(0, 0, 0.2, 1)` | Entering the screen |
+| `easing.exit` | `var(--easing-exit)` | `cubic-bezier(0.4, 0, 1, 1)` | Leaving the screen |
+
+### Layering
+
+Use the scale. Never an arbitrary value such as `99999`.
+
+| Token | CSS variable | Value | Use |
+| --- | --- | --- | --- |
+| `z.base` | `var(--z-base)` | 0 |  |
+| `z.sticky` | `var(--z-sticky)` | 100 | Sticky headers and toolbars |
+| `z.dropdown` | `var(--z-dropdown)` | 300 | Select and Menu panels |
+| `z.popover` | `var(--z-popover)` | 400 |  |
+| `z.overlay` | `var(--z-overlay)` | 500 | Dialog and Drawer scrim |
+| `z.modal` | `var(--z-modal)` | 600 | Dialog and Drawer surface |
+| `z.toast` | `var(--z-toast)` | 700 | Snackbar |
+| `z.tooltip` | `var(--z-tooltip)` | 800 |  |
+
+### Breakpoints
+
+Shared layout thresholds, not device names. Prefer responding to available
+space over user-agent detection.
+
+| Token | CSS variable | Min width |
+| --- | --- | --- |
+| `sm` | `var(--breakpoint-sm)` | 640px |
+| `md` | `var(--breakpoint-md)` | 768px |
+| `lg` | `var(--breakpoint-lg)` | 1024px |
+| `xl` | `var(--breakpoint-xl)` | 1280px |
+| `2xl` | `var(--breakpoint-2xl)` | 1440px |
+
+### Borders & focus
+
+| Token | CSS variable | Value |
+| --- | --- | --- |
+| `border-width.default` | `var(--border-width-default)` | 1px |
+| `border-width.strong` | `var(--border-width-strong)` | 2px |
+| `focus-ring-width` | `var(--focus-ring-width)` | 2px |
+| `focus-ring-offset` | `var(--focus-ring-offset)` | 2px |
+| `focus-ring-color` | `var(--focus-ring-color)` | var(--primary) |
+
+Focus is never removed, only replaced by something at least as visible:
+
+```css
+:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+```
 
 
 ## Composition patterns

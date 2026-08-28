@@ -35,7 +35,7 @@ import {
   brandColors, semanticColors, brandAccents, palette,
   spacing, radius, shadows, typeScale,
   systemTokens, fonts, baseColors,
-  borderWidths, focusRing, motion, zIndex, breakpoints, fontWeights,
+  borderWidths, focusRing, motion, zIndex, breakpoints, fontWeights, effects,
 } from '../src/data/tokens'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
@@ -89,6 +89,7 @@ function buildRootCss(): string {
   blocks.push(tokenBlock('Spacing', spacing.map((sp) => ({ name: `space-${sp.token}`, value: `${sp.value}px` }))))
   blocks.push(tokenBlock('Radius', radius.map((r) => ({ name: `radius-${r.token}`, value: `${r.value}px` }))))
   blocks.push(tokenBlock('Elevation', shadows.map((sh) => ({ name: `shadow-${sh.token}`, value: sh.value }))))
+  blocks.push(tokenBlock('Effects', effects.map((e) => ({ name: `effect-${e.name}`, value: e.value, note: e.note }))))
   blocks.push(tokenBlock('Border width', borderWidths.map((b) => ({ name: `border-width-${b.token}`, value: b.value }))))
   blocks.push(tokenBlock('Focus ring', focusRing))
   blocks.push(tokenBlock('Motion — duration', motion.duration.map((d) => ({ name: `duration-${d.token}`, value: d.value, note: d.note }))))
@@ -336,34 +337,20 @@ ${sections}
 `
 }
 
+/**
+ * The kit's token reference is the same document as the portable foundations.
+ * It used to be a thinner hand-rolled copy covering only colour, radius and
+ * spacing, which meant shadows, motion, layering and effects were simply absent
+ * from the kit — and any new category had to be remembered twice.
+ */
 function buildKitTokensMd(): string {
-  const rows = (label: string, items: { name: string; value: string }[]) =>
-    `### ${label}\n\n| Token | Value |\n| --- | --- |\n${items.map((i) => `| ${i.name} | ${i.value} |`).join('\n')}`
-  const paletteRows = Object.entries(palette)
-    .map(([f, shades]) => `### palette.${f}\n\n| Shade | Value |\n| --- | --- |\n${Object.entries(shades).map(([s, v]) => `| ${s} | ${v} |`).join('\n')}`)
-    .join('\n\n')
   return `# Tokens
 
-All tokens are CSS custom properties defined in \`styles.css\` (imported by setup).
-Reference them as \`var(--primary)\`, \`var(--radius-md)\`, etc.
+All tokens are CSS custom properties defined in \`styles.css\` (imported during
+setup). Reference them as \`var(--primary)\`, \`var(--radius-md)\`,
+\`var(--space-4)\`.
 
-${rows('Brand', brandColors.map((c) => ({ name: c.name, value: c.value })))}
-
-${rows('Semantic', semanticColors.map((c) => ({ name: c.name, value: c.value })))}
-
-${rows('Accent', brandAccents.map((c) => ({ name: `accent.${c.name}`, value: c.value })))}
-
-${paletteRows}
-
-### Radius
-
-| Token | Value |
-| --- | --- |
-${radius.map((r) => `| radius.${r.token} | ${r.value}px |`).join('\n')}
-
-### Spacing (px)
-
-${spacing.map((s) => s.value).join(', ')}
+${buildFoundations({ compact: false })}
 `
 }
 
@@ -598,6 +585,58 @@ cards and \`500\` for dialogs.
 | Token | CSS variable | Value |
 | --- | --- | --- |
 ${depth}
+
+### Effects
+
+Focus rings, validation rings, the button highlight and link underlines. Apply
+as \`box-shadow\`. Their colours are palette colours.
+
+| Token | CSS variable | Value | Use |
+| --- | --- | --- | --- |
+${effects.map((e) => `| \`${e.name}\` | \`var(--effect-${e.name})\` | \`${e.value}\` | ${[e.note, e.pending?.length ? `unconfirmed: ${e.pending.join(', ')}` : ''].filter(Boolean).join(' · ')} |`).join('\n')}
+
+### Motion
+
+Motion explains a state change; it does not decorate. Under
+\`prefers-reduced-motion: reduce\`, drop non-essential transitions.
+
+| Token | CSS variable | Value | Use |
+| --- | --- | --- | --- |
+${motion.duration.map((d) => `| \`duration.${d.token}\` | \`var(--duration-${d.token})\` | ${d.value} | ${d.note ?? ''} |`).join('\n')}
+${motion.easing.map((e) => `| \`easing.${e.token}\` | \`var(--easing-${e.token})\` | \`${e.value}\` | ${e.note ?? ''} |`).join('\n')}
+
+### Layering
+
+Use the scale. Never an arbitrary value such as \`99999\`.
+
+| Token | CSS variable | Value | Use |
+| --- | --- | --- | --- |
+${zIndex.map((z) => `| \`z.${z.token}\` | \`var(--z-${z.token})\` | ${z.value} | ${z.note ?? ''} |`).join('\n')}
+
+### Breakpoints
+
+Shared layout thresholds, not device names. Prefer responding to available
+space over user-agent detection.
+
+| Token | CSS variable | Min width |
+| --- | --- | --- |
+${breakpoints.map((b) => `| \`${b.token}\` | \`var(--breakpoint-${b.token})\` | ${b.value}px |`).join('\n')}
+
+### Borders & focus
+
+| Token | CSS variable | Value |
+| --- | --- | --- |
+${borderWidths.map((b) => `| \`border-width.${b.token}\` | \`var(--border-width-${b.token})\` | ${b.value} |`).join('\n')}
+${focusRing.map((f) => `| \`${f.name}\` | \`var(--${f.name})\` | ${f.value} |`).join('\n')}
+
+Focus is never removed, only replaced by something at least as visible:
+
+\`\`\`css
+:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+\`\`\`
 `
 }
 
