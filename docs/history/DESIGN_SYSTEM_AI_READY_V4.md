@@ -1,3 +1,23 @@
+> [!WARNING]
+> **SUPERSEDED — historical reference only. Do not use this file to generate UI.**
+>
+> This document was the original hand-written distillation of the Figma library.
+> It is now out of date in ways that actively produce broken code:
+>
+> - It describes **14 components**; the library ships **42**.
+> - Its §2.2 mandates Capitalized variant names (`Intent`, `State`, `WithLabel`).
+>   The real React props are camelCase (`intent`, `state`, `withLabel`). React
+>   silently ignores unknown props, so following this file yields default-styled
+>   components rather than a visible error.
+> - It points at a `docs-site/` path that does not exist in this repo.
+> - It defines `shadow.400`/`shadow.600`, breakpoint and effect tokens that exist
+>   nowhere in the shipped token set.
+>
+> **The source of truth is now the code itself** — see the "Source of truth"
+> section of the root [README.md](../../README.md). Kept here only for provenance.
+
+---
+
 # Inspera Design System — AI Ready Spec v4
 
 > Purpose: This file is optimized for AI coding tools (Claude Code, Cursor, ChatGPT, etc.) that need to generate or review UI consistent with the Inspera Design System.
