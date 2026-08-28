@@ -47,7 +47,7 @@ export default function Tabs({
     borderBottom: contained ? 'none' : '1px solid var(--border-strong)',
     background: contained ? 'var(--gray-100)' : 'transparent',
     borderRadius: contained ? 'var(--radius-md)' : 0,
-    width: fullWidth ? 480 : 'auto',
+    width: fullWidth ? '100%' : 'auto',
   }
 
   return (

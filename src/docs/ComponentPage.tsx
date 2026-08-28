@@ -83,6 +83,7 @@ export default function ComponentPage({ slug }: { slug: string }) {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
+                  overflow: 'hidden',
                   padding: 16,
                   border: '1px solid var(--border)',
                   borderRadius: 'var(--radius-md)',

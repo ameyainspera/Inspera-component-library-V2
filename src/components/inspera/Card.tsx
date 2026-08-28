@@ -31,7 +31,7 @@ export default function Card({
     display: 'flex',
     flexDirection: 'column',
     gap: 12,
-    width: 320,
+    width: '100%',
     padding: padMap[padding],
     borderRadius: 'var(--radius-lg)',
     background: '#FFFFFF',

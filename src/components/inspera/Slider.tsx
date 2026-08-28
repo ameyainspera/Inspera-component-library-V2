@@ -54,7 +54,7 @@ export default function Slider({
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: 280, opacity: disabled ? 0.5 : 1 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%', opacity: disabled ? 0.5 : 1 }}>
       {(showLabel || showValue) && (
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           {showLabel && (

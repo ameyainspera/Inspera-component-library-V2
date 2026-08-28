@@ -60,7 +60,6 @@ export default function Accordion({
     <div
       style={{
         width: '100%',
-        maxWidth: 480,
         border: '1px solid var(--border)',
         borderRadius: 'var(--radius-md)',
         overflow: 'hidden',

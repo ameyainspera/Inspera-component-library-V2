@@ -42,7 +42,7 @@ export default function FileUpload({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
-    width: 320,
+    width: '100%',
     padding: '32px 24px',
     border: `2px dashed ${border}`,
     borderRadius: 'var(--radius-md)',

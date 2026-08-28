@@ -92,7 +92,6 @@ export default function List({
         margin: 0,
         padding: 0,
         width: '100%',
-        maxWidth: 420,
         fontFamily: 'var(--font-sans)',
         background: 'var(--white)',
         border: '1px solid var(--border)',

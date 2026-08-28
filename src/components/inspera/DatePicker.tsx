@@ -106,7 +106,7 @@ export default function DatePicker({
   }
 
   return (
-    <div ref={rootRef} style={{ display: 'flex', flexDirection: 'column', gap: 6, width: 280, position: 'relative' }}>
+    <div ref={rootRef} style={{ display: 'flex', flexDirection: 'column', gap: 6, width: '100%', position: 'relative' }}>
       {showLabel && (
         <label htmlFor={id} style={{ fontSize: 16, fontWeight: 500, color: 'var(--text-primary)' }}>{label}</label>
       )}

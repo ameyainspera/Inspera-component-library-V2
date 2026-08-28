@@ -164,7 +164,20 @@ export function SegmentedControl({
 // ---------------------------------------------------------------------------
 // Preview surface with the signature Inspera dot-grid backdrop.
 // ---------------------------------------------------------------------------
-export function PreviewCanvas({ children, minHeight = 220 }: { children: ReactNode; minHeight?: number }) {
+export function PreviewCanvas({
+  children,
+  minHeight = 220,
+  contentWidth = 480,
+}: {
+  children: ReactNode
+  minHeight?: number
+  /**
+   * Width budget for the previewed component. Components size to their
+   * container rather than carrying a fixed width, so the *canvas* decides how
+   * wide a preview should be — the component never does.
+   */
+  contentWidth?: number
+}) {
   return (
     <div
       style={{
@@ -182,7 +195,9 @@ export function PreviewCanvas({ children, minHeight = 220 }: { children: ReactNo
         overflow: 'visible',
       }}
     >
-      {children}
+      <div style={{ width: '100%', maxWidth: contentWidth, display: 'flex', justifyContent: 'center' }}>
+        {children}
+      </div>
     </div>
   )
 }

@@ -26,7 +26,7 @@ export default function FormField({
   const helpId = `${fallbackId}-help`
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 6, width: 280 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 6, width: '100%' }}>
       {label && (
         <label htmlFor={htmlFor} style={{ fontSize: 16, fontWeight: 500, color: 'var(--text-primary)' }}>
           {label}

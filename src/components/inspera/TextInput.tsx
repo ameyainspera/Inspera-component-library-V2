@@ -72,7 +72,7 @@ export default function TextInput({
   const iconStyle: CSSProperties = { fontSize: 20, color: 'var(--action-active)' }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 6, width: 280 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 6, width: '100%' }}>
       {showLabel && (
         <label htmlFor={id} style={{ fontSize: 16, fontWeight: 500, color: 'var(--text-primary)' }}>
           {label}

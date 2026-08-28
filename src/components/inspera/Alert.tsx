@@ -42,7 +42,7 @@ export default function Alert({
     display: 'flex',
     alignItems: 'flex-start',
     gap: 12,
-    width: 440,
+    width: '100%',
     maxWidth: '100%',
     padding: '12px 16px',
     borderRadius: 'var(--radius-md)',
