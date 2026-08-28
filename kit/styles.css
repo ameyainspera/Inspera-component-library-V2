@@ -217,6 +217,45 @@
   --font-serif: 'Noto Serif', Georgia, serif; /* Long-form or editorial content */
 
   /* Typography — scale */
+  --default-16-regular-size: 16px;
+  --default-16-regular-weight: 400;
+  --default-16-regular-line-height: 1.25;
+  --default-16-medium-size: 16px;
+  --default-16-medium-weight: 500;
+  --default-16-medium-line-height: 1.25;
+  --link-16-size: 16px;
+  --link-16-weight: 500;
+  --link-16-line-height: 1.25;
+  --regular-14-size: 14px;
+  --regular-14-weight: 400;
+  --regular-14-line-height: 1.4;
+  --regular-18-size: 18px;
+  --regular-18-weight: 400;
+  --regular-18-line-height: 1.4;
+  --regular-20-size: 20px;
+  --regular-20-weight: 400;
+  --regular-20-line-height: 1.4;
+  --regular-22-size: 22px;
+  --regular-22-weight: 400;
+  --regular-22-line-height: 1.4;
+  --regular-26-size: 26px;
+  --regular-26-weight: 400;
+  --regular-26-line-height: 1.4;
+  --medium-14-size: 14px;
+  --medium-14-weight: 500;
+  --medium-14-line-height: 1.4;
+  --medium-18-size: 18px;
+  --medium-18-weight: 500;
+  --medium-18-line-height: 1.4;
+  --medium-20-size: 20px;
+  --medium-20-weight: 500;
+  --medium-20-line-height: 1.4;
+  --medium-22-size: 22px;
+  --medium-22-weight: 500;
+  --medium-22-line-height: 1.4;
+  --medium-26-size: 26px;
+  --medium-26-weight: 500;
+  --medium-26-line-height: 1.4;
   --h1-size: 28.83px;
   --h1-weight: 600;
   --h1-line-height: 1.12;
@@ -236,27 +275,129 @@
   --h6-weight: 500;
   --h6-line-height: 1.12;
   --h6-tracking: 1.6px;
-  --body-md-regular-size: 16px;
-  --body-md-regular-weight: 400;
-  --body-md-regular-line-height: 1.25;
-  --body-md-medium-size: 16px;
-  --body-md-medium-weight: 500;
-  --body-md-medium-line-height: 1.25;
-  --caption-size: 12px;
-  --caption-weight: 400;
-  --caption-line-height: 1.2;
-  --paragraph-size: 16px;
-  --paragraph-weight: 400;
-  --paragraph-line-height: 1.5;
-  --serif-size: 16px;
-  --serif-weight: 400;
-  --serif-line-height: 1.5;
-  --mono-size: 16px;
-  --mono-weight: 400;
-  --mono-line-height: 1.5;
+  --semibold-16-size: 16px;
+  --semibold-16-weight: 600;
+  --semibold-16-line-height: 1.25;
+  --allcaps-12-size: 12px;
+  --allcaps-12-weight: 600;
+  --allcaps-12-line-height: 1.12;
+  --allcaps-12-tracking: 1.6px;
+  --paragraph-default-size: 16px;
+  --paragraph-default-weight: 400;
+  --paragraph-default-line-height: 1.5;
+  --paragraph-content-size: 16px;
+  --paragraph-content-weight: 400;
+  --paragraph-content-line-height: 1.5;
+  --paragraph-captions-size: 12px;
+  --paragraph-captions-weight: 400;
+  --paragraph-captions-line-height: 1.2;
+  --paragraph-heading-size: 20.25px;
+  --paragraph-heading-weight: 500;
+  --paragraph-heading-line-height: 1.12;
+  --mono-16-size: 16px;
+  --mono-16-weight: 400;
+  --mono-16-line-height: 1.5;
+  --serif-16-size: 16px;
+  --serif-16-weight: 400;
+  --serif-16-line-height: 1.5;
+  --documentation-size: 14px;
+  --documentation-weight: 300;
+  --documentation-line-height: 1.4;
 }
 
-/* Type styles — one class per Figma style (12 total). */
+/* Type styles — one class per Figma style (28 total). */
+
+.inspera-default-16-regular {
+  font-family: var(--font-sans);
+  font-size: var(--default-16-regular-size);
+  font-weight: var(--default-16-regular-weight);
+  line-height: var(--default-16-regular-line-height);
+}
+
+.inspera-default-16-medium {
+  font-family: var(--font-sans);
+  font-size: var(--default-16-medium-size);
+  font-weight: var(--default-16-medium-weight);
+  line-height: var(--default-16-medium-line-height);
+}
+
+.inspera-link-16 {
+  font-family: var(--font-sans);
+  font-size: var(--link-16-size);
+  font-weight: var(--link-16-weight);
+  line-height: var(--link-16-line-height);
+  text-decoration: underline;
+}
+
+.inspera-regular-14 {
+  font-family: var(--font-sans);
+  font-size: var(--regular-14-size);
+  font-weight: var(--regular-14-weight);
+  line-height: var(--regular-14-line-height);
+}
+
+.inspera-regular-18 {
+  font-family: var(--font-sans);
+  font-size: var(--regular-18-size);
+  font-weight: var(--regular-18-weight);
+  line-height: var(--regular-18-line-height);
+}
+
+.inspera-regular-20 {
+  font-family: var(--font-sans);
+  font-size: var(--regular-20-size);
+  font-weight: var(--regular-20-weight);
+  line-height: var(--regular-20-line-height);
+}
+
+.inspera-regular-22 {
+  font-family: var(--font-sans);
+  font-size: var(--regular-22-size);
+  font-weight: var(--regular-22-weight);
+  line-height: var(--regular-22-line-height);
+}
+
+.inspera-regular-26 {
+  font-family: var(--font-sans);
+  font-size: var(--regular-26-size);
+  font-weight: var(--regular-26-weight);
+  line-height: var(--regular-26-line-height);
+}
+
+.inspera-medium-14 {
+  font-family: var(--font-sans);
+  font-size: var(--medium-14-size);
+  font-weight: var(--medium-14-weight);
+  line-height: var(--medium-14-line-height);
+}
+
+.inspera-medium-18 {
+  font-family: var(--font-sans);
+  font-size: var(--medium-18-size);
+  font-weight: var(--medium-18-weight);
+  line-height: var(--medium-18-line-height);
+}
+
+.inspera-medium-20 {
+  font-family: var(--font-sans);
+  font-size: var(--medium-20-size);
+  font-weight: var(--medium-20-weight);
+  line-height: var(--medium-20-line-height);
+}
+
+.inspera-medium-22 {
+  font-family: var(--font-sans);
+  font-size: var(--medium-22-size);
+  font-weight: var(--medium-22-weight);
+  line-height: var(--medium-22-line-height);
+}
+
+.inspera-medium-26 {
+  font-family: var(--font-sans);
+  font-size: var(--medium-26-size);
+  font-weight: var(--medium-26-weight);
+  line-height: var(--medium-26-line-height);
+}
 
 .inspera-h1 {
   font-family: var(--font-sans);
@@ -302,46 +443,69 @@
   text-transform: uppercase;
 }
 
-.inspera-body-md-regular {
+.inspera-semibold-16 {
   font-family: var(--font-sans);
-  font-size: var(--body-md-regular-size);
-  font-weight: var(--body-md-regular-weight);
-  line-height: var(--body-md-regular-line-height);
+  font-size: var(--semibold-16-size);
+  font-weight: var(--semibold-16-weight);
+  line-height: var(--semibold-16-line-height);
 }
 
-.inspera-body-md-medium {
+.inspera-allcaps-12 {
   font-family: var(--font-sans);
-  font-size: var(--body-md-medium-size);
-  font-weight: var(--body-md-medium-weight);
-  line-height: var(--body-md-medium-line-height);
+  font-size: var(--allcaps-12-size);
+  font-weight: var(--allcaps-12-weight);
+  line-height: var(--allcaps-12-line-height);
+  letter-spacing: var(--allcaps-12-tracking);
+  text-transform: uppercase;
 }
 
-.inspera-caption {
+.inspera-paragraph-default {
   font-family: var(--font-sans);
-  font-size: var(--caption-size);
-  font-weight: var(--caption-weight);
-  line-height: var(--caption-line-height);
+  font-size: var(--paragraph-default-size);
+  font-weight: var(--paragraph-default-weight);
+  line-height: var(--paragraph-default-line-height);
 }
 
-.inspera-paragraph {
+.inspera-paragraph-content {
   font-family: var(--font-sans);
-  font-size: var(--paragraph-size);
-  font-weight: var(--paragraph-weight);
-  line-height: var(--paragraph-line-height);
+  font-size: var(--paragraph-content-size);
+  font-weight: var(--paragraph-content-weight);
+  line-height: var(--paragraph-content-line-height);
 }
 
-.inspera-serif {
-  font-family: var(--font-serif);
-  font-size: var(--serif-size);
-  font-weight: var(--serif-weight);
-  line-height: var(--serif-line-height);
+.inspera-paragraph-captions {
+  font-family: var(--font-sans);
+  font-size: var(--paragraph-captions-size);
+  font-weight: var(--paragraph-captions-weight);
+  line-height: var(--paragraph-captions-line-height);
 }
 
-.inspera-mono {
+.inspera-paragraph-heading {
+  font-family: var(--font-sans);
+  font-size: var(--paragraph-heading-size);
+  font-weight: var(--paragraph-heading-weight);
+  line-height: var(--paragraph-heading-line-height);
+}
+
+.inspera-mono-16 {
   font-family: var(--font-mono);
-  font-size: var(--mono-size);
-  font-weight: var(--mono-weight);
-  line-height: var(--mono-line-height);
+  font-size: var(--mono-16-size);
+  font-weight: var(--mono-16-weight);
+  line-height: var(--mono-16-line-height);
+}
+
+.inspera-serif-16 {
+  font-family: var(--font-serif);
+  font-size: var(--serif-16-size);
+  font-weight: var(--serif-16-weight);
+  line-height: var(--serif-16-line-height);
+}
+
+.inspera-documentation {
+  font-family: var(--font-sans);
+  font-size: var(--documentation-size);
+  font-weight: var(--documentation-weight);
+  line-height: var(--documentation-line-height);
 }
 
 .material-symbols-outlined,

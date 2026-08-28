@@ -152,13 +152,13 @@ export default function FoundationsPage() {
       </Panel>
 
       <Panel>
-        <SectionTitle sub="Inter for UI, Noto Sans Mono for code, Noto Serif for long-form. Every style has a ready-made class — prefer .inspera-h1 over setting four properties by hand.">
+        <SectionTitle sub="The 28 Figma text styles. Sizes are exact; Figma exports font-size only, so rows marked ° have a line height or weight inferred rather than measured.">
           Typography
         </SectionTitle>
         {[
-          { label: 'Heading', rows: typeScale.filter((t) => t.token.startsWith('heading.')) },
-          { label: 'Body', rows: typeScale.filter((t) => t.token.startsWith('body.')) },
-          { label: 'Special', rows: typeScale.filter((t) => t.token.startsWith('special.')) },
+          ...(['Default', 'Regular', 'Medium', 'Heading', 'Extended', 'Paragraph', 'Extra', 'Documentation'] as const)
+            .map((g) => ({ label: g, rows: typeScale.filter((t) => t.group === g) }))
+            .filter((g) => g.rows.length > 0),
         ].map((group) => (
           <div key={group.label} style={{ marginBottom: 28 }}>
             <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: 0.6, textTransform: 'uppercase', color: 'var(--gray-500)', marginBottom: 10 }}>
@@ -194,6 +194,7 @@ export default function FoundationsPage() {
                   <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--muted-foreground)', flexShrink: 0, textAlign: 'right', width: 190 }}>
                     {t.size}/{Math.round(t.lineHeight * 100)}% · {t.weight}
                     {t.tracking !== undefined && ` · ${t.tracking > 0 ? '+' : ''}${t.tracking}`}
+                    {t.pending?.length ? <span title={`Inferred, not from Figma: ${t.pending.join(', ')}`} style={{ color: 'var(--warning)' }}> °</span> : null}
                   </span>
                 </div>
               ))}

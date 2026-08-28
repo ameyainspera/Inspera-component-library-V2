@@ -213,39 +213,84 @@ Prefer a role token over a raw palette shade wherever one exists.
 
 ### Typography
 
-Inter for all UI text (weights 400, 500, 600). Noto Sans Mono for
+Inter for all UI text (weights 300, 400, 500, 600). Noto Sans Mono for
 code, identifiers and token values. Noto Serif for long-form content. Material
 Symbols Outlined for icons.
 
 Every style below has a ready-made class — prefer `class="inspera-h1"` over
 setting four properties by hand.
 
+Sizes are exact, exported from Figma. Figma exports font-size only for text
+styles, so a row marked *unconfirmed* has a line height or weight inferred from
+the V3 spec rather than measured.
+
+#### Default
+
+| Style | Class | Size | Weight | Line height | Notes |
+| --- | --- | --- | --- | --- | --- |
+| `Default/Default 16 px/Regular` | `.inspera-default-16-regular` | 16px | 400 | 1.25 | V3 body.mdRegular — line height fixed at 20px |
+| `Default/16 px/Medium` | `.inspera-default-16-medium` | 16px | 500 | 1.25 | V3 body.mdMedium — line height fixed at 20px |
+| `Default/Link 16 px` | `.inspera-link-16` | 16px | 500 | 1.25 | underline, unconfirmed: weight, lineHeight |
+
+#### Regular
+
+| Style | Class | Size | Weight | Line height | Notes |
+| --- | --- | --- | --- | --- | --- |
+| `Regular/14 px/Regular` | `.inspera-regular-14` | 14px | 400 | 1.4 | unconfirmed: lineHeight |
+| `Regular/18 px/Regular` | `.inspera-regular-18` | 18px | 400 | 1.4 | unconfirmed: lineHeight |
+| `Regular/20 px/Regular` | `.inspera-regular-20` | 20px | 400 | 1.4 | unconfirmed: lineHeight |
+| `Regular/22 px/Regular` | `.inspera-regular-22` | 22px | 400 | 1.4 | unconfirmed: lineHeight |
+| `Regular/26 px/Regular` | `.inspera-regular-26` | 26px | 400 | 1.4 | unconfirmed: lineHeight |
+
+#### Medium
+
+| Style | Class | Size | Weight | Line height | Notes |
+| --- | --- | --- | --- | --- | --- |
+| `Medium/14 px/Medium` | `.inspera-medium-14` | 14px | 500 | 1.4 | unconfirmed: lineHeight |
+| `Medium/18 px/Medium` | `.inspera-medium-18` | 18px | 500 | 1.4 | unconfirmed: lineHeight |
+| `Medium/20 px/Medium` | `.inspera-medium-20` | 20px | 500 | 1.4 | unconfirmed: lineHeight |
+| `Medium/22 px/Medium` | `.inspera-medium-22` | 22px | 500 | 1.4 | unconfirmed: lineHeight |
+| `Medium/26 px/Medium` | `.inspera-medium-26` | 26px | 500 | 1.4 | unconfirmed: lineHeight |
+
 #### Heading
 
 | Style | Class | Size | Weight | Line height | Notes |
 | --- | --- | --- | --- | --- | --- |
-| `heading.h1` | `.inspera-h1` | 28.83px | 600 | 1.12 |  |
-| `heading.h2` | `.inspera-h2` | 22.78px | 500 | 1.12 |  |
-| `heading.h3` | `.inspera-h3` | 20.25px | 500 | 1.12 |  |
-| `heading.h4` | `.inspera-h4` | 18px | 500 | 1.12 |  |
-| `heading.h5` | `.inspera-h5` | 16px | 500 | 1.12 |  |
-| `heading.h6` | `.inspera-h6` | 12px | 500 | 1.12 | +1.6px tracking, uppercase |
+| `Heading/H1` | `.inspera-h1` | 28.83px | 600 | 1.12 |  |
+| `Heading/H2` | `.inspera-h2` | 22.78px | 500 | 1.12 |  |
+| `Heading/H3` | `.inspera-h3` | 20.25px | 500 | 1.12 |  |
+| `Heading/H4` | `.inspera-h4` | 18px | 500 | 1.12 |  |
+| `Heading/H5` | `.inspera-h5` | 16px | 500 | 1.12 |  |
+| `Heading/H6` | `.inspera-h6` | 12px | 500 | 1.12 | +1.6px tracking, uppercase |
 
-#### Body
-
-| Style | Class | Size | Weight | Line height | Notes |
-| --- | --- | --- | --- | --- | --- |
-| `body.mdRegular` | `.inspera-body-md-regular` | 16px | 400 | 1.25 | Line height fixed at 20px |
-| `body.mdMedium` | `.inspera-body-md-medium` | 16px | 500 | 1.25 | Line height fixed at 20px |
-| `body.caption` | `.inspera-caption` | 12px | 400 | 1.2 |  |
-| `body.paragraph` | `.inspera-paragraph` | 16px | 400 | 1.5 | Long-form running text |
-
-#### Special
+#### Extended
 
 | Style | Class | Size | Weight | Line height | Notes |
 | --- | --- | --- | --- | --- | --- |
-| `special.serif` | `.inspera-serif` | 16px | 400 | 1.5 |  |
-| `special.mono` | `.inspera-mono` | 16px | 400 | 1.5 |  |
+| `Extended/Semi Bold 16 px` | `.inspera-semibold-16` | 16px | 600 | 1.25 | unconfirmed: lineHeight |
+| `Extended/Inter Semi Bold 12 px/ALL CAPS` | `.inspera-allcaps-12` | 12px | 600 | 1.12 | +1.6px tracking, uppercase, unconfirmed: lineHeight, tracking |
+
+#### Paragraph
+
+| Style | Class | Size | Weight | Line height | Notes |
+| --- | --- | --- | --- | --- | --- |
+| `Paragraph/Default` | `.inspera-paragraph-default` | 16px | 400 | 1.5 | V3 body.paragraph — 150% |
+| `Paragraph/Content` | `.inspera-paragraph-content` | 16px | 400 | 1.5 | unconfirmed: lineHeight |
+| `Paragraph/Captions` | `.inspera-paragraph-captions` | 12px | 400 | 1.2 | V3 body.caption — 120% |
+| `Paragraph/Heading` | `.inspera-paragraph-heading` | 20.25px | 500 | 1.12 | unconfirmed: weight, lineHeight |
+
+#### Extra
+
+| Style | Class | Size | Weight | Line height | Notes |
+| --- | --- | --- | --- | --- | --- |
+| `Extra/Noto Sans Mono` | `.inspera-mono-16` | 16px | 400 | 1.5 | unconfirmed: lineHeight |
+| `Extra/Noto Serif` | `.inspera-serif-16` | 16px | 400 | 1.5 | unconfirmed: lineHeight |
+
+#### Documentation
+
+| Style | Class | Size | Weight | Line height | Notes |
+| --- | --- | --- | --- | --- | --- |
+| `Documentation` | `.inspera-documentation` | 14px | 300 | 1.4 | Inter Light per the specimen sheet, unconfirmed: weight, lineHeight |
 
 ### Spacing
 

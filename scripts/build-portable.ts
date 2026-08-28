@@ -508,6 +508,7 @@ function buildFoundations({ compact }: { compact: boolean }): string {
       t.transform ?? '',
       t.decoration ?? '',
       t.note ?? '',
+      t.pending?.length ? `unconfirmed: ${t.pending.join(', ')}` : '',
     ].filter(Boolean).join(', ')
     return `| \`${t.token}\` | \`.inspera-${t.name}\` | ${t.size}px | ${t.weight} | ${t.lineHeight} | ${extras} |`
   }
@@ -515,11 +516,11 @@ function buildFoundations({ compact }: { compact: boolean }): string {
     `#### ${label}\n\n| Style | Class | Size | Weight | Line height | Notes |\n| --- | --- | --- | --- | --- | --- |\n` +
     rows.map(typeRow).join('\n')
 
-  const type = [
-    typeGroup('Heading', typeScale.filter((t) => t.token.startsWith('heading.'))),
-    typeGroup('Body', typeScale.filter((t) => t.token.startsWith('body.'))),
-    typeGroup('Special', typeScale.filter((t) => t.token.startsWith('special.'))),
-  ].join('\n\n')
+  const groupOrder = ['Default', 'Regular', 'Medium', 'Heading', 'Extended', 'Paragraph', 'Extra', 'Documentation'] as const
+  const type = groupOrder
+    .map((g) => typeGroup(g, typeScale.filter((t) => t.group === g)))
+    .filter((block) => !block.endsWith('| --- |'))
+    .join('\n\n')
 
   const space = spacing
     .map((sp) => `| \`${sp.token}\` | \`var(--space-${sp.token})\` | ${sp.value}px |`)
@@ -565,6 +566,10 @@ Symbols Outlined for icons.
 
 Every style below has a ready-made class — prefer \`class="inspera-h1"\` over
 setting four properties by hand.
+
+Sizes are exact, exported from Figma. Figma exports font-size only for text
+styles, so a row marked *unconfirmed* has a line height or weight inferred from
+the V3 spec rather than measured.
 
 ${type}
 
