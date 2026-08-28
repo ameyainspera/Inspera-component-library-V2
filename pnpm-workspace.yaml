@@ -1,0 +1,4 @@
+# pnpm >=10 reads these settings here, not from the "pnpm" field in package.json.
+# esbuild needs its postinstall to run so Vite/tsup can find the platform binary.
+onlyBuiltDependencies:
+  - esbuild
