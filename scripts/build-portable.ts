@@ -35,7 +35,7 @@ import {
   brandColors, semanticColors, brandAccents, palette,
   spacing, radius, shadows, typeScale,
   systemTokens, fonts, baseColors,
-  borderWidths, focusRing, motion, zIndex, breakpoints,
+  borderWidths, focusRing, motion, zIndex, breakpoints, fontWeights,
 } from '../src/data/tokens'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
@@ -98,13 +98,12 @@ function buildRootCss(): string {
   blocks.push(tokenBlock('Typography — family', fonts))
   blocks.push(tokenBlock(
     'Typography — scale',
-    typeScale.flatMap((t) => {
-      const n = cssName(t.token)
-      return [
-        { name: `text-${n}-size`, value: `${t.size}px` },
-        { name: `text-${n}-weight`, value: String(t.weight) },
-      ]
-    }),
+    typeScale.flatMap((t) => [
+      { name: `${t.name}-size`, value: `${t.size}px` },
+      { name: `${t.name}-weight`, value: String(t.weight) },
+      { name: `${t.name}-line-height`, value: String(t.lineHeight) },
+      ...(t.tracking !== undefined ? [{ name: `${t.name}-tracking`, value: `${t.tracking}px` }] : []),
+    ]),
   ))
 
   return `:root {\n${blocks.join('\n\n')}\n}\n`
@@ -114,11 +113,38 @@ const GENERATED_HEADER = (from: string) =>
   `/* Inspera Design System — GENERATED FILE, DO NOT EDIT.\n` +
   `   Source: ${from}. Regenerate with \`pnpm generate\`. */\n\n`
 
+/**
+ * One utility class per Figma type style. Four separate custom properties are
+ * awkward to apply correctly; `class="inspera-h1"` is not.
+ */
+function buildTypeClasses(): string {
+  const rules = typeScale.map((t) => {
+    const decl = [
+      `font-family: var(--font-sans)`,
+      `font-size: var(--${t.name}-size)`,
+      `font-weight: var(--${t.name}-weight)`,
+      `line-height: var(--${t.name}-line-height)`,
+      ...(t.tracking !== undefined ? [`letter-spacing: var(--${t.name}-tracking)`] : []),
+      ...(t.transform ? [`text-transform: ${t.transform}`] : []),
+      ...(t.decoration ? [`text-decoration: ${t.decoration}`] : []),
+    ]
+    return `.inspera-${t.name} {\n  ${decl.join(';\n  ')};\n}`
+  })
+  return `/* Type styles — one class per Figma style (${typeScale.length} total). */\n\n${rules.join('\n\n')}\n`
+}
+
 /** The stylesheet shipped to consumers: tokens + the runtime CSS, verbatim. */
 function buildDistributedCss(): string {
   const runtime = readFileSync(join(root, 'src/runtime.css'), 'utf8')
     .replace(/^\/\*[\s\S]*?\*\/\n\n/, '') // strip the authoring preamble
-  return GENERATED_HEADER('src/data/tokens.ts + src/runtime.css') + buildRootCss() + '\n' + runtime
+  return (
+    GENERATED_HEADER('src/data/tokens.ts + src/runtime.css') +
+    buildRootCss() +
+    '\n' +
+    buildTypeClasses() +
+    '\n' +
+    runtime
+  )
 }
 
 // ---------------------------------------------------------------------------
@@ -475,9 +501,24 @@ function buildFoundations({ compact }: { compact: boolean }): string {
       entries.map((t) => `\`var(--${t.name})\` ${t.value}`).join(', '))
     .join('\n\n')
 
-  const type = typeScale
-    .map((t) => `| \`${t.token}\` | \`var(--text-${cssName(t.token)}-size)\` | ${t.size}px | ${t.weight} |`)
-    .join('\n')
+  const typeRow = (t: (typeof typeScale)[number]) => {
+    const extras = [
+      t.tracking !== undefined ? `${t.tracking > 0 ? '+' : ''}${t.tracking}px tracking` : '',
+      t.transform ?? '',
+      t.decoration ?? '',
+      t.note ?? '',
+    ].filter(Boolean).join(', ')
+    return `| \`${t.token}\` | \`.inspera-${t.name}\` | ${t.size}px | ${t.weight} | ${t.lineHeight} | ${extras} |`
+  }
+  const typeGroup = (label: string, rows: typeof typeScale) =>
+    `#### ${label}\n\n| Style | Class | Size | Weight | Line height | Notes |\n| --- | --- | --- | --- | --- | --- |\n` +
+    rows.map(typeRow).join('\n')
+
+  const type = [
+    typeGroup('Text', typeScale.filter((t) => t.token.startsWith('Text/'))),
+    typeGroup('Heading', typeScale.filter((t) => t.token.startsWith('Heading/'))),
+    typeGroup('Semantic', typeScale.filter((t) => !t.token.includes('/'))),
+  ].join('\n\n')
 
   const space = spacing
     .map((sp) => `| \`${sp.token}\` | \`var(--space-${sp.token})\` | ${sp.value}px |`)
@@ -517,11 +558,13 @@ ${roles}
 
 ### Typography
 
-Inter for all UI text. JetBrains Mono for code and token values. Material
-Symbols Outlined for icons.
+Inter for all UI text (weights ${fontWeights.join(', ')}). JetBrains Mono for
+code and token values. Material Symbols Outlined for icons.
 
-| Token | CSS variable | Size | Weight |
-| --- | --- | --- | --- |
+Line height is 140% for text and 120% for headings. Every style below has a
+ready-made class — prefer \`class="inspera-h1"\` over setting four properties
+by hand.
+
 ${type}
 
 ### Spacing
@@ -693,7 +736,7 @@ function buildTailwindTheme(): string {
   push('Typography', [
     ['--font-sans', "'Inter', system-ui, sans-serif"],
     ['--font-mono', "'JetBrains Mono', ui-monospace, monospace"],
-    ...typeScale.map((t) => [`--text-${cssName(t.token)}`, `${t.size}px`] as [string, string]),
+    ...typeScale.map((t) => [`--text-${t.name}`, `${t.size}px`] as [string, string]),
   ])
 
   return `/* Inspera Design System v${VERSION} — Tailwind v4 theme. GENERATED, do not edit.
@@ -780,7 +823,10 @@ write(
     JSON.stringify(componentApi, null, 2) +
     '\n',
 )
-write('src/tokens.css', GENERATED_HEADER('src/data/tokens.ts') + buildRootCss())
+write(
+  'src/tokens.css',
+  GENERATED_HEADER('src/data/tokens.ts') + buildRootCss() + '\n' + buildTypeClasses(),
+)
 write('public/llms.txt', buildLlmsIndex())
 write('public/llms-full.txt', buildLlmsTxt())
 write('public/foundations.md', buildFoundationsDoc())

@@ -107,20 +107,62 @@ Prefer a role token over a raw palette shade wherever one exists.
 
 ### Typography
 
-Inter for all UI text. JetBrains Mono for code and token values. Material
-Symbols Outlined for icons.
+Inter for all UI text (weights 300, 400, 500, 600, 700). JetBrains Mono for
+code and token values. Material Symbols Outlined for icons.
 
-| Token | CSS variable | Size | Weight |
-| --- | --- | --- | --- |
-| `heading.h1` | `var(--text-heading-h1-size)` | 28.83px | 600 |
-| `heading.h2` | `var(--text-heading-h2-size)` | 22.78px | 500 |
-| `heading.h3` | `var(--text-heading-h3-size)` | 20.25px | 500 |
-| `heading.h4` | `var(--text-heading-h4-size)` | 18px | 500 |
-| `heading.h5` | `var(--text-heading-h5-size)` | 16px | 500 |
-| `body.mdRegular` | `var(--text-body-mdRegular-size)` | 16px | 400 |
-| `body.mdMedium` | `var(--text-body-mdMedium-size)` | 16px | 500 |
-| `body.semiBold16` | `var(--text-body-semiBold16-size)` | 16px | 600 |
-| `body.caption` | `var(--text-body-caption-size)` | 12px | 400 |
+Line height is 140% for text and 120% for headings. Every style below has a
+ready-made class — prefer `class="inspera-h1"` over setting four properties
+by hand.
+
+#### Text
+
+| Style | Class | Size | Weight | Line height | Notes |
+| --- | --- | --- | --- | --- | --- |
+| `Text/Regular/12` | `.inspera-text-regular-12` | 12px | 400 | 1.4 |  |
+| `Text/Regular/14` | `.inspera-text-regular-14` | 14px | 400 | 1.4 |  |
+| `Text/Regular/16` | `.inspera-text-regular-16` | 16px | 400 | 1.4 |  |
+| `Text/Regular/18` | `.inspera-text-regular-18` | 18px | 400 | 1.4 |  |
+| `Text/Regular/20` | `.inspera-text-regular-20` | 20px | 400 | 1.4 |  |
+| `Text/Regular/22` | `.inspera-text-regular-22` | 22px | 400 | 1.4 |  |
+| `Text/Regular/26` | `.inspera-text-regular-26` | 26px | 400 | 1.4 |  |
+| `Text/Medium/12` | `.inspera-text-medium-12` | 12px | 500 | 1.4 |  |
+| `Text/Medium/14` | `.inspera-text-medium-14` | 14px | 500 | 1.4 |  |
+| `Text/Medium/16` | `.inspera-text-medium-16` | 16px | 500 | 1.4 |  |
+| `Text/Medium/18` | `.inspera-text-medium-18` | 18px | 500 | 1.4 |  |
+| `Text/Medium/20` | `.inspera-text-medium-20` | 20px | 500 | 1.4 |  |
+| `Text/Medium/22` | `.inspera-text-medium-22` | 22px | 500 | 1.4 |  |
+| `Text/Medium/26` | `.inspera-text-medium-26` | 26px | 500 | 1.4 |  |
+| `Text/Semi Bold/12` | `.inspera-text-semibold-12` | 12px | 600 | 1.4 |  |
+| `Text/Semi Bold/14` | `.inspera-text-semibold-14` | 14px | 600 | 1.4 |  |
+| `Text/Semi Bold/16` | `.inspera-text-semibold-16` | 16px | 600 | 1.4 |  |
+| `Text/Semi Bold/18` | `.inspera-text-semibold-18` | 18px | 600 | 1.4 |  |
+| `Text/Semi Bold/20` | `.inspera-text-semibold-20` | 20px | 600 | 1.4 |  |
+| `Text/Semi Bold/22` | `.inspera-text-semibold-22` | 22px | 600 | 1.4 |  |
+| `Text/Semi Bold/26` | `.inspera-text-semibold-26` | 26px | 600 | 1.4 |  |
+| `Text/Bold/16` | `.inspera-text-bold-16` | 16px | 700 | 1.4 |  |
+| `Text/Bold/18` | `.inspera-text-bold-18` | 18px | 700 | 1.4 |  |
+| `Text/Bold/20` | `.inspera-text-bold-20` | 20px | 700 | 1.4 |  |
+| `Text/Bold/22` | `.inspera-text-bold-22` | 22px | 700 | 1.4 |  |
+
+#### Heading
+
+| Style | Class | Size | Weight | Line height | Notes |
+| --- | --- | --- | --- | --- | --- |
+| `Heading/H1` | `.inspera-h1` | 28px | 600 | 1.2 | -0.2px tracking |
+| `Heading/H2` | `.inspera-h2` | 22px | 600 | 1.2 |  |
+| `Heading/H3` | `.inspera-h3` | 20px | 500 | 1.2 |  |
+| `Heading/H4` | `.inspera-h4` | 18px | 500 | 1.2 |  |
+| `Heading/H5` | `.inspera-h5` | 16px | 500 | 1.2 |  |
+| `Heading/H6` | `.inspera-h6` | 12px | 500 | 1.2 | +1.6px tracking, uppercase |
+
+#### Semantic
+
+| Style | Class | Size | Weight | Line height | Notes |
+| --- | --- | --- | --- | --- | --- |
+| `Link` | `.inspera-link` | 16px | 500 | 1.4 | underline |
+| `Caption` | `.inspera-caption` | 12px | 400 | 1.4 | +0.1px tracking |
+| `Documentation` | `.inspera-documentation` | 14px | 300 | 1.4 | Inter Light |
+| `Label` | `.inspera-label` | 16px | 500 | 1.25 | Fixed 16/20 — buttons and controls |
 
 ### Spacing
 

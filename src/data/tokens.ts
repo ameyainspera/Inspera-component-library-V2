@@ -77,17 +77,67 @@ export const shadows = [
   { token: '500', value: '0px 10px 32px rgba(39, 39, 39, 0.1), 0px 6px 14px rgba(39, 39, 39, 0.12)' },
 ]
 
-export const typeScale = [
-  { token: 'heading.h1', size: 28.83, weight: 600, sample: 'Heading H1' },
-  { token: 'heading.h2', size: 22.78, weight: 500, sample: 'Heading H2' },
-  { token: 'heading.h3', size: 20.25, weight: 500, sample: 'Heading H3' },
-  { token: 'heading.h4', size: 18, weight: 500, sample: 'Heading H4' },
-  { token: 'heading.h5', size: 16, weight: 500, sample: 'Heading H5' },
-  { token: 'body.mdRegular', size: 16, weight: 400, sample: 'Body medium regular' },
-  { token: 'body.mdMedium', size: 16, weight: 500, sample: 'Body medium medium' },
-  { token: 'body.semiBold16', size: 16, weight: 600, sample: 'Body semibold 16' },
-  { token: 'body.caption', size: 12, weight: 400, sample: 'Caption text' },
+/**
+ * Type scale — transcribed from the Figma library.
+ *
+ * The rule the library states: Inter, 140% line-height for text, 120% for
+ * headings. Line heights are stored unitless (1.4 / 1.2) so they scale with
+ * font-size; `Label` is the one exception Figma fixes outright at 16/20.
+ *
+ * Tracking is read as px. Only three styles set it: H1 -0.2, H6 +1.6
+ * (uppercase), Caption +0.1.
+ */
+export interface TypeToken {
+  /** Figma style name, e.g. "Text/Regular/16". */
+  token: string
+  /** CSS custom-property and utility-class suffix. */
+  name: string
+  size: number
+  weight: number
+  /** Unitless line-height. */
+  lineHeight: number
+  /** Letter spacing in px. */
+  tracking?: number
+  transform?: 'uppercase'
+  decoration?: 'underline'
+  note?: string
+}
+
+const TEXT_SIZES = [12, 14, 16, 18, 20, 22, 26]
+const TEXT_LH = 1.4
+const HEADING_LH = 1.2
+
+const textRamp = (label: string, slug: string, weight: number, sizes: number[] = TEXT_SIZES): TypeToken[] =>
+  sizes.map((size) => ({
+    token: `Text/${label}/${size}`,
+    name: `text-${slug}-${size}`,
+    size,
+    weight,
+    lineHeight: TEXT_LH,
+  }))
+
+export const typeScale: TypeToken[] = [
+  ...textRamp('Regular', 'regular', 400),
+  ...textRamp('Medium', 'medium', 500),
+  ...textRamp('Semi Bold', 'semibold', 600),
+  // Bold ships only these four sizes in the library.
+  ...textRamp('Bold', 'bold', 700, [16, 18, 20, 22]),
+
+  { token: 'Heading/H1', name: 'h1', size: 28, weight: 600, lineHeight: HEADING_LH, tracking: -0.2 },
+  { token: 'Heading/H2', name: 'h2', size: 22, weight: 600, lineHeight: HEADING_LH },
+  { token: 'Heading/H3', name: 'h3', size: 20, weight: 500, lineHeight: HEADING_LH },
+  { token: 'Heading/H4', name: 'h4', size: 18, weight: 500, lineHeight: HEADING_LH },
+  { token: 'Heading/H5', name: 'h5', size: 16, weight: 500, lineHeight: HEADING_LH },
+  { token: 'Heading/H6', name: 'h6', size: 12, weight: 500, lineHeight: HEADING_LH, tracking: 1.6, transform: 'uppercase' },
+
+  { token: 'Link', name: 'link', size: 16, weight: 500, lineHeight: TEXT_LH, decoration: 'underline' },
+  { token: 'Caption', name: 'caption', size: 12, weight: 400, lineHeight: TEXT_LH, tracking: 0.1 },
+  { token: 'Documentation', name: 'documentation', size: 14, weight: 300, lineHeight: TEXT_LH, note: 'Inter Light' },
+  { token: 'Label', name: 'label', size: 16, weight: 500, lineHeight: 20 / 16, note: 'Fixed 16/20 — buttons and controls' },
 ]
+
+/** Weights the stylesheet must load. 300 is required by Documentation. */
+export const fontWeights = [300, 400, 500, 600, 700]
 
 // ---------------------------------------------------------------------------
 // System tokens — the derived / semantic layer. These are not part of the raw

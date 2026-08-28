@@ -152,16 +152,55 @@ export default function FoundationsPage() {
       </Panel>
 
       <Panel>
-        <SectionTitle sub="Typeface: Inter. Monospace: JetBrains Mono.">Typography</SectionTitle>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-          {typeScale.map((t) => (
-            <div key={t.token} style={{ display: 'flex', alignItems: 'baseline', gap: 16, borderBottom: '1px solid var(--border)', paddingBottom: 12 }}>
-              <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--muted-foreground)', width: 150, flexShrink: 0 }}>{t.token}</span>
-              <span style={{ fontSize: t.size, fontWeight: t.weight, color: 'var(--gray-900)' }}>{t.sample}</span>
+        <SectionTitle sub="Inter, transcribed from the Figma library. 140% line-height for text, 120% for headings. Every style has a ready-made class.">
+          Typography
+        </SectionTitle>
+        {[
+          { label: 'Text', rows: typeScale.filter((t) => t.token.startsWith('Text/')) },
+          { label: 'Heading', rows: typeScale.filter((t) => t.token.startsWith('Heading/')) },
+          { label: 'Semantic', rows: typeScale.filter((t) => !t.token.includes('/')) },
+        ].map((group) => (
+          <div key={group.label} style={{ marginBottom: 28 }}>
+            <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: 0.6, textTransform: 'uppercase', color: 'var(--gray-500)', marginBottom: 10 }}>
+              {group.label}
             </div>
-          ))}
-        </div>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              {group.rows.map((t) => (
+                <div
+                  key={t.token}
+                  style={{
+                    display: 'flex', alignItems: 'baseline', gap: 16,
+                    borderBottom: '1px solid var(--border)', padding: '10px 0',
+                  }}
+                >
+                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--muted-foreground)', width: 150, flexShrink: 0 }}>
+                    {t.token}
+                  </span>
+                  <span
+                    style={{
+                      flex: 1, minWidth: 0, color: 'var(--gray-900)',
+                      fontSize: t.size,
+                      fontWeight: t.weight,
+                      lineHeight: t.lineHeight,
+                      letterSpacing: t.tracking !== undefined ? t.tracking : undefined,
+                      textTransform: t.transform,
+                      textDecoration: t.decoration,
+                      whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+                    }}
+                  >
+                    The quick brown fox jumps over the lazy dog
+                  </span>
+                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--muted-foreground)', flexShrink: 0, textAlign: 'right', width: 190 }}>
+                    {t.size}/{Math.round(t.lineHeight * 100)}% · {t.weight}
+                    {t.tracking !== undefined && ` · ${t.tracking > 0 ? '+' : ''}${t.tracking}`}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
       </Panel>
+
     </div>
   )
 }
