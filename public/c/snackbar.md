@@ -29,7 +29,7 @@ import { Snackbar } from '@inspera/components'
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `message` | `string` | `'Assessment saved successfully.'` |  |
-| `intent` | `'Info' \| 'Success' \| 'Warning' \| 'Error' \| 'Neutral'` | `'Neutral'` | Accent icon color. Values: Neutral \| Info \| Success \| Warning \| Error. |
+| `intent` | `'Neutral' \| 'Info' \| 'Success' \| 'Warning' \| 'Error'` | `'Neutral'` | Accent icon color. Values: Neutral \| Info \| Success \| Warning \| Error. |
 | `hasAction` | `boolean` | `false` | Show an inline action (e.g. Undo). Values: true \| false. |
 | `hasClose` | `boolean` | `true` | Show the dismiss button. Values: true \| false. |
 | `actionLabel` | `string` | `'Undo'` |  |

@@ -34,7 +34,7 @@ import { Textarea } from '@inspera/components'
 | `value` | `string` | — |  |
 | `rows` | `number` | `4` | Visible text rows. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Vertical padding density. Values: Small \| Medium. |
-| `state` | `'Error' \| 'Default' \| 'Hover' \| 'Focused' \| 'Disabled' \| 'Filled' \| 'ReadOnly'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
+| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Filled' \| 'Error' \| 'Disabled' \| 'ReadOnly'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
 | `showLabel` | `boolean` | `true` | Show the field label. Values: true \| false. |
 | `helpText` | `string` | — |  |
 | `errorText` | `string` | — |  |

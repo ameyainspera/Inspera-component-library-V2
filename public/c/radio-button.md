@@ -30,7 +30,7 @@ import { RadioButton } from '@inspera/components'
 | `label` | `string` | `'Radio option'` |  |
 | `selected` | `boolean` | — | Selected state. Values: true \| false. |
 | `name` | `string` | `'radio'` |  |
-| `state` | `'Error' \| 'Default' \| 'Hover' \| 'Focused' \| 'Pressed' \| 'Disabled'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
+| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Pressed' \| 'Disabled' \| 'Error'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
 | `withLabel` | `boolean` | `true` | Render the label. Values: true \| false. |
 | `onChange` | `(selected: boolean) => void` | — |  |
 

@@ -34,8 +34,15 @@ import { RadioGroup } from '@inspera/components'
 | `options` | `RadioOption[]` | `DEFAULT_OPTIONS` | Radio options. |
 | `value` | `string` | — | Selected option value. |
 | `orientation` | `'Vertical' \| 'Horizontal'` | `'Vertical'` | Layout direction. Values: Vertical \| Horizontal. |
-| `state` | `'Error' \| 'Default' \| 'Disabled'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
+| `state` | `'Default' \| 'Disabled' \| 'Error'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
 | `onChange` | `(value: string) => void` | — |  |
+
+```ts
+export interface RadioOption {
+  label: string
+  value: string
+}
+```
 
 **Accessibility** — role `radiogroup`, keyboard operable. Container uses role="radiogroup" with an accessible label; Each option is a radio with aria-checked; Arrow keys navigate between options.
 

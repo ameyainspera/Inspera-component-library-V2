@@ -30,12 +30,21 @@ import { Table } from '@inspera/components'
 | --- | --- | --- | --- |
 | `columns` | `TableColumn[]` | `defaultColumns` | Column definitions. |
 | `rows` | `Record<string, ReactNode>[]` | `defaultRows` | Row data keyed by column. |
-| `size` | `'Default' \| 'Compact'` | `'Default'` | Row height density. Values: Compact \| Default. |
+| `size` | `'Compact' \| 'Default'` | `'Default'` | Row height density. Values: Compact \| Default. |
 | `striped` | `boolean` | `false` | Zebra-stripe rows. Values: true \| false. |
 | `hoverable` | `boolean` | `true` | Highlight rows on hover. Values: true \| false. |
 | `selectable` | `boolean` | `false` | Add a row selection column. Values: true \| false. |
 | `caption` | `string` | — |  |
 | `onRowClick` | `(row: Record<string, ReactNode>, index: number) => void` | — |  |
+
+```ts
+export interface TableColumn {
+  key: string
+  header: string
+  align?: 'left' | 'right' | 'center'
+  width?: string | number
+}
+```
 
 **Accessibility** — role `table`, keyboard operable. Use semantic table / thead / tbody markup; Header cells use scope="col"; Provide a caption or aria-label describing the table.
 

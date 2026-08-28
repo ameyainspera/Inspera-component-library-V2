@@ -29,7 +29,7 @@ import { Checkbox } from '@inspera/components'
 | --- | --- | --- | --- |
 | `label` | `string` | `'Checkbox label'` |  |
 | `checked` | `boolean` | — | Checked state. Values: true \| false. |
-| `state` | `'Error' \| 'Default' \| 'Hover' \| 'Focused' \| 'Pressed' \| 'Disabled'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
+| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Pressed' \| 'Disabled' \| 'Error'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
 | `withLabel` | `boolean` | `true` | Render the label. Values: true \| false. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Indicator size. Values: Small \| Medium. |
 | `onChange` | `(checked: boolean) => void` | — |  |

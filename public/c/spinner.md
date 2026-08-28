@@ -28,7 +28,7 @@ import { Spinner } from '@inspera/components'
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Diameter 16 / 24 / 40. Values: Small \| Medium \| Large. |
-| `intent` | `'Neutral' \| 'Primary' \| 'Inverse'` | `'Primary'` | Arc color. Values: Primary \| Neutral \| Inverse. |
+| `intent` | `'Primary' \| 'Neutral' \| 'Inverse'` | `'Primary'` | Arc color. Values: Primary \| Neutral \| Inverse. |
 | `label` | `string` | `'Loading'` | Accessible label. |
 
 **Accessibility** — role `status`. Use role="status" with aria-live="polite"; Provide an accessible label via aria-label; Include visually-hidden loading text.

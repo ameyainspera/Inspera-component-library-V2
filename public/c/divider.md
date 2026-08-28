@@ -26,9 +26,9 @@ import { Divider } from '@inspera/components'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `orientation` | `'Vertical' \| 'Horizontal'` | `'Horizontal'` | Divider direction. Values: Horizontal \| Vertical. |
+| `orientation` | `'Horizontal' \| 'Vertical'` | `'Horizontal'` | Divider direction. Values: Horizontal \| Vertical. |
 | `label` | `string` | — | Optional centered label (horizontal only). |
-| `spacing` | `'Default' \| 'Compact' \| 'Spacious'` | `'Default'` | Surrounding margin. Values: Compact \| Default \| Spacious. |
+| `spacing` | `'Compact' \| 'Default' \| 'Spacious'` | `'Default'` | Surrounding margin. Values: Compact \| Default \| Spacious. |
 
 **Accessibility** — role `separator`. Use role="separator" with aria-orientation; Purely decorative dividers may be aria-hidden.
 

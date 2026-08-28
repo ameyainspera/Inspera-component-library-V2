@@ -29,8 +29,15 @@ import { Stepper } from '@inspera/components'
 | --- | --- | --- | --- |
 | `steps` | `Step[]` | `defaultSteps` | Ordered steps. |
 | `activeStep` | `number` | `1` | Zero-based index of the current step. |
-| `orientation` | `'Vertical' \| 'Horizontal'` | `'Horizontal'` | Layout direction. Values: Horizontal \| Vertical. |
+| `orientation` | `'Horizontal' \| 'Vertical'` | `'Horizontal'` | Layout direction. Values: Horizontal \| Vertical. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Indicator size. Values: Small \| Medium. |
+
+```ts
+export interface Step {
+  label: string
+  description?: string
+}
+```
 
 **Accessibility** — role `list`. Use an ordered list for step semantics; Mark the current step with aria-current="step"; Convey completion with an icon, not color alone.
 

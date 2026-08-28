@@ -29,12 +29,12 @@ import { Link } from '@inspera/components'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `children` | `string \| number \| bigint \| boolean \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> \| Iterable<ReactNode> \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal \| Promise<string \| number \| bigint \| boolean \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> \| Iterable<ReactNode> \| null \| undefined> \| null` | — |  |
+| `children` | `ReactNode` | — |  |
 | `label` | `string` | `'Learn more'` |  |
 | `href` | `string` | `'#'` |  |
 | `intent` | `'Default' \| 'Muted'` | `'Default'` | Color emphasis. Values: Default \| Muted. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Text size. Values: Small \| Medium. |
-| `underline` | `'None' \| 'Hover' \| 'Always'` | `'Hover'` | Underline behavior. Values: Always \| Hover \| None. |
+| `underline` | `'Always' \| 'Hover' \| 'None'` | `'Hover'` | Underline behavior. Values: Always \| Hover \| None. |
 | `external` | `boolean` | `false` | Open in a new tab with an icon. Values: true \| false. |
 | `disabled` | `boolean` | `false` | Non-interactive state. Values: true \| false. |
 | `leadingIcon` | `string` | — |  |

@@ -29,7 +29,7 @@ import { Button } from '@inspera/components'
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `label` | `string` | `'Button'` |  |
-| `intent` | `'Success' \| 'Warning' \| 'Primary' \| 'Secondary' \| 'Outline' \| 'Text' \| 'Destructive'` | `'Primary'` | Visual role / semantic weight. Values: Primary \| Secondary \| Outline \| Text \| Success \| Warning \| Destructive. |
+| `intent` | `'Primary' \| 'Secondary' \| 'Outline' \| 'Text' \| 'Success' \| 'Warning' \| 'Destructive'` | `'Primary'` | Visual role / semantic weight. Values: Primary \| Secondary \| Outline \| Text \| Success \| Warning \| Destructive. |
 | `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Height 32 / 40 / 48. Values: Small \| Medium \| Large. |
 | `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Pressed' \| 'Disabled'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
 | `content` | `'Text' \| 'Icon + Text' \| 'Text + Icon' \| 'Text + Disclosure'` | `'Text'` | Label / icon composition. Values: Text \| Icon + Text \| Text + Icon \| Text + Disclosure. |

@@ -31,8 +31,17 @@ import { List } from '@inspera/components'
 | `items` | `ListItem[]` | `defaultItems` | List rows. |
 | `divided` | `boolean` | `true` | Show dividers between rows. Values: true \| false. |
 | `interactive` | `boolean` | `false` | Make rows clickable. Values: true \| false. |
-| `size` | `'Default' \| 'Compact'` | `'Default'` | Row density. Values: Compact \| Default. |
+| `size` | `'Compact' \| 'Default'` | `'Default'` | Row density. Values: Compact \| Default. |
 | `onItemClick` | `(item: ListItem, index: number) => void` | — |  |
+
+```ts
+export interface ListItem {
+  primary: string
+  secondary?: string
+  leading?: ReactNode
+  trailing?: ReactNode
+}
+```
 
 **Accessibility** — role `list`, keyboard operable. Use semantic list markup (ul / li); Interactive rows are buttons and keyboard focusable; Provide meaningful text for each item.
 

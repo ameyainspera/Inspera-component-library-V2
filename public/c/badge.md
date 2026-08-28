@@ -29,7 +29,7 @@ import { Badge } from '@inspera/components'
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `label` | `string` | `'Badge'` |  |
-| `intent` | `'Info' \| 'Success' \| 'Warning' \| 'Error' \| 'Neutral'` | `'Neutral'` | Semantic color. Values: Neutral \| Info \| Success \| Warning \| Error. |
+| `intent` | `'Neutral' \| 'Info' \| 'Success' \| 'Warning' \| 'Error'` | `'Neutral'` | Semantic color. Values: Neutral \| Info \| Success \| Warning \| Error. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Height 20 / 24. Values: Small \| Medium. |
 | `withIcon` | `boolean` | `false` | Show a leading status icon. Values: true \| false. |
 | `icon` | `string` | — |  |

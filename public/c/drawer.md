@@ -33,11 +33,11 @@ import { Drawer } from '@inspera/components'
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `open` | `boolean` | `false` | Visibility. Values: true \| false. |
-| `side` | `'Left' \| 'Right' \| 'Bottom'` | `'Right'` | Edge it slides from. Values: Right \| Left \| Bottom. |
+| `side` | `'Right' \| 'Left' \| 'Bottom'` | `'Right'` | Edge it slides from. Values: Right \| Left \| Bottom. |
 | `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Panel width / height. Values: Small \| Medium \| Large. |
 | `title` | `string` | `'Panel'` | Header title. |
 | `hasCloseButton` | `boolean` | `true` | Show the close affordance. Values: true \| false. |
-| `children` | `string \| number \| bigint \| boolean \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> \| Iterable<ReactNode> \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal \| Promise<string \| number \| bigint \| boolean \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> \| Iterable<ReactNode> \| null \| undefined> \| null` | — |  |
+| `children` | `ReactNode` | — |  |
 | `embedded` | `boolean` | `false` | Render just the panel inline (no overlay/scrim) — used for documentation previews. |
 | `onClose` | `() => void` | — |  |
 

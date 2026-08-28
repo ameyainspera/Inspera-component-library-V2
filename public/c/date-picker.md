@@ -30,7 +30,7 @@ import { DatePicker } from '@inspera/components'
 | `label` | `string` | `'Date'` |  |
 | `value` | `string` | — | Selected date (YYYY-MM-DD). |
 | `placeholder` | `string` | `'Select date'` | Trigger placeholder. |
-| `state` | `'Error' \| 'Default' \| 'Focused' \| 'Disabled'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
+| `state` | `'Default' \| 'Focused' \| 'Disabled' \| 'Error'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
 | `showLabel` | `boolean` | `true` | Show the field label. Values: true \| false. |
 | `defaultOpen` | `boolean` | `false` | Open the calendar initially. Values: true \| false. |
 | `onChange` | `(iso: string) => void` | — |  |

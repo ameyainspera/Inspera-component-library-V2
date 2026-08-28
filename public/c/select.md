@@ -32,7 +32,7 @@ import { Select } from '@inspera/components'
 | `placeholder` | `string` | `'Select an option'` |  |
 | `options` | `string[]` | `defaultOptions` |  |
 | `value` | `string` | — |  |
-| `state` | `'Error' \| 'Default' \| 'Hover' \| 'Focused' \| 'Disabled' \| 'Open'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
+| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Disabled' \| 'Error' \| 'Open'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
 | `widthMode` | `'Fixed' \| 'Content Adaptable'` | `'Fixed'` | Trigger sizing. Values: Fixed \| Content Adaptable. |
 | `showLabel` | `boolean` | `true` |  |
 | `search` | `boolean` | `false` | Filterable option list. Values: true \| false. |

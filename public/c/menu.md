@@ -36,6 +36,16 @@ import { Menu } from '@inspera/components'
 | `forceVisible` | `boolean` | `false` | Always render the open menu, for documentation. |
 | `onSelect` | `(label: string) => void` | — |  |
 
+```ts
+export interface MenuItem {
+  label: string
+  icon?: string
+  danger?: boolean
+  disabled?: boolean
+  divider?: boolean
+}
+```
+
 **Accessibility** — role `menu`, keyboard operable. Trigger uses aria-haspopup="menu" and aria-expanded; Items use role="menuitem"; Arrow keys move, Enter selects, Escape closes; Outside click closes the menu.
 
 **Do:** Use for grouped actions and overflow; Separate destructive actions with a divider; Keep item labels action-oriented.

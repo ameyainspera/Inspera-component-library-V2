@@ -35,6 +35,13 @@ import { Tabs } from '@inspera/components'
 | `value` | `number` | — |  |
 | `onChange` | `(index: number) => void` | — |  |
 
+```ts
+export interface TabItem {
+  label: string
+  icon?: string
+}
+```
+
 **Accessibility** — role `tablist`, keyboard operable. Use role="tablist" on the tab container; Each tab uses role="tab" with aria-selected; Tab panels use role="tabpanel" linked by aria-labelledby; Arrow keys navigate between tabs.
 
 **Do:** Use to organize related content sections; Label tabs clearly and concisely; Use a maximum of 6 tabs per set.

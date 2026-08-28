@@ -29,7 +29,7 @@ import { Tag } from '@inspera/components'
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `label` **(required)** | `string` | — | Tag text. |
-| `intent` | `'Info' \| 'Success' \| 'Warning' \| 'Error' \| 'Neutral'` | `'Neutral'` | Semantic color. Values: Neutral \| Info \| Success \| Warning \| Error. |
+| `intent` | `'Neutral' \| 'Info' \| 'Success' \| 'Warning' \| 'Error'` | `'Neutral'` | Semantic color. Values: Neutral \| Info \| Success \| Warning \| Error. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Tag height. Values: Small \| Medium. |
 | `removable` | `boolean` | `false` | Show a remove affordance. Values: true \| false. |
 | `leadingIcon` | `string` | — | Optional leading icon. |

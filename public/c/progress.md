@@ -34,7 +34,7 @@ import { Progress } from '@inspera/components'
 | `value` | `number` | `60` | Completion percentage 0–100. Ignored when indeterminate. |
 | `indeterminate` | `boolean` | `false` | Unknown-duration animation. Values: true \| false. |
 | `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Bar height / ring diameter. Values: Small \| Medium \| Large. |
-| `intent` | `'Success' \| 'Warning' \| 'Error' \| 'Primary'` | `'Primary'` | Fill color. Values: Primary \| Success \| Warning \| Error. |
+| `intent` | `'Primary' \| 'Success' \| 'Warning' \| 'Error'` | `'Primary'` | Fill color. Values: Primary \| Success \| Warning \| Error. |
 | `showValue` | `boolean` | `false` | Render the percentage. Values: true \| false. |
 
 **Accessibility** — role `progressbar`. Use role="progressbar" with aria-valuenow / min / max; Omit aria-valuenow when indeterminate; Provide an accessible label for the task.

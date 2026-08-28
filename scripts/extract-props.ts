@@ -18,6 +18,12 @@ import ts from 'typescript'
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const COMPONENT_DIR = join(root, 'src/components/inspera')
 
+/** A component's prop API plus any shapes its props reference. */
+export interface ComponentApi {
+  props: PropDoc[]
+  relatedTypes: Record<string, string>
+}
+
 export interface PropDoc {
   name: string
   /** Rendered TypeScript type, with unions of string literals kept verbatim. */
@@ -27,18 +33,75 @@ export interface PropDoc {
   description?: string
 }
 
-/** Collapse the compiler's rendering into something a human (or model) reads well. */
-function renderType(checker: ts.TypeChecker, type: ts.Type, node: ts.Node): string {
-  const text = checker.typeToString(
-    type,
-    node,
-    ts.TypeFormatFlags.NoTruncation | ts.TypeFormatFlags.InTypeAlias,
-  )
-  return text
-    .replace(/ \| undefined$/, '')
-    .replace(/"/g, "'")
-    .replace(/\s+/g, ' ')
-    .trim()
+/**
+ * Render a prop's type the way a reader needs it.
+ *
+ * Deliberately *not* the compiler's fully-resolved type. Resolving `ReactNode`
+ * expands to a ~10-member union containing an absolute `import("/Users/…")`
+ * path — which is machine-specific (so generated files differed between a
+ * laptop and CI) and tells a model nothing. Instead:
+ *
+ *   - a named alias that is a union of string literals is expanded to those
+ *     literals in *declaration* order, because that variant list is the whole
+ *     point of the table;
+ *   - everything else keeps the annotation as written: `ReactNode`,
+ *     `TabItem[]`, `(index: number) => void`.
+ */
+function renderType(checker: ts.TypeChecker, member: ts.PropertySignature, source: ts.SourceFile): string {
+  if (!member.type) return 'unknown'
+  const written = member.type.getText(source).replace(/\s+/g, ' ').trim()
+
+  if (ts.isTypeReferenceNode(member.type) && ts.isIdentifier(member.type.typeName)) {
+    const symbol = checker.getSymbolAtLocation(member.type.typeName)
+    const decl = symbol?.declarations?.find(ts.isTypeAliasDeclaration)
+    if (decl && ts.isUnionTypeNode(decl.type)) {
+      const literals = decl.type.types.every(
+        (t) => ts.isLiteralTypeNode(t) && ts.isStringLiteral(t.literal),
+      )
+      if (literals) {
+        return decl.type
+          .getText(source)
+          .replace(/\s+/g, ' ')
+          .replace(/"/g, "'")
+          .replace(/^\|\s*/, '') // aliases are often written with a leading `|`
+          .trim()
+      }
+    }
+  }
+
+  return written
+}
+
+/**
+ * Shapes referenced by props and declared alongside the component — TabItem,
+ * MenuItem, TableColumn. Without these, `items: TabItem[]` is a dead end for
+ * anyone (or anything) trying to call the component.
+ */
+function collectRelatedTypes(
+  source: ts.SourceFile,
+  props: ts.PropertySignature[],
+  selfName: string,
+): Record<string, string> {
+  const referenced = new Set<string>()
+  for (const prop of props) {
+    if (!prop.type) continue
+    const visit = (n: ts.Node) => {
+      if (ts.isTypeReferenceNode(n) && ts.isIdentifier(n.typeName)) referenced.add(n.typeName.text)
+      ts.forEachChild(n, visit)
+    }
+    visit(prop.type)
+  }
+
+  const shapes: Record<string, string> = {}
+  ts.forEachChild(source, (node) => {
+    const named =
+      (ts.isInterfaceDeclaration(node) || ts.isTypeAliasDeclaration(node)) && node.name.text
+    if (!named || named === selfName || !referenced.has(named)) return
+    // Literal-union aliases are already inlined into the prop's type.
+    if (ts.isTypeAliasDeclaration(node) && ts.isUnionTypeNode(node.type)) return
+    shapes[named] = node.getText(source).trim()
+  })
+  return shapes
 }
 
 /** Default values, read from the destructuring pattern of the component function. */
@@ -67,7 +130,7 @@ function collectDefaults(source: ts.SourceFile): Record<string, string> {
   return defaults
 }
 
-export function extractComponentProps(): Record<string, PropDoc[]> {
+export function extractComponentProps(): Record<string, ComponentApi> {
   const files = readdirSync(COMPONENT_DIR)
     .filter((f) => f.endsWith('.tsx'))
     .map((f) => join(COMPONENT_DIR, f))
@@ -82,7 +145,7 @@ export function extractComponentProps(): Record<string, PropDoc[]> {
     noEmit: true,
   })
   const checker = program.getTypeChecker()
-  const result: Record<string, PropDoc[]> = {}
+  const result: Record<string, ComponentApi> = {}
 
   for (const file of files) {
     const source = program.getSourceFile(file)
@@ -90,36 +153,35 @@ export function extractComponentProps(): Record<string, PropDoc[]> {
 
     const componentName = basename(file, '.tsx')
     const defaults = collectDefaults(source)
-    let props: PropDoc[] | null = null
+    let api: ComponentApi | null = null
 
     ts.forEachChild(source, (node) => {
-      if (props) return
+      if (api) return
       if (!ts.isInterfaceDeclaration(node)) return
-      if (!node.name.text.endsWith('Props')) return
       // The component's own props interface, not a nested item shape.
       if (node.name.text !== `${componentName}Props`) return
 
-      props = node.members.filter(ts.isPropertySignature).map((member) => {
+      const members = node.members.filter(ts.isPropertySignature)
+      const props = members.map((member) => {
         const name = member.name.getText(source).replace(/^'|'$/g, '')
         const symbol = checker.getSymbolAtLocation(member.name)
-        const type = member.type
-          ? renderType(checker, checker.getTypeFromTypeNode(member.type), member)
-          : 'unknown'
         const description = symbol
           ? ts.displayPartsToString(symbol.getDocumentationComment(checker)).replace(/\s+/g, ' ').trim()
           : ''
 
         return {
           name,
-          type,
+          type: renderType(checker, member, source),
           required: !member.questionToken,
           ...(defaults[name] !== undefined ? { default: defaults[name] } : {}),
           ...(description ? { description } : {}),
         }
       })
+
+      api = { props, relatedTypes: collectRelatedTypes(source, members, node.name.text) }
     })
 
-    if (props) result[componentName] = props
+    if (api) result[componentName] = api
   }
 
   return result

@@ -26,7 +26,7 @@ ${doc}`
 export default function ComponentPage({ slug }: { slug: string }) {
   const spec = components[slug]
   const entry = registry[slug]
-  const props = componentApi[spec?.exportName ?? spec?.name.replace(/\s+/g, '') ?? ''] ?? []
+  const props = componentApi[spec?.exportName ?? spec?.name.replace(/\s+/g, '') ?? '']?.props ?? []
   const doc = componentDocs[slug] ?? ''
   const [values, setValues] = useState<Record<string, string>>(entry?.defaults ?? {})
 

@@ -32,8 +32,15 @@ import { CheckboxGroup } from '@inspera/components'
 | `options` | `CheckboxOption[]` | `DEFAULT_OPTIONS` | Checkbox options. |
 | `value` | `string[]` | — | Selected option values. |
 | `orientation` | `'Vertical' \| 'Horizontal'` | `'Vertical'` | Layout direction. Values: Vertical \| Horizontal. |
-| `state` | `'Error' \| 'Default' \| 'Disabled'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
+| `state` | `'Default' \| 'Disabled' \| 'Error'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
 | `onChange` | `(value: string[]) => void` | — |  |
+
+```ts
+export interface CheckboxOption {
+  label: string
+  value: string
+}
+```
 
 **Accessibility** — role `group`, keyboard operable. Container uses role="group" with aria-labelledby; Each option is a checkbox with aria-checked; Group related options under a shared legend/label.
 

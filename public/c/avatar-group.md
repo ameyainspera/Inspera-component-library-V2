@@ -29,7 +29,14 @@ import { AvatarGroup } from '@inspera/components'
 | --- | --- | --- | --- |
 | `avatars` | `AvatarGroupItem[]` | `defaultAvatars` | Avatars to display. |
 | `max` | `number` | `4` | Maximum shown before overflow. |
-| `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Avatar diameter. Values: Small \| Medium \| Large. |
+| `size` | `AvatarSize` | `'Medium'` | Avatar diameter. Values: Small \| Medium \| Large. |
+
+```ts
+export interface AvatarGroupItem {
+  content?: AvatarContent
+  name?: string
+}
+```
 
 **Accessibility** — role `group`. Wrap in a group with an aria-label describing the set; Each avatar keeps its own accessible label; The overflow chip states the hidden count.
 

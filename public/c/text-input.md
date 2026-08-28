@@ -30,7 +30,7 @@ import { TextInput } from '@inspera/components'
 | `label` | `string` | `'Label'` | Show the field label. Values: true \| false. |
 | `placeholder` | `string` | `'Placeholder text'` |  |
 | `value` | `string` | — |  |
-| `state` | `'Error' \| 'Default' \| 'Hover' \| 'Focused' \| 'Disabled' \| 'Filled' \| 'ReadOnly'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
+| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Disabled' \| 'Error' \| 'Filled' \| 'ReadOnly'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Control height. Values: Small \| Medium. |
 | `leadingIcon` | `string` | — | Show a leading icon. Values: true \| false. |
 | `trailingIcon` | `string` | — | Show a trailing icon. Values: true \| false. |

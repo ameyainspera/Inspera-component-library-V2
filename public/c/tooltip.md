@@ -31,10 +31,10 @@ import { Tooltip } from '@inspera/components'
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `content` | `string` | `'Supplementary help text'` |  |
-| `placement` | `'Left' \| 'Right' \| 'Bottom' \| 'Top'` | `'Top'` | Position relative to the trigger. Values: Top \| Bottom \| Left \| Right. |
+| `placement` | `'Top' \| 'Bottom' \| 'Left' \| 'Right'` | `'Top'` | Position relative to the trigger. Values: Top \| Bottom \| Left \| Right. |
 | `theme` | `'Light' \| 'Dark'` | `'Dark'` | Surface color. Values: Light \| Dark. |
 | `type` | `'Default' \| 'Accessibility'` | `'Default'` | Accessibility type uses larger text. Values: Default \| Accessibility. |
-| `children` | `string \| number \| bigint \| boolean \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> \| Iterable<ReactNode> \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal \| Promise<string \| number \| bigint \| boolean \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> \| Iterable<ReactNode> \| null \| undefined> \| null` | — |  |
+| `children` | `ReactNode` | — |  |
 | `forceVisible` | `boolean` | `false` | Keep the tooltip visible regardless of hover — used for documentation. |
 
 **Accessibility** — role `tooltip`, keyboard operable. Use role="tooltip" on the tooltip element; Link trigger and tooltip with aria-describedby; Escape key dismisses the tooltip; Tooltip must not contain interactive content.

@@ -23,7 +23,7 @@ import { Button } from '@inspera/kit'
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `label` | `string` | `'Button'` |  |
-| `intent` | `'Success' \| 'Warning' \| 'Primary' \| 'Secondary' \| 'Outline' \| 'Text' \| 'Destructive'` | `'Primary'` | Visual role / semantic weight. Values: Primary \| Secondary \| Outline \| Text \| Success \| Warning \| Destructive. |
+| `intent` | `'Primary' \| 'Secondary' \| 'Outline' \| 'Text' \| 'Success' \| 'Warning' \| 'Destructive'` | `'Primary'` | Visual role / semantic weight. Values: Primary \| Secondary \| Outline \| Text \| Success \| Warning \| Destructive. |
 | `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Height 32 / 40 / 48. Values: Small \| Medium \| Large. |
 | `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Pressed' \| 'Disabled'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
 | `content` | `'Text' \| 'Icon + Text' \| 'Text + Icon' \| 'Text + Disclosure'` | `'Text'` | Label / icon composition. Values: Text \| Icon + Text \| Text + Icon \| Text + Disclosure. |
@@ -57,7 +57,7 @@ import { TextInput } from '@inspera/kit'
 | `label` | `string` | `'Label'` | Show the field label. Values: true \| false. |
 | `placeholder` | `string` | `'Placeholder text'` |  |
 | `value` | `string` | — |  |
-| `state` | `'Error' \| 'Default' \| 'Hover' \| 'Focused' \| 'Disabled' \| 'Filled' \| 'ReadOnly'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
+| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Disabled' \| 'Error' \| 'Filled' \| 'ReadOnly'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Control height. Values: Small \| Medium. |
 | `leadingIcon` | `string` | — | Show a leading icon. Values: true \| false. |
 | `trailingIcon` | `string` | — | Show a trailing icon. Values: true \| false. |
@@ -92,7 +92,7 @@ import { Checkbox } from '@inspera/kit'
 | --- | --- | --- | --- |
 | `label` | `string` | `'Checkbox label'` |  |
 | `checked` | `boolean` | — | Checked state. Values: true \| false. |
-| `state` | `'Error' \| 'Default' \| 'Hover' \| 'Focused' \| 'Pressed' \| 'Disabled'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
+| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Pressed' \| 'Disabled' \| 'Error'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
 | `withLabel` | `boolean` | `true` | Render the label. Values: true \| false. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Indicator size. Values: Small \| Medium. |
 | `onChange` | `(checked: boolean) => void` | — |  |
@@ -124,7 +124,7 @@ import { RadioButton } from '@inspera/kit'
 | `label` | `string` | `'Radio option'` |  |
 | `selected` | `boolean` | — | Selected state. Values: true \| false. |
 | `name` | `string` | `'radio'` |  |
-| `state` | `'Error' \| 'Default' \| 'Hover' \| 'Focused' \| 'Pressed' \| 'Disabled'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
+| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Pressed' \| 'Disabled' \| 'Error'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
 | `withLabel` | `boolean` | `true` | Render the label. Values: true \| false. |
 | `onChange` | `(selected: boolean) => void` | — |  |
 
@@ -157,7 +157,7 @@ import { Select } from '@inspera/kit'
 | `placeholder` | `string` | `'Select an option'` |  |
 | `options` | `string[]` | `defaultOptions` |  |
 | `value` | `string` | — |  |
-| `state` | `'Error' \| 'Default' \| 'Hover' \| 'Focused' \| 'Disabled' \| 'Open'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
+| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Disabled' \| 'Error' \| 'Open'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
 | `widthMode` | `'Fixed' \| 'Content Adaptable'` | `'Fixed'` | Trigger sizing. Values: Fixed \| Content Adaptable. |
 | `showLabel` | `boolean` | `true` |  |
 | `search` | `boolean` | `false` | Filterable option list. Values: true \| false. |
@@ -225,7 +225,7 @@ import { Textarea } from '@inspera/kit'
 | `value` | `string` | — |  |
 | `rows` | `number` | `4` | Visible text rows. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Vertical padding density. Values: Small \| Medium. |
-| `state` | `'Error' \| 'Default' \| 'Hover' \| 'Focused' \| 'Disabled' \| 'Filled' \| 'ReadOnly'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
+| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Filled' \| 'Error' \| 'Disabled' \| 'ReadOnly'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
 | `showLabel` | `boolean` | `true` | Show the field label. Values: true \| false. |
 | `helpText` | `string` | — |  |
 | `errorText` | `string` | — |  |
@@ -265,7 +265,7 @@ import { FormField } from '@inspera/kit'
 | `required` | `boolean` | `false` | Show a required asterisk. Values: true \| false. |
 | `helpText` | `string` | — | Helper text shown below the control. |
 | `errorText` | `string` | — | Error message; replaces help text when present. |
-| `children` **(required)** | `string \| number \| bigint \| boolean \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> \| Iterable<ReactNode> \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal \| Promise<string \| number \| bigint \| boolean \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> \| Iterable<ReactNode> \| null \| undefined> \| null` | — |  |
+| `children` **(required)** | `ReactNode` | — |  |
 
 **Accessibility** — role `group`, keyboard operable. Associate the label with the control via htmlFor/id; Link error and help text with aria-describedby on the control; Required fields should set aria-required on the control.
 
@@ -361,7 +361,7 @@ import { DatePicker } from '@inspera/kit'
 | `label` | `string` | `'Date'` |  |
 | `value` | `string` | — | Selected date (YYYY-MM-DD). |
 | `placeholder` | `string` | `'Select date'` | Trigger placeholder. |
-| `state` | `'Error' \| 'Default' \| 'Focused' \| 'Disabled'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
+| `state` | `'Default' \| 'Focused' \| 'Disabled' \| 'Error'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
 | `showLabel` | `boolean` | `true` | Show the field label. Values: true \| false. |
 | `defaultOpen` | `boolean` | `false` | Open the calendar initially. Values: true \| false. |
 | `onChange` | `(iso: string) => void` | — |  |
@@ -394,7 +394,7 @@ import { FileUpload } from '@inspera/kit'
 | `label` | `string` | `'Upload files'` |  |
 | `accept` | `string` | — | Accepted MIME types / extensions. |
 | `multiple` | `boolean` | `false` | Allow multiple files. Values: true \| false. |
-| `state` | `'Error' \| 'Default' \| 'Disabled' \| 'Dragging'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
+| `state` | `'Default' \| 'Dragging' \| 'Disabled' \| 'Error'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
 | `helpText` | `string` | `'PNG, JPG or PDF up to 10MB'` | Constraint hint text. |
 | `onFiles` | `(files: File[]) => void` | — |  |
 
@@ -429,8 +429,15 @@ import { RadioGroup } from '@inspera/kit'
 | `options` | `RadioOption[]` | `DEFAULT_OPTIONS` | Radio options. |
 | `value` | `string` | — | Selected option value. |
 | `orientation` | `'Vertical' \| 'Horizontal'` | `'Vertical'` | Layout direction. Values: Vertical \| Horizontal. |
-| `state` | `'Error' \| 'Default' \| 'Disabled'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
+| `state` | `'Default' \| 'Disabled' \| 'Error'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
 | `onChange` | `(value: string) => void` | — |  |
+
+```ts
+export interface RadioOption {
+  label: string
+  value: string
+}
+```
 
 **Accessibility** — role `radiogroup`, keyboard operable. Container uses role="radiogroup" with an accessible label; Each option is a radio with aria-checked; Arrow keys navigate between options.
 
@@ -461,8 +468,15 @@ import { CheckboxGroup } from '@inspera/kit'
 | `options` | `CheckboxOption[]` | `DEFAULT_OPTIONS` | Checkbox options. |
 | `value` | `string[]` | — | Selected option values. |
 | `orientation` | `'Vertical' \| 'Horizontal'` | `'Vertical'` | Layout direction. Values: Vertical \| Horizontal. |
-| `state` | `'Error' \| 'Default' \| 'Disabled'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
+| `state` | `'Default' \| 'Disabled' \| 'Error'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
 | `onChange` | `(value: string[]) => void` | — |  |
+
+```ts
+export interface CheckboxOption {
+  label: string
+  value: string
+}
+```
 
 **Accessibility** — role `group`, keyboard operable. Container uses role="group" with aria-labelledby; Each option is a checkbox with aria-checked; Group related options under a shared legend/label.
 
@@ -522,7 +536,7 @@ import { OtpInput } from '@inspera/kit'
 | --- | --- | --- | --- |
 | `length` | `number` | `6` | Number of digit boxes. |
 | `value` | `string` | — | Current code value. |
-| `state` | `'Error' \| 'Default' \| 'Focused' \| 'Disabled'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
+| `state` | `'Default' \| 'Focused' \| 'Error' \| 'Disabled'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
 | `onChange` | `(value: string) => void` | — |  |
 
 **Accessibility** — role `textbox`, keyboard operable. Each box has an aria-label "Digit N"; aria-invalid reflects the error state; Backspace moves focus to the previous box; paste distributes digits.
@@ -555,9 +569,9 @@ import { Card } from '@inspera/kit'
 | `title` | `string` | `'Card title'` |  |
 | `body` | `string` | `'Group related content in a contained surface using consistent padding and elevation.'` |  |
 | `elevation` | `'Flat' \| 'Raised' \| 'Outlined'` | `'Raised'` | Surface treatment. Values: Flat \| Raised \| Outlined. |
-| `padding` | `'Default' \| 'Compact' \| 'Spacious'` | `'Default'` | Internal padding (12 / 16 / 24). Values: Compact \| Default \| Spacious. |
+| `padding` | `'Compact' \| 'Default' \| 'Spacious'` | `'Default'` | Internal padding (12 / 16 / 24). Values: Compact \| Default \| Spacious. |
 | `interactive` | `boolean` | `false` | Renders as a focusable button with hover elevation. Values: true \| false. |
-| `children` | `string \| number \| bigint \| boolean \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> \| Iterable<ReactNode> \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal \| Promise<string \| number \| bigint \| boolean \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> \| Iterable<ReactNode> \| null \| undefined> \| null` | — |  |
+| `children` | `ReactNode` | — |  |
 | `onClick` | `() => void` | — |  |
 
 **Accessibility** — role `article`, keyboard operable. Interactive cards should use role="button" or be wrapped in an anchor; Non-interactive cards use role="article" or a semantic section.
@@ -584,7 +598,7 @@ import { Badge } from '@inspera/kit'
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `label` | `string` | `'Badge'` |  |
-| `intent` | `'Info' \| 'Success' \| 'Warning' \| 'Error' \| 'Neutral'` | `'Neutral'` | Semantic color. Values: Neutral \| Info \| Success \| Warning \| Error. |
+| `intent` | `'Neutral' \| 'Info' \| 'Success' \| 'Warning' \| 'Error'` | `'Neutral'` | Semantic color. Values: Neutral \| Info \| Success \| Warning \| Error. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Height 20 / 24. Values: Small \| Medium. |
 | `withIcon` | `boolean` | `false` | Show a leading status icon. Values: true \| false. |
 | `icon` | `string` | — |  |
@@ -646,12 +660,21 @@ import { Table } from '@inspera/kit'
 | --- | --- | --- | --- |
 | `columns` | `TableColumn[]` | `defaultColumns` | Column definitions. |
 | `rows` | `Record<string, ReactNode>[]` | `defaultRows` | Row data keyed by column. |
-| `size` | `'Default' \| 'Compact'` | `'Default'` | Row height density. Values: Compact \| Default. |
+| `size` | `'Compact' \| 'Default'` | `'Default'` | Row height density. Values: Compact \| Default. |
 | `striped` | `boolean` | `false` | Zebra-stripe rows. Values: true \| false. |
 | `hoverable` | `boolean` | `true` | Highlight rows on hover. Values: true \| false. |
 | `selectable` | `boolean` | `false` | Add a row selection column. Values: true \| false. |
 | `caption` | `string` | — |  |
 | `onRowClick` | `(row: Record<string, ReactNode>, index: number) => void` | — |  |
+
+```ts
+export interface TableColumn {
+  key: string
+  header: string
+  align?: 'left' | 'right' | 'center'
+  width?: string | number
+}
+```
 
 **Accessibility** — role `table`, keyboard operable. Use semantic table / thead / tbody markup; Header cells use scope="col"; Provide a caption or aria-label describing the table.
 
@@ -682,6 +705,13 @@ import { Accordion } from '@inspera/kit'
 | `defaultOpenIndex` | `number` | `0` | Initially open section. |
 | `iconPosition` | `'Left' \| 'Right'` | `'Right'` | Chevron placement. Values: Left \| Right. |
 
+```ts
+export interface AccordionItem {
+  title: string
+  content: ReactNode
+}
+```
+
 **Accessibility** — role `region`, keyboard operable. Header is a button with aria-expanded and aria-controls; Panel uses role="region" linked via aria-labelledby; Enter / Space toggle the section.
 
 **Do:** Use to progressively disclose content; Keep section titles scannable; Use Single mode when only one section is relevant at a time.
@@ -708,7 +738,7 @@ import { Tag } from '@inspera/kit'
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `label` **(required)** | `string` | — | Tag text. |
-| `intent` | `'Info' \| 'Success' \| 'Warning' \| 'Error' \| 'Neutral'` | `'Neutral'` | Semantic color. Values: Neutral \| Info \| Success \| Warning \| Error. |
+| `intent` | `'Neutral' \| 'Info' \| 'Success' \| 'Warning' \| 'Error'` | `'Neutral'` | Semantic color. Values: Neutral \| Info \| Success \| Warning \| Error. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Tag height. Values: Small \| Medium. |
 | `removable` | `boolean` | `false` | Show a remove affordance. Values: true \| false. |
 | `leadingIcon` | `string` | — | Optional leading icon. |
@@ -738,9 +768,9 @@ import { Divider } from '@inspera/kit'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `orientation` | `'Vertical' \| 'Horizontal'` | `'Horizontal'` | Divider direction. Values: Horizontal \| Vertical. |
+| `orientation` | `'Horizontal' \| 'Vertical'` | `'Horizontal'` | Divider direction. Values: Horizontal \| Vertical. |
 | `label` | `string` | — | Optional centered label (horizontal only). |
-| `spacing` | `'Default' \| 'Compact' \| 'Spacious'` | `'Default'` | Surrounding margin. Values: Compact \| Default \| Spacious. |
+| `spacing` | `'Compact' \| 'Default' \| 'Spacious'` | `'Default'` | Surrounding margin. Values: Compact \| Default \| Spacious. |
 
 **Accessibility** — role `separator`. Use role="separator" with aria-orientation; Purely decorative dividers may be aria-hidden.
 
@@ -801,7 +831,14 @@ import { AvatarGroup } from '@inspera/kit'
 | --- | --- | --- | --- |
 | `avatars` | `AvatarGroupItem[]` | `defaultAvatars` | Avatars to display. |
 | `max` | `number` | `4` | Maximum shown before overflow. |
-| `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Avatar diameter. Values: Small \| Medium \| Large. |
+| `size` | `AvatarSize` | `'Medium'` | Avatar diameter. Values: Small \| Medium \| Large. |
+
+```ts
+export interface AvatarGroupItem {
+  content?: AvatarContent
+  name?: string
+}
+```
 
 **Accessibility** — role `group`. Wrap in a group with an aria-label describing the set; Each avatar keeps its own accessible label; The overflow chip states the hidden count.
 
@@ -864,8 +901,17 @@ import { List } from '@inspera/kit'
 | `items` | `ListItem[]` | `defaultItems` | List rows. |
 | `divided` | `boolean` | `true` | Show dividers between rows. Values: true \| false. |
 | `interactive` | `boolean` | `false` | Make rows clickable. Values: true \| false. |
-| `size` | `'Default' \| 'Compact'` | `'Default'` | Row density. Values: Compact \| Default. |
+| `size` | `'Compact' \| 'Default'` | `'Default'` | Row density. Values: Compact \| Default. |
 | `onItemClick` | `(item: ListItem, index: number) => void` | — |  |
+
+```ts
+export interface ListItem {
+  primary: string
+  secondary?: string
+  leading?: ReactNode
+  trailing?: ReactNode
+}
+```
 
 **Accessibility** — role `list`, keyboard operable. Use semantic list markup (ul / li); Interactive rows are buttons and keyboard focusable; Provide meaningful text for each item.
 
@@ -931,7 +977,7 @@ import { Dialog } from '@inspera/kit'
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `title` | `string` | `'Dialog title'` |  |
-| `body` | `string \| number \| bigint \| boolean \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> \| Iterable<ReactNode> \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal \| Promise<string \| number \| bigint \| boolean \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> \| Iterable<ReactNode> \| null \| undefined> \| null` | `'This is the dialog body. Provide context or a clear description of the action the user is about to take.'` |  |
+| `body` | `ReactNode` | `'This is the dialog body. Provide context or a clear description of the action the user is about to take.'` |  |
 | `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Panel width 400 / 480 / 560. Values: Small \| Medium \| Large. |
 | `hasCloseButton` | `boolean` | `true` | Show the header close affordance. Values: true \| false. |
 | `hasActions` | `boolean` | `true` | Show the footer action buttons. Values: true \| false. |
@@ -968,7 +1014,7 @@ import { Snackbar } from '@inspera/kit'
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `message` | `string` | `'Assessment saved successfully.'` |  |
-| `intent` | `'Info' \| 'Success' \| 'Warning' \| 'Error' \| 'Neutral'` | `'Neutral'` | Accent icon color. Values: Neutral \| Info \| Success \| Warning \| Error. |
+| `intent` | `'Neutral' \| 'Info' \| 'Success' \| 'Warning' \| 'Error'` | `'Neutral'` | Accent icon color. Values: Neutral \| Info \| Success \| Warning \| Error. |
 | `hasAction` | `boolean` | `false` | Show an inline action (e.g. Undo). Values: true \| false. |
 | `hasClose` | `boolean` | `true` | Show the dismiss button. Values: true \| false. |
 | `actionLabel` | `string` | `'Undo'` |  |
@@ -1003,10 +1049,10 @@ import { Tooltip } from '@inspera/kit'
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `content` | `string` | `'Supplementary help text'` |  |
-| `placement` | `'Left' \| 'Right' \| 'Bottom' \| 'Top'` | `'Top'` | Position relative to the trigger. Values: Top \| Bottom \| Left \| Right. |
+| `placement` | `'Top' \| 'Bottom' \| 'Left' \| 'Right'` | `'Top'` | Position relative to the trigger. Values: Top \| Bottom \| Left \| Right. |
 | `theme` | `'Light' \| 'Dark'` | `'Dark'` | Surface color. Values: Light \| Dark. |
 | `type` | `'Default' \| 'Accessibility'` | `'Default'` | Accessibility type uses larger text. Values: Default \| Accessibility. |
-| `children` | `string \| number \| bigint \| boolean \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> \| Iterable<ReactNode> \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal \| Promise<string \| number \| bigint \| boolean \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> \| Iterable<ReactNode> \| null \| undefined> \| null` | — |  |
+| `children` | `ReactNode` | — |  |
 | `forceVisible` | `boolean` | `false` | Keep the tooltip visible regardless of hover — used for documentation. |
 
 **Accessibility** — role `tooltip`, keyboard operable. Use role="tooltip" on the tooltip element; Link trigger and tooltip with aria-describedby; Escape key dismisses the tooltip; Tooltip must not contain interactive content.
@@ -1040,7 +1086,7 @@ import { Progress } from '@inspera/kit'
 | `value` | `number` | `60` | Completion percentage 0–100. Ignored when indeterminate. |
 | `indeterminate` | `boolean` | `false` | Unknown-duration animation. Values: true \| false. |
 | `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Bar height / ring diameter. Values: Small \| Medium \| Large. |
-| `intent` | `'Success' \| 'Warning' \| 'Error' \| 'Primary'` | `'Primary'` | Fill color. Values: Primary \| Success \| Warning \| Error. |
+| `intent` | `'Primary' \| 'Success' \| 'Warning' \| 'Error'` | `'Primary'` | Fill color. Values: Primary \| Success \| Warning \| Error. |
 | `showValue` | `boolean` | `false` | Render the percentage. Values: true \| false. |
 
 **Accessibility** — role `progressbar`. Use role="progressbar" with aria-valuenow / min / max; Omit aria-valuenow when indeterminate; Provide an accessible label for the task.
@@ -1068,7 +1114,7 @@ import { Spinner } from '@inspera/kit'
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Diameter 16 / 24 / 40. Values: Small \| Medium \| Large. |
-| `intent` | `'Neutral' \| 'Primary' \| 'Inverse'` | `'Primary'` | Arc color. Values: Primary \| Neutral \| Inverse. |
+| `intent` | `'Primary' \| 'Neutral' \| 'Inverse'` | `'Primary'` | Arc color. Values: Primary \| Neutral \| Inverse. |
 | `label` | `string` | `'Loading'` | Accessible label. |
 
 **Accessibility** — role `status`. Use role="status" with aria-live="polite"; Provide an accessible label via aria-label; Include visually-hidden loading text.
@@ -1125,10 +1171,10 @@ import { Popover } from '@inspera/kit'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `trigger` | `string \| number \| bigint \| boolean \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> \| Iterable<ReactNode> \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal \| Promise<string \| number \| bigint \| boolean \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> \| Iterable<ReactNode> \| null \| undefined> \| null` | — | Element that toggles the popover. |
+| `trigger` | `ReactNode` | — | Element that toggles the popover. |
 | `title` | `string` | `'Popover title'` | Optional panel heading. |
-| `content` | `string \| number \| bigint \| boolean \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> \| Iterable<ReactNode> \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal \| Promise<string \| number \| bigint \| boolean \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> \| Iterable<ReactNode> \| null \| undefined> \| null` | `'Popover content with interactive elements.'` | Popover body content. |
-| `placement` | `'Left' \| 'Right' \| 'Bottom' \| 'Top'` | `'Bottom'` | Position relative to the trigger. Values: Top \| Bottom \| Left \| Right. |
+| `content` | `ReactNode` | `'Popover content with interactive elements.'` | Popover body content. |
+| `placement` | `'Top' \| 'Bottom' \| 'Left' \| 'Right'` | `'Bottom'` | Position relative to the trigger. Values: Top \| Bottom \| Left \| Right. |
 | `open` | `boolean` | — |  |
 | `defaultOpen` | `boolean` | `false` | Open on mount. Values: true \| false. |
 | `forceVisible` | `boolean` | `false` | Keep the panel visible regardless of state — used for documentation. |
@@ -1164,11 +1210,11 @@ import { Drawer } from '@inspera/kit'
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `open` | `boolean` | `false` | Visibility. Values: true \| false. |
-| `side` | `'Left' \| 'Right' \| 'Bottom'` | `'Right'` | Edge it slides from. Values: Right \| Left \| Bottom. |
+| `side` | `'Right' \| 'Left' \| 'Bottom'` | `'Right'` | Edge it slides from. Values: Right \| Left \| Bottom. |
 | `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Panel width / height. Values: Small \| Medium \| Large. |
 | `title` | `string` | `'Panel'` | Header title. |
 | `hasCloseButton` | `boolean` | `true` | Show the close affordance. Values: true \| false. |
-| `children` | `string \| number \| bigint \| boolean \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> \| Iterable<ReactNode> \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal \| Promise<string \| number \| bigint \| boolean \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> \| Iterable<ReactNode> \| null \| undefined> \| null` | — |  |
+| `children` | `ReactNode` | — |  |
 | `embedded` | `boolean` | `false` | Render just the panel inline (no overlay/scrim) — used for documentation previews. |
 | `onClose` | `() => void` | — |  |
 
@@ -1205,6 +1251,13 @@ import { Tabs } from '@inspera/kit'
 | `fullWidth` | `boolean` | `false` | Stretch tabs to fill the row. Values: true \| false. |
 | `value` | `number` | — |  |
 | `onChange` | `(index: number) => void` | — |  |
+
+```ts
+export interface TabItem {
+  label: string
+  icon?: string
+}
+```
 
 **Accessibility** — role `tablist`, keyboard operable. Use role="tablist" on the tab container; Each tab uses role="tab" with aria-selected; Tab panels use role="tabpanel" linked by aria-labelledby; Arrow keys navigate between tabs.
 
@@ -1301,6 +1354,16 @@ import { Menu } from '@inspera/kit'
 | `forceVisible` | `boolean` | `false` | Always render the open menu, for documentation. |
 | `onSelect` | `(label: string) => void` | — |  |
 
+```ts
+export interface MenuItem {
+  label: string
+  icon?: string
+  danger?: boolean
+  disabled?: boolean
+  divider?: boolean
+}
+```
+
 **Accessibility** — role `menu`, keyboard operable. Trigger uses aria-haspopup="menu" and aria-expanded; Items use role="menuitem"; Arrow keys move, Enter selects, Escape closes; Outside click closes the menu.
 
 **Do:** Use for grouped actions and overflow; Separate destructive actions with a divider; Keep item labels action-oriented.
@@ -1327,8 +1390,15 @@ import { Stepper } from '@inspera/kit'
 | --- | --- | --- | --- |
 | `steps` | `Step[]` | `defaultSteps` | Ordered steps. |
 | `activeStep` | `number` | `1` | Zero-based index of the current step. |
-| `orientation` | `'Vertical' \| 'Horizontal'` | `'Horizontal'` | Layout direction. Values: Horizontal \| Vertical. |
+| `orientation` | `'Horizontal' \| 'Vertical'` | `'Horizontal'` | Layout direction. Values: Horizontal \| Vertical. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Indicator size. Values: Small \| Medium. |
+
+```ts
+export interface Step {
+  label: string
+  description?: string
+}
+```
 
 **Accessibility** — role `list`. Use an ordered list for step semantics; Mark the current step with aria-current="step"; Convey completion with an icon, not color alone.
 
@@ -1356,12 +1426,12 @@ import { Link } from '@inspera/kit'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `children` | `string \| number \| bigint \| boolean \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> \| Iterable<ReactNode> \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal \| Promise<string \| number \| bigint \| boolean \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> \| Iterable<ReactNode> \| null \| undefined> \| null` | — |  |
+| `children` | `ReactNode` | — |  |
 | `label` | `string` | `'Learn more'` |  |
 | `href` | `string` | `'#'` |  |
 | `intent` | `'Default' \| 'Muted'` | `'Default'` | Color emphasis. Values: Default \| Muted. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Text size. Values: Small \| Medium. |
-| `underline` | `'None' \| 'Hover' \| 'Always'` | `'Hover'` | Underline behavior. Values: Always \| Hover \| None. |
+| `underline` | `'Always' \| 'Hover' \| 'None'` | `'Hover'` | Underline behavior. Values: Always \| Hover \| None. |
 | `external` | `boolean` | `false` | Open in a new tab with an icon. Values: true \| false. |
 | `disabled` | `boolean` | `false` | Non-interactive state. Values: true \| false. |
 | `leadingIcon` | `string` | — |  |

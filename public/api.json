@@ -19,7 +19,7 @@
         },
         {
           "name": "intent",
-          "type": "'Success' | 'Warning' | 'Primary' | 'Secondary' | 'Outline' | 'Text' | 'Destructive'",
+          "type": "'Primary' | 'Secondary' | 'Outline' | 'Text' | 'Success' | 'Warning' | 'Destructive'",
           "required": false,
           "default": "'Primary'",
           "description": "Visual role / semantic weight. Values: Primary | Secondary | Outline | Text | Success | Warning | Destructive."
@@ -57,6 +57,7 @@
           "required": false
         }
       ],
+      "relatedTypes": {},
       "accessibility": {
         "role": "button",
         "keyboard": true,
@@ -111,7 +112,7 @@
         },
         {
           "name": "state",
-          "type": "'Error' | 'Default' | 'Hover' | 'Focused' | 'Disabled' | 'Filled' | 'ReadOnly'",
+          "type": "'Default' | 'Hover' | 'Focused' | 'Disabled' | 'Error' | 'Filled' | 'ReadOnly'",
           "required": false,
           "default": "'Default'",
           "description": "Forces a visual state for documentation. Omit for real interactivity."
@@ -159,6 +160,7 @@
           "required": false
         }
       ],
+      "relatedTypes": {},
       "accessibility": {
         "role": "textbox",
         "keyboard": true,
@@ -206,7 +208,7 @@
         },
         {
           "name": "state",
-          "type": "'Error' | 'Default' | 'Hover' | 'Focused' | 'Pressed' | 'Disabled'",
+          "type": "'Default' | 'Hover' | 'Focused' | 'Pressed' | 'Disabled' | 'Error'",
           "required": false,
           "default": "'Default'",
           "description": "Forces a visual state for documentation. Omit for real interactivity."
@@ -231,6 +233,7 @@
           "required": false
         }
       ],
+      "relatedTypes": {},
       "accessibility": {
         "role": "checkbox",
         "keyboard": true,
@@ -285,7 +288,7 @@
         },
         {
           "name": "state",
-          "type": "'Error' | 'Default' | 'Hover' | 'Focused' | 'Pressed' | 'Disabled'",
+          "type": "'Default' | 'Hover' | 'Focused' | 'Pressed' | 'Disabled' | 'Error'",
           "required": false,
           "default": "'Default'",
           "description": "Forces a visual state for documentation. Omit for real interactivity."
@@ -303,6 +306,7 @@
           "required": false
         }
       ],
+      "relatedTypes": {},
       "accessibility": {
         "role": "radio",
         "keyboard": true,
@@ -365,7 +369,7 @@
         },
         {
           "name": "state",
-          "type": "'Error' | 'Default' | 'Hover' | 'Focused' | 'Disabled' | 'Open'",
+          "type": "'Default' | 'Hover' | 'Focused' | 'Disabled' | 'Error' | 'Open'",
           "required": false,
           "default": "'Default'",
           "description": "Forces a visual state for documentation. Omit for real interactivity."
@@ -396,6 +400,7 @@
           "required": false
         }
       ],
+      "relatedTypes": {},
       "accessibility": {
         "role": "combobox",
         "keyboard": true,
@@ -469,6 +474,7 @@
           "required": false
         }
       ],
+      "relatedTypes": {},
       "accessibility": {
         "role": "switch",
         "keyboard": true,
@@ -522,7 +528,7 @@
         },
         {
           "name": "padding",
-          "type": "'Default' | 'Compact' | 'Spacious'",
+          "type": "'Compact' | 'Default' | 'Spacious'",
           "required": false,
           "default": "'Default'",
           "description": "Internal padding (12 / 16 / 24). Values: Compact | Default | Spacious."
@@ -536,7 +542,7 @@
         },
         {
           "name": "children",
-          "type": "string | number | bigint | boolean | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> | Iterable<ReactNode> | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal | Promise<string | number | bigint | boolean | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null",
+          "type": "ReactNode",
           "required": false
         },
         {
@@ -545,6 +551,7 @@
           "required": false
         }
       ],
+      "relatedTypes": {},
       "accessibility": {
         "role": "article",
         "keyboard": true,
@@ -581,7 +588,7 @@
         },
         {
           "name": "intent",
-          "type": "'Info' | 'Success' | 'Warning' | 'Error' | 'Neutral'",
+          "type": "'Neutral' | 'Info' | 'Success' | 'Warning' | 'Error'",
           "required": false,
           "default": "'Neutral'",
           "description": "Semantic color. Values: Neutral | Info | Success | Warning | Error."
@@ -606,6 +613,7 @@
           "required": false
         }
       ],
+      "relatedTypes": {},
       "accessibility": {
         "role": "status",
         "keyboard": false,
@@ -684,6 +692,7 @@
           "default": "'person'"
         }
       ],
+      "relatedTypes": {},
       "accessibility": {
         "role": "img",
         "keyboard": false,
@@ -762,6 +771,7 @@
           "required": false
         }
       ],
+      "relatedTypes": {},
       "accessibility": {
         "role": "alert",
         "keyboard": true,
@@ -799,7 +809,7 @@
         },
         {
           "name": "body",
-          "type": "string | number | bigint | boolean | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> | Iterable<ReactNode> | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal | Promise<string | number | bigint | boolean | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null",
+          "type": "ReactNode",
           "required": false,
           "default": "'This is the dialog body. Provide context or a clear description of the action the user is about to take.'"
         },
@@ -860,6 +870,7 @@
           "required": false
         }
       ],
+      "relatedTypes": {},
       "accessibility": {
         "role": "dialog",
         "keyboard": true,
@@ -902,7 +913,7 @@
         },
         {
           "name": "intent",
-          "type": "'Info' | 'Success' | 'Warning' | 'Error' | 'Neutral'",
+          "type": "'Neutral' | 'Info' | 'Success' | 'Warning' | 'Error'",
           "required": false,
           "default": "'Neutral'",
           "description": "Accent icon color. Values: Neutral | Info | Success | Warning | Error."
@@ -938,6 +949,7 @@
           "required": false
         }
       ],
+      "relatedTypes": {},
       "accessibility": {
         "role": "status",
         "keyboard": true,
@@ -978,7 +990,7 @@
         },
         {
           "name": "placement",
-          "type": "'Left' | 'Right' | 'Bottom' | 'Top'",
+          "type": "'Top' | 'Bottom' | 'Left' | 'Right'",
           "required": false,
           "default": "'Top'",
           "description": "Position relative to the trigger. Values: Top | Bottom | Left | Right."
@@ -999,7 +1011,7 @@
         },
         {
           "name": "children",
-          "type": "string | number | bigint | boolean | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> | Iterable<ReactNode> | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal | Promise<string | number | bigint | boolean | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null",
+          "type": "ReactNode",
           "required": false
         },
         {
@@ -1010,6 +1022,7 @@
           "description": "Keep the tooltip visible regardless of hover — used for documentation."
         }
       ],
+      "relatedTypes": {},
       "accessibility": {
         "role": "tooltip",
         "keyboard": true,
@@ -1082,6 +1095,9 @@
           "required": false
         }
       ],
+      "relatedTypes": {
+        "TabItem": "export interface TabItem {\n  label: string\n  icon?: string\n}"
+      },
       "accessibility": {
         "role": "tablist",
         "keyboard": true,
@@ -1141,6 +1157,7 @@
           "required": false
         }
       ],
+      "relatedTypes": {},
       "accessibility": {
         "role": "navigation",
         "keyboard": true,
@@ -1206,7 +1223,7 @@
         },
         {
           "name": "state",
-          "type": "'Error' | 'Default' | 'Hover' | 'Focused' | 'Disabled' | 'Filled' | 'ReadOnly'",
+          "type": "'Default' | 'Hover' | 'Focused' | 'Filled' | 'Error' | 'Disabled' | 'ReadOnly'",
           "required": false,
           "default": "'Default'",
           "description": "Forces a visual state for documentation. Omit for real interactivity."
@@ -1247,6 +1264,7 @@
           "required": false
         }
       ],
+      "relatedTypes": {},
       "accessibility": {
         "role": "textbox",
         "keyboard": true,
@@ -1313,10 +1331,11 @@
         },
         {
           "name": "children",
-          "type": "string | number | bigint | boolean | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> | Iterable<ReactNode> | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal | Promise<string | number | bigint | boolean | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null",
+          "type": "ReactNode",
           "required": true
         }
       ],
+      "relatedTypes": {},
       "accessibility": {
         "role": "group",
         "keyboard": true,
@@ -1408,6 +1427,7 @@
           "required": false
         }
       ],
+      "relatedTypes": {},
       "accessibility": {
         "role": "slider",
         "keyboard": true,
@@ -1473,6 +1493,7 @@
           "required": false
         }
       ],
+      "relatedTypes": {},
       "accessibility": {
         "role": "radiogroup",
         "keyboard": true,
@@ -1527,7 +1548,7 @@
         },
         {
           "name": "state",
-          "type": "'Error' | 'Default' | 'Focused' | 'Disabled'",
+          "type": "'Default' | 'Focused' | 'Disabled' | 'Error'",
           "required": false,
           "default": "'Default'",
           "description": "Forces a visual state for documentation. Omit for real interactivity."
@@ -1552,6 +1573,7 @@
           "required": false
         }
       ],
+      "relatedTypes": {},
       "accessibility": {
         "role": "dialog",
         "keyboard": true,
@@ -1606,7 +1628,7 @@
         },
         {
           "name": "state",
-          "type": "'Error' | 'Default' | 'Disabled' | 'Dragging'",
+          "type": "'Default' | 'Dragging' | 'Disabled' | 'Error'",
           "required": false,
           "default": "'Default'",
           "description": "Forces a visual state for documentation. Omit for real interactivity."
@@ -1624,6 +1646,7 @@
           "required": false
         }
       ],
+      "relatedTypes": {},
       "accessibility": {
         "role": "button",
         "keyboard": true,
@@ -1690,7 +1713,7 @@
         },
         {
           "name": "state",
-          "type": "'Error' | 'Default' | 'Disabled'",
+          "type": "'Default' | 'Disabled' | 'Error'",
           "required": false,
           "default": "'Default'",
           "description": "Forces a visual state for documentation. Omit for real interactivity."
@@ -1701,6 +1724,9 @@
           "required": false
         }
       ],
+      "relatedTypes": {
+        "RadioOption": "export interface RadioOption {\n  label: string\n  value: string\n}"
+      },
       "accessibility": {
         "role": "radiogroup",
         "keyboard": true,
@@ -1760,7 +1786,7 @@
         },
         {
           "name": "state",
-          "type": "'Error' | 'Default' | 'Disabled'",
+          "type": "'Default' | 'Disabled' | 'Error'",
           "required": false,
           "default": "'Default'",
           "description": "Forces a visual state for documentation. Omit for real interactivity."
@@ -1771,6 +1797,9 @@
           "required": false
         }
       ],
+      "relatedTypes": {
+        "CheckboxOption": "export interface CheckboxOption {\n  label: string\n  value: string\n}"
+      },
       "accessibility": {
         "role": "group",
         "keyboard": true,
@@ -1844,6 +1873,7 @@
           "required": false
         }
       ],
+      "relatedTypes": {},
       "accessibility": {
         "role": "radiogroup",
         "keyboard": true,
@@ -1891,7 +1921,7 @@
         },
         {
           "name": "state",
-          "type": "'Error' | 'Default' | 'Focused' | 'Disabled'",
+          "type": "'Default' | 'Focused' | 'Error' | 'Disabled'",
           "required": false,
           "default": "'Default'",
           "description": "Forces a visual state for documentation. Omit for real interactivity."
@@ -1902,6 +1932,7 @@
           "required": false
         }
       ],
+      "relatedTypes": {},
       "accessibility": {
         "role": "textbox",
         "keyboard": true,
@@ -1951,7 +1982,7 @@
         },
         {
           "name": "size",
-          "type": "'Default' | 'Compact'",
+          "type": "'Compact' | 'Default'",
           "required": false,
           "default": "'Default'",
           "description": "Row height density. Values: Compact | Default."
@@ -1988,6 +2019,9 @@
           "required": false
         }
       ],
+      "relatedTypes": {
+        "TableColumn": "export interface TableColumn {\n  key: string\n  header: string\n  align?: 'left' | 'right' | 'center'\n  width?: string | number\n}"
+      },
       "accessibility": {
         "role": "table",
         "keyboard": true,
@@ -2050,6 +2084,9 @@
           "description": "Chevron placement. Values: Left | Right."
         }
       ],
+      "relatedTypes": {
+        "AccordionItem": "export interface AccordionItem {\n  title: string\n  content: ReactNode\n}"
+      },
       "accessibility": {
         "role": "region",
         "keyboard": true,
@@ -2091,7 +2128,7 @@
         },
         {
           "name": "intent",
-          "type": "'Info' | 'Success' | 'Warning' | 'Error' | 'Neutral'",
+          "type": "'Neutral' | 'Info' | 'Success' | 'Warning' | 'Error'",
           "required": false,
           "default": "'Neutral'",
           "description": "Semantic color. Values: Neutral | Info | Success | Warning | Error."
@@ -2127,6 +2164,7 @@
           "required": false
         }
       ],
+      "relatedTypes": {},
       "accessibility": {
         "role": "status",
         "keyboard": true,
@@ -2162,7 +2200,7 @@
       "props": [
         {
           "name": "orientation",
-          "type": "'Vertical' | 'Horizontal'",
+          "type": "'Horizontal' | 'Vertical'",
           "required": false,
           "default": "'Horizontal'",
           "description": "Divider direction. Values: Horizontal | Vertical."
@@ -2175,12 +2213,13 @@
         },
         {
           "name": "spacing",
-          "type": "'Default' | 'Compact' | 'Spacious'",
+          "type": "'Compact' | 'Default' | 'Spacious'",
           "required": false,
           "default": "'Default'",
           "description": "Surrounding margin. Values: Compact | Default | Spacious."
         }
       ],
+      "relatedTypes": {},
       "accessibility": {
         "role": "separator",
         "keyboard": false,
@@ -2253,6 +2292,7 @@
           "description": "Overall scale. Values: Small | Medium."
         }
       ],
+      "relatedTypes": {},
       "accessibility": {
         "role": "status",
         "keyboard": true,
@@ -2302,12 +2342,15 @@
         },
         {
           "name": "size",
-          "type": "'Small' | 'Medium' | 'Large'",
+          "type": "AvatarSize",
           "required": false,
           "default": "'Medium'",
           "description": "Avatar diameter. Values: Small | Medium | Large."
         }
       ],
+      "relatedTypes": {
+        "AvatarGroupItem": "export interface AvatarGroupItem {\n  content?: AvatarContent\n  name?: string\n}"
+      },
       "accessibility": {
         "role": "group",
         "keyboard": false,
@@ -2380,6 +2423,7 @@
           "required": false
         }
       ],
+      "relatedTypes": {},
       "accessibility": {
         "role": "group",
         "keyboard": false,
@@ -2436,7 +2480,7 @@
         },
         {
           "name": "size",
-          "type": "'Default' | 'Compact'",
+          "type": "'Compact' | 'Default'",
           "required": false,
           "default": "'Default'",
           "description": "Row density. Values: Compact | Default."
@@ -2447,6 +2491,9 @@
           "required": false
         }
       ],
+      "relatedTypes": {
+        "ListItem": "export interface ListItem {\n  primary: string\n  secondary?: string\n  leading?: ReactNode\n  trailing?: ReactNode\n}"
+      },
       "accessibility": {
         "role": "list",
         "keyboard": true,
@@ -2509,7 +2556,7 @@
         },
         {
           "name": "intent",
-          "type": "'Success' | 'Warning' | 'Error' | 'Primary'",
+          "type": "'Primary' | 'Success' | 'Warning' | 'Error'",
           "required": false,
           "default": "'Primary'",
           "description": "Fill color. Values: Primary | Success | Warning | Error."
@@ -2522,6 +2569,7 @@
           "description": "Render the percentage. Values: true | false."
         }
       ],
+      "relatedTypes": {},
       "accessibility": {
         "role": "progressbar",
         "keyboard": false,
@@ -2564,7 +2612,7 @@
         },
         {
           "name": "intent",
-          "type": "'Neutral' | 'Primary' | 'Inverse'",
+          "type": "'Primary' | 'Neutral' | 'Inverse'",
           "required": false,
           "default": "'Primary'",
           "description": "Arc color. Values: Primary | Neutral | Inverse."
@@ -2577,6 +2625,7 @@
           "description": "Accessible label."
         }
       ],
+      "relatedTypes": {},
       "accessibility": {
         "role": "status",
         "keyboard": false,
@@ -2642,6 +2691,7 @@
           "required": false
         }
       ],
+      "relatedTypes": {},
       "accessibility": {
         "role": "presentation",
         "keyboard": false,
@@ -2677,7 +2727,7 @@
       "props": [
         {
           "name": "trigger",
-          "type": "string | number | bigint | boolean | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> | Iterable<ReactNode> | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal | Promise<string | number | bigint | boolean | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null",
+          "type": "ReactNode",
           "required": false,
           "description": "Element that toggles the popover."
         },
@@ -2690,14 +2740,14 @@
         },
         {
           "name": "content",
-          "type": "string | number | bigint | boolean | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> | Iterable<ReactNode> | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal | Promise<string | number | bigint | boolean | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null",
+          "type": "ReactNode",
           "required": false,
           "default": "'Popover content with interactive elements.'",
           "description": "Popover body content."
         },
         {
           "name": "placement",
-          "type": "'Left' | 'Right' | 'Bottom' | 'Top'",
+          "type": "'Top' | 'Bottom' | 'Left' | 'Right'",
           "required": false,
           "default": "'Bottom'",
           "description": "Position relative to the trigger. Values: Top | Bottom | Left | Right."
@@ -2727,6 +2777,7 @@
           "required": false
         }
       ],
+      "relatedTypes": {},
       "accessibility": {
         "role": "dialog",
         "keyboard": true,
@@ -2769,7 +2820,7 @@
         },
         {
           "name": "side",
-          "type": "'Left' | 'Right' | 'Bottom'",
+          "type": "'Right' | 'Left' | 'Bottom'",
           "required": false,
           "default": "'Right'",
           "description": "Edge it slides from. Values: Right | Left | Bottom."
@@ -2797,7 +2848,7 @@
         },
         {
           "name": "children",
-          "type": "string | number | bigint | boolean | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> | Iterable<ReactNode> | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal | Promise<string | number | bigint | boolean | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null",
+          "type": "ReactNode",
           "required": false
         },
         {
@@ -2813,6 +2864,7 @@
           "required": false
         }
       ],
+      "relatedTypes": {},
       "accessibility": {
         "role": "dialog",
         "keyboard": true,
@@ -2888,6 +2940,7 @@
           "required": false
         }
       ],
+      "relatedTypes": {},
       "accessibility": {
         "role": "navigation",
         "keyboard": true,
@@ -2966,6 +3019,9 @@
           "required": false
         }
       ],
+      "relatedTypes": {
+        "MenuItem": "export interface MenuItem {\n  label: string\n  icon?: string\n  danger?: boolean\n  disabled?: boolean\n  divider?: boolean\n}"
+      },
       "accessibility": {
         "role": "menu",
         "keyboard": true,
@@ -3017,7 +3073,7 @@
         },
         {
           "name": "orientation",
-          "type": "'Vertical' | 'Horizontal'",
+          "type": "'Horizontal' | 'Vertical'",
           "required": false,
           "default": "'Horizontal'",
           "description": "Layout direction. Values: Horizontal | Vertical."
@@ -3030,6 +3086,9 @@
           "description": "Indicator size. Values: Small | Medium."
         }
       ],
+      "relatedTypes": {
+        "Step": "export interface Step {\n  label: string\n  description?: string\n}"
+      },
       "accessibility": {
         "role": "list",
         "keyboard": false,
@@ -3065,7 +3124,7 @@
       "props": [
         {
           "name": "children",
-          "type": "string | number | bigint | boolean | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> | Iterable<ReactNode> | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal | Promise<string | number | bigint | boolean | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null",
+          "type": "ReactNode",
           "required": false
         },
         {
@@ -3096,7 +3155,7 @@
         },
         {
           "name": "underline",
-          "type": "'None' | 'Hover' | 'Always'",
+          "type": "'Always' | 'Hover' | 'None'",
           "required": false,
           "default": "'Hover'",
           "description": "Underline behavior. Values: Always | Hover | None."
@@ -3131,6 +3190,7 @@
           "required": false
         }
       ],
+      "relatedTypes": {},
       "accessibility": {
         "role": "link",
         "keyboard": true,

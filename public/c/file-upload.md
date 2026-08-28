@@ -31,7 +31,7 @@ import { FileUpload } from '@inspera/components'
 | `label` | `string` | `'Upload files'` |  |
 | `accept` | `string` | — | Accepted MIME types / extensions. |
 | `multiple` | `boolean` | `false` | Allow multiple files. Values: true \| false. |
-| `state` | `'Error' \| 'Default' \| 'Disabled' \| 'Dragging'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
+| `state` | `'Default' \| 'Dragging' \| 'Disabled' \| 'Error'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
 | `helpText` | `string` | `'PNG, JPG or PDF up to 10MB'` | Constraint hint text. |
 | `onFiles` | `(files: File[]) => void` | — |  |
 

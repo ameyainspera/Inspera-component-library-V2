@@ -32,6 +32,13 @@ import { Accordion } from '@inspera/components'
 | `defaultOpenIndex` | `number` | `0` | Initially open section. |
 | `iconPosition` | `'Left' \| 'Right'` | `'Right'` | Chevron placement. Values: Left \| Right. |
 
+```ts
+export interface AccordionItem {
+  title: string
+  content: ReactNode
+}
+```
+
 **Accessibility** — role `region`, keyboard operable. Header is a button with aria-expanded and aria-controls; Panel uses role="region" linked via aria-labelledby; Enter / Space toggle the section.
 
 **Do:** Use to progressively disclose content; Keep section titles scannable; Use Single mode when only one section is relevant at a time.
