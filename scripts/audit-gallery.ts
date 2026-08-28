@@ -26,6 +26,26 @@ for (const slug of slugs) {
   await page.goto(`${BASE}/#/component/${slug}`, { waitUntil: 'networkidle' })
   await page.waitForTimeout(120)
 
+  // Two buttons in one panel that copy the same thing is just noise: the
+  // CodeBlock already carries a copy affordance in its header.
+  const duplicateCopy = await page.evaluate(() => {
+    const found: string[] = []
+    for (const section of document.querySelectorAll('section')) {
+      const labels = [...section.querySelectorAll('button')]
+        .map((b) => b.textContent?.trim() ?? '')
+        .filter((t) => /^(Copy|Copied)/.test(t))
+      const seen = new Set<string>()
+      for (const l of labels) {
+        if (seen.has(l)) found.push(l)
+        seen.add(l)
+      }
+    }
+    return found
+  })
+  for (const label of duplicateCopy) {
+    problems.push(`${slug} · duplicate "${label}" button in one panel`)
+  }
+
   // Playground: the live preview canvas must not clip or overflow either.
   const playground = await page.evaluate(() => {
     const heading = [...document.querySelectorAll('h2')].find((h) => h.textContent?.trim() === 'Playground')
@@ -88,7 +108,9 @@ for (const slug of slugs) {
 await browser.close()
 
 if (problems.length === 0) {
-  console.log(`✓ all ${slugs.length} component pages: playground + state gallery fit`)
+  console.log(
+    `✓ all ${slugs.length} component pages: playground + state gallery fit, no duplicate copy buttons`,
+  )
 } else {
   console.log(`✗ ${problems.length} issue(s):`)
   for (const p of problems) console.log('  ' + p)

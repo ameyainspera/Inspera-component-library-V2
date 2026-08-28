@@ -4,7 +4,7 @@ import { componentApi } from '../data/component-api.generated'
 import { componentDocs } from '../data/component-docs.generated'
 import { registry, galleryLayout, GALLERY_MIN_WIDTH_DEFAULT } from './registry'
 import {
-  Panel, SectionTitle, SegmentedControl, PreviewCanvas, CodeBlock, CopyButton,
+  Panel, SectionTitle, SegmentedControl, PreviewCanvas, CodeBlock,
 } from './primitives'
 
 function aiPrompt(name: string, doc: string): string {
@@ -184,26 +184,17 @@ export default function ComponentPage({ slug }: { slug: string }) {
         </Panel>
       </div>
 
-      {/* AI copy panel */}
+      {/* AI copy panel. Each block's copy affordance lives in the CodeBlock
+          header — no second button above it doing the same thing. */}
       <Panel style={{ background: 'linear-gradient(180deg, #f8fbff, #ffffff)', borderColor: 'rgba(0,64,128,0.25)' }}>
-        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
-          <div>
-            <SectionTitle sub="Paste these into any AI tool to generate an on-spec version of this component.">AI copy blocks</SectionTitle>
-          </div>
-        </div>
+        <SectionTitle sub="Paste these into any AI tool to generate an on-spec version of this component.">AI copy blocks</SectionTitle>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-              <span style={{ fontSize: 13, fontWeight: 600 }}>Canonical spec</span>
-              <CopyButton text={doc} label="Copy spec" />
-            </div>
+            <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 8 }}>Canonical spec</div>
             <CodeBlock code={doc} language="markdown" copyLabel="Copy spec" />
           </div>
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-              <span style={{ fontSize: 13, fontWeight: 600 }}>Generation prompt</span>
-              <CopyButton text={aiPrompt(spec.name, doc)} label="Copy prompt" />
-            </div>
+            <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 8 }}>Generation prompt</div>
             <CodeBlock code={aiPrompt(spec.name, doc)} language="prompt" copyLabel="Copy prompt" />
           </div>
         </div>
