@@ -5,10 +5,12 @@ export type RadioState =
 
 export interface RadioButtonProps {
   label?: string
+  /** Selected state. Values: true | false. */
   selected?: boolean
   name?: string
   /** Forces a visual state for documentation. Omit for real interactivity. */
   state?: RadioState
+  /** Render the label. Values: true | false. */
   withLabel?: boolean
   onChange?: (selected: boolean) => void
 }

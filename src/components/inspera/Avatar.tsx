@@ -5,8 +5,11 @@ export type AvatarContent = 'Image' | 'Initials' | 'Icon'
 export type AvatarStatus = 'None' | 'Online' | 'Offline' | 'Busy'
 
 export interface AvatarProps {
+  /** Diameter 32 / 40 / 56. Values: Small | Medium | Large. */
   size?: AvatarSize
+  /** What fills the avatar. Values: Image | Initials | Icon. */
   content?: AvatarContent
+  /** Presence indicator dot. Values: None | Online | Offline | Busy. */
   status?: AvatarStatus
   initials?: string
   imageSrc?: string

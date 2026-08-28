@@ -3,10 +3,15 @@ import { type CSSProperties, useState } from 'react'
 export type PaginationSize = 'Small' | 'Medium'
 
 export interface PaginationProps {
+  /** Current page (1-based). */
   page?: number
+  /** Total number of pages. */
   pageCount?: number
+  /** Pages shown either side of current. */
   siblingCount?: number
+  /** Control height. Values: Small | Medium. */
   size?: PaginationSize
+  /** Show first / last controls. Values: true | false. */
   showEdges?: boolean
   onChange?: (page: number) => void
 }

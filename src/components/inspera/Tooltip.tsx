@@ -6,8 +6,11 @@ export type TooltipType = 'Default' | 'Accessibility'
 
 export interface TooltipProps {
   content?: string
+  /** Position relative to the trigger. Values: Top | Bottom | Left | Right. */
   placement?: TooltipPlacement
+  /** Surface color. Values: Light | Dark. */
   theme?: TooltipTheme
+  /** Accessibility type uses larger text. Values: Default | Accessibility. */
   type?: TooltipType
   children?: ReactNode
   /** Keep the tooltip visible regardless of hover — used for documentation. */

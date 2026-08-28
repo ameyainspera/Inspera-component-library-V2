@@ -8,10 +8,13 @@ export type ButtonContent = 'Text' | 'Icon + Text' | 'Text + Icon' | 'Text + Dis
 
 export interface ButtonProps {
   label?: string
+  /** Visual role / semantic weight. Values: Primary | Secondary | Outline | Text | Success | Warning | Destructive. */
   intent?: ButtonIntent
+  /** Height 32 / 40 / 48. Values: Small | Medium | Large. */
   size?: ButtonSize
   /** Forces a visual state for documentation. Omit for real interactivity. */
   state?: ButtonState
+  /** Label / icon composition. Values: Text | Icon + Text | Text + Icon | Text + Disclosure. */
   content?: ButtonContent
   icon?: string
   onClick?: () => void

@@ -3,8 +3,11 @@ import { type CSSProperties } from 'react'
 export type SkeletonVariant = 'Text' | 'Rect' | 'Circle'
 
 export interface SkeletonProps {
+  /** Placeholder shape. Values: Text | Rect | Circle. */
   variant?: SkeletonVariant
+  /** Explicit width. Values: string | number. */
   width?: string | number
+  /** Explicit height. Values: string | number. */
   height?: string | number
   /** Number of text lines. Only applies to the Text variant. */
   lines?: number

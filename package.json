@@ -9,6 +9,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "generate": "tsx scripts/build-portable.ts",
+    "verify:generated": "bash scripts/verify-generated.sh",
+    "typecheck": "tsc --noEmit",
     "build:pkg": "cd packages/components && tsup",
     "format": "oxfmt"
   },

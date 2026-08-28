@@ -11,9 +11,13 @@ export interface ListItem {
 }
 
 export interface ListProps {
+  /** List rows. */
   items?: ListItem[]
+  /** Show dividers between rows. Values: true | false. */
   divided?: boolean
+  /** Make rows clickable. Values: true | false. */
   interactive?: boolean
+  /** Row density. Values: Compact | Default. */
   size?: ListSize
   onItemClick?: (item: ListItem, index: number) => void
 }

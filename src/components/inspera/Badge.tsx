@@ -5,8 +5,11 @@ export type BadgeSize = 'Small' | 'Medium'
 
 export interface BadgeProps {
   label?: string
+  /** Semantic color. Values: Neutral | Info | Success | Warning | Error. */
   intent?: BadgeIntent
+  /** Height 20 / 24. Values: Small | Medium. */
   size?: BadgeSize
+  /** Show a leading status icon. Values: true | false. */
   withIcon?: boolean
   icon?: string
 }

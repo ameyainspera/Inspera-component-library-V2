@@ -5,7 +5,9 @@ export type BreadcrumbSize = 'Small' | 'Medium'
 
 export interface BreadcrumbProps {
   items?: string[]
+  /** Divider glyph between items. Values: Slash | Chevron. */
   separator?: BreadcrumbSeparator
+  /** Text size 14 / 16. Values: Small | Medium. */
   size?: BreadcrumbSize
   onNavigate?: (index: number) => void
 }

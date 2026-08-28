@@ -3,11 +3,16 @@ import { type CSSProperties, type ReactNode, useEffect, useId, useRef, useState 
 export type PopoverPlacement = 'Top' | 'Bottom' | 'Left' | 'Right'
 
 export interface PopoverProps {
+  /** Element that toggles the popover. */
   trigger?: ReactNode
+  /** Optional panel heading. */
   title?: string
+  /** Popover body content. */
   content?: ReactNode
+  /** Position relative to the trigger. Values: Top | Bottom | Left | Right. */
   placement?: PopoverPlacement
   open?: boolean
+  /** Open on mount. Values: true | false. */
   defaultOpen?: boolean
   /** Keep the panel visible regardless of state — used for documentation. */
   forceVisible?: boolean

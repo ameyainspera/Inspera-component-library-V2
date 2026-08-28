@@ -5,14 +5,17 @@ export type SelectState =
 export type SelectWidthMode = 'Fixed' | 'Content Adaptable'
 
 export interface SelectProps {
+  /** Render the label. Values: true | false. */
   label?: string
   placeholder?: string
   options?: string[]
   value?: string
   /** Forces a visual state for documentation. Omit for real interactivity. */
   state?: SelectState
+  /** Trigger sizing. Values: Fixed | Content Adaptable. */
   widthMode?: SelectWidthMode
   showLabel?: boolean
+  /** Filterable option list. Values: true | false. */
   search?: boolean
   onChange?: (value: string) => void
 }

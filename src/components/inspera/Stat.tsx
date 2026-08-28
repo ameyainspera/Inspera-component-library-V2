@@ -3,10 +3,15 @@ import { type CSSProperties } from 'react'
 export type StatDeltaIntent = 'up' | 'down' | 'neutral'
 
 export interface StatProps {
+  /** Metric name. */
   label: string
+  /** Metric value. Values: string | number. */
   value: string | number
+  /** Change indicator text. */
   delta?: string
+  /** Trend direction / color. Values: up | down | neutral. */
   deltaIntent?: StatDeltaIntent
+  /** Optional leading icon. */
   icon?: string
   helpText?: string
 }

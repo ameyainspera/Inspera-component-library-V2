@@ -4,11 +4,16 @@ import Button from './Button'
 export type EmptyStateSize = 'Small' | 'Medium'
 
 export interface EmptyStateProps {
+  /** Material Symbols icon name. */
   icon?: string
+  /** Primary message. */
   title?: string
+  /** Supporting explanation. */
   description?: string
+  /** Optional primary action label. */
   actionLabel?: string
   onAction?: () => void
+  /** Overall scale. Values: Small | Medium. */
   size?: EmptyStateSize
 }
 

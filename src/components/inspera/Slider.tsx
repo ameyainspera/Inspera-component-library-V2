@@ -4,13 +4,18 @@ export type SliderState = 'Default' | 'Focused' | 'Disabled'
 
 export interface SliderProps {
   label?: string
+  /** Minimum value. */
   min?: number
+  /** Maximum value. */
   max?: number
   value?: number
+  /** Increment granularity. */
   step?: number
   /** Forces a visual state for documentation. Omit for real interactivity. */
   state?: SliderState
+  /** Show the current value. Values: true | false. */
   showValue?: boolean
+  /** Show the field label. Values: true | false. */
   showLabel?: boolean
   onChange?: (value: number) => void
 }

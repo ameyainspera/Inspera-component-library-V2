@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      # The guardrail that makes "generated files cannot drift" true rather
+      # than aspirational: regenerate everything and fail if anything moved.
+      - name: Generated files are up to date
+        run: pnpm verify:generated
+
+      - name: Build site
+        run: pnpm build
+
+      - name: Build package
+        run: pnpm build:pkg

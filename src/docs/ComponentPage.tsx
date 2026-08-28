@@ -1,27 +1,33 @@
 import { useEffect, useState } from 'react'
 import { components } from '../data/components'
+import { componentApi } from '../data/component-api.generated'
+import { componentDocs } from '../data/component-docs.generated'
 import { registry } from './registry'
 import {
   Panel, SectionTitle, SegmentedControl, PreviewCanvas, CodeBlock, CopyButton,
 } from './primitives'
 
-function aiPrompt(name: string, specYaml: string): string {
-  return `Generate the Inspera ${name} as a reusable, production-ready component for my codebase.
+function aiPrompt(name: string, doc: string): string {
+  return `Build UI with the Inspera ${name} component, exactly as specified below.
 
 Rules:
-- Follow ONLY the canonical variants, tokens, and states in the spec below.
-- Do not invent styles, spacing, or colors outside the Inspera token system.
-- Support all listed variants and states as typed props.
+- Use the props exactly as named. Prop names are camelCase and case-sensitive;
+  React silently ignores an unknown prop, so a wrong case renders the default
+  variant with no error. Variant *values* are Capitalized.
+- Do not invent props, variants, or styles outside this spec.
+- Style with Inspera tokens (var(--primary), var(--radius-md), …) — never
+  hardcode off-palette colors.
 - Implement the accessibility notes exactly (role, keyboard behavior, ARIA).
-- Match my project's existing conventions while keeping visual output identical to the spec.
 
 Canonical spec:
-${specYaml}`
+${doc}`
 }
 
 export default function ComponentPage({ slug }: { slug: string }) {
   const spec = components[slug]
   const entry = registry[slug]
+  const props = componentApi[spec?.exportName ?? spec?.name.replace(/\s+/g, '') ?? ''] ?? []
+  const doc = componentDocs[slug] ?? ''
   const [values, setValues] = useState<Record<string, string>>(entry?.defaults ?? {})
 
   useEffect(() => {
@@ -93,24 +99,27 @@ export default function ComponentPage({ slug }: { slug: string }) {
 
       {/* Props / API */}
       <Panel>
-        <SectionTitle>Props API</SectionTitle>
+        <SectionTitle sub="Derived from the component's TypeScript interface — this is the real API, not a transcription.">Props API</SectionTitle>
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
             <thead>
               <tr style={{ textAlign: 'left', color: 'var(--muted-foreground)' }}>
                 <th style={{ padding: '8px 12px', borderBottom: '2px solid var(--border)', fontWeight: 600 }}>Prop</th>
-                <th style={{ padding: '8px 12px', borderBottom: '2px solid var(--border)', fontWeight: 600 }}>Values</th>
+                <th style={{ padding: '8px 12px', borderBottom: '2px solid var(--border)', fontWeight: 600 }}>Type</th>
                 <th style={{ padding: '8px 12px', borderBottom: '2px solid var(--border)', fontWeight: 600 }}>Default</th>
                 <th style={{ padding: '8px 12px', borderBottom: '2px solid var(--border)', fontWeight: 600 }}>Description</th>
               </tr>
             </thead>
             <tbody>
-              {spec.props.map((p) => (
+              {props.map((p) => (
                 <tr key={p.name} style={{ verticalAlign: 'top' }}>
-                  <td style={{ padding: '10px 12px', borderBottom: '1px solid var(--border)', fontFamily: 'var(--font-mono)', fontSize: 13, color: 'var(--primary)' }}>{p.name}</td>
-                  <td style={{ padding: '10px 12px', borderBottom: '1px solid var(--border)', fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--gray-700)' }}>{p.values}</td>
+                  <td style={{ padding: '10px 12px', borderBottom: '1px solid var(--border)', fontFamily: 'var(--font-mono)', fontSize: 13, color: 'var(--primary)', whiteSpace: 'nowrap' }}>
+                    {p.name}
+                    {p.required && <span style={{ color: 'var(--error)', marginLeft: 2 }} title="Required">*</span>}
+                  </td>
+                  <td style={{ padding: '10px 12px', borderBottom: '1px solid var(--border)', fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--gray-700)' }}>{p.type}</td>
                   <td style={{ padding: '10px 12px', borderBottom: '1px solid var(--border)', fontFamily: 'var(--font-mono)', fontSize: 12 }}>{p.default ?? '—'}</td>
-                  <td style={{ padding: '10px 12px', borderBottom: '1px solid var(--border)', color: 'var(--gray-700)' }}>{p.description}</td>
+                  <td style={{ padding: '10px 12px', borderBottom: '1px solid var(--border)', color: 'var(--gray-700)' }}>{p.description ?? ''}</td>
                 </tr>
               ))}
             </tbody>
@@ -172,16 +181,16 @@ export default function ComponentPage({ slug }: { slug: string }) {
           <div>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
               <span style={{ fontSize: 13, fontWeight: 600 }}>Canonical spec</span>
-              <CopyButton text={spec.specYaml} label="Copy spec" />
+              <CopyButton text={doc} label="Copy spec" />
             </div>
-            <CodeBlock code={spec.specYaml} language="yaml" copyLabel="Copy spec" />
+            <CodeBlock code={doc} language="markdown" copyLabel="Copy spec" />
           </div>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
               <span style={{ fontSize: 13, fontWeight: 600 }}>Generation prompt</span>
-              <CopyButton text={aiPrompt(spec.name, spec.specYaml)} label="Copy prompt" />
+              <CopyButton text={aiPrompt(spec.name, doc)} label="Copy prompt" />
             </div>
-            <CodeBlock code={aiPrompt(spec.name, spec.specYaml)} language="prompt" copyLabel="Copy prompt" />
+            <CodeBlock code={aiPrompt(spec.name, doc)} language="prompt" copyLabel="Copy prompt" />
           </div>
         </div>
       </Panel>

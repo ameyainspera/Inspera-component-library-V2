@@ -11,14 +11,24 @@ Trigger an action. — category: `input-controls`.
 
 ```tsx
 import { Button } from '@inspera/kit'
+
+<Button
+  label="Button"
+  intent="Primary"
+  size="Medium"
+  content="Text"
+/>
 ```
 
-| Prop | Values | Default | Description |
+| Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `Intent` | Primary | Secondary | Outline | Text | Success | Warning | Destructive | Primary | Visual role / semantic weight. |
-| `Size` | Small | Medium | Large | Medium | Height 32 / 40 / 48. |
-| `State` | Default | Hover | Focused | Pressed | Disabled | Default | Interaction state. |
-| `Content` | Text | Icon + Text | Text + Icon | Text + Disclosure | Text | Label / icon composition. |
+| `label` | `string` | `'Button'` |  |
+| `intent` | `'Success' \| 'Warning' \| 'Primary' \| 'Secondary' \| 'Outline' \| 'Text' \| 'Destructive'` | `'Primary'` | Visual role / semantic weight. Values: Primary \| Secondary \| Outline \| Text \| Success \| Warning \| Destructive. |
+| `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Height 32 / 40 / 48. Values: Small \| Medium \| Large. |
+| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Pressed' \| 'Disabled'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
+| `content` | `'Text' \| 'Icon + Text' \| 'Text + Icon' \| 'Text + Disclosure'` | `'Text'` | Label / icon composition. Values: Text \| Icon + Text \| Text + Icon \| Text + Disclosure. |
+| `icon` | `string` | `'add'` |  |
+| `onClick` | `() => void` | — |  |
 
 **Accessibility** — role `button`, keyboard operable. Icon-only buttons must have an accessible label.
 
@@ -27,34 +37,6 @@ import { Button } from '@inspera/kit'
 
 **Deprecated aliases** (do not use): `Primary button`, `Secondary button`, `Outline button`, `Text button`, `Success button`, `Warning button`
 
-<details><summary>Canonical spec</summary>
-
-```yaml
-component: Button
-purpose: "Trigger an action."
-variants:
-  Intent: [Primary, Secondary, Outline, Text, Success, Warning, Destructive]
-  Size: [Small, Medium, Large]
-  State: [Default, Hover, Focused, Pressed, Disabled]
-  Content: [Text, "Icon + Text", "Text + Icon", "Text + Disclosure"]
-defaults: { Intent: Primary, Size: Medium, State: Default, Content: Text }
-layout:
-  height: { Small: 32, Medium: 40, Large: 48 }
-  paddingX: { Small: 12, Medium: 16, Large: 24 }
-  gap: { Small: 6, Medium: 8, Large: 10 }
-  radius: sm
-typography: { label: "body.semiBold16" }
-intentMap:
-  Primary:     { background: "#004080", text: "#FFFFFF" }
-  Secondary:   { background: "#F7F7F7", text: "#272727", border: "#595959" }
-  Outline:     { background: transparent, text: "#004080", border: "#004080" }
-  Text:        { background: transparent, text: "#004080" }
-  Success:     { background: "#2E7D32", text: "#FFFFFF" }
-  Warning:     { background: "#EF6C00", text: "#FFFFFF" }
-  Destructive: { background: "#D32F2F", text: "#FFFFFF" }
-accessibility: { role: button, keyboard: true }
-```
-</details>
 
 ### Text Input
 
@@ -62,17 +44,27 @@ Collect single-line text input. — category: `input-controls`.
 
 ```tsx
 import { TextInput } from '@inspera/kit'
+
+<TextInput
+  label="Email address"
+  placeholder="jane@inspera.com"
+  size="Medium"
+/>
 ```
 
-| Prop | Values | Default | Description |
+| Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `State` | Default | Hover | Focused | Disabled | Error | Filled | ReadOnly | Default | Interaction / validation state. |
-| `Size` | Small | Medium | Medium | Control height. |
-| `LeadingIcon` | true | false | false | Show a leading icon. |
-| `TrailingIcon` | true | false | false | Show a trailing icon. |
-| `Label` | true | false | true | Show the field label. |
-| `HelpText` | true | false | false | Show helper text. |
-| `ErrorText` | true | false | false | Show error message. |
+| `label` | `string` | `'Label'` | Show the field label. Values: true \| false. |
+| `placeholder` | `string` | `'Placeholder text'` |  |
+| `value` | `string` | — |  |
+| `state` | `'Error' \| 'Default' \| 'Hover' \| 'Focused' \| 'Disabled' \| 'Filled' \| 'ReadOnly'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Control height. Values: Small \| Medium. |
+| `leadingIcon` | `string` | — | Show a leading icon. Values: true \| false. |
+| `trailingIcon` | `string` | — | Show a trailing icon. Values: true \| false. |
+| `showLabel` | `boolean` | `true` |  |
+| `helpText` | `string` | — | Show helper text. Values: true \| false. |
+| `errorText` | `string` | — | Show error message. Values: true \| false. |
+| `onChange` | `(value: string) => void` | — |  |
 
 **Accessibility** — role `textbox`, keyboard operable. Always associate label with input using htmlFor/id; Error text must be linked via aria-describedby; Required fields must use aria-required.
 
@@ -81,26 +73,6 @@ import { TextInput } from '@inspera/kit'
 
 **Deprecated aliases** (do not use): `Text inputs`, `Content`, `Content (small)`
 
-<details><summary>Canonical spec</summary>
-
-```yaml
-component: Text Input
-purpose: "Collect single-line text input."
-variants:
-  State: [Default, Hover, Focused, Disabled, Error, Filled, ReadOnly]
-  Size: [Small, Medium]
-  LeadingIcon: [true, false]
-  TrailingIcon: [true, false]
-  Label: [true, false]
-  HelpText: [true, false]
-  ErrorText: [true, false]
-defaults: { State: Default, Size: Medium, Label: true }
-layout: { height: 40, paddingX: 12, paddingY: 8, gap: 8, radius: md }
-typography: { label: "body.mdMedium", input: "body.mdRegular", help: "body.caption" }
-styling: { background: "#FFFFFF", text: "rgba(0,0,0,0.87)", border: "#C4C4C4" }
-accessibility: { role: textbox, keyboard: true }
-```
-</details>
 
 ### Checkbox
 
@@ -108,14 +80,22 @@ Allow multiple selection. — category: `input-controls`.
 
 ```tsx
 import { Checkbox } from '@inspera/kit'
+
+<Checkbox
+  label="Send me product updates"
+  checked={false}
+  size="Medium"
+/>
 ```
 
-| Prop | Values | Default | Description |
+| Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `State` | Default | Hover | Focused | Pressed | Disabled | Error | Default | Interaction / validation state. |
-| `Checked` | true | false | false | Checked state. |
-| `WithLabel` | true | false | true | Render the label. |
-| `Size` | Small | Medium | Medium | Indicator size. |
+| `label` | `string` | `'Checkbox label'` |  |
+| `checked` | `boolean` | — | Checked state. Values: true \| false. |
+| `state` | `'Error' \| 'Default' \| 'Hover' \| 'Focused' \| 'Pressed' \| 'Disabled'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
+| `withLabel` | `boolean` | `true` | Render the label. Values: true \| false. |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Indicator size. Values: Small \| Medium. |
+| `onChange` | `(checked: boolean) => void` | — |  |
 
 **Accessibility** — role `checkbox`, keyboard operable. Use aria-checked to reflect state; Group related checkboxes with fieldset and legend.
 
@@ -124,22 +104,6 @@ import { Checkbox } from '@inspera/kit'
 
 **Deprecated aliases** (do not use): `Checkbox/Unchecked`, `Checkbox/Checked`, `Checkbox with label`, `Checkbox (fill width)`, `Checkbox (Cards)`
 
-<details><summary>Canonical spec</summary>
-
-```yaml
-component: Checkbox
-purpose: "Allow multiple selection."
-variants:
-  State: [Default, Hover, Focused, Pressed, Disabled, Error]
-  Checked: [true, false]
-  WithLabel: [true, false]
-  Size: [Small, Medium]
-defaults: { State: Default, Checked: false, WithLabel: true, Size: Medium }
-layout: { paddingY: 8, gap: 8, radius: xs, indicatorSize: 20 }
-styling: { border: "#8C8C8C", checkedBackground: "#004080" }
-accessibility: { role: checkbox, keyboard: true }
-```
-</details>
 
 ### Radio Button
 
@@ -147,13 +111,22 @@ Allow single selection. — category: `input-controls`.
 
 ```tsx
 import { RadioButton } from '@inspera/kit'
+
+<RadioButton
+  label="Standard delivery"
+  name="delivery"
+  selected={false}
+/>
 ```
 
-| Prop | Values | Default | Description |
+| Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `State` | Default | Hover | Focused | Pressed | Disabled | Error | Default | Interaction / validation state. |
-| `Selected` | true | false | false | Selected state. |
-| `WithLabel` | true | false | true | Render the label. |
+| `label` | `string` | `'Radio option'` |  |
+| `selected` | `boolean` | — | Selected state. Values: true \| false. |
+| `name` | `string` | `'radio'` |  |
+| `state` | `'Error' \| 'Default' \| 'Hover' \| 'Focused' \| 'Pressed' \| 'Disabled'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
+| `withLabel` | `boolean` | `true` | Render the label. Values: true \| false. |
+| `onChange` | `(selected: boolean) => void` | — |  |
 
 **Accessibility** — role `radio`, keyboard operable. Use role="radiogroup" for the group container; Use aria-checked to indicate selected state; Arrow keys navigate between options in the group.
 
@@ -162,21 +135,6 @@ import { RadioButton } from '@inspera/kit'
 
 **Deprecated aliases** (do not use): `Radiobutton`, `Radiobuttons`, `Radio Button New-BonW`, `Radio Button New-BonY`, `Radio Button New-WonB`, `Radio Button New-YonB`
 
-<details><summary>Canonical spec</summary>
-
-```yaml
-component: Radio Button
-purpose: "Allow single selection."
-variants:
-  State: [Default, Hover, Focused, Pressed, Disabled, Error]
-  Selected: [true, false]
-  WithLabel: [true, false]
-defaults: { State: Default, Selected: false, WithLabel: true }
-layout: { paddingY: 8, gap: 8, radius: pill, indicatorSize: 20 }
-styling: { border: "#8C8C8C", selectedColor: "#004080" }
-accessibility: { role: radio, keyboard: true }
-```
-</details>
 
 ### Select
 
@@ -184,14 +142,26 @@ Select one option from a list. — category: `input-controls`.
 
 ```tsx
 import { Select } from '@inspera/kit'
+
+<Select
+  label="Country"
+  widthMode="Fixed"
+  search={false}
+  options={['Norway', 'Sweden', 'Denmark']}
+/>
 ```
 
-| Prop | Values | Default | Description |
+| Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `State` | Default | Hover | Focused | Disabled | Error | Open | Default | Interaction / validation state. |
-| `WidthMode` | Fixed | Content Adaptable | Fixed | Trigger sizing. |
-| `Label` | true | false | true | Render the label. |
-| `Search` | true | false | false | Filterable option list. |
+| `label` | `string` | `'Country'` | Render the label. Values: true \| false. |
+| `placeholder` | `string` | `'Select an option'` |  |
+| `options` | `string[]` | `defaultOptions` |  |
+| `value` | `string` | — |  |
+| `state` | `'Error' \| 'Default' \| 'Hover' \| 'Focused' \| 'Disabled' \| 'Open'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
+| `widthMode` | `'Fixed' \| 'Content Adaptable'` | `'Fixed'` | Trigger sizing. Values: Fixed \| Content Adaptable. |
+| `showLabel` | `boolean` | `true` |  |
+| `search` | `boolean` | `false` | Filterable option list. Values: true \| false. |
+| `onChange` | `(value: string) => void` | — |  |
 
 **Accessibility** — role `combobox`, keyboard operable. Use aria-expanded to indicate open state; Use aria-activedescendant for highlighted option; Support arrow key navigation through options.
 
@@ -200,22 +170,6 @@ import { Select } from '@inspera/kit'
 
 **Deprecated aliases** (do not use): `Select / Fixed width`, `Select / Content adaptable`, `Dropdown`, `Dropdown with Label`
 
-<details><summary>Canonical spec</summary>
-
-```yaml
-component: Select
-purpose: "Select one option from a list."
-variants:
-  State: [Default, Hover, Focused, Disabled, Error, Open]
-  WidthMode: [Fixed, "Content Adaptable"]
-  Label: [true, false]
-  Search: [true, false]
-defaults: { State: Default, WidthMode: Fixed, Label: true, Search: false }
-layout: { height: 40, minWidth: 120, paddingX: 12, paddingY: 8, gap: 8, radius: md }
-styling: { background: "#FFFFFF", border: "#C4C4C4" }
-accessibility: { role: combobox, keyboard: true }
-```
-</details>
 
 ### Toggle
 
@@ -223,14 +177,22 @@ Switch a setting on or off instantly. — category: `input-controls`.
 
 ```tsx
 import { Toggle } from '@inspera/kit'
+
+<Toggle
+  label="Enable notifications"
+  checked={false}
+  size="Medium"
+/>
 ```
 
-| Prop | Values | Default | Description |
+| Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `State` | Default | Hover | Focused | Disabled | Default | Interaction state. |
-| `Checked` | true | false | false | On / off state. |
-| `Size` | Small | Medium | Medium | Track / thumb size. |
-| `WithLabel` | true | false | true | Render the label. |
+| `label` | `string` | `'Toggle setting'` |  |
+| `checked` | `boolean` | — | On / off state. Values: true \| false. |
+| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Disabled'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Track / thumb size. Values: Small \| Medium. |
+| `withLabel` | `boolean` | `true` | Render the label. Values: true \| false. |
+| `onChange` | `(checked: boolean) => void` | — |  |
 
 **Accessibility** — role `switch`, keyboard operable. Use role="switch" for the toggle; Use aria-checked to reflect on/off state; Space key toggles the switch.
 
@@ -239,22 +201,6 @@ import { Toggle } from '@inspera/kit'
 
 **Deprecated aliases** (do not use): `Switch`, `Toggle switch`
 
-<details><summary>Canonical spec</summary>
-
-```yaml
-component: Toggle
-purpose: "Switch a setting on or off instantly."
-variants:
-  State: [Default, Hover, Focused, Disabled]
-  Checked: [true, false]
-  Size: [Small, Medium]
-  WithLabel: [true, false]
-defaults: { State: Default, Checked: false, Size: Medium, WithLabel: true }
-layout: { height: 24, gap: 8, radius: pill, trackWidth: 44, thumbSize: 20 }
-styling: { offTrack: "#C4C4C4", onTrack: "#004080" }
-accessibility: { role: switch, keyboard: true }
-```
-</details>
 
 ### Textarea
 
@@ -262,16 +208,30 @@ Collect multi-line text input. — category: `input-controls`.
 
 ```tsx
 import { Textarea } from '@inspera/kit'
+
+<Textarea
+  label="Feedback"
+  placeholder="Share your thoughts…"
+  size="Medium"
+  showCount={false}
+  maxLength={280}
+/>
 ```
 
-| Prop | Values | Default | Description |
+| Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `State` | Default | Hover | Focused | Filled | Error | Disabled | ReadOnly | Default | Interaction / validation state. |
-| `Size` | Small | Medium | Medium | Vertical padding density. |
-| `Rows` | number | 4 | Visible text rows. |
-| `ShowLabel` | true | false | true | Show the field label. |
-| `ShowCount` | true | false | false | Show character counter. |
-| `MaxLength` | number | — | Maximum character length. |
+| `label` | `string` | `'Description'` |  |
+| `placeholder` | `string` | `'Placeholder text'` |  |
+| `value` | `string` | — |  |
+| `rows` | `number` | `4` | Visible text rows. |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Vertical padding density. Values: Small \| Medium. |
+| `state` | `'Error' \| 'Default' \| 'Hover' \| 'Focused' \| 'Disabled' \| 'Filled' \| 'ReadOnly'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
+| `showLabel` | `boolean` | `true` | Show the field label. Values: true \| false. |
+| `helpText` | `string` | — |  |
+| `errorText` | `string` | — |  |
+| `maxLength` | `number` | — | Maximum character length. |
+| `showCount` | `boolean` | `false` | Show character counter. Values: true \| false. |
+| `onChange` | `(value: string) => void` | — |  |
 
 **Accessibility** — role `textbox`, keyboard operable. Always associate label with textarea using htmlFor/id; Error text must be linked via aria-describedby; aria-invalid reflects the error state.
 
@@ -280,21 +240,6 @@ import { Textarea } from '@inspera/kit'
 
 **Deprecated aliases** (do not use): `Text area`, `Multiline input`, `Comment box`
 
-<details><summary>Canonical spec</summary>
-
-```yaml
-component: Textarea
-purpose: "Collect multi-line text input."
-variants:
-  State: [Default, Hover, Focused, Filled, Error, Disabled, ReadOnly]
-  Size: [Small, Medium]
-defaults: { State: Default, Size: Medium, Rows: 4 }
-layout: { paddingX: 12, paddingY: 8, gap: 6, radius: md }
-typography: { input: "body.mdRegular", help: "body.caption" }
-styling: { background: "#FFFFFF", border: "#C4C4C4" }
-accessibility: { role: textbox, keyboard: true }
-```
-</details>
 
 ### Form Field
 
@@ -302,15 +247,25 @@ Standardize label, control, and help/error layout around any input. — category
 
 ```tsx
 import { FormField } from '@inspera/kit'
+
+<FormField
+  label="Email address"
+  htmlFor="email"
+  required={false}
+  helpText="We'll never share your email."
+>
+  <TextInput id="email" showLabel={false} />
+</FormField>
 ```
 
-| Prop | Values | Default | Description |
+| Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | string | — | Field label text. |
-| `htmlFor` | string | — | id of the wrapped control for label association. |
-| `required` | true | false | false | Show a required asterisk. |
-| `helpText` | string | — | Helper text shown below the control. |
-| `errorText` | string | — | Error message; replaces help text when present. |
+| `label` | `string` | — | Field label text. |
+| `htmlFor` | `string` | — | id of the wrapped control for label association. |
+| `required` | `boolean` | `false` | Show a required asterisk. Values: true \| false. |
+| `helpText` | `string` | — | Helper text shown below the control. |
+| `errorText` | `string` | — | Error message; replaces help text when present. |
+| `children` **(required)** | `string \| number \| bigint \| boolean \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> \| Iterable<ReactNode> \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal \| Promise<string \| number \| bigint \| boolean \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> \| Iterable<ReactNode> \| null \| undefined> \| null` | — |  |
 
 **Accessibility** — role `group`, keyboard operable. Associate the label with the control via htmlFor/id; Link error and help text with aria-describedby on the control; Required fields should set aria-required on the control.
 
@@ -319,20 +274,6 @@ import { FormField } from '@inspera/kit'
 
 **Deprecated aliases** (do not use): `Field wrapper`, `Input group`
 
-<details><summary>Canonical spec</summary>
-
-```yaml
-component: Form Field
-purpose: "Standardize label, control, and help/error layout around any input."
-variants:
-  required: [true, false]
-defaults: { required: false }
-layout: { gap: 6 }
-typography: { label: "body.mdMedium", help: "body.caption" }
-styling: { asterisk: "#D32F2F", help: "#595959", error: "#D32F2F" }
-accessibility: { role: group, keyboard: true }
-```
-</details>
 
 ### Slider
 
@@ -340,16 +281,27 @@ Select a numeric value from a continuous range. — category: `input-controls`.
 
 ```tsx
 import { Slider } from '@inspera/kit'
+
+<Slider
+  label="Volume"
+  min={0}
+  max={100}
+  value={40}
+  showValue={true}
+/>
 ```
 
-| Prop | Values | Default | Description |
+| Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `State` | Default | Focused | Disabled | Default | Interaction state. |
-| `Min` | number | 0 | Minimum value. |
-| `Max` | number | 100 | Maximum value. |
-| `Step` | number | 1 | Increment granularity. |
-| `ShowValue` | true | false | true | Show the current value. |
-| `ShowLabel` | true | false | true | Show the field label. |
+| `label` | `string` | `'Value'` |  |
+| `min` | `number` | `0` | Minimum value. |
+| `max` | `number` | `100` | Maximum value. |
+| `value` | `number` | — |  |
+| `step` | `number` | `1` | Increment granularity. |
+| `state` | `'Default' \| 'Focused' \| 'Disabled'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
+| `showValue` | `boolean` | `true` | Show the current value. Values: true \| false. |
+| `showLabel` | `boolean` | `true` | Show the field label. Values: true \| false. |
+| `onChange` | `(value: number) => void` | — |  |
 
 **Accessibility** — role `slider`, keyboard operable. Use role="slider" with aria-valuemin / aria-valuemax / aria-valuenow; Provide an accessible label via aria-label; Arrow keys adjust the value.
 
@@ -358,19 +310,6 @@ import { Slider } from '@inspera/kit'
 
 **Deprecated aliases** (do not use): `Range`, `Range slider`
 
-<details><summary>Canonical spec</summary>
-
-```yaml
-component: Slider
-purpose: "Select a numeric value from a continuous range."
-variants:
-  State: [Default, Focused, Disabled]
-defaults: { State: Default, Min: 0, Max: 100, Step: 1, ShowValue: true }
-layout: { trackHeight: 4, thumbSize: 20, gap: 8, radius: pill }
-styling: { track: "var(--gray-300)", fill: "#004080", thumb: "#FFFFFF" }
-accessibility: { role: slider, keyboard: true }
-```
-</details>
 
 ### Segmented Control
 
@@ -378,14 +317,22 @@ Choose one option from a small set of mutually exclusive segments. — category:
 
 ```tsx
 import { SegmentedControl } from '@inspera/kit'
+
+<SegmentedControl
+  items={['Day', 'Week', 'Month']}
+  value={1}
+  size="Medium"
+  fullWidth={false}
+/>
 ```
 
-| Prop | Values | Default | Description |
+| Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `Items` | string[] | ['Day','Week','Month'] | Segment labels. |
-| `Value` | number | 0 | Active segment index. |
-| `Size` | Small | Medium | Medium | Segment height. |
-| `FullWidth` | true | false | false | Stretch to fill the row. |
+| `items` | `string[]` | `['Day', 'Week', 'Month']` | Segment labels. |
+| `value` | `number` | — | Active segment index. |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Segment height. Values: Small \| Medium. |
+| `fullWidth` | `boolean` | `false` | Stretch to fill the row. Values: true \| false. |
+| `onChange` | `(index: number) => void` | — |  |
 
 **Accessibility** — role `radiogroup`, keyboard operable. Container uses role="radiogroup"; Each segment uses role="radio" with aria-checked; Arrow keys move between segments.
 
@@ -394,20 +341,6 @@ import { SegmentedControl } from '@inspera/kit'
 
 **Deprecated aliases** (do not use): `Segment control`, `Toggle group`, `Button group`
 
-<details><summary>Canonical spec</summary>
-
-```yaml
-component: Segmented Control
-purpose: "Choose one option from a small set of mutually exclusive segments."
-variants:
-  Size: [Small, Medium]
-  FullWidth: [true, false]
-defaults: { Size: Medium, FullWidth: false, Value: 0 }
-layout: { height: 40, padding: 4, gap: 2, radius: md, segmentRadius: sm }
-styling: { track: "var(--gray-100)", active: "var(--surface)", shadow: "shadow.100" }
-accessibility: { role: radiogroup, keyboard: true }
-```
-</details>
 
 ### Date Picker
 
@@ -415,15 +348,23 @@ Select a calendar date from a popover. — category: `input-controls`.
 
 ```tsx
 import { DatePicker } from '@inspera/kit'
+
+<DatePicker
+  label="Due date"
+  value="2026-08-19"
+  onChange={setDate}
+/>
 ```
 
-| Prop | Values | Default | Description |
+| Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `State` | Default | Focused | Disabled | Error | Default | Interaction / validation state. |
-| `Value` | ISO date string | — | Selected date (YYYY-MM-DD). |
-| `Placeholder` | string | Select date | Trigger placeholder. |
-| `ShowLabel` | true | false | true | Show the field label. |
-| `DefaultOpen` | true | false | false | Open the calendar initially. |
+| `label` | `string` | `'Date'` |  |
+| `value` | `string` | — | Selected date (YYYY-MM-DD). |
+| `placeholder` | `string` | `'Select date'` | Trigger placeholder. |
+| `state` | `'Error' \| 'Default' \| 'Focused' \| 'Disabled'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
+| `showLabel` | `boolean` | `true` | Show the field label. Values: true \| false. |
+| `defaultOpen` | `boolean` | `false` | Open the calendar initially. Values: true \| false. |
+| `onChange` | `(iso: string) => void` | — |  |
 
 **Accessibility** — role `dialog`, keyboard operable. Trigger uses aria-haspopup="dialog" and aria-expanded; Popover uses role="dialog" with a label; Day cells are buttons with descriptive aria-labels; Escape closes the popover.
 
@@ -432,19 +373,6 @@ import { DatePicker } from '@inspera/kit'
 
 **Deprecated aliases** (do not use): `Calendar input`, `Date field`
 
-<details><summary>Canonical spec</summary>
-
-```yaml
-component: Date Picker
-purpose: "Select a calendar date from a popover."
-variants:
-  State: [Default, Focused, Disabled, Error]
-defaults: { State: Default, DefaultOpen: false }
-layout: { triggerHeight: 40, paddingX: 12, popoverPadding: 12, radius: md }
-styling: { border: "#C4C4C4", popover: "var(--surface)", shadow: "shadow.200", selected: "#004080" }
-accessibility: { role: dialog, keyboard: true }
-```
-</details>
 
 ### File Upload
 
@@ -452,14 +380,23 @@ Upload files via drag-and-drop or browse. — category: `input-controls`.
 
 ```tsx
 import { FileUpload } from '@inspera/kit'
+
+<FileUpload
+  label="Attachments"
+  accept="image/*,.pdf"
+  multiple={false}
+  onFiles={handleFiles}
+/>
 ```
 
-| Prop | Values | Default | Description |
+| Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `State` | Default | Dragging | Disabled | Error | Default | Interaction / validation state. |
-| `Accept` | string | — | Accepted MIME types / extensions. |
-| `Multiple` | true | false | false | Allow multiple files. |
-| `HelpText` | string | PNG, JPG or PDF up to 10MB | Constraint hint text. |
+| `label` | `string` | `'Upload files'` |  |
+| `accept` | `string` | — | Accepted MIME types / extensions. |
+| `multiple` | `boolean` | `false` | Allow multiple files. Values: true \| false. |
+| `state` | `'Error' \| 'Default' \| 'Disabled' \| 'Dragging'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
+| `helpText` | `string` | `'PNG, JPG or PDF up to 10MB'` | Constraint hint text. |
+| `onFiles` | `(files: File[]) => void` | — |  |
 
 **Accessibility** — role `button`, keyboard operable. Dropzone uses role="button" and is keyboard focusable; Enter / Space open the file browser; Provide an accessible label describing the action.
 
@@ -468,20 +405,6 @@ import { FileUpload } from '@inspera/kit'
 
 **Deprecated aliases** (do not use): `Dropzone`, `File dropzone`, `Uploader`
 
-<details><summary>Canonical spec</summary>
-
-```yaml
-component: File Upload
-purpose: "Upload files via drag-and-drop or browse."
-variants:
-  State: [Default, Dragging, Disabled, Error]
-  Multiple: [true, false]
-defaults: { State: Default, Multiple: false }
-layout: { paddingX: 24, paddingY: 32, gap: 8, radius: md, borderStyle: dashed }
-styling: { border: "var(--gray-400)", dragging: "var(--blue-100)", error: "#D32F2F" }
-accessibility: { role: button, keyboard: true }
-```
-</details>
 
 ### Radio Group
 
@@ -489,15 +412,25 @@ Group mutually exclusive radio options. — category: `input-controls`.
 
 ```tsx
 import { RadioGroup } from '@inspera/kit'
+
+<RadioGroup
+  label="Delivery speed"
+  name="delivery"
+  value="standard"
+  orientation="Vertical"
+  options={[{ label: 'Standard', value: 'standard' }]}
+/>
 ```
 
-| Prop | Values | Default | Description |
+| Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `State` | Default | Disabled | Error | Default | Group interaction / validation state. |
-| `Options` | { label, value }[] | — | Radio options. |
-| `Orientation` | Vertical | Horizontal | Vertical | Layout direction. |
-| `Value` | string | — | Selected option value. |
-| `Name` | string | — | Shared input name for the group. |
+| `label` | `string` | — |  |
+| `name` | `string` | — | Shared input name for the group. |
+| `options` | `RadioOption[]` | `DEFAULT_OPTIONS` | Radio options. |
+| `value` | `string` | — | Selected option value. |
+| `orientation` | `'Vertical' \| 'Horizontal'` | `'Vertical'` | Layout direction. Values: Vertical \| Horizontal. |
+| `state` | `'Error' \| 'Default' \| 'Disabled'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
+| `onChange` | `(value: string) => void` | — |  |
 
 **Accessibility** — role `radiogroup`, keyboard operable. Container uses role="radiogroup" with an accessible label; Each option is a radio with aria-checked; Arrow keys navigate between options.
 
@@ -506,20 +439,6 @@ import { RadioGroup } from '@inspera/kit'
 
 **Deprecated aliases** (do not use): `Radio list`, `Option group`
 
-<details><summary>Canonical spec</summary>
-
-```yaml
-component: Radio Group
-purpose: "Group mutually exclusive radio options."
-variants:
-  State: [Default, Disabled, Error]
-  Orientation: [Vertical, Horizontal]
-defaults: { State: Default, Orientation: Vertical }
-layout: { gap: 24, radius: pill }
-styling: { border: "#8C8C8C", selectedColor: "#004080" }
-accessibility: { role: radiogroup, keyboard: true }
-```
-</details>
 
 ### Checkbox Group
 
@@ -527,14 +446,23 @@ Group related multi-select checkboxes. — category: `input-controls`.
 
 ```tsx
 import { CheckboxGroup } from '@inspera/kit'
+
+<CheckboxGroup
+  label="Notifications"
+  value={['email']}
+  orientation="Vertical"
+  options={[{ label: 'Email', value: 'email' }]}
+/>
 ```
 
-| Prop | Values | Default | Description |
+| Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `State` | Default | Disabled | Error | Default | Group interaction / validation state. |
-| `Options` | { label, value }[] | — | Checkbox options. |
-| `Orientation` | Vertical | Horizontal | Vertical | Layout direction. |
-| `Value` | string[] | — | Selected option values. |
+| `label` | `string` | — |  |
+| `options` | `CheckboxOption[]` | `DEFAULT_OPTIONS` | Checkbox options. |
+| `value` | `string[]` | — | Selected option values. |
+| `orientation` | `'Vertical' \| 'Horizontal'` | `'Vertical'` | Layout direction. Values: Vertical \| Horizontal. |
+| `state` | `'Error' \| 'Default' \| 'Disabled'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
+| `onChange` | `(value: string[]) => void` | — |  |
 
 **Accessibility** — role `group`, keyboard operable. Container uses role="group" with aria-labelledby; Each option is a checkbox with aria-checked; Group related options under a shared legend/label.
 
@@ -543,20 +471,6 @@ import { CheckboxGroup } from '@inspera/kit'
 
 **Deprecated aliases** (do not use): `Checkbox list`, `Multi-select group`
 
-<details><summary>Canonical spec</summary>
-
-```yaml
-component: Checkbox Group
-purpose: "Group related multi-select checkboxes."
-variants:
-  State: [Default, Disabled, Error]
-  Orientation: [Vertical, Horizontal]
-defaults: { State: Default, Orientation: Vertical }
-layout: { gap: 24, radius: xs }
-styling: { border: "#8C8C8C", checkedBackground: "#004080" }
-accessibility: { role: group, keyboard: true }
-```
-</details>
 
 ### Rating
 
@@ -564,15 +478,23 @@ Capture or display a star rating. — category: `input-controls`.
 
 ```tsx
 import { Rating } from '@inspera/kit'
+
+<Rating
+  value={3}
+  max={5}
+  size="Medium"
+  readOnly={false}
+/>
 ```
 
-| Prop | Values | Default | Description |
+| Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `Value` | number | 0 | Current rating. |
-| `Max` | number | 5 | Number of stars. |
-| `Size` | Small | Medium | Medium | Star size. |
-| `ReadOnly` | true | false | false | Display-only mode. |
-| `ShowValue` | true | false | false | Show numeric value. |
+| `value` | `number` | `0` | Current rating. |
+| `max` | `number` | `5` | Number of stars. |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Star size. Values: Small \| Medium. |
+| `readOnly` | `boolean` | `false` | Display-only mode. Values: true \| false. |
+| `showValue` | `boolean` | `false` | Show numeric value. Values: true \| false. |
+| `onChange` | `(value: number) => void` | — |  |
 
 **Accessibility** — role `radiogroup`, keyboard operable. Container uses role="radiogroup" with an accessible label; Each star is a radio with aria-checked and an aria-label; Arrow keys adjust the rating.
 
@@ -581,34 +503,27 @@ import { Rating } from '@inspera/kit'
 
 **Deprecated aliases** (do not use): `Star rating`, `Stars`
 
-<details><summary>Canonical spec</summary>
-
-```yaml
-component: Rating
-purpose: "Capture or display a star rating."
-variants:
-  Size: [Small, Medium]
-  ReadOnly: [true, false]
-defaults: { Value: 0, Max: 5, Size: Medium, ReadOnly: false, ShowValue: false }
-layout: { gap: 2 }
-styling: { filled: "#EF6C00", empty: "var(--gray-400)" }
-accessibility: { role: radiogroup, keyboard: true }
-```
-</details>
 
 ### OTP Input
 
 Enter a one-time verification code. — category: `input-controls`.
 
 ```tsx
-import { OTPInput } from '@inspera/kit'
+import { OtpInput } from '@inspera/kit'
+
+<OtpInput
+  length={6}
+  value={code}
+  onChange={setCode}
+/>
 ```
 
-| Prop | Values | Default | Description |
+| Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `State` | Default | Focused | Error | Disabled | Default | Interaction / validation state. |
-| `Length` | number | 6 | Number of digit boxes. |
-| `Value` | string | — | Current code value. |
+| `length` | `number` | `6` | Number of digit boxes. |
+| `value` | `string` | — | Current code value. |
+| `state` | `'Error' \| 'Default' \| 'Focused' \| 'Disabled'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
+| `onChange` | `(value: string) => void` | — |  |
 
 **Accessibility** — role `textbox`, keyboard operable. Each box has an aria-label "Digit N"; aria-invalid reflects the error state; Backspace moves focus to the previous box; paste distributes digits.
 
@@ -617,19 +532,6 @@ import { OTPInput } from '@inspera/kit'
 
 **Deprecated aliases** (do not use): `PIN input`, `Verification code`, `Code input`
 
-<details><summary>Canonical spec</summary>
-
-```yaml
-component: OTP Input
-purpose: "Enter a one-time verification code."
-variants:
-  State: [Default, Focused, Error, Disabled]
-defaults: { State: Default, Length: 6 }
-layout: { boxWidth: 44, boxHeight: 48, gap: 8, radius: md }
-styling: { border: "#C4C4C4", error: "#D32F2F", font: "var(--font-mono)" }
-accessibility: { role: textbox, keyboard: true }
-```
-</details>
 
 ## data-display
 
@@ -639,34 +541,30 @@ Group related content in a contained surface. — category: `data-display`.
 
 ```tsx
 import { Card } from '@inspera/kit'
+
+<Card
+  title="Algebra Quiz"
+  elevation="Raised"
+  padding="Default"
+  interactive={false}
+/>
 ```
 
-| Prop | Values | Default | Description |
+| Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `Elevation` | Flat | Raised | Outlined | Raised | Surface treatment. |
-| `Padding` | Compact | Default | Spacious | Default | Internal padding (12 / 16 / 24). |
-| `Interactive` | true | false | false | Renders as a focusable button with hover elevation. |
+| `title` | `string` | `'Card title'` |  |
+| `body` | `string` | `'Group related content in a contained surface using consistent padding and elevation.'` |  |
+| `elevation` | `'Flat' \| 'Raised' \| 'Outlined'` | `'Raised'` | Surface treatment. Values: Flat \| Raised \| Outlined. |
+| `padding` | `'Default' \| 'Compact' \| 'Spacious'` | `'Default'` | Internal padding (12 / 16 / 24). Values: Compact \| Default \| Spacious. |
+| `interactive` | `boolean` | `false` | Renders as a focusable button with hover elevation. Values: true \| false. |
+| `children` | `string \| number \| bigint \| boolean \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> \| Iterable<ReactNode> \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal \| Promise<string \| number \| bigint \| boolean \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> \| Iterable<ReactNode> \| null \| undefined> \| null` | — |  |
+| `onClick` | `() => void` | — |  |
 
 **Accessibility** — role `article`, keyboard operable. Interactive cards should use role="button" or be wrapped in an anchor; Non-interactive cards use role="article" or a semantic section.
 
 **Do:** Use to group related content; Maintain consistent padding within a view; Use raised elevation for primary content cards.
 **Don't:** Do not nest cards inside other cards; Do not use cards for layout-only purposes without content.
 
-<details><summary>Canonical spec</summary>
-
-```yaml
-component: Card
-purpose: "Group related content in a contained surface."
-variants:
-  Elevation: [Flat, Raised, Outlined]
-  Padding: [Compact, Default, Spacious]
-  Interactive: [true, false]
-defaults: { Elevation: Raised, Padding: Default, Interactive: false }
-layout: { paddingX: 16, paddingY: 16, gap: 12, radius: lg }
-styling: { background: "#FFFFFF", border: "#E5E7EB", shadow: "shadow.200" }
-accessibility: { role: article, keyboard: true }
-```
-</details>
 
 ### Badge
 
@@ -674,13 +572,22 @@ Display a short status label or count. — category: `data-display`.
 
 ```tsx
 import { Badge } from '@inspera/kit'
+
+<Badge
+  label="Neutral"
+  intent="Neutral"
+  size="Medium"
+  withIcon={false}
+/>
 ```
 
-| Prop | Values | Default | Description |
+| Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `Intent` | Neutral | Info | Success | Warning | Error | Neutral | Semantic color. |
-| `Size` | Small | Medium | Medium | Height 20 / 24. |
-| `WithIcon` | true | false | false | Show a leading status icon. |
+| `label` | `string` | `'Badge'` |  |
+| `intent` | `'Info' \| 'Success' \| 'Warning' \| 'Error' \| 'Neutral'` | `'Neutral'` | Semantic color. Values: Neutral \| Info \| Success \| Warning \| Error. |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Height 20 / 24. Values: Small \| Medium. |
+| `withIcon` | `boolean` | `false` | Show a leading status icon. Values: true \| false. |
+| `icon` | `string` | — |  |
 
 **Accessibility** — role `status`. Use aria-label for icon-only badges; Use role="status" for dynamic count badges.
 
@@ -689,26 +596,6 @@ import { Badge } from '@inspera/kit'
 
 **Deprecated aliases** (do not use): `Status Badge`, `Tag`, `Chip`
 
-<details><summary>Canonical spec</summary>
-
-```yaml
-component: Badge
-purpose: "Display a short status label or count."
-variants:
-  Intent: [Neutral, Info, Success, Warning, Error]
-  Size: [Small, Medium]
-  WithIcon: [true, false]
-defaults: { Intent: Neutral, Size: Medium, WithIcon: false }
-layout: { height: 24, paddingX: 8, paddingY: 4, gap: 4, radius: pill }
-intentMap:
-  Neutral: { background: "#F0F0F0", text: "#272727" }
-  Info:    { background: "#E1F5FE", text: "#0288D1" }
-  Success: { background: "#E8F5E9", text: "#2E7D32" }
-  Warning: { background: "#FFF3E0", text: "#EF6C00" }
-  Error:   { background: "#FFEBEE", text: "#D32F2F" }
-accessibility: { role: status }
-```
-</details>
 
 ### Avatar
 
@@ -716,34 +603,29 @@ Represent a user or entity with an image or initials. — category: `data-displa
 
 ```tsx
 import { Avatar } from '@inspera/kit'
+
+<Avatar
+  size="Medium"
+  content="Initials"
+  status="None"
+/>
 ```
 
-| Prop | Values | Default | Description |
+| Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `Size` | Small | Medium | Large | Medium | Diameter 32 / 40 / 56. |
-| `Content` | Image | Initials | Icon | Initials | What fills the avatar. |
-| `Status` | None | Online | Offline | Busy | None | Presence indicator dot. |
+| `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Diameter 32 / 40 / 56. Values: Small \| Medium \| Large. |
+| `content` | `'Image' \| 'Initials' \| 'Icon'` | `'Initials'` | What fills the avatar. Values: Image \| Initials \| Icon. |
+| `status` | `'None' \| 'Online' \| 'Offline' \| 'Busy'` | `'None'` | Presence indicator dot. Values: None \| Online \| Offline \| Busy. |
+| `initials` | `string` | `'JC'` |  |
+| `imageSrc` | `string` | `'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=112&h=112&fit=crop&auto=format'` |  |
+| `alt` | `string` | `'User avatar'` |  |
+| `icon` | `string` | `'person'` |  |
 
 **Accessibility** — role `img`. Provide alt text for image avatars; Use aria-label for initials and icon variants.
 
 **Do:** Use for user profiles and participant lists; Provide meaningful alt text; Use consistent sizing within a context.
 **Don't:** Do not stretch or distort avatar images; Do not use random colors — use a deterministic palette.
 
-<details><summary>Canonical spec</summary>
-
-```yaml
-component: Avatar
-purpose: "Represent a user or entity with an image or initials."
-variants:
-  Size: [Small, Medium, Large]
-  Content: [Image, Initials, Icon]
-  Status: [None, Online, Offline, Busy]
-defaults: { Size: Medium, Content: Initials, Status: None }
-layout: { radius: pill }
-styling: { background: "#E0E0E0", text: "#272727" }
-accessibility: { role: img }
-```
-</details>
 
 ### Table
 
@@ -751,16 +633,25 @@ Display structured data in rows and columns. — category: `data-display`.
 
 ```tsx
 import { Table } from '@inspera/kit'
+
+<Table
+  size="Default"
+  striped={false}
+  columns={[{ key: 'name', header: 'Assessment' }]}
+  rows={[{ name: 'Algebra Quiz' }]}
+/>
 ```
 
-| Prop | Values | Default | Description |
+| Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `columns` | { key, header, align?, width? }[] | — | Column definitions. |
-| `rows` | Record<string, ReactNode>[] | — | Row data keyed by column. |
-| `size` | Compact | Default | Default | Row height density. |
-| `striped` | true | false | false | Zebra-stripe rows. |
-| `hoverable` | true | false | true | Highlight rows on hover. |
-| `selectable` | true | false | false | Add a row selection column. |
+| `columns` | `TableColumn[]` | `defaultColumns` | Column definitions. |
+| `rows` | `Record<string, ReactNode>[]` | `defaultRows` | Row data keyed by column. |
+| `size` | `'Default' \| 'Compact'` | `'Default'` | Row height density. Values: Compact \| Default. |
+| `striped` | `boolean` | `false` | Zebra-stripe rows. Values: true \| false. |
+| `hoverable` | `boolean` | `true` | Highlight rows on hover. Values: true \| false. |
+| `selectable` | `boolean` | `false` | Add a row selection column. Values: true \| false. |
+| `caption` | `string` | — |  |
+| `onRowClick` | `(row: Record<string, ReactNode>, index: number) => void` | — |  |
 
 **Accessibility** — role `table`, keyboard operable. Use semantic table / thead / tbody markup; Header cells use scope="col"; Provide a caption or aria-label describing the table.
 
@@ -769,22 +660,6 @@ import { Table } from '@inspera/kit'
 
 **Deprecated aliases** (do not use): `Data table`, `Grid`, `Datagrid`
 
-<details><summary>Canonical spec</summary>
-
-```yaml
-component: Table
-purpose: "Display structured data in rows and columns."
-variants:
-  size: [Compact, Default]
-  striped: [true, false]
-  hoverable: [true, false]
-  selectable: [true, false]
-defaults: { size: Default, striped: false, hoverable: true, selectable: false }
-layout: { rowHeight: { Compact: 40, Default: 52 }, paddingX: 12 }
-styling: { header: "var(--gray-100)", border: "var(--border)", rowHover: "var(--action-hover)" }
-accessibility: { role: table, keyboard: true }
-```
-</details>
 
 ### Accordion
 
@@ -792,14 +667,20 @@ Show and hide sections of related content. — category: `data-display`.
 
 ```tsx
 import { Accordion } from '@inspera/kit'
+
+<Accordion
+  type="Single"
+  iconPosition="Right"
+  items={[{ title: 'What is Inspera?', content: '…' }]}
+/>
 ```
 
-| Prop | Values | Default | Description |
+| Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `items` | { title, content }[] | — | Accordion sections. |
-| `type` | Single | Multiple | Single | Allow one or many open at once. |
-| `defaultOpenIndex` | number | 0 | Initially open section. |
-| `iconPosition` | Left | Right | Right | Chevron placement. |
+| `items` | `AccordionItem[]` | `defaultItems` | Accordion sections. |
+| `type` | `'Single' \| 'Multiple'` | `'Single'` | Allow one or many open at once. Values: Single \| Multiple. |
+| `defaultOpenIndex` | `number` | `0` | Initially open section. |
+| `iconPosition` | `'Left' \| 'Right'` | `'Right'` | Chevron placement. Values: Left \| Right. |
 
 **Accessibility** — role `region`, keyboard operable. Header is a button with aria-expanded and aria-controls; Panel uses role="region" linked via aria-labelledby; Enter / Space toggle the section.
 
@@ -808,20 +689,6 @@ import { Accordion } from '@inspera/kit'
 
 **Deprecated aliases** (do not use): `Disclosure`, `Collapse`, `Expander`
 
-<details><summary>Canonical spec</summary>
-
-```yaml
-component: Accordion
-purpose: "Show and hide sections of related content."
-variants:
-  type: [Single, Multiple]
-  iconPosition: [Left, Right]
-defaults: { type: Single, defaultOpenIndex: 0, iconPosition: Right }
-layout: { paddingX: 16, paddingY: 14, radius: md }
-styling: { border: "var(--border)", headerHover: "var(--action-hover)" }
-accessibility: { role: region, keyboard: true }
-```
-</details>
 
 ### Tag
 
@@ -829,15 +696,24 @@ Label, categorize, or filter with a removable chip. — category: `data-display`
 
 ```tsx
 import { Tag } from '@inspera/kit'
+
+<Tag
+  label="Neutral"
+  intent="Neutral"
+  size="Medium"
+  removable={false}
+/>
 ```
 
-| Prop | Values | Default | Description |
+| Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | string | — | Tag text. |
-| `intent` | Neutral | Info | Success | Warning | Error | Neutral | Semantic color. |
-| `size` | Small | Medium | Medium | Tag height. |
-| `removable` | true | false | false | Show a remove affordance. |
-| `leadingIcon` | string | — | Optional leading icon. |
+| `label` **(required)** | `string` | — | Tag text. |
+| `intent` | `'Info' \| 'Success' \| 'Warning' \| 'Error' \| 'Neutral'` | `'Neutral'` | Semantic color. Values: Neutral \| Info \| Success \| Warning \| Error. |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Tag height. Values: Small \| Medium. |
+| `removable` | `boolean` | `false` | Show a remove affordance. Values: true \| false. |
+| `leadingIcon` | `string` | — | Optional leading icon. |
+| `onRemove` | `() => void` | — |  |
+| `onClick` | `() => void` | — |  |
 
 **Accessibility** — role `status`, keyboard operable. Removable tags expose a button with aria-label "Remove {label}"; Interactive tags must be keyboard focusable; Use aria-label for icon-only tags.
 
@@ -846,26 +722,6 @@ import { Tag } from '@inspera/kit'
 
 **Deprecated aliases** (do not use): `Chip`, `Pill`, `Label`
 
-<details><summary>Canonical spec</summary>
-
-```yaml
-component: Tag
-purpose: "Label, categorize, or filter with a removable chip."
-variants:
-  intent: [Neutral, Info, Success, Warning, Error]
-  size: [Small, Medium]
-  removable: [true, false]
-defaults: { intent: Neutral, size: Medium, removable: false }
-layout: { height: 24, paddingX: 8, paddingY: 4, gap: 4, radius: pill }
-intentMap:
-  Neutral: { background: "#F0F0F0", text: "#272727" }
-  Info:    { background: "#E1F5FE", text: "#0288D1" }
-  Success: { background: "#E8F5E9", text: "#2E7D32" }
-  Warning: { background: "#FFF3E0", text: "#EF6C00" }
-  Error:   { background: "#FFEBEE", text: "#D32F2F" }
-accessibility: { role: status, keyboard: true }
-```
-</details>
 
 ### Divider
 
@@ -873,13 +729,18 @@ Separate content with a thin rule. — category: `data-display`.
 
 ```tsx
 import { Divider } from '@inspera/kit'
+
+<Divider
+  orientation="Horizontal"
+  spacing="Default"
+/>
 ```
 
-| Prop | Values | Default | Description |
+| Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `orientation` | Horizontal | Vertical | Horizontal | Divider direction. |
-| `label` | string | — | Optional centered label (horizontal only). |
-| `spacing` | Compact | Default | Spacious | Default | Surrounding margin. |
+| `orientation` | `'Vertical' \| 'Horizontal'` | `'Horizontal'` | Divider direction. Values: Horizontal \| Vertical. |
+| `label` | `string` | — | Optional centered label (horizontal only). |
+| `spacing` | `'Default' \| 'Compact' \| 'Spacious'` | `'Default'` | Surrounding margin. Values: Compact \| Default \| Spacious. |
 
 **Accessibility** — role `separator`. Use role="separator" with aria-orientation; Purely decorative dividers may be aria-hidden.
 
@@ -888,20 +749,6 @@ import { Divider } from '@inspera/kit'
 
 **Deprecated aliases** (do not use): `Separator`, `Rule`, `HR`
 
-<details><summary>Canonical spec</summary>
-
-```yaml
-component: Divider
-purpose: "Separate content with a thin rule."
-variants:
-  orientation: [Horizontal, Vertical]
-  spacing: [Compact, Default, Spacious]
-defaults: { orientation: Horizontal, spacing: Default }
-layout: { thickness: 1, spacing: { Compact: 8, Default: 16, Spacious: 24 } }
-styling: { line: "var(--border)", label: "var(--muted-foreground)" }
-accessibility: { role: separator }
-```
-</details>
 
 ### Empty State
 
@@ -909,15 +756,24 @@ Communicate the absence of content and offer a next step. — category: `data-di
 
 ```tsx
 import { EmptyState } from '@inspera/kit'
+
+<EmptyState
+  icon="inbox"
+  title="No assessments yet"
+  description="Create your first assessment."
+  actionLabel="New assessment"
+  size="Medium"
+/>
 ```
 
-| Prop | Values | Default | Description |
+| Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `icon` | string | inbox | Material Symbols icon name. |
-| `title` | string | No results found | Primary message. |
-| `description` | string | — | Supporting explanation. |
-| `actionLabel` | string | — | Optional primary action label. |
-| `size` | Small | Medium | Medium | Overall scale. |
+| `icon` | `string` | `'inbox'` | Material Symbols icon name. |
+| `title` | `string` | `'No results found'` | Primary message. |
+| `description` | `string` | `'Try adjusting your filters or search terms.'` | Supporting explanation. |
+| `actionLabel` | `string` | — | Optional primary action label. |
+| `onAction` | `() => void` | — |  |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Overall scale. Values: Small \| Medium. |
 
 **Accessibility** — role `status`, keyboard operable. Announce dynamically-appearing empty states with role="status"; The action must be a real focusable button; The illustration/icon is decorative (aria-hidden).
 
@@ -926,19 +782,6 @@ import { EmptyState } from '@inspera/kit'
 
 **Deprecated aliases** (do not use): `Blank slate`, `Zero state`, `No data`
 
-<details><summary>Canonical spec</summary>
-
-```yaml
-component: Empty State
-purpose: "Communicate the absence of content and offer a next step."
-variants:
-  size: [Small, Medium]
-defaults: { icon: inbox, title: "No results found", size: Medium }
-layout: { gap: 12, align: center }
-styling: { iconCircle: "var(--gray-100)", title: "var(--text-primary)", description: "var(--muted-foreground)" }
-accessibility: { role: status, keyboard: true }
-```
-</details>
 
 ### Avatar Group
 
@@ -946,13 +789,19 @@ Show a set of users as overlapping avatars with an overflow count. — category:
 
 ```tsx
 import { AvatarGroup } from '@inspera/kit'
+
+<AvatarGroup
+  size="Medium"
+  max={4}
+  avatars={[{ name: 'Ada Lovelace' }, { name: 'Linus Torvalds' }]}
+/>
 ```
 
-| Prop | Values | Default | Description |
+| Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `avatars` | { content?, name? }[] | — | Avatars to display. |
-| `max` | number | 4 | Maximum shown before overflow. |
-| `size` | Small | Medium | Large | Medium | Avatar diameter. |
+| `avatars` | `AvatarGroupItem[]` | `defaultAvatars` | Avatars to display. |
+| `max` | `number` | `4` | Maximum shown before overflow. |
+| `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Avatar diameter. Values: Small \| Medium \| Large. |
 
 **Accessibility** — role `group`. Wrap in a group with an aria-label describing the set; Each avatar keeps its own accessible label; The overflow chip states the hidden count.
 
@@ -961,19 +810,6 @@ import { AvatarGroup } from '@inspera/kit'
 
 **Deprecated aliases** (do not use): `Avatar stack`, `Facepile`
 
-<details><summary>Canonical spec</summary>
-
-```yaml
-component: Avatar Group
-purpose: "Show a set of users as overlapping avatars with an overflow count."
-variants:
-  size: [Small, Medium, Large]
-defaults: { max: 4, size: Medium }
-layout: { overlap: -8, ring: 2 }
-styling: { ring: "#FFFFFF", overflowBg: "var(--gray-200)", overflowText: "var(--gray-700)" }
-accessibility: { role: group }
-```
-</details>
 
 ### Stat
 
@@ -981,15 +817,24 @@ Highlight a key metric with an optional trend. — category: `data-display`.
 
 ```tsx
 import { Stat } from '@inspera/kit'
+
+<Stat
+  label="Active candidates"
+  value="12,480"
+  delta="+8.2% vs last week"
+  deltaIntent="up"
+  icon="group"
+/>
 ```
 
-| Prop | Values | Default | Description |
+| Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | string | — | Metric name. |
-| `value` | string | number | — | Metric value. |
-| `delta` | string | — | Change indicator text. |
-| `deltaIntent` | up | down | neutral | neutral | Trend direction / color. |
-| `icon` | string | — | Optional leading icon. |
+| `label` **(required)** | `string` | `'Average score'` | Metric name. |
+| `value` **(required)** | `string \| number` | `'84%'` | Metric value. Values: string \| number. |
+| `delta` | `string` | `'+4.2%'` | Change indicator text. |
+| `deltaIntent` | `'up' \| 'down' \| 'neutral'` | `'up'` | Trend direction / color. Values: up \| down \| neutral. |
+| `icon` | `string` | — | Optional leading icon. |
+| `helpText` | `string` | — |  |
 
 **Accessibility** — role `group`. Associate the value with its label for screen readers; Convey trend with text, not color alone; Use aria-label to summarize the metric and change.
 
@@ -998,19 +843,6 @@ import { Stat } from '@inspera/kit'
 
 **Deprecated aliases** (do not use): `Metric`, `KPI`, `Stat card`
 
-<details><summary>Canonical spec</summary>
-
-```yaml
-component: Stat
-purpose: "Highlight a key metric with an optional trend."
-variants:
-  deltaIntent: [up, down, neutral]
-defaults: { deltaIntent: neutral }
-layout: { padding: 20, gap: 8, radius: lg }
-styling: { border: "var(--border)", up: "#2E7D32", down: "#D32F2F", neutral: "var(--muted-foreground)" }
-accessibility: { role: group }
-```
-</details>
 
 ### List
 
@@ -1018,14 +850,22 @@ Present a vertical series of related items. — category: `data-display`.
 
 ```tsx
 import { List } from '@inspera/kit'
+
+<List
+  size="Default"
+  divided={true}
+  interactive={false}
+  items={[{ primary: 'General settings', secondary: '…', leading: 'settings' }]}
+/>
 ```
 
-| Prop | Values | Default | Description |
+| Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `items` | { primary, secondary?, leading?, trailing? }[] | — | List rows. |
-| `divided` | true | false | true | Show dividers between rows. |
-| `interactive` | true | false | false | Make rows clickable. |
-| `size` | Compact | Default | Default | Row density. |
+| `items` | `ListItem[]` | `defaultItems` | List rows. |
+| `divided` | `boolean` | `true` | Show dividers between rows. Values: true \| false. |
+| `interactive` | `boolean` | `false` | Make rows clickable. Values: true \| false. |
+| `size` | `'Default' \| 'Compact'` | `'Default'` | Row density. Values: Compact \| Default. |
+| `onItemClick` | `(item: ListItem, index: number) => void` | — |  |
 
 **Accessibility** — role `list`, keyboard operable. Use semantic list markup (ul / li); Interactive rows are buttons and keyboard focusable; Provide meaningful text for each item.
 
@@ -1034,21 +874,6 @@ import { List } from '@inspera/kit'
 
 **Deprecated aliases** (do not use): `List view`, `Item list`
 
-<details><summary>Canonical spec</summary>
-
-```yaml
-component: List
-purpose: "Present a vertical series of related items."
-variants:
-  divided: [true, false]
-  interactive: [true, false]
-  size: [Compact, Default]
-defaults: { divided: true, interactive: false, size: Default }
-layout: { paddingX: 12, gap: 2 }
-styling: { border: "var(--border)", rowHover: "var(--action-hover)" }
-accessibility: { role: list, keyboard: true }
-```
-</details>
 
 ## feedback
 
@@ -1058,38 +883,32 @@ Display semantic inline feedback. — category: `feedback`.
 
 ```tsx
 import { Alert } from '@inspera/kit'
+
+<Alert
+  intent="Info"
+  title="Heads up"
+  message="…"
+  layout="Simple"
+  background={true}
+/>
 ```
 
-| Prop | Values | Default | Description |
+| Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `Intent` | Info | Success | Warning | Error | Info | Severity / color. |
-| `Layout` | Simple | With CTA | With Close | With CTA + Close | Simple | Action affordances. |
-| `Background` | true | false | true | Tinted fill vs. left-accent only. |
+| `title` | `string` | `'Heads up'` |  |
+| `message` | `string` | `'This is a contextual inline message that matches the intent severity.'` |  |
+| `intent` | `'Info' \| 'Success' \| 'Warning' \| 'Error'` | `'Info'` | Severity / color. Values: Info \| Success \| Warning \| Error. |
+| `layout` | `'Simple' \| 'With CTA' \| 'With Close' \| 'With CTA + Close'` | `'Simple'` | Action affordances. Values: Simple \| With CTA \| With Close \| With CTA + Close. |
+| `background` | `boolean` | `true` | Tinted fill vs. left-accent only. Values: true \| false. |
+| `ctaLabel` | `string` | `'View details'` |  |
+| `onCta` | `() => void` | — |  |
+| `onClose` | `() => void` | — |  |
 
 **Accessibility** — role `alert`, keyboard operable. Use role="alert" for important messages; Use aria-live="polite" for non-critical alerts; Close button must have aria-label="Close alert".
 
 **Do:** Use for contextual inline messages; Match intent to message severity; Keep alert text concise.
 **Don't:** Do not stack more than 2 alerts in the same area; Do not use alerts for permanent content.
 
-<details><summary>Canonical spec</summary>
-
-```yaml
-component: Alert
-purpose: "Display semantic inline feedback."
-variants:
-  Intent: [Info, Success, Warning, Error]
-  Layout: [Simple, "With CTA", "With Close", "With CTA + Close"]
-  Background: [true, false]
-defaults: { Intent: Info, Layout: Simple, Background: true }
-layout: { paddingX: 16, paddingY: 12, gap: 12, radius: md }
-intentMap:
-  Info:    { background: "#E1F5FE", text: "#0288D1", border: "#0288D1" }
-  Success: { background: "#E8F5E9", text: "#2E7D32", border: "#2E7D32" }
-  Warning: { background: "#FFF3E0", text: "#EF6C00", border: "#EF6C00" }
-  Error:   { background: "#FFEBEE", text: "#D32F2F", border: "#D32F2F" }
-accessibility: { role: alert, keyboard: true }
-```
-</details>
 
 ### Dialog
 
@@ -1097,13 +916,31 @@ Present content or actions that require user attention. — category: `feedback`
 
 ```tsx
 import { Dialog } from '@inspera/kit'
+
+<Dialog
+  open={open}
+  size="Medium"
+  title="Dialog title"
+  hasCloseButton={true}
+  hasActions={true}
+  onClose={() => setOpen(false)}
+  onConfirm={handleConfirm}
+/>
 ```
 
-| Prop | Values | Default | Description |
+| Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `Size` | Small | Medium | Large | Medium | Panel width 400 / 480 / 560. |
-| `HasCloseButton` | true | false | true | Show the header close affordance. |
-| `HasActions` | true | false | true | Show the footer action buttons. |
+| `title` | `string` | `'Dialog title'` |  |
+| `body` | `string \| number \| bigint \| boolean \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> \| Iterable<ReactNode> \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal \| Promise<string \| number \| bigint \| boolean \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> \| Iterable<ReactNode> \| null \| undefined> \| null` | `'This is the dialog body. Provide context or a clear description of the action the user is about to take.'` |  |
+| `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Panel width 400 / 480 / 560. Values: Small \| Medium \| Large. |
+| `hasCloseButton` | `boolean` | `true` | Show the header close affordance. Values: true \| false. |
+| `hasActions` | `boolean` | `true` | Show the footer action buttons. Values: true \| false. |
+| `confirmLabel` | `string` | `'Continue'` |  |
+| `cancelLabel` | `string` | `'Cancel'` |  |
+| `open` | `boolean` | `true` |  |
+| `embedded` | `boolean` | `false` | Render just the panel (no overlay) — used for documentation previews. |
+| `onClose` | `() => void` | — |  |
+| `onConfirm` | `() => void` | — |  |
 
 **Accessibility** — role `dialog`, keyboard operable. Use role="dialog" with aria-modal="true"; Set aria-labelledby to the dialog title; Trap focus inside the dialog when open; Return focus to trigger element on close; Escape key closes the dialog.
 
@@ -1112,21 +949,6 @@ import { Dialog } from '@inspera/kit'
 
 **Deprecated aliases** (do not use): `Modal`, `Popup`
 
-<details><summary>Canonical spec</summary>
-
-```yaml
-component: Dialog
-purpose: "Present content or actions that require user attention."
-variants:
-  Size: [Small, Medium, Large]
-  HasCloseButton: [true, false]
-  HasActions: [true, false]
-defaults: { Size: Medium, HasCloseButton: true, HasActions: true }
-layout: { minWidth: 400, maxWidth: 560, paddingX: 24, paddingY: 24, gap: 16, radius: lg }
-styling: { background: "#FFFFFF", shadow: "shadow.500" }
-accessibility: { role: dialog, ariaModal: true, keyboard: true }
-```
-</details>
 
 ### Snackbar
 
@@ -1134,13 +956,24 @@ Show brief, non-blocking feedback at the bottom of the screen. — category: `fe
 
 ```tsx
 import { Snackbar } from '@inspera/kit'
+
+<Snackbar
+  intent="Neutral"
+  message="Assessment saved."
+  hasAction={false}
+  hasClose={true}
+/>
 ```
 
-| Prop | Values | Default | Description |
+| Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `Intent` | Neutral | Info | Success | Warning | Error | Neutral | Accent icon color. |
-| `HasAction` | true | false | false | Show an inline action (e.g. Undo). |
-| `HasClose` | true | false | true | Show the dismiss button. |
+| `message` | `string` | `'Assessment saved successfully.'` |  |
+| `intent` | `'Info' \| 'Success' \| 'Warning' \| 'Error' \| 'Neutral'` | `'Neutral'` | Accent icon color. Values: Neutral \| Info \| Success \| Warning \| Error. |
+| `hasAction` | `boolean` | `false` | Show an inline action (e.g. Undo). Values: true \| false. |
+| `hasClose` | `boolean` | `true` | Show the dismiss button. Values: true \| false. |
+| `actionLabel` | `string` | `'Undo'` |  |
+| `onAction` | `() => void` | — |  |
+| `onClose` | `() => void` | — |  |
 
 **Accessibility** — role `status`, keyboard operable. Use role="status" with aria-live="polite"; Action button must be focusable; Auto-dismiss timing must be generous (5s minimum).
 
@@ -1149,21 +982,6 @@ import { Snackbar } from '@inspera/kit'
 
 **Deprecated aliases** (do not use): `Toast`, `Notification bar`
 
-<details><summary>Canonical spec</summary>
-
-```yaml
-component: Snackbar
-purpose: "Show brief, non-blocking feedback at the bottom of the screen."
-variants:
-  Intent: [Neutral, Info, Success, Warning, Error]
-  HasAction: [true, false]
-  HasClose: [true, false]
-defaults: { Intent: Neutral, HasAction: false, HasClose: true }
-layout: { height: 48, minWidth: 300, paddingX: 16, paddingY: 12, gap: 8, radius: md }
-styling: { background: "#272727", text: "#FFFFFF", shadow: "shadow.300" }
-accessibility: { role: status, keyboard: true }
-```
-</details>
 
 ### Tooltip
 
@@ -1171,13 +989,25 @@ Provide contextual help on hover or focus. — category: `feedback`.
 
 ```tsx
 import { Tooltip } from '@inspera/kit'
+
+<Tooltip
+  content="Supplementary help text"
+  placement="Top"
+  theme="Dark"
+  type="Default"
+>
+  <IconButton icon="help" />
+</Tooltip>
 ```
 
-| Prop | Values | Default | Description |
+| Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `Placement` | Top | Bottom | Left | Right | Top | Position relative to the trigger. |
-| `Theme` | Light | Dark | Dark | Surface color. |
-| `Type` | Default | Accessibility | Default | Accessibility type uses larger text. |
+| `content` | `string` | `'Supplementary help text'` |  |
+| `placement` | `'Left' \| 'Right' \| 'Bottom' \| 'Top'` | `'Top'` | Position relative to the trigger. Values: Top \| Bottom \| Left \| Right. |
+| `theme` | `'Light' \| 'Dark'` | `'Dark'` | Surface color. Values: Light \| Dark. |
+| `type` | `'Default' \| 'Accessibility'` | `'Default'` | Accessibility type uses larger text. Values: Default \| Accessibility. |
+| `children` | `string \| number \| bigint \| boolean \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> \| Iterable<ReactNode> \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal \| Promise<string \| number \| bigint \| boolean \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> \| Iterable<ReactNode> \| null \| undefined> \| null` | — |  |
+| `forceVisible` | `boolean` | `false` | Keep the tooltip visible regardless of hover — used for documentation. |
 
 **Accessibility** — role `tooltip`, keyboard operable. Use role="tooltip" on the tooltip element; Link trigger and tooltip with aria-describedby; Escape key dismisses the tooltip; Tooltip must not contain interactive content.
 
@@ -1186,21 +1016,6 @@ import { Tooltip } from '@inspera/kit'
 
 **Deprecated aliases** (do not use): `Tooltips`, `Walkthrough`, `a11y tooltips`
 
-<details><summary>Canonical spec</summary>
-
-```yaml
-component: Tooltip
-purpose: "Provide contextual help on hover or focus."
-variants:
-  Placement: [Top, Bottom, Left, Right]
-  Theme: [Light, Dark]
-  Type: [Default, Accessibility]
-defaults: { Placement: Top, Theme: Dark, Type: Default }
-layout: { maxWidth: 240, paddingX: 12, paddingY: 8, radius: sm }
-styling: { background: "#272727", text: "#FFFFFF", shadow: "shadow.100" }
-accessibility: { role: tooltip, keyboard: true }
-```
-</details>
 
 ### Progress
 
@@ -1208,16 +1023,25 @@ Show completion of an ongoing task. — category: `feedback`.
 
 ```tsx
 import { Progress } from '@inspera/kit'
+
+<Progress
+  variant="Linear"
+  value={60}
+  intent="Primary"
+  size="Medium"
+  indeterminate={false}
+  showValue={false}
+/>
 ```
 
-| Prop | Values | Default | Description |
+| Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `variant` | Linear | Circular | Linear | Bar or ring. |
-| `value` | number (0–100) | 60 | Completion percentage. |
-| `indeterminate` | true | false | false | Unknown-duration animation. |
-| `size` | Small | Medium | Large | Medium | Bar height / ring diameter. |
-| `intent` | Primary | Success | Warning | Error | Primary | Fill color. |
-| `showValue` | true | false | false | Render the percentage. |
+| `variant` | `'Linear' \| 'Circular'` | `'Linear'` | Bar or ring. Values: Linear \| Circular. |
+| `value` | `number` | `60` | Completion percentage 0–100. Ignored when indeterminate. |
+| `indeterminate` | `boolean` | `false` | Unknown-duration animation. Values: true \| false. |
+| `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Bar height / ring diameter. Values: Small \| Medium \| Large. |
+| `intent` | `'Success' \| 'Warning' \| 'Error' \| 'Primary'` | `'Primary'` | Fill color. Values: Primary \| Success \| Warning \| Error. |
+| `showValue` | `boolean` | `false` | Render the percentage. Values: true \| false. |
 
 **Accessibility** — role `progressbar`. Use role="progressbar" with aria-valuenow / min / max; Omit aria-valuenow when indeterminate; Provide an accessible label for the task.
 
@@ -1226,22 +1050,6 @@ import { Progress } from '@inspera/kit'
 
 **Deprecated aliases** (do not use): `Progress bar`, `Loading bar`, `Meter`
 
-<details><summary>Canonical spec</summary>
-
-```yaml
-component: Progress
-purpose: "Show completion of an ongoing task."
-variants:
-  variant: [Linear, Circular]
-  size: [Small, Medium, Large]
-  intent: [Primary, Success, Warning, Error]
-  indeterminate: [true, false]
-defaults: { variant: Linear, value: 60, indeterminate: false, size: Medium, intent: Primary }
-layout: { linearHeight: { Small: 4, Medium: 8, Large: 12 }, circularSize: { Small: 24, Medium: 40, Large: 56 } }
-styling: { track: "var(--gray-200)", fill: "#004080" }
-accessibility: { role: progressbar }
-```
-</details>
 
 ### Spinner
 
@@ -1249,13 +1057,19 @@ Indicate an indeterminate loading state. — category: `feedback`.
 
 ```tsx
 import { Spinner } from '@inspera/kit'
+
+<Spinner
+  size="Medium"
+  intent="Primary"
+  label="Loading assessments"
+/>
 ```
 
-| Prop | Values | Default | Description |
+| Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `size` | Small | Medium | Large | Medium | Diameter 16 / 24 / 40. |
-| `intent` | Primary | Neutral | Inverse | Primary | Arc color. |
-| `label` | string | Loading | Accessible label. |
+| `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Diameter 16 / 24 / 40. Values: Small \| Medium \| Large. |
+| `intent` | `'Neutral' \| 'Primary' \| 'Inverse'` | `'Primary'` | Arc color. Values: Primary \| Neutral \| Inverse. |
+| `label` | `string` | `'Loading'` | Accessible label. |
 
 **Accessibility** — role `status`. Use role="status" with aria-live="polite"; Provide an accessible label via aria-label; Include visually-hidden loading text.
 
@@ -1264,20 +1078,6 @@ import { Spinner } from '@inspera/kit'
 
 **Deprecated aliases** (do not use): `Loader`, `Loading indicator`, `Activity indicator`
 
-<details><summary>Canonical spec</summary>
-
-```yaml
-component: Spinner
-purpose: "Indicate an indeterminate loading state."
-variants:
-  size: [Small, Medium, Large]
-  intent: [Primary, Neutral, Inverse]
-defaults: { size: Medium, intent: Primary, label: Loading }
-layout: { diameter: { Small: 16, Medium: 24, Large: 40 } }
-styling: { arc: "#004080", track: "var(--gray-300)", inverse: "#FFFFFF" }
-accessibility: { role: status }
-```
-</details>
 
 ### Skeleton
 
@@ -1285,14 +1085,20 @@ Show placeholder shapes while content loads. — category: `feedback`.
 
 ```tsx
 import { Skeleton } from '@inspera/kit'
+
+<Skeleton
+  variant="Text"
+  lines={3}
+/>
 ```
 
-| Prop | Values | Default | Description |
+| Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `variant` | Text | Rect | Circle | Text | Placeholder shape. |
-| `width` | string | number | — | Explicit width. |
-| `height` | string | number | — | Explicit height. |
-| `lines` | number | 1 | Text lines (Text variant). |
+| `variant` | `'Text' \| 'Rect' \| 'Circle'` | `'Text'` | Placeholder shape. Values: Text \| Rect \| Circle. |
+| `width` | `string \| number` | — | Explicit width. Values: string \| number. |
+| `height` | `string \| number` | — | Explicit height. Values: string \| number. |
+| `lines` | `number` | `1` | Number of text lines. Only applies to the Text variant. |
+| `radius` | `string \| number` | — |  |
 
 **Accessibility** — role `presentation`. Skeletons are decorative and aria-hidden; Announce the real content once loaded; Mirror the layout of the content being loaded.
 
@@ -1301,19 +1107,6 @@ import { Skeleton } from '@inspera/kit'
 
 **Deprecated aliases** (do not use): `Placeholder`, `Shimmer`, `Ghost`
 
-<details><summary>Canonical spec</summary>
-
-```yaml
-component: Skeleton
-purpose: "Show placeholder shapes while content loads."
-variants:
-  variant: [Text, Rect, Circle]
-defaults: { variant: Text, lines: 1 }
-layout: { lastLineWidth: "60%" }
-styling: { gradient: "var(--gray-200) → var(--gray-100)", animation: "inspera-shimmer 1.4s ease infinite" }
-accessibility: { role: presentation, ariaHidden: true }
-```
-</details>
 
 ### Popover
 
@@ -1321,15 +1114,25 @@ Show interactive content anchored to a trigger. — category: `feedback`.
 
 ```tsx
 import { Popover } from '@inspera/kit'
+
+<Popover
+  placement="Bottom"
+  title="Filter results"
+  trigger={<Button label="Filters" />}
+  content={<FilterForm />}
+/>
 ```
 
-| Prop | Values | Default | Description |
+| Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `trigger` | ReactNode | — | Element that toggles the popover. |
-| `title` | string | — | Optional panel heading. |
-| `content` | ReactNode | — | Popover body content. |
-| `placement` | Top | Bottom | Left | Right | Bottom | Position relative to the trigger. |
-| `defaultOpen` | true | false | false | Open on mount. |
+| `trigger` | `string \| number \| bigint \| boolean \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> \| Iterable<ReactNode> \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal \| Promise<string \| number \| bigint \| boolean \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> \| Iterable<ReactNode> \| null \| undefined> \| null` | — | Element that toggles the popover. |
+| `title` | `string` | `'Popover title'` | Optional panel heading. |
+| `content` | `string \| number \| bigint \| boolean \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> \| Iterable<ReactNode> \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal \| Promise<string \| number \| bigint \| boolean \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> \| Iterable<ReactNode> \| null \| undefined> \| null` | `'Popover content with interactive elements.'` | Popover body content. |
+| `placement` | `'Left' \| 'Right' \| 'Bottom' \| 'Top'` | `'Bottom'` | Position relative to the trigger. Values: Top \| Bottom \| Left \| Right. |
+| `open` | `boolean` | — |  |
+| `defaultOpen` | `boolean` | `false` | Open on mount. Values: true \| false. |
+| `forceVisible` | `boolean` | `false` | Keep the panel visible regardless of state — used for documentation. |
+| `onOpenChange` | `(open: boolean) => void` | — |  |
 
 **Accessibility** — role `dialog`, keyboard operable. Trigger uses aria-haspopup and aria-expanded; Panel uses role="dialog"; Escape and outside-click close the popover; May contain interactive content (unlike Tooltip).
 
@@ -1338,19 +1141,6 @@ import { Popover } from '@inspera/kit'
 
 **Deprecated aliases** (do not use): `Flyout`, `Overlay panel`
 
-<details><summary>Canonical spec</summary>
-
-```yaml
-component: Popover
-purpose: "Show interactive content anchored to a trigger."
-variants:
-  placement: [Top, Bottom, Left, Right]
-defaults: { placement: Bottom, defaultOpen: false }
-layout: { padding: 16, maxWidth: 280, radius: md }
-styling: { surface: "var(--surface)", shadow: "shadow.300", border: "var(--border)" }
-accessibility: { role: dialog, keyboard: true }
-```
-</details>
 
 ### Drawer
 
@@ -1358,15 +1148,29 @@ Slide a panel in from the edge of the screen. — category: `feedback`.
 
 ```tsx
 import { Drawer } from '@inspera/kit'
+
+<Drawer
+  open={open}
+  side="Right"
+  size="Medium"
+  title="Assessment details"
+  hasCloseButton={true}
+  onClose={() => setOpen(false)}
+>
+  {children}
+</Drawer>
 ```
 
-| Prop | Values | Default | Description |
+| Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `open` | true | false | false | Visibility. |
-| `side` | Right | Left | Bottom | Right | Edge it slides from. |
-| `size` | Small | Medium | Large | Medium | Panel width / height. |
-| `title` | string | Panel | Header title. |
-| `hasCloseButton` | true | false | true | Show the close affordance. |
+| `open` | `boolean` | `false` | Visibility. Values: true \| false. |
+| `side` | `'Left' \| 'Right' \| 'Bottom'` | `'Right'` | Edge it slides from. Values: Right \| Left \| Bottom. |
+| `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Panel width / height. Values: Small \| Medium \| Large. |
+| `title` | `string` | `'Panel'` | Header title. |
+| `hasCloseButton` | `boolean` | `true` | Show the close affordance. Values: true \| false. |
+| `children` | `string \| number \| bigint \| boolean \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> \| Iterable<ReactNode> \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal \| Promise<string \| number \| bigint \| boolean \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> \| Iterable<ReactNode> \| null \| undefined> \| null` | — |  |
+| `embedded` | `boolean` | `false` | Render just the panel inline (no overlay/scrim) — used for documentation previews. |
+| `onClose` | `() => void` | — |  |
 
 **Accessibility** — role `dialog`, keyboard operable. Use role="dialog" with aria-modal="true"; Set aria-labelledby to the drawer title; Trap focus while open and restore it on close; Escape closes the drawer.
 
@@ -1375,21 +1179,6 @@ import { Drawer } from '@inspera/kit'
 
 **Deprecated aliases** (do not use): `Sheet`, `Side panel`, `Off-canvas`
 
-<details><summary>Canonical spec</summary>
-
-```yaml
-component: Drawer
-purpose: "Slide a panel in from the edge of the screen."
-variants:
-  side: [Right, Left, Bottom]
-  size: [Small, Medium, Large]
-  hasCloseButton: [true, false]
-defaults: { open: false, side: Right, size: Medium, hasCloseButton: true }
-layout: { width: { Small: 320, Medium: 400, Large: 560 }, paddingX: 24, paddingY: 20 }
-styling: { surface: "var(--surface)", shadow: "shadow.500", scrim: "rgba(39,39,39,0.48)" }
-accessibility: { role: dialog, ariaModal: true, keyboard: true }
-```
-</details>
 
 ## navigation
 
@@ -1399,13 +1188,23 @@ Organize content into switchable panels. — category: `navigation`.
 
 ```tsx
 import { Tabs } from '@inspera/kit'
+
+<Tabs
+  items={[{ label: 'Overview' }, { label: 'Questions' }]}
+  style="Underline"
+  size="Medium"
+  fullWidth={false}
+/>
 ```
 
-| Prop | Values | Default | Description |
+| Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `Style` | Underline | Contained | Underline | Visual treatment. |
-| `Size` | Small | Medium | Medium | Tab height 40 / 48. |
-| `FullWidth` | true | false | false | Stretch tabs to fill the row. |
+| `items` | `TabItem[]` | `defaultItems` |  |
+| `style` | `'Underline' \| 'Contained'` | `'Underline'` | Visual treatment. Values: Underline \| Contained. |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Tab height 40 / 48. Values: Small \| Medium. |
+| `fullWidth` | `boolean` | `false` | Stretch tabs to fill the row. Values: true \| false. |
+| `value` | `number` | — |  |
+| `onChange` | `(index: number) => void` | — |  |
 
 **Accessibility** — role `tablist`, keyboard operable. Use role="tablist" on the tab container; Each tab uses role="tab" with aria-selected; Tab panels use role="tabpanel" linked by aria-labelledby; Arrow keys navigate between tabs.
 
@@ -1414,21 +1213,6 @@ import { Tabs } from '@inspera/kit'
 
 **Deprecated aliases** (do not use): `Tab bar`, `Tab navigation`
 
-<details><summary>Canonical spec</summary>
-
-```yaml
-component: Tabs
-purpose: "Organize content into switchable panels."
-variants:
-  Style: [Underline, Contained]
-  Size: [Small, Medium]
-  FullWidth: [true, false]
-defaults: { Style: Underline, Size: Medium, FullWidth: false }
-layout: { height: 48, paddingX: 16, radius: none }
-styling: { text: "rgba(0,0,0,0.87)", border: "#E5E7EB", active: "#004080" }
-accessibility: { role: tablist, keyboard: true }
-```
-</details>
 
 ### Breadcrumb
 
@@ -1436,12 +1220,20 @@ Show the user's current location in a hierarchy. — category: `navigation`.
 
 ```tsx
 import { Breadcrumb } from '@inspera/kit'
+
+<Breadcrumb
+  items={['Home', 'Assessments', 'Algebra Quiz']}
+  separator="Chevron"
+  size="Medium"
+/>
 ```
 
-| Prop | Values | Default | Description |
+| Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `Separator` | Slash | Chevron | Chevron | Divider glyph between items. |
-| `Size` | Small | Medium | Medium | Text size 14 / 16. |
+| `items` | `string[]` | `defaultItems` |  |
+| `separator` | `'Slash' \| 'Chevron'` | `'Chevron'` | Divider glyph between items. Values: Slash \| Chevron. |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Text size 14 / 16. Values: Small \| Medium. |
+| `onNavigate` | `(index: number) => void` | — |  |
 
 **Accessibility** — role `navigation`, keyboard operable. Wrap in nav with aria-label="Breadcrumb"; Use an ordered list for semantic structure; Mark current page with aria-current="page".
 
@@ -1450,20 +1242,6 @@ import { Breadcrumb } from '@inspera/kit'
 
 **Deprecated aliases** (do not use): `Breadcrumbs`, `Path navigation`
 
-<details><summary>Canonical spec</summary>
-
-```yaml
-component: Breadcrumb
-purpose: "Show the user's current location in a hierarchy."
-variants:
-  Separator: [Slash, Chevron]
-  Size: [Small, Medium]
-defaults: { Separator: Chevron, Size: Medium }
-layout: { height: 32, paddingY: 4, gap: 8, radius: none }
-styling: { text: "#004080", current: "rgba(0,0,0,0.87)" }
-accessibility: { role: navigation, keyboard: true }
-```
-</details>
 
 ### Pagination
 
@@ -1471,15 +1249,24 @@ Navigate between pages of content. — category: `navigation`.
 
 ```tsx
 import { Pagination } from '@inspera/kit'
+
+<Pagination
+  page={page}
+  pageCount={12}
+  size="Medium"
+  showEdges={true}
+  onChange={setPage}
+/>
 ```
 
-| Prop | Values | Default | Description |
+| Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `page` | number | 1 | Current page (1-based). |
-| `pageCount` | number | 10 | Total number of pages. |
-| `siblingCount` | number | 1 | Pages shown either side of current. |
-| `size` | Small | Medium | Medium | Control height. |
-| `showEdges` | true | false | true | Show first / last controls. |
+| `page` | `number` | `1` | Current page (1-based). |
+| `pageCount` | `number` | `10` | Total number of pages. |
+| `siblingCount` | `number` | `1` | Pages shown either side of current. |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Control height. Values: Small \| Medium. |
+| `showEdges` | `boolean` | `true` | Show first / last controls. Values: true \| false. |
+| `onChange` | `(page: number) => void` | — |  |
 
 **Accessibility** — role `navigation`, keyboard operable. Wrap in nav with aria-label="Pagination"; Mark the current page with aria-current="page"; Disable and aria-disable prev/next at the bounds.
 
@@ -1488,20 +1275,6 @@ import { Pagination } from '@inspera/kit'
 
 **Deprecated aliases** (do not use): `Pager`, `Page navigation`
 
-<details><summary>Canonical spec</summary>
-
-```yaml
-component: Pagination
-purpose: "Navigate between pages of content."
-variants:
-  size: [Small, Medium]
-  showEdges: [true, false]
-defaults: { page: 1, pageCount: 10, siblingCount: 1, size: Medium, showEdges: true }
-layout: { itemSize: { Small: 32, Medium: 40 }, gap: 4, radius: sm }
-styling: { current: "#004080", hover: "var(--action-hover)" }
-accessibility: { role: navigation, keyboard: true }
-```
-</details>
 
 ### Menu
 
@@ -1509,14 +1282,24 @@ Present a list of actions in a dropdown. — category: `navigation`.
 
 ```tsx
 import { Menu } from '@inspera/kit'
+
+<Menu
+  label="Actions"
+  placement="Bottom Start"
+  items={[{ label: 'Edit', icon: 'edit' }, { label: 'Delete', icon: 'delete', danger: true }]}
+  onSelect={handleSelect}
+/>
 ```
 
-| Prop | Values | Default | Description |
+| Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | string | Actions | Trigger label. |
-| `items` | { label, icon?, danger?, disabled?, divider? }[] | — | Menu items. |
-| `placement` | Bottom Start | Bottom End | Bottom Start | Alignment to trigger. |
-| `defaultOpen` | true | false | false | Open on mount. |
+| `label` | `string` | `'Actions'` | Trigger label. |
+| `items` | `MenuItem[]` | `sampleItems` | Menu items. |
+| `placement` | `'Bottom Start' \| 'Bottom End'` | `'Bottom Start'` | Alignment to trigger. Values: Bottom Start \| Bottom End. |
+| `open` | `boolean` | — |  |
+| `defaultOpen` | `boolean` | `false` | Open on mount. Values: true \| false. |
+| `forceVisible` | `boolean` | `false` | Always render the open menu, for documentation. |
+| `onSelect` | `(label: string) => void` | — |  |
 
 **Accessibility** — role `menu`, keyboard operable. Trigger uses aria-haspopup="menu" and aria-expanded; Items use role="menuitem"; Arrow keys move, Enter selects, Escape closes; Outside click closes the menu.
 
@@ -1525,19 +1308,6 @@ import { Menu } from '@inspera/kit'
 
 **Deprecated aliases** (do not use): `Dropdown menu`, `Action menu`, `Context menu`, `Overflow menu`
 
-<details><summary>Canonical spec</summary>
-
-```yaml
-component: Menu
-purpose: "Present a list of actions in a dropdown."
-variants:
-  placement: ["Bottom Start", "Bottom End"]
-defaults: { label: Actions, placement: "Bottom Start", defaultOpen: false }
-layout: { minWidth: 180, paddingY: 4, itemHeight: 40, radius: md }
-styling: { surface: "var(--surface)", shadow: "shadow.200", danger: "#D32F2F", hover: "var(--action-hover)" }
-accessibility: { role: menu, keyboard: true }
-```
-</details>
 
 ### Stepper
 
@@ -1545,14 +1315,20 @@ Show progress through a sequence of steps. — category: `navigation`.
 
 ```tsx
 import { Stepper } from '@inspera/kit'
+
+<Stepper
+  steps={[{ label: 'Details' }, { label: 'Questions' }, { label: 'Review' }]}
+  activeStep={1}
+  orientation="Horizontal"
+/>
 ```
 
-| Prop | Values | Default | Description |
+| Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `steps` | { label, description? }[] | — | Ordered steps. |
-| `activeStep` | number | 1 | Zero-based current step. |
-| `orientation` | Horizontal | Vertical | Horizontal | Layout direction. |
-| `size` | Small | Medium | Medium | Indicator size. |
+| `steps` | `Step[]` | `defaultSteps` | Ordered steps. |
+| `activeStep` | `number` | `1` | Zero-based index of the current step. |
+| `orientation` | `'Vertical' \| 'Horizontal'` | `'Horizontal'` | Layout direction. Values: Horizontal \| Vertical. |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Indicator size. Values: Small \| Medium. |
 
 **Accessibility** — role `list`. Use an ordered list for step semantics; Mark the current step with aria-current="step"; Convey completion with an icon, not color alone.
 
@@ -1561,20 +1337,6 @@ import { Stepper } from '@inspera/kit'
 
 **Deprecated aliases** (do not use): `Wizard`, `Progress steps`, `Step indicator`
 
-<details><summary>Canonical spec</summary>
-
-```yaml
-component: Stepper
-purpose: "Show progress through a sequence of steps."
-variants:
-  orientation: [Horizontal, Vertical]
-  size: [Small, Medium]
-defaults: { activeStep: 1, orientation: Horizontal, size: Medium }
-layout: { circle: { Small: 24, Medium: 32 }, connector: 2 }
-styling: { active: "#004080", upcoming: "var(--border-strong)", connector: "var(--border)" }
-accessibility: { role: list }
-```
-</details>
 
 ### Link
 
@@ -1582,15 +1344,29 @@ Navigate to another location or resource. — category: `navigation`.
 
 ```tsx
 import { Link } from '@inspera/kit'
+
+<Link
+  href="/docs"
+  label="Learn more"
+  intent="Default"
+  underline="Hover"
+  external={false}
+/>
 ```
 
-| Prop | Values | Default | Description |
+| Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `intent` | Default | Muted | Default | Color emphasis. |
-| `size` | Small | Medium | Medium | Text size. |
-| `underline` | Always | Hover | None | Hover | Underline behavior. |
-| `external` | true | false | false | Open in a new tab with an icon. |
-| `disabled` | true | false | false | Non-interactive state. |
+| `children` | `string \| number \| bigint \| boolean \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> \| Iterable<ReactNode> \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal \| Promise<string \| number \| bigint \| boolean \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string \| import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> \| Iterable<ReactNode> \| null \| undefined> \| null` | — |  |
+| `label` | `string` | `'Learn more'` |  |
+| `href` | `string` | `'#'` |  |
+| `intent` | `'Default' \| 'Muted'` | `'Default'` | Color emphasis. Values: Default \| Muted. |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Text size. Values: Small \| Medium. |
+| `underline` | `'None' \| 'Hover' \| 'Always'` | `'Hover'` | Underline behavior. Values: Always \| Hover \| None. |
+| `external` | `boolean` | `false` | Open in a new tab with an icon. Values: true \| false. |
+| `disabled` | `boolean` | `false` | Non-interactive state. Values: true \| false. |
+| `leadingIcon` | `string` | — |  |
+| `trailingIcon` | `string` | — |  |
+| `onClick` | `(e: React.MouseEvent) => void` | — |  |
 
 **Accessibility** — role `link`, keyboard operable. Use a real anchor with a valid href; External links set target="_blank" and rel="noreferrer"; Disabled links set aria-disabled and prevent navigation; Focus ring is visible on keyboard focus.
 
@@ -1599,19 +1375,3 @@ import { Link } from '@inspera/kit'
 
 **Deprecated aliases** (do not use): `Hyperlink`, `Text link`, `Anchor`
 
-<details><summary>Canonical spec</summary>
-
-```yaml
-component: Link
-purpose: "Navigate to another location or resource."
-variants:
-  intent: [Default, Muted]
-  size: [Small, Medium]
-  underline: [Always, Hover, None]
-  external: [true, false]
-  disabled: [true, false]
-defaults: { intent: Default, size: Medium, underline: Hover, external: false, disabled: false }
-styling: { default: "#004080", muted: "var(--gray-600)", disabled: "var(--action-disabled)" }
-accessibility: { role: link, keyboard: true }
-```
-</details>

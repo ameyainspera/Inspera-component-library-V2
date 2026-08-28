@@ -5,10 +5,13 @@ export type ToggleSize = 'Small' | 'Medium'
 
 export interface ToggleProps {
   label?: string
+  /** On / off state. Values: true | false. */
   checked?: boolean
   /** Forces a visual state for documentation. Omit for real interactivity. */
   state?: ToggleState
+  /** Track / thumb size. Values: Small | Medium. */
   size?: ToggleSize
+  /** Render the label. Values: true | false. */
   withLabel?: boolean
   onChange?: (checked: boolean) => void
 }

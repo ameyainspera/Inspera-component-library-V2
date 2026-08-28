@@ -8,14 +8,19 @@ export interface TextareaProps {
   label?: string
   placeholder?: string
   value?: string
+  /** Visible text rows. */
   rows?: number
+  /** Vertical padding density. Values: Small | Medium. */
   size?: TextareaSize
   /** Forces a visual state for documentation. Omit for real interactivity. */
   state?: TextareaState
+  /** Show the field label. Values: true | false. */
   showLabel?: boolean
   helpText?: string
   errorText?: string
+  /** Maximum character length. */
   maxLength?: number
+  /** Show character counter. Values: true | false. */
   showCount?: boolean
   onChange?: (value: string) => void
 }

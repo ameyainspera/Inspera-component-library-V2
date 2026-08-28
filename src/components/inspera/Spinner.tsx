@@ -4,8 +4,11 @@ export type SpinnerSize = 'Small' | 'Medium' | 'Large'
 export type SpinnerIntent = 'Primary' | 'Neutral' | 'Inverse'
 
 export interface SpinnerProps {
+  /** Diameter 16 / 24 / 40. Values: Small | Medium | Large. */
   size?: SpinnerSize
+  /** Arc color. Values: Primary | Neutral | Inverse. */
   intent?: SpinnerIntent
+  /** Accessible label. */
   label?: string
 }
 

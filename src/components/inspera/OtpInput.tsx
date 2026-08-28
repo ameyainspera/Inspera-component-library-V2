@@ -3,7 +3,9 @@ import { type CSSProperties, useId, useRef, useState } from 'react'
 export type OtpInputState = 'Default' | 'Focused' | 'Error' | 'Disabled'
 
 export interface OtpInputProps {
+  /** Number of digit boxes. */
   length?: number
+  /** Current code value. */
   value?: string
   /** Forces a visual state for documentation. Omit for real interactivity. */
   state?: OtpInputState

@@ -4,11 +4,15 @@ export type DatePickerState = 'Default' | 'Focused' | 'Disabled' | 'Error'
 
 export interface DatePickerProps {
   label?: string
+  /** Selected date (YYYY-MM-DD). */
   value?: string
+  /** Trigger placeholder. */
   placeholder?: string
   /** Forces a visual state for documentation. Omit for real interactivity. */
   state?: DatePickerState
+  /** Show the field label. Values: true | false. */
   showLabel?: boolean
+  /** Open the calendar initially. Values: true | false. */
   defaultOpen?: boolean
   onChange?: (iso: string) => void
 }

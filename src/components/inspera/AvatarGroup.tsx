@@ -7,8 +7,11 @@ export interface AvatarGroupItem {
 }
 
 export interface AvatarGroupProps {
+  /** Avatars to display. */
   avatars?: AvatarGroupItem[]
+  /** Maximum shown before overflow. */
   max?: number
+  /** Avatar diameter. Values: Small | Medium | Large. */
   size?: AvatarSize
 }
 

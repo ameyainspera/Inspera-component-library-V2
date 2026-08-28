@@ -6,8 +6,11 @@ export type AlertLayout = 'Simple' | 'With CTA' | 'With Close' | 'With CTA + Clo
 export interface AlertProps {
   title?: string
   message?: string
+  /** Severity / color. Values: Info | Success | Warning | Error. */
   intent?: AlertIntent
+  /** Action affordances. Values: Simple | With CTA | With Close | With CTA + Close. */
   layout?: AlertLayout
+  /** Tinted fill vs. left-accent only. Values: true | false. */
   background?: boolean
   ctaLabel?: string
   onCta?: () => void

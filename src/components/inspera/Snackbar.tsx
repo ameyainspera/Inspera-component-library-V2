@@ -4,8 +4,11 @@ export type SnackbarIntent = 'Neutral' | 'Info' | 'Success' | 'Warning' | 'Error
 
 export interface SnackbarProps {
   message?: string
+  /** Accent icon color. Values: Neutral | Info | Success | Warning | Error. */
   intent?: SnackbarIntent
+  /** Show an inline action (e.g. Undo). Values: true | false. */
   hasAction?: boolean
+  /** Show the dismiss button. Values: true | false. */
   hasClose?: boolean
   actionLabel?: string
   onAction?: () => void

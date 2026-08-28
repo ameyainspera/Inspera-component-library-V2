@@ -8,10 +8,15 @@ export interface LinkProps {
   children?: ReactNode
   label?: string
   href?: string
+  /** Color emphasis. Values: Default | Muted. */
   intent?: LinkIntent
+  /** Text size. Values: Small | Medium. */
   size?: LinkSize
+  /** Underline behavior. Values: Always | Hover | None. */
   underline?: LinkUnderline
+  /** Open in a new tab with an icon. Values: true | false. */
   external?: boolean
+  /** Non-interactive state. Values: true | false. */
   disabled?: boolean
   leadingIcon?: string
   trailingIcon?: string

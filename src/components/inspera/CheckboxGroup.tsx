@@ -11,8 +11,11 @@ export interface CheckboxOption {
 
 export interface CheckboxGroupProps {
   label?: string
+  /** Checkbox options. */
   options?: CheckboxOption[]
+  /** Selected option values. */
   value?: string[]
+  /** Layout direction. Values: Vertical | Horizontal. */
   orientation?: CheckboxGroupOrientation
   /** Forces a visual state for documentation. Omit for real interactivity. */
   state?: CheckboxGroupState

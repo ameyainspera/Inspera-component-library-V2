@@ -5,8 +5,11 @@ export type DialogSize = 'Small' | 'Medium' | 'Large'
 export interface DialogProps {
   title?: string
   body?: ReactNode
+  /** Panel width 400 / 480 / 560. Values: Small | Medium | Large. */
   size?: DialogSize
+  /** Show the header close affordance. Values: true | false. */
   hasCloseButton?: boolean
+  /** Show the footer action buttons. Values: true | false. */
   hasActions?: boolean
   confirmLabel?: string
   cancelLabel?: string

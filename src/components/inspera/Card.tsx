@@ -6,8 +6,11 @@ export type CardPadding = 'Compact' | 'Default' | 'Spacious'
 export interface CardProps {
   title?: string
   body?: string
+  /** Surface treatment. Values: Flat | Raised | Outlined. */
   elevation?: CardElevation
+  /** Internal padding (12 / 16 / 24). Values: Compact | Default | Spacious. */
   padding?: CardPadding
+  /** Renders as a focusable button with hover elevation. Values: true | false. */
   interactive?: boolean
   children?: ReactNode
   onClick?: () => void

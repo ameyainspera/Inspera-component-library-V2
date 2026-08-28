@@ -5,16 +5,22 @@ export type TextInputState =
 export type TextInputSize = 'Small' | 'Medium'
 
 export interface TextInputProps {
+  /** Show the field label. Values: true | false. */
   label?: string
   placeholder?: string
   value?: string
   /** Forces a visual state for documentation. Omit for real interactivity. */
   state?: TextInputState
+  /** Control height. Values: Small | Medium. */
   size?: TextInputSize
+  /** Show a leading icon. Values: true | false. */
   leadingIcon?: string
+  /** Show a trailing icon. Values: true | false. */
   trailingIcon?: string
   showLabel?: boolean
+  /** Show helper text. Values: true | false. */
   helpText?: string
+  /** Show error message. Values: true | false. */
   errorText?: string
   onChange?: (value: string) => void
 }

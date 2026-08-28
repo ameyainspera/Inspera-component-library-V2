@@ -10,8 +10,11 @@ export interface TabItem {
 
 export interface TabsProps {
   items?: TabItem[]
+  /** Visual treatment. Values: Underline | Contained. */
   style?: TabsStyle
+  /** Tab height 40 / 48. Values: Small | Medium. */
   size?: TabsSize
+  /** Stretch tabs to fill the row. Values: true | false. */
   fullWidth?: boolean
   value?: number
   onChange?: (index: number) => void

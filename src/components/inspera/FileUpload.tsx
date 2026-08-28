@@ -4,10 +4,13 @@ export type FileUploadState = 'Default' | 'Dragging' | 'Disabled' | 'Error'
 
 export interface FileUploadProps {
   label?: string
+  /** Accepted MIME types / extensions. */
   accept?: string
+  /** Allow multiple files. Values: true | false. */
   multiple?: boolean
   /** Forces a visual state for documentation. Omit for real interactivity. */
   state?: FileUploadState
+  /** Constraint hint text. */
   helpText?: string
   onFiles?: (files: File[]) => void
 }

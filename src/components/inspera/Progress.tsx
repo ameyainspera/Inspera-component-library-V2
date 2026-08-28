@@ -5,12 +5,17 @@ export type ProgressSize = 'Small' | 'Medium' | 'Large'
 export type ProgressIntent = 'Primary' | 'Success' | 'Warning' | 'Error'
 
 export interface ProgressProps {
+  /** Bar or ring. Values: Linear | Circular. */
   variant?: ProgressVariant
   /** Completion percentage 0–100. Ignored when indeterminate. */
   value?: number
+  /** Unknown-duration animation. Values: true | false. */
   indeterminate?: boolean
+  /** Bar height / ring diameter. Values: Small | Medium | Large. */
   size?: ProgressSize
+  /** Fill color. Values: Primary | Success | Warning | Error. */
   intent?: ProgressIntent
+  /** Render the percentage. Values: true | false. */
   showValue?: boolean
 }
 

@@ -3,9 +3,13 @@ import { type CSSProperties, useId, useState } from 'react'
 export type SegmentedControlSize = 'Small' | 'Medium'
 
 export interface SegmentedControlProps {
+  /** Segment labels. */
   items?: string[]
+  /** Active segment index. */
   value?: number
+  /** Segment height. Values: Small | Medium. */
   size?: SegmentedControlSize
+  /** Stretch to fill the row. Values: true | false. */
   fullWidth?: boolean
   onChange?: (index: number) => void
 }

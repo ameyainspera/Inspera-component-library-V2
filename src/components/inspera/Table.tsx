@@ -10,11 +10,17 @@ export interface TableColumn {
 }
 
 export interface TableProps {
+  /** Column definitions. */
   columns?: TableColumn[]
+  /** Row data keyed by column. */
   rows?: Record<string, ReactNode>[]
+  /** Row height density. Values: Compact | Default. */
   size?: TableSize
+  /** Zebra-stripe rows. Values: true | false. */
   striped?: boolean
+  /** Highlight rows on hover. Values: true | false. */
   hoverable?: boolean
+  /** Add a row selection column. Values: true | false. */
   selectable?: boolean
   caption?: string
   onRowClick?: (row: Record<string, ReactNode>, index: number) => void

@@ -3,10 +3,15 @@ import { type CSSProperties, useId, useState } from 'react'
 export type RatingSize = 'Small' | 'Medium'
 
 export interface RatingProps {
+  /** Current rating. */
   value?: number
+  /** Number of stars. */
   max?: number
+  /** Star size. Values: Small | Medium. */
   size?: RatingSize
+  /** Display-only mode. Values: true | false. */
   readOnly?: boolean
+  /** Show numeric value. Values: true | false. */
   showValue?: boolean
   onChange?: (value: number) => void
 }

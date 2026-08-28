@@ -7,21 +7,20 @@ export type Category =
   | 'feedback'
   | 'navigation'
 
-export interface PropSpec {
-  name: string
-  values: string
-  default?: string
-  description: string
-}
-
 export interface ComponentSpec {
   slug: string
+  /** Human-readable display name, e.g. "OTP Input". */
   name: string
+  /**
+   * The React export name, when it differs from `name` with spaces removed
+   * (e.g. "OTP Input" displays that way but exports as `OtpInput`). The
+   * generator asserts this resolves to a real export.
+   */
+  exportName?: string
   category: Category
   purpose: string
   status: 'ready' | 'coming-soon'
   deprecatedAliases: string[]
-  props: PropSpec[]
   tokens: string[]
   accessibility: {
     role: string
@@ -32,8 +31,6 @@ export interface ComponentSpec {
     do: string[]
     dont: string[]
   }
-  /** Raw canonical spec block, shown verbatim in the AI copy panel. */
-  specYaml: string
 }
 
 export interface NavGroup {

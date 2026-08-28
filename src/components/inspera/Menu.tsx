@@ -11,10 +11,14 @@ export interface MenuItem {
 }
 
 export interface MenuProps {
+  /** Trigger label. */
   label?: string
+  /** Menu items. */
   items?: MenuItem[]
+  /** Alignment to trigger. Values: Bottom Start | Bottom End. */
   placement?: MenuPlacement
   open?: boolean
+  /** Open on mount. Values: true | false. */
   defaultOpen?: boolean
   /** Always render the open menu, for documentation. */
   forceVisible?: boolean

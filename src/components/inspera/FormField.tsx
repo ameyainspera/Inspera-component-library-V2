@@ -1,10 +1,15 @@
 import { type ReactNode, useId } from 'react'
 
 export interface FormFieldProps {
+  /** Field label text. */
   label?: string
+  /** id of the wrapped control for label association. */
   htmlFor?: string
+  /** Show a required asterisk. Values: true | false. */
   required?: boolean
+  /** Helper text shown below the control. */
   helpText?: string
+  /** Error message; replaces help text when present. */
   errorText?: string
   children: ReactNode
 }
