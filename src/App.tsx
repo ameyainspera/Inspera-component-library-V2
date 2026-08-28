@@ -63,8 +63,12 @@ export default function App() {
           </span>
         </button>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+          {/* The complete document, not the index. llms.txt lists component
+              names and links a file per component — useful to an agent that
+              fetches, but it reads as a bare list of names to a person who
+              clicks it expecting the spec. */}
           <a
-            href="/llms.txt"
+            href="/llms-full.txt"
             target="_blank"
             rel="noreferrer"
             style={{
@@ -73,10 +77,19 @@ export default function App() {
               background: 'var(--surface)', color: 'var(--gray-800)', textDecoration: 'none',
               fontSize: 13, fontWeight: 500,
             }}
-            title="Portable spec index for any AI builder"
+            title="Complete AI build guide — foundations + all 42 components"
           >
             <span className="material-symbols-outlined" style={{ fontSize: 18 }} aria-hidden>description</span>
             AI spec
+          </a>
+          <a
+            href="/llms.txt"
+            target="_blank"
+            rel="noreferrer"
+            style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--muted-foreground)', textDecoration: 'none' }}
+            title="Short index that links a spec per component — paste this into a chat"
+          >
+            llms.txt
           </a>
           <a
             href="/tokens.w3c.json"

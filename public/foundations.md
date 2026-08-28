@@ -1,25 +1,9 @@
-# Inspera Design System
+<!-- Inspera Design System v1.0.0 — generated 2026-08-28. Do not edit. -->
 
-All UI in this project uses the Inspera Design System (v1.0.0).
+# Inspera Design System — Foundations
 
-- Use ONLY the 42 components listed here. Do not invent variants or rename props.
-- **Prop names are camelCase and case-sensitive** (`intent`, not `Intent`). React
-  silently ignores an unknown prop, so a capitalised name renders the default
-  variant with no error at all. Copy prop names exactly as given.
-- **Variant *values* are Capitalised** (`intent="Primary"`, `size="Medium"`).
-- Never use a deprecated alias name; map it to the canonical component.
-- Style with the tokens — never hardcode an off-palette color.
-- Honor the accessibility notes (role, aria, keyboard) for every component.
-
-## Reference
-
-They live in this repo's `public/` directory (set INSPERA_DS_BASE_URL and regenerate to emit absolute URLs)
-
-- `llms.txt` — component index. Read this first.
-- `c/<component>.md` — full spec for one component. Fetch only what you use.
-- `api.json` — every prop, type and default, machine-readable.
-- `tokens.css` — import once at the app root.
-- `inspera.theme.css` — Tailwind v4 `@theme` block, if this project uses Tailwind.
+Version 1.0.0. Colour, typography, spacing, radius and depth. Components
+are documented separately — see llms.txt for the index.
 
 ## Foundations
 
@@ -46,14 +30,117 @@ app root and reference tokens as `var(--primary)`, `var(--space-4)`,
 Each family runs 100 (lightest) to 900 (darkest). 600–900 are safe for text on
 a light background; 100–300 are surface tints.
 
-- **gray** — 100 `#F7F7F7` · 200 `#EDEDED` · 300 `#D9D9D9` · 400 `#BCBCBC` · 500 `#949494` · 600 `#7A7A7A` · 700 `#595959` · 800 `#404040` · 900 `#272727`
-- **blue** — 100 `#F0F7FF` · 200 `#DBEDFF` · 300 `#B3D9FF` · 400 `#7ABDFF` · 500 `#3399FF` · 600 `#007BF5` · 700 `#0059B3` · 800 `#004080` · 900 `#002E5C`
-- **green** — 100 `#F2FDF8` · 200 `#E0FAEF` · 300 `#BDF4DD` · 400 `#8DECC5` · 500 `#50E2A5` · 600 `#1BA76D` · 700 `#147B50` · 800 `#106542` · 900 `#0D4F33`
-- **red** — 100 `#FEF1F1` · 200 `#FCDEDE` · 300 `#F9B8B8` · 400 `#F58484` · 500 `#F04242` · 600 `#E21212` · 700 `#A50D0D` · 800 `#760A0A` · 900 `#550707`
-- **yellow** — 100 `#FFFCF0` · 200 `#FFF8DC` · 300 `#FEF0B3` · 400 `#FEE67C` · 500 `#FDD835` · 600 `#F2C602` · 700 `#B19102` · 800 `#7E6701` · 900 `#5B4A01`
-- **orange** — 100 `#FFFAF0` · 200 `#FFF3DC` · 300 `#FEE5B3` · 400 `#FED27C` · 500 `#FDBA35` · 600 `#F2A202` · 700 `#D99102` · 800 `#7E5501` · 900 `#5B3D01`
-- **purple** — 100 `#F6F4FB` · 200 `#E9E4F6` · 300 `#D0C6EC` · 400 `#9F88D7` · 500 `#8366CC` · 600 `#603DB8` · 700 `#462D86` · 800 `#322060` · 900 `#241745`
-- **pink** — 100 `#FEF1F5` · 200 `#FCDFE8` · 300 `#F8B9CE` · 400 `#F386AB` · 500 `#ED457D` · 600 `#DF1659` · 700 `#A21041` · 800 `#740B2E` · 900 `#540821`
+#### gray
+
+| Shade | CSS variable | Value |
+| --- | --- | --- |
+| 100 | `var(--gray-100)` | #F7F7F7 |
+| 200 | `var(--gray-200)` | #EDEDED |
+| 300 | `var(--gray-300)` | #D9D9D9 |
+| 400 | `var(--gray-400)` | #BCBCBC |
+| 500 | `var(--gray-500)` | #949494 |
+| 600 | `var(--gray-600)` | #7A7A7A |
+| 700 | `var(--gray-700)` | #595959 |
+| 800 | `var(--gray-800)` | #404040 |
+| 900 | `var(--gray-900)` | #272727 |
+
+#### blue
+
+| Shade | CSS variable | Value |
+| --- | --- | --- |
+| 100 | `var(--blue-100)` | #F0F7FF |
+| 200 | `var(--blue-200)` | #DBEDFF |
+| 300 | `var(--blue-300)` | #B3D9FF |
+| 400 | `var(--blue-400)` | #7ABDFF |
+| 500 | `var(--blue-500)` | #3399FF |
+| 600 | `var(--blue-600)` | #007BF5 |
+| 700 | `var(--blue-700)` | #0059B3 |
+| 800 | `var(--blue-800)` | #004080 |
+| 900 | `var(--blue-900)` | #002E5C |
+
+#### green
+
+| Shade | CSS variable | Value |
+| --- | --- | --- |
+| 100 | `var(--green-100)` | #F2FDF8 |
+| 200 | `var(--green-200)` | #E0FAEF |
+| 300 | `var(--green-300)` | #BDF4DD |
+| 400 | `var(--green-400)` | #8DECC5 |
+| 500 | `var(--green-500)` | #50E2A5 |
+| 600 | `var(--green-600)` | #1BA76D |
+| 700 | `var(--green-700)` | #147B50 |
+| 800 | `var(--green-800)` | #106542 |
+| 900 | `var(--green-900)` | #0D4F33 |
+
+#### red
+
+| Shade | CSS variable | Value |
+| --- | --- | --- |
+| 100 | `var(--red-100)` | #FEF1F1 |
+| 200 | `var(--red-200)` | #FCDEDE |
+| 300 | `var(--red-300)` | #F9B8B8 |
+| 400 | `var(--red-400)` | #F58484 |
+| 500 | `var(--red-500)` | #F04242 |
+| 600 | `var(--red-600)` | #E21212 |
+| 700 | `var(--red-700)` | #A50D0D |
+| 800 | `var(--red-800)` | #760A0A |
+| 900 | `var(--red-900)` | #550707 |
+
+#### yellow
+
+| Shade | CSS variable | Value |
+| --- | --- | --- |
+| 100 | `var(--yellow-100)` | #FFFCF0 |
+| 200 | `var(--yellow-200)` | #FFF8DC |
+| 300 | `var(--yellow-300)` | #FEF0B3 |
+| 400 | `var(--yellow-400)` | #FEE67C |
+| 500 | `var(--yellow-500)` | #FDD835 |
+| 600 | `var(--yellow-600)` | #F2C602 |
+| 700 | `var(--yellow-700)` | #B19102 |
+| 800 | `var(--yellow-800)` | #7E6701 |
+| 900 | `var(--yellow-900)` | #5B4A01 |
+
+#### orange
+
+| Shade | CSS variable | Value |
+| --- | --- | --- |
+| 100 | `var(--orange-100)` | #FFFAF0 |
+| 200 | `var(--orange-200)` | #FFF3DC |
+| 300 | `var(--orange-300)` | #FEE5B3 |
+| 400 | `var(--orange-400)` | #FED27C |
+| 500 | `var(--orange-500)` | #FDBA35 |
+| 600 | `var(--orange-600)` | #F2A202 |
+| 700 | `var(--orange-700)` | #D99102 |
+| 800 | `var(--orange-800)` | #7E5501 |
+| 900 | `var(--orange-900)` | #5B3D01 |
+
+#### purple
+
+| Shade | CSS variable | Value |
+| --- | --- | --- |
+| 100 | `var(--purple-100)` | #F6F4FB |
+| 200 | `var(--purple-200)` | #E9E4F6 |
+| 300 | `var(--purple-300)` | #D0C6EC |
+| 400 | `var(--purple-400)` | #9F88D7 |
+| 500 | `var(--purple-500)` | #8366CC |
+| 600 | `var(--purple-600)` | #603DB8 |
+| 700 | `var(--purple-700)` | #462D86 |
+| 800 | `var(--purple-800)` | #322060 |
+| 900 | `var(--purple-900)` | #241745 |
+
+#### pink
+
+| Shade | CSS variable | Value |
+| --- | --- | --- |
+| 100 | `var(--pink-100)` | #FEF1F5 |
+| 200 | `var(--pink-200)` | #FCDFE8 |
+| 300 | `var(--pink-300)` | #F8B9CE |
+| 400 | `var(--pink-400)` | #F386AB |
+| 500 | `var(--pink-500)` | #ED457D |
+| 600 | `var(--pink-600)` | #DF1659 |
+| 700 | `var(--pink-700)` | #A21041 |
+| 800 | `var(--pink-800)` | #740B2E |
+| 900 | `var(--pink-900)` | #540821 |
 
 ### Colour — roles
 
@@ -127,9 +214,3 @@ cards and `500` for dialogs.
 | `shadow.300` | `var(--shadow-300)` | `0px 8px 16px rgba(39, 39, 39, 0.08), 0px 6px 8px rgba(39, 39, 39, 0.12)` |
 | `shadow.500` | `var(--shadow-500)` | `0px 10px 32px rgba(39, 39, 39, 0.1), 0px 6px 14px rgba(39, 39, 39, 0.12)` |
 
-
-## Before you finish
-
-Check every component you used against its `c/<component>.md`: prop names
-camelCase, variant values Capitalised, no hardcoded colors, accessibility notes
-implemented.

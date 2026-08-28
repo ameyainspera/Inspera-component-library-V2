@@ -225,49 +225,56 @@ ${aliases}`
 // Portable spec — public/inspera-llms.txt (AGENTS/llms.txt style)
 // ---------------------------------------------------------------------------
 function buildLlmsTxt(): string {
-  const tokenLines = [
-    ...brandColors.map((c) => `- ${c.name}: ${c.value} — ${c.note}`),
-    ...semanticColors.map((c) => `- ${c.name}: ${c.value}`),
-    ...brandAccents.map((c) => `- accent.${c.name}: ${c.value}`),
-    `- radius: ${radius.map((r) => `${r.token} ${r.value}px`).join(', ')}`,
-    `- spacing scale (px): ${spacing.map((s) => s.value).join(', ')}`,
-    `- fonts: Inter (UI/body), JetBrains Mono (code), Material Symbols Outlined (icons)`,
-  ].join('\n')
-
   const byCategory: Record<string, ComponentSpec[]> = {}
   for (const c of componentList) (byCategory[c.category] ??= []).push(c)
 
   const sections = Object.entries(byCategory)
     .map(([cat, list]) =>
-      `## ${cat}\n\n${list.map((c) => componentMarkdown(c, '@inspera/components')).join('\n\n')}`)
+      `## Components — ${cat}\n\n${list.map((c) => componentMarkdown(c, '@inspera/components')).join('\n\n')}`)
     .join('\n\n')
 
-  return `# Inspera Design System — AI build guide
+  return `# Inspera Design System — complete AI build guide
 
-> Portable reference for generating on-brand Inspera UI in ANY AI builder
-> (Cursor, v0, Lovable, Bolt, Claude, ChatGPT, etc.). Paste or link this file.
-> If the project can install packages, prefer \`npm i @inspera/components\` and
-> \`import '@inspera/components/tokens.css'\` — the real components enforce this
-> spec. Otherwise, follow the definitions below verbatim.
+> Version ${VERSION}. Everything needed to generate on-brand Inspera UI, in one
+> document: the foundations, then all ${componentList.length} components with
+> their real prop APIs.
+>
+> This is the full text. For a smaller starting point that links a spec per
+> component, use llms.txt.
+
+If the project can install packages, prefer the real components — they enforce
+this spec at runtime:
+
+\`\`\`bash
+npm i @inspera/components   # private registry
+\`\`\`
+\`\`\`tsx
+import '@inspera/components/tokens.css'
+import { Button, TextInput } from '@inspera/components'
+\`\`\`
+
+Otherwise follow the definitions below verbatim.
 
 ## Rules
 
-- Use ONLY the ${componentList.length} components below. Do not invent variants or rename props.
-- **Prop names are camelCase and case-sensitive** (\`intent\`, not \`Intent\`). React
-  silently ignores an unknown prop, so a capitalised name renders the default
-  variant with no error. Copy prop names exactly as the tables give them.
-- **Variant *values* are Capitalised** (\`intent="Primary"\`, \`size="Medium"\`).
-- Never use a deprecated alias name; map it to the canonical component.
-- Style everything with the tokens below — never hardcode off-palette colors.
-- Honor the accessibility notes (roles, aria, keyboard) for every component.
+${RULES}
 
-## Tokens
-
-${tokenLines}
-
-Full machine-readable tokens: tokens.w3c.json (W3C Design Tokens format).
+${buildFoundations({ compact: false })}
 
 ${sections}
+`
+}
+
+/** Foundations on their own, for an agent that only needs the tokens. */
+function buildFoundationsDoc(): string {
+  return `${provenance()}
+
+# Inspera Design System — Foundations
+
+Version ${VERSION}. Colour, typography, spacing, radius and depth. Components
+are documented separately — see llms.txt for the index.
+
+${buildFoundations({ compact: false })}
 `
 }
 
@@ -369,16 +376,121 @@ const RULES = `- Use ONLY the ${componentList.length} components listed here. Do
 - Style with the tokens — never hardcode an off-palette color.
 - Honor the accessibility notes (role, aria, keyboard) for every component.`
 
-const TOKEN_SUMMARY = () =>
-  [
-    ...brandColors.map((c) => `- ${c.name}: ${c.value} — ${c.note}`),
-    ...semanticColors.map((c) => `- ${c.name}: ${c.value}`),
-    ...brandAccents.map((c) => `- accent.${c.name}: ${c.value}`),
-    `- palette families (100–900 each): ${Object.keys(palette).join(', ')} — e.g. \`var(--blue-600)\``,
-    `- radius: ${radius.map((r) => `${r.token} ${r.value}px`).join(', ')}`,
-    `- spacing (px): ${spacing.map((sp) => sp.value).join(', ')} — \`var(--space-1)\`…\`var(--space-16)\``,
-    `- fonts: Inter (UI), JetBrains Mono (code), Material Symbols Outlined (icons)`,
+/**
+ * Foundations — the design decisions every component is built from.
+ *
+ * `compact` collapses each palette family onto one line for the paste-able
+ * index; the full form gets a table per family. Both carry real values: an
+ * agent that cannot load tokens.css still needs to know that --blue-600 is
+ * #007BF5, or it will invent a blue.
+ */
+function buildFoundations({ compact }: { compact: boolean }): string {
+  const swatch = (name: string, value: string, note?: string) =>
+    `| \`${name}\` | \`var(--${cssName(name)})\` | ${value} |${note ? ` ${note} |` : ' |'}`
+
+  const colourHead = '| Token | CSS variable | Value | Use |\n| --- | --- | --- | --- |'
+
+  const brand = [
+    ...brandColors.map((c) => swatch(c.name, c.value, c.note)),
+    ...semanticColors.map((c) => swatch(c.name, c.value, `Use only for its meaning (${c.name})`)),
+    ...brandAccents.map((c) => swatch(`accent.${c.name}`, c.value, 'Sparingly, for accent moments')),
   ].join('\n')
+
+  const paletteSection = compact
+    ? Object.entries(palette)
+        .map(([family, shades]) =>
+          `- **${family}** — ${Object.entries(shades).map(([sh, v]) => `${sh} \`${v}\``).join(' · ')}`)
+        .join('\n')
+    : Object.entries(palette)
+        .map(([family, shades]) =>
+          `#### ${family}\n\n| Shade | CSS variable | Value |\n| --- | --- | --- |\n` +
+          Object.entries(shades)
+            .map(([sh, v]) => `| ${sh} | \`var(--${family}-${sh})\` | ${v} |`)
+            .join('\n'))
+        .join('\n\n')
+
+  const roles = Object.entries(systemTokens)
+    .map(([label, entries]) =>
+      `**${label}** — ` +
+      entries.map((t) => `\`var(--${t.name})\` ${t.value}`).join(', '))
+    .join('\n\n')
+
+  const type = typeScale
+    .map((t) => `| \`${t.token}\` | \`var(--text-${cssName(t.token)}-size)\` | ${t.size}px | ${t.weight} |`)
+    .join('\n')
+
+  const space = spacing
+    .map((sp) => `| \`${sp.token}\` | \`var(--space-${sp.token})\` | ${sp.value}px |`)
+    .join('\n')
+
+  const rad = radius
+    .map((r) => `| \`${r.token}\` | \`var(--radius-${r.token})\` | ${r.value}px |`)
+    .join('\n')
+
+  const depth = shadows
+    .map((sh) => `| \`shadow.${sh.token}\` | \`var(--shadow-${sh.token})\` | \`${sh.value}\` |`)
+    .join('\n')
+
+  return `## Foundations
+
+Every value below is a CSS custom property. Import the stylesheet once at the
+app root and reference tokens as \`var(--primary)\`, \`var(--space-4)\`,
+\`var(--radius-md)\`. Never hardcode a colour that is not in this list.
+
+### Colour — brand & semantic
+
+${colourHead}
+${brand}
+
+### Colour — palette
+
+Each family runs 100 (lightest) to 900 (darkest). 600–900 are safe for text on
+a light background; 100–300 are surface tints.
+
+${paletteSection}
+
+### Colour — roles
+
+Prefer a role token over a raw palette shade wherever one exists.
+
+${roles}
+
+### Typography
+
+Inter for all UI text. JetBrains Mono for code and token values. Material
+Symbols Outlined for icons.
+
+| Token | CSS variable | Size | Weight |
+| --- | --- | --- | --- |
+${type}
+
+### Spacing
+
+Use the scale — no arbitrary pixel values.
+
+| Token | CSS variable | Value |
+| --- | --- | --- |
+${space}
+
+### Radius
+
+Small-to-medium radii: \`sm\` for controls, \`md\` for inputs and alerts,
+\`lg\` for cards and dialogs. Pills only for toggles, badges, radios, avatars.
+
+| Token | CSS variable | Value |
+| --- | --- | --- |
+${rad}
+
+### Depth / elevation
+
+Flat by default. Prefer a border over a shadow for separation; use \`200\` for
+cards and \`500\` for dialogs.
+
+| Token | CSS variable | Value |
+| --- | --- | --- |
+${depth}
+`
+}
 
 /** The small index — this is what a person pastes into a chat. */
 function buildLlmsIndex(): string {
@@ -414,12 +526,7 @@ Otherwise follow the definitions in the linked files verbatim.
 
 ${RULES}
 
-## Tokens
-
-${TOKEN_SUMMARY()}
-
-Every token is a CSS custom property: \`var(--primary)\`, \`var(--radius-md)\`,
-\`var(--space-4)\`, \`var(--gray-700)\`. Import the stylesheet once at your app root.
+${buildFoundations({ compact: true })}
 
 ## Components
 
@@ -429,7 +536,8 @@ ${index}
 
 | File | What it is |
 | --- | --- |
-| [llms-full.txt](${url('llms-full.txt')}) | Every component inline, one document |
+| [llms-full.txt](${url('llms-full.txt')}) | The complete document — foundations plus every component inline |
+| [foundations.md](${url('foundations.md')}) | Colour, typography, spacing, radius, depth on their own |
 | [api.json](${url('api.json')}) | Prop API, derived from the TypeScript types |
 | [tokens.css](${url('tokens.css')}) | Token custom properties + icon/keyframe runtime |
 | [inspera.theme.css](${url('inspera.theme.css')}) | Tailwind v4 \`@theme\` block |
@@ -568,9 +676,7 @@ ${where}
 - \`tokens.css\` — import once at the app root.
 - \`inspera.theme.css\` — Tailwind v4 \`@theme\` block, if this project uses Tailwind.
 
-## Tokens
-
-${TOKEN_SUMMARY()}
+${buildFoundations({ compact: true })}
 
 ## Before you finish
 
@@ -620,6 +726,7 @@ write(
 write('src/tokens.css', GENERATED_HEADER('src/data/tokens.ts') + buildRootCss())
 write('public/llms.txt', buildLlmsIndex())
 write('public/llms-full.txt', buildLlmsTxt())
+write('public/foundations.md', buildFoundationsDoc())
 for (const f of buildComponentFiles()) write(f.path, f.content)
 write('public/api.json', JSON.stringify(buildApiJson(), null, 2) + '\n')
 write('public/aliases.json', JSON.stringify(buildAliasesJson(), null, 2) + '\n')
