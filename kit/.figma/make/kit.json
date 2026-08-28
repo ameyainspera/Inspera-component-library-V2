@@ -12,12 +12,19 @@
       "styles": [
         "400",
         "500",
-        "600",
-        "700"
+        "600"
       ]
     },
     {
-      "family": "JetBrains Mono",
+      "family": "Noto Sans Mono",
+      "styles": [
+        "400",
+        "500",
+        "600"
+      ]
+    },
+    {
+      "family": "Noto Serif",
       "styles": [
         "400",
         "500",

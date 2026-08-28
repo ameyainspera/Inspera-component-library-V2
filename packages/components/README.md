@@ -33,7 +33,7 @@ import { palette, spacing, radius } from '@inspera/components/tokens'
 
 ## Fonts
 
-The tokens reference **Inter**, **JetBrains Mono**, and **Material Symbols Outlined**. Wire them however your project wires Google Fonts — e.g. in a Vite/CSS app, add before all other CSS:
+The tokens reference **Inter**, **Noto Sans Mono**, and **Material Symbols Outlined**. Wire them however your project wires Google Fonts — e.g. in a Vite/CSS app, add before all other CSS:
 
 ```css
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');

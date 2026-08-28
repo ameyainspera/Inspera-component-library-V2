@@ -120,7 +120,7 @@ const GENERATED_HEADER = (from: string) =>
 function buildTypeClasses(): string {
   const rules = typeScale.map((t) => {
     const decl = [
-      `font-family: var(--font-sans)`,
+      `font-family: ${t.fontFamily ?? 'var(--font-sans)'}`,
       `font-size: var(--${t.name}-size)`,
       `font-weight: var(--${t.name}-weight)`,
       `line-height: var(--${t.name}-line-height)`,
@@ -377,8 +377,9 @@ function buildKitManifest() {
     styles: 'styles.css',
     entry: 'src/index.ts',
     fonts: [
-      { family: 'Inter', styles: ['400', '500', '600', '700'] },
-      { family: 'JetBrains Mono', styles: ['400', '500', '600'] },
+      { family: 'Inter', styles: ['400', '500', '600'] },
+      { family: 'Noto Sans Mono', styles: ['400', '500', '600'] },
+      { family: 'Noto Serif', styles: ['400', '500', '600'] },
       { family: 'Material Symbols Outlined', styles: ['variable'] },
     ],
   }
@@ -515,9 +516,9 @@ function buildFoundations({ compact }: { compact: boolean }): string {
     rows.map(typeRow).join('\n')
 
   const type = [
-    typeGroup('Text', typeScale.filter((t) => t.token.startsWith('Text/'))),
-    typeGroup('Heading', typeScale.filter((t) => t.token.startsWith('Heading/'))),
-    typeGroup('Semantic', typeScale.filter((t) => !t.token.includes('/'))),
+    typeGroup('Heading', typeScale.filter((t) => t.token.startsWith('heading.'))),
+    typeGroup('Body', typeScale.filter((t) => t.token.startsWith('body.'))),
+    typeGroup('Special', typeScale.filter((t) => t.token.startsWith('special.'))),
   ].join('\n\n')
 
   const space = spacing
@@ -558,12 +559,12 @@ ${roles}
 
 ### Typography
 
-Inter for all UI text (weights ${fontWeights.join(', ')}). JetBrains Mono for
-code and token values. Material Symbols Outlined for icons.
+Inter for all UI text (weights ${fontWeights.join(', ')}). Noto Sans Mono for
+code, identifiers and token values. Noto Serif for long-form content. Material
+Symbols Outlined for icons.
 
-Line height is 140% for text and 120% for headings. Every style below has a
-ready-made class — prefer \`class="inspera-h1"\` over setting four properties
-by hand.
+Every style below has a ready-made class — prefer \`class="inspera-h1"\` over
+setting four properties by hand.
 
 ${type}
 
@@ -734,8 +735,9 @@ function buildTailwindTheme(): string {
   push('Spacing', spacing.map((sp) => [`--spacing-${sp.token}`, `${sp.value}px`]))
   push('Elevation', shadows.map((sh) => [`--shadow-${sh.token}`, sh.value]))
   push('Typography', [
-    ['--font-sans', "'Inter', system-ui, sans-serif"],
-    ['--font-mono', "'JetBrains Mono', ui-monospace, monospace"],
+    // Derived from `fonts`, not restated — a duplicated list is how the
+    // stylesheet and the Tailwind theme end up disagreeing about the face.
+    ...fonts.map((f) => [`--${f.name}`, f.value] as [string, string]),
     ...typeScale.map((t) => [`--text-${t.name}`, `${t.size}px`] as [string, string]),
   ])
 

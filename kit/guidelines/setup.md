@@ -8,11 +8,12 @@ Execute these steps before generating any UI.
    import '@inspera/kit/styles.css'
    ```
 
-2. **Register fonts.** The kit assumes Inter, JetBrains Mono, and Material Symbols Outlined. In a Vite/CSS project, add these **before all other CSS statements** (they are public Google Fonts):
+2. **Register fonts.** The kit assumes Inter, Noto Sans Mono, Noto Serif, and Material Symbols Outlined. In a Vite/CSS project, add these **before all other CSS statements** (they are public Google Fonts):
 
    ```css
-   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-   @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
+   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+   @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@400;500;600&display=swap');
+   @import url('https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;500;600&display=swap');
    @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-25..200&display=swap');
    ```
 

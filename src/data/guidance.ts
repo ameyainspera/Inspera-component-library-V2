@@ -19,7 +19,7 @@ export const contract: string[] = [
   'Consume tokens, not literals. Raw values here define what a token resolves to; application code references `var(--token)`.',
   'Do not introduce another design system. No Material UI, Bootstrap, Ant, Chakra, shadcn default styling, Tailwind default palette, or Radix Themes look. Headless behaviour libraries are fine if restyled entirely to this spec.',
   'No arbitrary Tailwind values where a token exists. Never `bg-[#004080]` — use the token.',
-  'Inter for product UI. JetBrains Mono only for code, identifiers, and technical values.',
+  'Inter for product UI. Noto Sans Mono only for code, identifiers and technical values; Noto Serif only for long-form content.',
   'Material Symbols Outlined only. Do not mix in Lucide, Heroicons, or Font Awesome.',
   'Accessibility is part of the component contract, not an enhancement. Keyboard operation, visible focus, labels, roles, names, and states are required.',
   'Never use colour alone to carry meaning. Pair it with text, an icon, or shape.',

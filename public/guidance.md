@@ -12,7 +12,7 @@ Version 1.0.0. How to assemble the canonical components into screens.
 4. Consume tokens, not literals. Raw values here define what a token resolves to; application code references `var(--token)`.
 5. Do not introduce another design system. No Material UI, Bootstrap, Ant, Chakra, shadcn default styling, Tailwind default palette, or Radix Themes look. Headless behaviour libraries are fine if restyled entirely to this spec.
 6. No arbitrary Tailwind values where a token exists. Never `bg-[#004080]` — use the token.
-7. Inter for product UI. JetBrains Mono only for code, identifiers, and technical values.
+7. Inter for product UI. Noto Sans Mono only for code, identifiers and technical values; Noto Serif only for long-form content.
 8. Material Symbols Outlined only. Do not mix in Lucide, Heroicons, or Font Awesome.
 9. Accessibility is part of the component contract, not an enhancement. Keyboard operation, visible focus, labels, roles, names, and states are required.
 10. Never use colour alone to carry meaning. Pair it with text, an icon, or shape.

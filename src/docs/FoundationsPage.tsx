@@ -152,13 +152,13 @@ export default function FoundationsPage() {
       </Panel>
 
       <Panel>
-        <SectionTitle sub="Inter, transcribed from the Figma library. 140% line-height for text, 120% for headings. Every style has a ready-made class.">
+        <SectionTitle sub="Inter for UI, Noto Sans Mono for code, Noto Serif for long-form. Every style has a ready-made class — prefer .inspera-h1 over setting four properties by hand.">
           Typography
         </SectionTitle>
         {[
-          { label: 'Text', rows: typeScale.filter((t) => t.token.startsWith('Text/')) },
-          { label: 'Heading', rows: typeScale.filter((t) => t.token.startsWith('Heading/')) },
-          { label: 'Semantic', rows: typeScale.filter((t) => !t.token.includes('/')) },
+          { label: 'Heading', rows: typeScale.filter((t) => t.token.startsWith('heading.')) },
+          { label: 'Body', rows: typeScale.filter((t) => t.token.startsWith('body.')) },
+          { label: 'Special', rows: typeScale.filter((t) => t.token.startsWith('special.')) },
         ].map((group) => (
           <div key={group.label} style={{ marginBottom: 28 }}>
             <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: 0.6, textTransform: 'uppercase', color: 'var(--gray-500)', marginBottom: 10 }}>
@@ -179,6 +179,7 @@ export default function FoundationsPage() {
                   <span
                     style={{
                       flex: 1, minWidth: 0, color: 'var(--gray-900)',
+                      fontFamily: t.fontFamily,
                       fontSize: t.size,
                       fontWeight: t.weight,
                       lineHeight: t.lineHeight,

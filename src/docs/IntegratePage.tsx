@@ -360,7 +360,7 @@ export function SettingsScreen() {
             <p style={{ margin: 0, fontSize: 14, color: 'var(--gray-700)', lineHeight: 1.55 }}>
               Every format is generated from the same source in <code style={{ fontFamily: 'var(--font-mono)', fontSize: 12 }}>src/</code>, and CI
               fails if a generated file drifts from it.
-              Whichever path you take, you get the same {COUNT} components, the same tokens (Inter, JetBrains Mono, Material Symbols,
+              Whichever path you take, you get the same {COUNT} components, the same tokens (Inter, Noto Sans Mono, Material Symbols,
               the <code style={{ fontFamily: 'var(--font-mono)', fontSize: 12 }}>#004080</code> navy palette), and the same accessibility rules —
               so a mockup built in Figma Make and a production screen built in code look and behave the same.
             </p>

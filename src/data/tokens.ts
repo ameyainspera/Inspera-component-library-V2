@@ -78,17 +78,18 @@ export const shadows = [
 ]
 
 /**
- * Type scale — transcribed from the Figma library.
+ * Type scale — DESIGN_SYSTEM_AI_READY_V3 §4.5, confirmed as authoritative.
  *
- * The rule the library states: Inter, 140% line-height for text, 120% for
- * headings. Line heights are stored unitless (1.4 / 1.2) so they scale with
- * font-size; `Label` is the one exception Figma fixes outright at 16/20.
+ * Sixteen styles in three groups: heading, body, special. Line heights are
+ * stored unitless; V3 gives headings 112%, caption 120%, paragraph 150%, and
+ * fixes body.mdRegular/mdMedium at 20px against a 16px size (1.25).
  *
- * Tracking is read as px. Only three styles set it: H1 -0.2, H6 +1.6
- * (uppercase), Caption +0.1.
+ * Note the scale deliberately has no ramp: 16px and 12px are the only body
+ * sizes it defines. Components currently render 13, 14, 18, 20 and 22px text
+ * with no token to point at — see TYPE_SCALE_GAPS below.
  */
 export interface TypeToken {
-  /** Figma style name, e.g. "Text/Regular/16". */
+  /** V3 token path, e.g. "body.mdRegular". */
   token: string
   /** CSS custom-property and utility-class suffix. */
   name: string
@@ -100,44 +101,45 @@ export interface TypeToken {
   tracking?: number
   transform?: 'uppercase'
   decoration?: 'underline'
+  /** Overrides --font-sans for this style. */
+  fontFamily?: string
   note?: string
 }
 
-const TEXT_SIZES = [12, 14, 16, 18, 20, 22, 26]
-const TEXT_LH = 1.4
-const HEADING_LH = 1.2
-
-const textRamp = (label: string, slug: string, weight: number, sizes: number[] = TEXT_SIZES): TypeToken[] =>
-  sizes.map((size) => ({
-    token: `Text/${label}/${size}`,
-    name: `text-${slug}-${size}`,
-    size,
-    weight,
-    lineHeight: TEXT_LH,
-  }))
+const HEADING_LH = 1.12 // V3: 112%
 
 export const typeScale: TypeToken[] = [
-  ...textRamp('Regular', 'regular', 400),
-  ...textRamp('Medium', 'medium', 500),
-  ...textRamp('Semi Bold', 'semibold', 600),
-  // Bold ships only these four sizes in the library.
-  ...textRamp('Bold', 'bold', 700, [16, 18, 20, 22]),
+  { token: 'heading.h1', name: 'h1', size: 28.83, weight: 600, lineHeight: HEADING_LH },
+  { token: 'heading.h2', name: 'h2', size: 22.78, weight: 500, lineHeight: HEADING_LH },
+  { token: 'heading.h3', name: 'h3', size: 20.25, weight: 500, lineHeight: HEADING_LH },
+  { token: 'heading.h4', name: 'h4', size: 18, weight: 500, lineHeight: HEADING_LH },
+  { token: 'heading.h5', name: 'h5', size: 16, weight: 500, lineHeight: HEADING_LH },
+  { token: 'heading.h6', name: 'h6', size: 12, weight: 500, lineHeight: HEADING_LH, tracking: 1.6, transform: 'uppercase' },
 
-  { token: 'Heading/H1', name: 'h1', size: 28, weight: 600, lineHeight: HEADING_LH, tracking: -0.2 },
-  { token: 'Heading/H2', name: 'h2', size: 22, weight: 600, lineHeight: HEADING_LH },
-  { token: 'Heading/H3', name: 'h3', size: 20, weight: 500, lineHeight: HEADING_LH },
-  { token: 'Heading/H4', name: 'h4', size: 18, weight: 500, lineHeight: HEADING_LH },
-  { token: 'Heading/H5', name: 'h5', size: 16, weight: 500, lineHeight: HEADING_LH },
-  { token: 'Heading/H6', name: 'h6', size: 12, weight: 500, lineHeight: HEADING_LH, tracking: 1.6, transform: 'uppercase' },
+  { token: 'body.mdRegular', name: 'body-md-regular', size: 16, weight: 400, lineHeight: 20 / 16, note: 'Line height fixed at 20px' },
+  { token: 'body.mdMedium', name: 'body-md-medium', size: 16, weight: 500, lineHeight: 20 / 16, note: 'Line height fixed at 20px' },
+  { token: 'body.caption', name: 'caption', size: 12, weight: 400, lineHeight: 1.2 },
+  { token: 'body.paragraph', name: 'paragraph', size: 16, weight: 400, lineHeight: 1.5, note: 'Long-form running text' },
 
-  { token: 'Link', name: 'link', size: 16, weight: 500, lineHeight: TEXT_LH, decoration: 'underline' },
-  { token: 'Caption', name: 'caption', size: 12, weight: 400, lineHeight: TEXT_LH, tracking: 0.1 },
-  { token: 'Documentation', name: 'documentation', size: 14, weight: 300, lineHeight: TEXT_LH, note: 'Inter Light' },
-  { token: 'Label', name: 'label', size: 16, weight: 500, lineHeight: 20 / 16, note: 'Fixed 16/20 — buttons and controls' },
+  { token: 'special.serif', name: 'serif', size: 16, weight: 400, lineHeight: 1.5, fontFamily: 'var(--font-serif)' },
+  { token: 'special.mono', name: 'mono', size: 16, weight: 400, lineHeight: 1.5, fontFamily: 'var(--font-mono)' },
 ]
 
-/** Weights the stylesheet must load. 300 is required by Documentation. */
-export const fontWeights = [300, 400, 500, 600, 700]
+/**
+ * Sizes the components render that the V3 scale does not define. Listed rather
+ * than quietly rounded, because inventing a token is exactly what the spec
+ * forbids — these need a decision against Figma.
+ */
+export const TYPE_SCALE_GAPS = [
+  { size: 13, usedBy: ['Divider label', 'List secondary', 'Stat delta', 'Stepper label', 'Table caption'] },
+  { size: 14, usedBy: ['docs chrome', 'Tabs', 'Menu', 'several component labels'] },
+  { size: 18, usedBy: ['Accordion title', 'EmptyState title'] },
+  { size: 20, usedBy: ['icon glyphs (icon size, not text)'] },
+  { size: 22, usedBy: ['Dialog title — closest is heading.h2 at 22.78'] },
+]
+
+/** Weights the stylesheet must load. V3 uses 400, 500 and 600 only. */
+export const fontWeights = [400, 500, 600]
 
 // ---------------------------------------------------------------------------
 // System tokens — the derived / semantic layer. These are not part of the raw
@@ -265,7 +267,8 @@ export const systemTokens: Record<string, SystemToken[]> = {
 
 export const fonts = [
   { name: 'font-sans', value: "'Inter', system-ui, -apple-system, sans-serif", note: 'All UI text' },
-  { name: 'font-mono', value: "'JetBrains Mono', ui-monospace, monospace", note: 'Code, token values' },
+  { name: 'font-mono', value: "'Noto Sans Mono', ui-monospace, SFMono-Regular, monospace", note: 'Code, identifiers, token values' },
+  { name: 'font-serif', value: "'Noto Serif', Georgia, serif", note: 'Long-form or editorial content' },
 ]
 
 /** Base white, kept alongside the palette so `var(--white)` always resolves. */

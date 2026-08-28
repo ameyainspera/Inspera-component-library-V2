@@ -25,7 +25,7 @@ Otherwise follow the definitions in the linked files verbatim.
 4. Consume tokens, not literals. Raw values here define what a token resolves to; application code references `var(--token)`.
 5. Do not introduce another design system. No Material UI, Bootstrap, Ant, Chakra, shadcn default styling, Tailwind default palette, or Radix Themes look. Headless behaviour libraries are fine if restyled entirely to this spec.
 6. No arbitrary Tailwind values where a token exists. Never `bg-[#004080]` — use the token.
-7. Inter for product UI. JetBrains Mono only for code, identifiers, and technical values.
+7. Inter for product UI. Noto Sans Mono only for code, identifiers and technical values; Noto Serif only for long-form content.
 8. Material Symbols Outlined only. Do not mix in Lucide, Heroicons, or Font Awesome.
 9. Accessibility is part of the component contract, not an enhancement. Keyboard operation, visible focus, labels, roles, names, and states are required.
 10. Never use colour alone to carry meaning. Pair it with text, an icon, or shape.
@@ -107,62 +107,39 @@ Prefer a role token over a raw palette shade wherever one exists.
 
 ### Typography
 
-Inter for all UI text (weights 300, 400, 500, 600, 700). JetBrains Mono for
-code and token values. Material Symbols Outlined for icons.
+Inter for all UI text (weights 400, 500, 600). Noto Sans Mono for
+code, identifiers and token values. Noto Serif for long-form content. Material
+Symbols Outlined for icons.
 
-Line height is 140% for text and 120% for headings. Every style below has a
-ready-made class — prefer `class="inspera-h1"` over setting four properties
-by hand.
-
-#### Text
-
-| Style | Class | Size | Weight | Line height | Notes |
-| --- | --- | --- | --- | --- | --- |
-| `Text/Regular/12` | `.inspera-text-regular-12` | 12px | 400 | 1.4 |  |
-| `Text/Regular/14` | `.inspera-text-regular-14` | 14px | 400 | 1.4 |  |
-| `Text/Regular/16` | `.inspera-text-regular-16` | 16px | 400 | 1.4 |  |
-| `Text/Regular/18` | `.inspera-text-regular-18` | 18px | 400 | 1.4 |  |
-| `Text/Regular/20` | `.inspera-text-regular-20` | 20px | 400 | 1.4 |  |
-| `Text/Regular/22` | `.inspera-text-regular-22` | 22px | 400 | 1.4 |  |
-| `Text/Regular/26` | `.inspera-text-regular-26` | 26px | 400 | 1.4 |  |
-| `Text/Medium/12` | `.inspera-text-medium-12` | 12px | 500 | 1.4 |  |
-| `Text/Medium/14` | `.inspera-text-medium-14` | 14px | 500 | 1.4 |  |
-| `Text/Medium/16` | `.inspera-text-medium-16` | 16px | 500 | 1.4 |  |
-| `Text/Medium/18` | `.inspera-text-medium-18` | 18px | 500 | 1.4 |  |
-| `Text/Medium/20` | `.inspera-text-medium-20` | 20px | 500 | 1.4 |  |
-| `Text/Medium/22` | `.inspera-text-medium-22` | 22px | 500 | 1.4 |  |
-| `Text/Medium/26` | `.inspera-text-medium-26` | 26px | 500 | 1.4 |  |
-| `Text/Semi Bold/12` | `.inspera-text-semibold-12` | 12px | 600 | 1.4 |  |
-| `Text/Semi Bold/14` | `.inspera-text-semibold-14` | 14px | 600 | 1.4 |  |
-| `Text/Semi Bold/16` | `.inspera-text-semibold-16` | 16px | 600 | 1.4 |  |
-| `Text/Semi Bold/18` | `.inspera-text-semibold-18` | 18px | 600 | 1.4 |  |
-| `Text/Semi Bold/20` | `.inspera-text-semibold-20` | 20px | 600 | 1.4 |  |
-| `Text/Semi Bold/22` | `.inspera-text-semibold-22` | 22px | 600 | 1.4 |  |
-| `Text/Semi Bold/26` | `.inspera-text-semibold-26` | 26px | 600 | 1.4 |  |
-| `Text/Bold/16` | `.inspera-text-bold-16` | 16px | 700 | 1.4 |  |
-| `Text/Bold/18` | `.inspera-text-bold-18` | 18px | 700 | 1.4 |  |
-| `Text/Bold/20` | `.inspera-text-bold-20` | 20px | 700 | 1.4 |  |
-| `Text/Bold/22` | `.inspera-text-bold-22` | 22px | 700 | 1.4 |  |
+Every style below has a ready-made class — prefer `class="inspera-h1"` over
+setting four properties by hand.
 
 #### Heading
 
 | Style | Class | Size | Weight | Line height | Notes |
 | --- | --- | --- | --- | --- | --- |
-| `Heading/H1` | `.inspera-h1` | 28px | 600 | 1.2 | -0.2px tracking |
-| `Heading/H2` | `.inspera-h2` | 22px | 600 | 1.2 |  |
-| `Heading/H3` | `.inspera-h3` | 20px | 500 | 1.2 |  |
-| `Heading/H4` | `.inspera-h4` | 18px | 500 | 1.2 |  |
-| `Heading/H5` | `.inspera-h5` | 16px | 500 | 1.2 |  |
-| `Heading/H6` | `.inspera-h6` | 12px | 500 | 1.2 | +1.6px tracking, uppercase |
+| `heading.h1` | `.inspera-h1` | 28.83px | 600 | 1.12 |  |
+| `heading.h2` | `.inspera-h2` | 22.78px | 500 | 1.12 |  |
+| `heading.h3` | `.inspera-h3` | 20.25px | 500 | 1.12 |  |
+| `heading.h4` | `.inspera-h4` | 18px | 500 | 1.12 |  |
+| `heading.h5` | `.inspera-h5` | 16px | 500 | 1.12 |  |
+| `heading.h6` | `.inspera-h6` | 12px | 500 | 1.12 | +1.6px tracking, uppercase |
 
-#### Semantic
+#### Body
 
 | Style | Class | Size | Weight | Line height | Notes |
 | --- | --- | --- | --- | --- | --- |
-| `Link` | `.inspera-link` | 16px | 500 | 1.4 | underline |
-| `Caption` | `.inspera-caption` | 12px | 400 | 1.4 | +0.1px tracking |
-| `Documentation` | `.inspera-documentation` | 14px | 300 | 1.4 | Inter Light |
-| `Label` | `.inspera-label` | 16px | 500 | 1.25 | Fixed 16/20 — buttons and controls |
+| `body.mdRegular` | `.inspera-body-md-regular` | 16px | 400 | 1.25 | Line height fixed at 20px |
+| `body.mdMedium` | `.inspera-body-md-medium` | 16px | 500 | 1.25 | Line height fixed at 20px |
+| `body.caption` | `.inspera-caption` | 12px | 400 | 1.2 |  |
+| `body.paragraph` | `.inspera-paragraph` | 16px | 400 | 1.5 | Long-form running text |
+
+#### Special
+
+| Style | Class | Size | Weight | Line height | Notes |
+| --- | --- | --- | --- | --- | --- |
+| `special.serif` | `.inspera-serif` | 16px | 400 | 1.5 |  |
+| `special.mono` | `.inspera-mono` | 16px | 400 | 1.5 |  |
 
 ### Spacing
 
