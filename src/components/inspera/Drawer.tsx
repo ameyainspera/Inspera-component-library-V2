@@ -56,7 +56,9 @@ export default function Drawer({
       ? {
           width: isBottom ? '100%' : extent,
           maxWidth: '100%',
-          height: isBottom ? extent : 480,
+          // `embedded` exists only so the drawer can be shown inline in docs.
+          // 480 left the preview mostly empty; 320 still reads as a drawer.
+          height: isBottom ? extent : 320,
           borderRadius: 'var(--radius-md)',
           border: '1px solid var(--border)',
           overflow: 'hidden',

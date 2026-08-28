@@ -11,6 +11,7 @@
     "generate": "tsx scripts/build-portable.ts",
     "verify:generated": "bash scripts/verify-generated.sh",
     "typecheck": "tsc --noEmit",
+    "audit:layout": "tsx scripts/audit-gallery.ts",
     "build:pkg": "cd packages/components && tsup",
     "format": "oxfmt"
   },
@@ -25,6 +26,7 @@
     "@types/react-dom": "^19.0.0",
     "@vitejs/plugin-react": "^6.0.0",
     "oxfmt": "^0.2.0",
+    "playwright-core": "^1.62.1",
     "tailwindcss": "^4.0.0",
     "tsup": "^8.5.1",
     "tsx": "^4.23.12",

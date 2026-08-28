@@ -108,7 +108,20 @@ export default function Pagination({
 
   return (
     <nav aria-label="Pagination">
-      <ul style={{ display: 'flex', alignItems: 'center', gap: 4, listStyle: 'none', margin: 0, padding: 0 }}>
+      <ul
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          // Wrap rather than overflow: a pagination bar with many pages must
+          // degrade gracefully in a narrow column, not spill out of it.
+          flexWrap: 'wrap',
+          justifyContent: 'center',
+          gap: 4,
+          listStyle: 'none',
+          margin: 0,
+          padding: 0,
+        }}
+      >
         {showEdges && <li>{arrow('first_page', 'First page', 1, current <= 1)}</li>}
         <li>{arrow('chevron_left', 'Previous page', current - 1, current <= 1)}</li>
         {items.map((it, i) => (

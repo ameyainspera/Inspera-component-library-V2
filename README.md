@@ -80,3 +80,15 @@ a tool takes only what it can use:
 Links inside these files are relative by default. Once the site is hosted, set
 `INSPERA_DS_BASE_URL=https://your-host` before `pnpm generate` to emit absolute
 URLs, which the drop-in rules files need.
+
+## Checking the reference site's layout
+
+```bash
+pnpm dev              # in one terminal
+pnpm audit:layout     # in another
+```
+
+Drives every component page in a real browser and fails if any Playground or
+State-gallery preview overflows its cell. Components size to their container,
+so the gallery grid owns the width budget — see `galleryMinWidth` in
+`src/docs/registry.tsx`. Add a component, add its entry there.

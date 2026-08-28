@@ -29,6 +29,69 @@ export interface RegistryEntry {
 
 const b = (v: string) => v === 'true'
 
+/** Full-width gallery wrapper that keeps a narrower component centred. */
+const fill = { width: '100%', display: 'flex', justifyContent: 'center' } as const
+
+/**
+ * Minimum column width for a component's state gallery.
+ *
+ * Components size to their container, so the gallery grid — not the component
+ * — decides how much room each state gets. A Stepper or Table needs far more
+ * than a Badge, and a single grid track width for all 42 either crams the wide
+ * ones or strands the narrow ones in acres of white space.
+ */
+export const GALLERY_MIN_WIDTH_DEFAULT = 220
+
+export const galleryMinWidth: Record<string, number> = {
+  // Intrinsically small: many fit per row.
+  button: 180,
+  badge: 160,
+  tag: 180,
+  avatar: 160,
+  'avatar-group': 180,
+  spinner: 160,
+  link: 200,
+  checkbox: 200,
+  'radio-button': 200,
+  toggle: 200,
+  rating: 200,
+
+  // Form controls and inline widgets.
+  'text-input': 300,
+  textarea: 300,
+  select: 300,
+  slider: 280,
+  'date-picker': 300,
+  'otp-input': 300,
+  'form-field': 300,
+  'radio-group': 260,
+  'checkbox-group': 260,
+  'segmented-control': 300,
+  progress: 260,
+  skeleton: 300,
+  divider: 260,
+  stat: 280,
+  breadcrumb: 320,
+  tabs: 320,
+  tooltip: 300,
+  menu: 300,
+  popover: 340,
+  pagination: 360,
+  'file-upload': 340,
+
+  // Wide: full rows of content, or a scaled-down surface.
+  card: 340,
+  alert: 380,
+  'empty-state': 340,
+  snackbar: 360,
+  list: 400,
+  accordion: 400,
+  table: 420,
+  stepper: 400,
+  dialog: 600, // one per row: 400/480/560 must render true size to differ
+  drawer: 380,
+}
+
 export const registry: Record<string, RegistryEntry> = {
   button: {
     controls: {
@@ -287,12 +350,12 @@ export const registry: Record<string, RegistryEntry> = {
       />
     ),
     gallery: [
-      { label: 'Medium (default)', node: <div style={{ zoom: 0.45 }}><Dialog embedded size="Medium" /></div> },
-      { label: 'Small', node: <div style={{ zoom: 0.45 }}><Dialog embedded size="Small" /></div> },
-      { label: 'Large', node: <div style={{ zoom: 0.38 }}><Dialog embedded size="Large" /></div> },
-      { label: 'No close button', node: <div style={{ zoom: 0.45 }}><Dialog embedded hasCloseButton={false} /></div> },
-      { label: 'No actions', node: <div style={{ zoom: 0.45 }}><Dialog embedded hasActions={false} /></div> },
-      { label: 'No close & no actions', node: <div style={{ zoom: 0.45 }}><Dialog embedded hasCloseButton={false} hasActions={false} /></div> },
+      { label: 'Medium (default)', node: <div style={fill}><Dialog embedded size="Medium" /></div> },
+      { label: 'Small', node: <div style={fill}><Dialog embedded size="Small" /></div> },
+      { label: 'Large', node: <div style={fill}><Dialog embedded size="Large" /></div> },
+      { label: 'No close button', node: <div style={fill}><Dialog embedded hasCloseButton={false} /></div> },
+      { label: 'No actions', node: <div style={fill}><Dialog embedded hasActions={false} /></div> },
+      { label: 'No close & no actions', node: <div style={fill}><Dialog embedded hasCloseButton={false} hasActions={false} /></div> },
     ],
     snippet: (v) =>
       `<Dialog\n  open={open}\n  size="${v.size}"\n  title="Dialog title"\n  hasCloseButton={${v.hasCloseButton}}\n  hasActions={${v.hasActions}}\n  onClose={() => setOpen(false)}\n  onConfirm={handleConfirm}\n/>`,
@@ -310,7 +373,7 @@ export const registry: Record<string, RegistryEntry> = {
     ),
     gallery: (['Neutral', 'Success', 'Error'] as const).map((i) => ({
       label: i,
-      node: <div style={{ transform: 'scale(0.9)' }}><Snackbar intent={i} message={`${i} message.`} hasAction /></div>,
+      node: <div style={fill}><Snackbar intent={i} message={`${i} message.`} hasAction /></div>,
     })),
     snippet: (v) =>
       `<Snackbar\n  intent="${v.intent}"\n  message="Assessment saved."\n  hasAction={${v.hasAction}}\n  hasClose={${v.hasClose}}\n/>`,
@@ -682,7 +745,7 @@ export const registry: Record<string, RegistryEntry> = {
           <span>Right</span>
         </div>
       ) : (
-        <div style={{ width: '100%' }}>
+        <div style={fill}>
           <span>Above</span>
           <Divider orientation="Horizontal" spacing={v.spacing as never} label={b(v.withLabel) ? 'OR' : undefined} />
           <span>Below</span>
@@ -913,7 +976,9 @@ export const registry: Record<string, RegistryEntry> = {
       <DrawerDemo side={v.side} size={v.size} hasCloseButton={b(v.hasCloseButton)} />
     ),
     gallery: [
-      { label: 'Embedded panel', node: <div style={{ transform: 'scale(0.85)' }}><Drawer embedded side="Right" size="Small" title="Details" /></div> },
+      { label: 'Right', node: <div style={fill}><Drawer embedded side="Right" size="Small" title="Details">Drawer body content.</Drawer></div> },
+      { label: 'Left', node: <div style={fill}><Drawer embedded side="Left" size="Small" title="Filters">Drawer body content.</Drawer></div> },
+      { label: 'Bottom', node: <div style={fill}><Drawer embedded side="Bottom" size="Small" title="Actions">Drawer body content.</Drawer></div> },
     ],
     snippet: (v) =>
       `<Drawer\n  open={open}\n  side="${v.side}"\n  size="${v.size}"\n  title="Assessment details"\n  hasCloseButton={${v.hasCloseButton}}\n  onClose={() => setOpen(false)}\n>\n  {children}\n</Drawer>`,
@@ -984,7 +1049,7 @@ export const registry: Record<string, RegistryEntry> = {
       <Stepper orientation={v.orientation as never} size={v.size as never} activeStep={Number(v.activeStep)} />
     ),
     gallery: [
-      { label: 'Horizontal', node: <div style={{ width: 320 }}><Stepper activeStep={1} /></div> },
+      { label: 'Horizontal', node: <div style={fill}><Stepper activeStep={1} /></div> },
       { label: 'Vertical', node: <Stepper orientation="Vertical" activeStep={2} /> },
     ],
     snippet: (v) =>

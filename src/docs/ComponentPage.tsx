@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { components } from '../data/components'
 import { componentApi } from '../data/component-api.generated'
 import { componentDocs } from '../data/component-docs.generated'
-import { registry } from './registry'
+import { registry, galleryMinWidth, GALLERY_MIN_WIDTH_DEFAULT } from './registry'
 import {
   Panel, SectionTitle, SegmentedControl, PreviewCanvas, CodeBlock, CopyButton,
 } from './primitives'
@@ -74,7 +74,13 @@ export default function ComponentPage({ slug }: { slug: string }) {
       {/* State gallery */}
       <Panel>
         <SectionTitle sub="Every canonical state at a glance.">States</SectionTitle>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 16 }}>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: `repeat(auto-fill, minmax(min(100%, ${galleryMinWidth[slug] ?? GALLERY_MIN_WIDTH_DEFAULT}px), 1fr))`,
+            gap: 16,
+          }}
+        >
           {entry.gallery.map((g) => (
             <div key={g.label} style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               <div
@@ -83,7 +89,9 @@ export default function ComponentPage({ slug }: { slug: string }) {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  overflow: 'hidden',
+                  // Wide previews scroll rather than being cut off.
+                  overflowX: 'auto',
+                  minWidth: 0,
                   padding: 16,
                   border: '1px solid var(--border)',
                   borderRadius: 'var(--radius-md)',

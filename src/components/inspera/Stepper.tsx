@@ -93,8 +93,18 @@ export default function Stepper({
             style={{
               display: 'flex',
               flexDirection: vertical ? 'column' : 'row',
-              alignItems: vertical ? 'flex-start' : 'center',
-              flex: vertical ? 'none' : isLast ? 'none' : 1,
+              // Always top-align. Centring made the horizontal connector sit
+              // against the full step height (circle + label + description),
+              // so it rendered down at label level instead of through the
+              // circles — and steps with a description knocked their circle
+              // out of line with the rest.
+              alignItems: 'flex-start',
+              // '1 1 auto', not '1' (basis 0): with a zero basis every step
+              // gets the same *total* width, so a step with a long label was
+              // left with a stub of a connector while a short one got a long
+              // run. Growing from the content width shares the free space
+              // evenly, so every connector comes out the same length.
+              flex: vertical ? 'none' : isLast ? 'none' : '1 1 auto',
               minWidth: 0,
             }}
           >
