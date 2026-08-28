@@ -1,0 +1,161 @@
+/* Font imports must precede all other CSS statements (including the Tailwind
+   import, which Lightning CSS inlines into real rules). Placed after it, these
+   @import rules are invalid and get dropped — which silently breaks the fonts. */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-25..200&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-25..200&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-25..200&display=swap');
+@import 'tailwindcss';
+
+/*
+  Inspera Design System — tokens (source of truth: DESIGN_SYSTEM_AI_READY_V4.md §3).
+  These CSS custom properties are consumed by both the docs chrome and the
+  Inspera components. Raw values are the canonical shipped values.
+*/
+:root {
+  /* Brand */
+  --primary: #004080;
+  --primary-hover-overlay: rgba(0, 64, 128, 0.04);
+  --primary-focus-ring: rgba(0, 64, 128, 0.3);
+
+  /* Semantic */
+  --error: #d32f2f;
+  --warning: #ef6c00;
+  --info: #0288d1;
+  --success: #2e7d32;
+
+  /* Action */
+  --action-active: rgba(0, 0, 0, 0.56);
+  --action-hover: rgba(0, 0, 0, 0.04);
+  --action-focus: rgba(0, 0, 0, 0.12);
+  --action-disabled: rgba(0, 0, 0, 0.38);
+
+  /* Text */
+  --text-primary: rgba(0, 0, 0, 0.87);
+
+  /* Palette */
+  --white: #ffffff;
+  --gray-100: #f7f7f7;
+  --gray-200: #ededed;
+  --gray-300: #d9d9d9;
+  --gray-400: #bcbcbc;
+  --gray-500: #949494;
+  --gray-600: #7a7a7a;
+  --gray-700: #595959;
+  --gray-800: #404040;
+  --gray-900: #272727;
+  --blue-100: #f0f7ff;
+  --blue-800: #004080;
+
+  /* Docs chrome semantics */
+  --background: var(--gray-100);
+  --surface: var(--white);
+  --border: var(--gray-200);
+  --border-strong: var(--gray-300);
+  --muted-foreground: var(--gray-600);
+
+  /* Radius (§3.5) */
+  --radius-none: 0px;
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-pill: 9999px;
+
+  /* Elevation (§3.6) */
+  --shadow-100: 0px 4px 4px rgba(39, 39, 39, 0.08), 0px 2px 4px rgba(39, 39, 39, 0.12);
+  --shadow-200: 0px 8px 8px rgba(39, 39, 39, 0.08), 0px 4px 6px rgba(39, 39, 39, 0.12);
+  --shadow-300: 0px 8px 16px rgba(39, 39, 39, 0.08), 0px 6px 8px rgba(39, 39, 39, 0.12);
+  --shadow-500: 0px 10px 32px rgba(39, 39, 39, 0.1), 0px 6px 14px rgba(39, 39, 39, 0.12);
+
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  color: var(--text-primary);
+  background-color: var(--background);
+  -webkit-font-smoothing: antialiased;
+}
+
+.material-symbols-outlined,
+.material-symbols-rounded,
+.material-symbols-sharp {
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  user-select: none;
+}
+.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
+.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
+.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
+
+/* Animations used by feedback components (Skeleton, Progress, Spinner). */
+@keyframes inspera-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes inspera-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+@keyframes inspera-indeterminate {
+  0% {
+    left: -40%;
+    width: 40%;
+  }
+  50% {
+    width: 55%;
+  }
+  100% {
+    left: 100%;
+    width: 40%;
+  }
+}
+
+/* Scrollbars: hidden until scroll (aesthetic craft rule 11) */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+*:hover {
+  scrollbar-color: var(--gray-300) transparent;
+}
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 9999px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+*:hover::-webkit-scrollbar-thumb {
+  background: var(--gray-300);
+  background-clip: content-box;
+}

@@ -1,0 +1,34 @@
+{
+  "name": "@inspera/kit",
+  "version": "1.0.0",
+  "displayName": "Inspera Design System",
+  "description": "Canonical Inspera components, tokens, and guidance for Figma Make.",
+  "guidelines": "guidelines/Guidelines.md",
+  "styles": "styles.css",
+  "entry": "src/index.ts",
+  "fonts": [
+    {
+      "family": "Inter",
+      "styles": [
+        "400",
+        "500",
+        "600",
+        "700"
+      ]
+    },
+    {
+      "family": "JetBrains Mono",
+      "styles": [
+        "400",
+        "500",
+        "600"
+      ]
+    },
+    {
+      "family": "Material Symbols Outlined",
+      "styles": [
+        "variable"
+      ]
+    }
+  ]
+}
