@@ -1,50 +1,150 @@
-/* Inspera Design System — token custom properties.
-   Generated from src/index.css by scripts/build-portable.ts — do not edit. */
+/* Inspera Design System — GENERATED FILE, DO NOT EDIT.
+   Source: src/data/tokens.ts + src/runtime.css. Regenerate with `pnpm generate`. */
 
 :root {
   /* Brand */
-  --primary: #004080;
-  --primary-hover-overlay: rgba(0, 64, 128, 0.04);
-  --primary-focus-ring: rgba(0, 64, 128, 0.3);
-  --secondary: #322060;
+  --primary: #004080; /* Primary brand / interactive */
+  --secondary: #322060; /* Secondary brand, used sparingly */
 
   /* Semantic */
-  --error: #d32f2f;
-  --warning: #ef6c00;
-  --info: #0288d1;
-  --success: #2e7d32;
+  --error: #D32F2F;
+  --warning: #EF6C00;
+  --info: #0288D1;
+  --success: #2E7D32;
 
-  /* Action */
-  --action-active: rgba(0, 0, 0, 0.56);
-  --action-hover: rgba(0, 0, 0, 0.04);
-  --action-focus: rgba(0, 0, 0, 0.12);
-  --action-disabled: rgba(0, 0, 0, 0.38);
+  /* Brand accents */
+  --accent-zest: #FA5101;
+  --accent-berry: #89239A;
+  --accent-algae: #00A788;
 
-  /* Text */
-  --text-primary: rgba(0, 0, 0, 0.87);
-
-  /* Palette */
+  /* Base */
   --white: #ffffff;
-  --gray-100: #f7f7f7;
-  --gray-200: #ededed;
-  --gray-300: #d9d9d9;
-  --gray-400: #bcbcbc;
+
+  /* Palette — gray */
+  --gray-100: #F7F7F7;
+  --gray-200: #EDEDED;
+  --gray-300: #D9D9D9;
+  --gray-400: #BCBCBC;
   --gray-500: #949494;
-  --gray-600: #7a7a7a;
+  --gray-600: #7A7A7A;
   --gray-700: #595959;
   --gray-800: #404040;
   --gray-900: #272727;
-  --blue-100: #f0f7ff;
+
+  /* Palette — blue */
+  --blue-100: #F0F7FF;
+  --blue-200: #DBEDFF;
+  --blue-300: #B3D9FF;
+  --blue-400: #7ABDFF;
+  --blue-500: #3399FF;
+  --blue-600: #007BF5;
+  --blue-700: #0059B3;
   --blue-800: #004080;
+  --blue-900: #002E5C;
 
-  /* Docs chrome semantics */
-  --background: var(--gray-100);
-  --surface: var(--white);
-  --border: var(--gray-200);
-  --border-strong: var(--gray-300);
-  --muted-foreground: var(--gray-600);
+  /* Palette — green */
+  --green-100: #F2FDF8;
+  --green-200: #E0FAEF;
+  --green-300: #BDF4DD;
+  --green-400: #8DECC5;
+  --green-500: #50E2A5;
+  --green-600: #1BA76D;
+  --green-700: #147B50;
+  --green-800: #106542;
+  --green-900: #0D4F33;
 
-  /* Radius (§3.5) */
+  /* Palette — red */
+  --red-100: #FEF1F1;
+  --red-200: #FCDEDE;
+  --red-300: #F9B8B8;
+  --red-400: #F58484;
+  --red-500: #F04242;
+  --red-600: #E21212;
+  --red-700: #A50D0D;
+  --red-800: #760A0A;
+  --red-900: #550707;
+
+  /* Palette — yellow */
+  --yellow-100: #FFFCF0;
+  --yellow-200: #FFF8DC;
+  --yellow-300: #FEF0B3;
+  --yellow-400: #FEE67C;
+  --yellow-500: #FDD835;
+  --yellow-600: #F2C602;
+  --yellow-700: #B19102;
+  --yellow-800: #7E6701;
+  --yellow-900: #5B4A01;
+
+  /* Palette — orange */
+  --orange-100: #FFFAF0;
+  --orange-200: #FFF3DC;
+  --orange-300: #FEE5B3;
+  --orange-400: #FED27C;
+  --orange-500: #FDBA35;
+  --orange-600: #F2A202;
+  --orange-700: #D99102;
+  --orange-800: #7E5501;
+  --orange-900: #5B3D01;
+
+  /* Palette — purple */
+  --purple-100: #F6F4FB;
+  --purple-200: #E9E4F6;
+  --purple-300: #D0C6EC;
+  --purple-400: #9F88D7;
+  --purple-500: #8366CC;
+  --purple-600: #603DB8;
+  --purple-700: #462D86;
+  --purple-800: #322060;
+  --purple-900: #241745;
+
+  /* Palette — pink */
+  --pink-100: #FEF1F5;
+  --pink-200: #FCDFE8;
+  --pink-300: #F8B9CE;
+  --pink-400: #F386AB;
+  --pink-500: #ED457D;
+  --pink-600: #DF1659;
+  --pink-700: #A21041;
+  --pink-800: #740B2E;
+  --pink-900: #540821;
+
+  /* Interaction */
+  --primary-hover-overlay: rgba(0, 64, 128, 0.04); /* Primary tint on hover */
+  --primary-focus-ring: rgba(0, 64, 128, 0.3); /* Focus ring on primary controls */
+  --action-active: rgba(0, 0, 0, 0.56); /* Icon / control glyph */
+  --action-hover: rgba(0, 0, 0, 0.04); /* Neutral hover wash */
+  --action-focus: rgba(0, 0, 0, 0.12); /* Neutral focus wash */
+  --action-disabled: rgba(0, 0, 0, 0.38); /* Disabled foreground */
+
+  /* Text */
+  --text-primary: rgba(0, 0, 0, 0.87); /* Body and heading text */
+  --text-secondary: var(--gray-600); /* Supporting and helper text */
+  --text-disabled: var(--action-disabled); /* Disabled text */
+  --text-on-primary: #ffffff; /* Text on a primary-filled surface */
+
+  /* Surface */
+  --background: var(--gray-100); /* App canvas */
+  --surface: var(--white);     /* Raised surface (cards, panels, inputs) */
+  --surface-sunken: var(--gray-100); /* Recessed surface (wells, read-only fields) */
+  --border: var(--gray-200);   /* Hairline separator */
+  --border-strong: var(--gray-300); /* Control outline */
+  --border-interactive: var(--gray-500); /* Control outline on hover */
+  --muted-foreground: var(--gray-600); /* De-emphasised label text */
+
+  /* Spacing */
+  --space-0: 0px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* Radius */
   --radius-none: 0px;
   --radius-xs: 2px;
   --radius-sm: 4px;
@@ -53,18 +153,40 @@
   --radius-xl: 16px;
   --radius-pill: 9999px;
 
-  /* Elevation (§3.6) */
+  /* Elevation */
   --shadow-100: 0px 4px 4px rgba(39, 39, 39, 0.08), 0px 2px 4px rgba(39, 39, 39, 0.12);
   --shadow-200: 0px 8px 8px rgba(39, 39, 39, 0.08), 0px 4px 6px rgba(39, 39, 39, 0.12);
   --shadow-300: 0px 8px 16px rgba(39, 39, 39, 0.08), 0px 6px 8px rgba(39, 39, 39, 0.12);
   --shadow-500: 0px 10px 32px rgba(39, 39, 39, 0.1), 0px 6px 14px rgba(39, 39, 39, 0.12);
 
-  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  /* Typography — family */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif; /* All UI text */
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace; /* Code, token values */
+
+  /* Typography — scale */
+  --text-heading-h1-size: 28.83px;
+  --text-heading-h1-weight: 600;
+  --text-heading-h2-size: 22.78px;
+  --text-heading-h2-weight: 500;
+  --text-heading-h3-size: 20.25px;
+  --text-heading-h3-weight: 500;
+  --text-heading-h4-size: 18px;
+  --text-heading-h4-weight: 500;
+  --text-heading-h5-size: 16px;
+  --text-heading-h5-weight: 500;
+  --text-body-mdRegular-size: 16px;
+  --text-body-mdRegular-weight: 400;
+  --text-body-mdMedium-size: 16px;
+  --text-body-mdMedium-weight: 500;
+  --text-body-semiBold16-size: 16px;
+  --text-body-semiBold16-weight: 600;
+  --text-body-caption-size: 12px;
+  --text-body-caption-weight: 400;
 }
 
-.material-symbols-outlined {
-  font-family: 'Material Symbols Outlined';
+.material-symbols-outlined,
+.material-symbols-rounded,
+.material-symbols-sharp {
   font-weight: normal;
   font-style: normal;
   line-height: 1;
@@ -78,4 +200,38 @@
   -webkit-font-feature-settings: 'liga';
   -moz-font-feature-settings: 'liga';
   user-select: none;
+}
+
+.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
+.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
+.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
+
+/* Animations used by the feedback components (Skeleton, Progress, Spinner). */
+@keyframes inspera-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes inspera-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes inspera-indeterminate {
+  0% {
+    left: -40%;
+    width: 40%;
+  }
+  50% {
+    width: 55%;
+  }
+  100% {
+    left: 100%;
+    width: 40%;
+  }
 }

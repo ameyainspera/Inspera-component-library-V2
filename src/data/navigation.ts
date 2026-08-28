@@ -1,7 +1,7 @@
 import type { NavGroup } from './types'
 
-// Category grouping per DESIGN_SYSTEM_AI_READY_V4.md §6, extended to a complete
-// production library. The four canonical categories still hold every component.
+// Sidebar grouping for the reference site. The four canonical categories
+// hold every component in the library.
 export const navigation: NavGroup[] = [
   {
     label: 'Input Controls',

@@ -4,10 +4,11 @@
  *
  * Source of truth:
  *   - src/data/tokens.ts      (token values)
- *   - src/data/components.ts  (component specs)
- *   - src/index.css           (:root custom properties + icon helper)
+ *   - src/data/components.ts  (component semantics)
+ *   - src/runtime.css         (icon helper + keyframes, copied verbatim)
  *
  * Generated outputs (never hand-edited):
+ *   - src/tokens.css                 :root custom properties for the docs app
  *   - public/inspera-llms.txt        portable spec for any LLM tool
  *   - public/tokens.w3c.json         W3C Design Tokens JSON
  *   - packages/components/tokens.css  token CSS shipped by the npm package
@@ -27,6 +28,7 @@ import type { ComponentSpec } from '../src/data/types'
 import {
   brandColors, semanticColors, brandAccents, palette,
   spacing, radius, shadows, typeScale,
+  systemTokens, fonts, baseColors,
 } from '../src/data/tokens'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
@@ -38,17 +40,72 @@ const write = (rel: string, content: string) => {
 }
 
 // ---------------------------------------------------------------------------
-// Extract the :root token block + icon helper from the canonical stylesheet so
-// the package/kit CSS never drifts from what the docs site actually renders.
+// Token CSS — generated from src/data/tokens.ts, the single typed source.
+//
+// This replaced a regex that scraped the :root block out of src/index.css. That
+// scrape silently broke when index.css was reformatted: it dropped the Material
+// Symbols base rule and two keyframes, and could not see tokens that had no
+// CSS declaration yet. Generating forwards from typed data means the CSS, the
+// docs and the W3C JSON cannot disagree.
 // ---------------------------------------------------------------------------
-function extractTokenCss(): string {
-  const css = readFileSync(join(root, 'src/index.css'), 'utf8')
-  const rootMatch = css.match(/:root\s*\{[\s\S]*?\n\}/)
-  const iconMatch = css.match(/\.material-symbols-outlined\s*\{[\s\S]*?\n\}/)
-  const header =
-    '/* Inspera Design System — token custom properties.\n' +
-    '   Generated from src/index.css by scripts/build-portable.ts — do not edit. */\n\n'
-  return header + [rootMatch?.[0], iconMatch?.[0]].filter(Boolean).join('\n\n') + '\n'
+const cssName = (name: string) => name.replace(/\./g, '-').replace('-main', '')
+
+function tokenBlock(label: string, entries: { name: string; value: string; note?: string }[]): string {
+  const width = Math.max(...entries.map((e) => e.name.length))
+  const lines = entries.map((e) => {
+    const decl = `  --${e.name}: ${e.value};`
+    return e.note ? `${decl.padEnd(width + 12)} /* ${e.note} */` : decl
+  })
+  return `  /* ${label} */\n${lines.join('\n')}`
+}
+
+/** The `:root { … }` block: every token in tokens.ts, as a custom property. */
+function buildRootCss(): string {
+  const blocks: string[] = []
+
+  blocks.push(tokenBlock('Brand', brandColors.map((c) => ({ name: cssName(c.name), value: c.value, note: c.note }))))
+  blocks.push(tokenBlock('Semantic', semanticColors.map((c) => ({ name: c.name, value: c.value }))))
+  blocks.push(tokenBlock('Brand accents', brandAccents.map((c) => ({ name: `accent-${c.name}`, value: c.value }))))
+  blocks.push(tokenBlock('Base', baseColors))
+
+  for (const [family, shades] of Object.entries(palette)) {
+    blocks.push(tokenBlock(
+      `Palette — ${family}`,
+      Object.entries(shades).map(([shade, value]) => ({ name: `${family}-${shade}`, value })),
+    ))
+  }
+
+  for (const [label, entries] of Object.entries(systemTokens)) {
+    blocks.push(tokenBlock(label, entries))
+  }
+
+  blocks.push(tokenBlock('Spacing', spacing.map((sp) => ({ name: `space-${sp.token}`, value: `${sp.value}px` }))))
+  blocks.push(tokenBlock('Radius', radius.map((r) => ({ name: `radius-${r.token}`, value: `${r.value}px` }))))
+  blocks.push(tokenBlock('Elevation', shadows.map((sh) => ({ name: `shadow-${sh.token}`, value: sh.value }))))
+  blocks.push(tokenBlock('Typography — family', fonts))
+  blocks.push(tokenBlock(
+    'Typography — scale',
+    typeScale.flatMap((t) => {
+      const n = cssName(t.token)
+      return [
+        { name: `text-${n}-size`, value: `${t.size}px` },
+        { name: `text-${n}-weight`, value: String(t.weight) },
+      ]
+    }),
+  ))
+
+  return `:root {\n${blocks.join('\n\n')}\n}\n`
+}
+
+const GENERATED_HEADER = (from: string) =>
+  `/* Inspera Design System — GENERATED FILE, DO NOT EDIT.\n` +
+  `   Source: ${from}. Regenerate with \`pnpm generate\`. */\n\n`
+
+/** The stylesheet shipped to consumers: tokens + the runtime CSS, verbatim. */
+function buildDistributedCss(): string {
+  const runtime = readFileSync(join(root, 'src/runtime.css'), 'utf8')
+    .replace(/^\/\*[\s\S]*?\*\/\n\n/, '') // strip the authoring preamble
+  return GENERATED_HEADER('src/data/tokens.ts + src/runtime.css') + buildRootCss() + '\n' + runtime
 }
 
 // ---------------------------------------------------------------------------
@@ -244,11 +301,12 @@ function buildKitManifest() {
 
 // ---------------------------------------------------------------------------
 console.log('Generating distribution outputs from source of truth…')
-const tokenCss = extractTokenCss()
+const distributedCss = buildDistributedCss()
+write('src/tokens.css', GENERATED_HEADER('src/data/tokens.ts') + buildRootCss())
 write('public/inspera-llms.txt', buildLlmsTxt())
 write('public/tokens.w3c.json', JSON.stringify(buildW3CTokens(), null, 2) + '\n')
-write('packages/components/tokens.css', tokenCss)
-write('kit/styles.css', tokenCss)
+write('packages/components/tokens.css', distributedCss)
+write('kit/styles.css', distributedCss)
 write('kit/guidelines/components.md', buildKitComponentsMd())
 write('kit/guidelines/tokens.md', buildKitTokensMd())
 write('kit/.figma/make/kit.json', JSON.stringify(buildKitManifest(), null, 2) + '\n')

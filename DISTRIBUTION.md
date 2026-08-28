@@ -6,7 +6,8 @@ This repo is both the **interactive reference site** for the Inspera Design Syst
 
 - `src/components/inspera/*` — the 15 real, token-styled React components
 - `src/data/tokens.ts` — canonical token values
-- `src/data/components.ts` + `src/imports/DESIGN_SYSTEM_AI_READY_V4.md` — the semantic spec
+- `src/data/components.ts` — the semantic spec (purpose, a11y, usage, aliases)
+- the `*Props` TypeScript interfaces in `src/components/inspera/*` — the prop APIs
 
 Everything below is generated or packaged from these — nothing is maintained twice.
 

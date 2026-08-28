@@ -1,8 +1,12 @@
-// Token data transcribed from DESIGN_SYSTEM_AI_READY_V4.md §3.
-// Used to render the Foundations page and token-usage references.
+// SOURCE OF TRUTH for every Inspera token.
+//
+// This file generates src/tokens.css, packages/components/tokens.css,
+// kit/styles.css and public/tokens.w3c.json via scripts/build-portable.ts.
+// Add a token here and it appears everywhere; never edit a generated file.
 
 export const brandColors = [
   { name: 'primary.main', value: '#004080', note: 'Primary brand / interactive' },
+  { name: 'secondary.main', value: '#322060', note: 'Secondary brand, used sparingly' },
 ]
 
 export const semanticColors = [
@@ -67,10 +71,10 @@ export const radius = [
 ]
 
 export const shadows = [
-  { token: '100', value: 'var(--shadow-100)' },
-  { token: '200', value: 'var(--shadow-200)' },
-  { token: '300', value: 'var(--shadow-300)' },
-  { token: '500', value: 'var(--shadow-500)' },
+  { token: '100', value: '0px 4px 4px rgba(39, 39, 39, 0.08), 0px 2px 4px rgba(39, 39, 39, 0.12)' },
+  { token: '200', value: '0px 8px 8px rgba(39, 39, 39, 0.08), 0px 4px 6px rgba(39, 39, 39, 0.12)' },
+  { token: '300', value: '0px 8px 16px rgba(39, 39, 39, 0.08), 0px 6px 8px rgba(39, 39, 39, 0.12)' },
+  { token: '500', value: '0px 10px 32px rgba(39, 39, 39, 0.1), 0px 6px 14px rgba(39, 39, 39, 0.12)' },
 ]
 
 export const typeScale = [
@@ -84,3 +88,49 @@ export const typeScale = [
   { token: 'body.semiBold16', size: 16, weight: 600, sample: 'Body semibold 16' },
   { token: 'body.caption', size: 12, weight: 400, sample: 'Caption text' },
 ]
+
+// ---------------------------------------------------------------------------
+// System tokens — the derived / semantic layer. These are not part of the raw
+// palette; they name a *role* and point at a palette value. Components should
+// prefer these over raw palette shades wherever a role exists.
+// ---------------------------------------------------------------------------
+export interface SystemToken {
+  /** CSS custom property name, without the leading `--`. */
+  name: string
+  value: string
+  note?: string
+}
+
+export const systemTokens: Record<string, SystemToken[]> = {
+  Interaction: [
+    { name: 'primary-hover-overlay', value: 'rgba(0, 64, 128, 0.04)', note: 'Primary tint on hover' },
+    { name: 'primary-focus-ring', value: 'rgba(0, 64, 128, 0.3)', note: 'Focus ring on primary controls' },
+    { name: 'action-active', value: 'rgba(0, 0, 0, 0.56)', note: 'Icon / control glyph' },
+    { name: 'action-hover', value: 'rgba(0, 0, 0, 0.04)', note: 'Neutral hover wash' },
+    { name: 'action-focus', value: 'rgba(0, 0, 0, 0.12)', note: 'Neutral focus wash' },
+    { name: 'action-disabled', value: 'rgba(0, 0, 0, 0.38)', note: 'Disabled foreground' },
+  ],
+  Text: [
+    { name: 'text-primary', value: 'rgba(0, 0, 0, 0.87)', note: 'Body and heading text' },
+    { name: 'text-secondary', value: 'var(--gray-600)', note: 'Supporting and helper text' },
+    { name: 'text-disabled', value: 'var(--action-disabled)', note: 'Disabled text' },
+    { name: 'text-on-primary', value: '#ffffff', note: 'Text on a primary-filled surface' },
+  ],
+  Surface: [
+    { name: 'background', value: 'var(--gray-100)', note: 'App canvas' },
+    { name: 'surface', value: 'var(--white)', note: 'Raised surface (cards, panels, inputs)' },
+    { name: 'surface-sunken', value: 'var(--gray-100)', note: 'Recessed surface (wells, read-only fields)' },
+    { name: 'border', value: 'var(--gray-200)', note: 'Hairline separator' },
+    { name: 'border-strong', value: 'var(--gray-300)', note: 'Control outline' },
+    { name: 'border-interactive', value: 'var(--gray-500)', note: 'Control outline on hover' },
+    { name: 'muted-foreground', value: 'var(--gray-600)', note: 'De-emphasised label text' },
+  ],
+}
+
+export const fonts = [
+  { name: 'font-sans', value: "'Inter', system-ui, -apple-system, sans-serif", note: 'All UI text' },
+  { name: 'font-mono', value: "'JetBrains Mono', ui-monospace, monospace", note: 'Code, token values' },
+]
+
+/** Base white, kept alongside the palette so `var(--white)` always resolves. */
+export const baseColors = [{ name: 'white', value: '#ffffff' }]

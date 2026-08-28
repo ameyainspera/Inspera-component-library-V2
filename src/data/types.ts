@@ -1,5 +1,5 @@
 // Shared data shapes for the Inspera component library.
-// Mirrors the canonical component model in DESIGN_SYSTEM_AI_READY_V4.md §4.
+// Shared shapes for the component metadata in components.ts.
 
 export type Category =
   | 'input-controls'

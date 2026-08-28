@@ -16,7 +16,7 @@
 ## Tokens
 
 - primary.main: #004080 — Primary brand / interactive
-- secondary.main: #322060 — Secondary brand
+- secondary.main: #322060 — Secondary brand, used sparingly
 - error: #D32F2F
 - warning: #EF6C00
 - info: #0288D1

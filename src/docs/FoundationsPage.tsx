@@ -83,7 +83,7 @@ export default function FoundationsPage() {
         <h1 style={{ margin: '6px 0 8px', fontSize: 32, fontWeight: 600, letterSpacing: -0.5 }}>Design tokens</h1>
         <p style={{ margin: 0, fontSize: 16, color: 'var(--muted-foreground)', maxWidth: 640 }}>
           The primitives every Inspera component is built from. Use these tokens, never raw values, when
-          generating new UI. Source of truth: DESIGN_SYSTEM_AI_READY_V4.md
+          generating new UI. Source of truth: src/data/tokens.ts
         </p>
       </header>
 

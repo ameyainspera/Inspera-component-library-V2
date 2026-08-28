@@ -1,0 +1,64 @@
+/*
+  Inspera Design System — runtime CSS.
+
+  Everything a consumer needs beyond the token custom properties: the Material
+  Symbols helper classes and the keyframes the feedback components animate with.
+
+  This file is hand-written and is copied verbatim into the distributed
+  stylesheet by scripts/build-portable.ts. It previously lived in index.css and
+  was scraped out with a regex, which silently dropped the base rule (ligature
+  rendering, font-variation-settings) and two of the three keyframes from every
+  published build.
+*/
+
+.material-symbols-outlined,
+.material-symbols-rounded,
+.material-symbols-sharp {
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  user-select: none;
+}
+
+.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
+.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
+.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
+
+/* Animations used by the feedback components (Skeleton, Progress, Spinner). */
+@keyframes inspera-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes inspera-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes inspera-indeterminate {
+  0% {
+    left: -40%;
+    width: 40%;
+  }
+  50% {
+    width: 55%;
+  }
+  100% {
+    left: 100%;
+    width: 40%;
+  }
+}

@@ -423,22 +423,22 @@
   "shadow": {
     "100": {
       "$type": "shadow",
-      "$value": "var(--shadow-100)",
+      "$value": "0px 4px 4px rgba(39, 39, 39, 0.08), 0px 2px 4px rgba(39, 39, 39, 0.12)",
       "$description": "See --shadow-* in tokens.css"
     },
     "200": {
       "$type": "shadow",
-      "$value": "var(--shadow-200)",
+      "$value": "0px 8px 8px rgba(39, 39, 39, 0.08), 0px 4px 6px rgba(39, 39, 39, 0.12)",
       "$description": "See --shadow-* in tokens.css"
     },
     "300": {
       "$type": "shadow",
-      "$value": "var(--shadow-300)",
+      "$value": "0px 8px 16px rgba(39, 39, 39, 0.08), 0px 6px 8px rgba(39, 39, 39, 0.12)",
       "$description": "See --shadow-* in tokens.css"
     },
     "500": {
       "$type": "shadow",
-      "$value": "var(--shadow-500)",
+      "$value": "0px 10px 32px rgba(39, 39, 39, 0.1), 0px 6px 14px rgba(39, 39, 39, 0.12)",
       "$description": "See --shadow-* in tokens.css"
     }
   },

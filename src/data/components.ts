@@ -1,6 +1,10 @@
 import type { ComponentSpec } from './types'
 
-// Canonical component metadata transcribed from DESIGN_SYSTEM_AI_READY_V4.md §5.
+// SOURCE OF TRUTH for what each component *means*: purpose, accessibility
+// contract, do/dont guidance, and legacy alias names.
+//
+// Prop APIs are NOT defined here — they are derived from the TypeScript
+// interfaces in src/components/inspera/*.tsx by scripts/build-portable.ts.
 // `specYaml` is the verbatim canonical block, exposed in the AI copy panel so
 // AI tools consuming this library get the exact source-of-truth definition.
 
