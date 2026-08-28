@@ -9,6 +9,13 @@
       "displayName": "Button",
       "category": "input-controls",
       "purpose": "Trigger an action.",
+      "keywords": [
+        "cta",
+        "action",
+        "submit",
+        "click",
+        "primary"
+      ],
       "importFrom": "@inspera/components",
       "props": [
         {
@@ -90,6 +97,14 @@
       "displayName": "Text Input",
       "category": "input-controls",
       "purpose": "Collect single-line text input.",
+      "keywords": [
+        "textbox",
+        "field",
+        "input",
+        "form",
+        "entry",
+        "single line"
+      ],
       "importFrom": "@inspera/components",
       "props": [
         {
@@ -192,6 +207,13 @@
       "displayName": "Checkbox",
       "category": "input-controls",
       "purpose": "Allow multiple selection.",
+      "keywords": [
+        "tick",
+        "check",
+        "boolean",
+        "multi select",
+        "opt in"
+      ],
       "importFrom": "@inspera/components",
       "props": [
         {
@@ -266,6 +288,12 @@
       "displayName": "Radio Button",
       "category": "input-controls",
       "purpose": "Allow single selection.",
+      "keywords": [
+        "option",
+        "single select",
+        "choice",
+        "radio"
+      ],
       "importFrom": "@inspera/components",
       "props": [
         {
@@ -341,6 +369,15 @@
       "displayName": "Select",
       "category": "input-controls",
       "purpose": "Select one option from a list.",
+      "keywords": [
+        "dropdown",
+        "drop down",
+        "combobox",
+        "picker",
+        "listbox",
+        "choose",
+        "options"
+      ],
       "importFrom": "@inspera/components",
       "props": [
         {
@@ -433,6 +470,13 @@
       "displayName": "Toggle",
       "category": "input-controls",
       "purpose": "Switch a setting on or off instantly.",
+      "keywords": [
+        "switch",
+        "on off",
+        "boolean",
+        "flip",
+        "enable"
+      ],
       "importFrom": "@inspera/components",
       "props": [
         {
@@ -505,6 +549,13 @@
       "displayName": "Card",
       "category": "data-display",
       "purpose": "Group related content in a contained surface.",
+      "keywords": [
+        "panel",
+        "tile",
+        "container",
+        "surface",
+        "box"
+      ],
       "importFrom": "@inspera/components",
       "props": [
         {
@@ -578,6 +629,14 @@
       "displayName": "Badge",
       "category": "data-display",
       "purpose": "Display a short status label or count.",
+      "keywords": [
+        "chip",
+        "count",
+        "label",
+        "status",
+        "pill",
+        "indicator"
+      ],
       "importFrom": "@inspera/components",
       "props": [
         {
@@ -644,6 +703,13 @@
       "displayName": "Avatar",
       "category": "data-display",
       "purpose": "Represent a user or entity with an image or initials.",
+      "keywords": [
+        "profile",
+        "user",
+        "photo",
+        "initials",
+        "picture"
+      ],
       "importFrom": "@inspera/components",
       "props": [
         {
@@ -719,6 +785,14 @@
       "displayName": "Alert",
       "category": "feedback",
       "purpose": "Display semantic inline feedback.",
+      "keywords": [
+        "banner",
+        "notification",
+        "message",
+        "callout",
+        "warning",
+        "inline message"
+      ],
       "importFrom": "@inspera/components",
       "props": [
         {
@@ -799,6 +873,15 @@
       "displayName": "Dialog",
       "category": "feedback",
       "purpose": "Present content or actions that require user attention.",
+      "keywords": [
+        "modal",
+        "popup",
+        "pop up",
+        "confirm",
+        "prompt",
+        "overlay",
+        "lightbox"
+      ],
       "importFrom": "@inspera/components",
       "props": [
         {
@@ -903,6 +986,13 @@
       "displayName": "Snackbar",
       "category": "feedback",
       "purpose": "Show brief, non-blocking feedback at the bottom of the screen.",
+      "keywords": [
+        "toast",
+        "notification",
+        "message",
+        "flash",
+        "transient"
+      ],
       "importFrom": "@inspera/components",
       "props": [
         {
@@ -980,6 +1070,13 @@
       "displayName": "Tooltip",
       "category": "feedback",
       "purpose": "Provide contextual help on hover or focus.",
+      "keywords": [
+        "hint",
+        "help",
+        "title",
+        "popup",
+        "info bubble"
+      ],
       "importFrom": "@inspera/components",
       "props": [
         {
@@ -1055,6 +1152,12 @@
       "displayName": "Tabs",
       "category": "navigation",
       "purpose": "Organize content into switchable panels.",
+      "keywords": [
+        "tabbed",
+        "sections",
+        "switcher",
+        "panels"
+      ],
       "importFrom": "@inspera/components",
       "props": [
         {
@@ -1129,6 +1232,13 @@
       "displayName": "Breadcrumb",
       "category": "navigation",
       "purpose": "Show the user's current location in a hierarchy.",
+      "keywords": [
+        "path",
+        "trail",
+        "navigation",
+        "hierarchy",
+        "you are here"
+      ],
       "importFrom": "@inspera/components",
       "props": [
         {
@@ -1188,6 +1298,14 @@
       "displayName": "Textarea",
       "category": "input-controls",
       "purpose": "Collect multi-line text input.",
+      "keywords": [
+        "multiline",
+        "multi line",
+        "notes",
+        "comment",
+        "description",
+        "long text"
+      ],
       "importFrom": "@inspera/components",
       "props": [
         {
@@ -1296,6 +1414,13 @@
       "displayName": "Form Field",
       "category": "input-controls",
       "purpose": "Standardize label, control, and help/error layout around any input.",
+      "keywords": [
+        "label",
+        "wrapper",
+        "field",
+        "help text",
+        "form row"
+      ],
       "importFrom": "@inspera/components",
       "props": [
         {
@@ -1366,6 +1491,13 @@
       "displayName": "Slider",
       "category": "input-controls",
       "purpose": "Select a numeric value from a continuous range.",
+      "keywords": [
+        "range",
+        "scrubber",
+        "volume",
+        "drag",
+        "value"
+      ],
       "importFrom": "@inspera/components",
       "props": [
         {
@@ -1458,6 +1590,12 @@
       "displayName": "Segmented Control",
       "category": "input-controls",
       "purpose": "Choose one option from a small set of mutually exclusive segments.",
+      "keywords": [
+        "switcher",
+        "button group",
+        "toggle group",
+        "filter"
+      ],
       "importFrom": "@inspera/components",
       "props": [
         {
@@ -1525,6 +1663,14 @@
       "displayName": "Date Picker",
       "category": "input-controls",
       "purpose": "Select a calendar date from a popover.",
+      "keywords": [
+        "calendar",
+        "date",
+        "day",
+        "schedule",
+        "deadline",
+        "due"
+      ],
       "importFrom": "@inspera/components",
       "props": [
         {
@@ -1605,6 +1751,15 @@
       "displayName": "File Upload",
       "category": "input-controls",
       "purpose": "Upload files via drag-and-drop or browse.",
+      "keywords": [
+        "dropzone",
+        "drop zone",
+        "attach",
+        "attachment",
+        "browse",
+        "file",
+        "import"
+      ],
       "importFrom": "@inspera/components",
       "props": [
         {
@@ -1678,6 +1833,12 @@
       "displayName": "Radio Group",
       "category": "input-controls",
       "purpose": "Group mutually exclusive radio options.",
+      "keywords": [
+        "options",
+        "single choice",
+        "radio buttons",
+        "either or"
+      ],
       "importFrom": "@inspera/components",
       "props": [
         {
@@ -1757,6 +1918,12 @@
       "displayName": "Checkbox Group",
       "category": "input-controls",
       "purpose": "Group related multi-select checkboxes.",
+      "keywords": [
+        "checklist",
+        "multi select",
+        "options",
+        "multiple choice"
+      ],
       "importFrom": "@inspera/components",
       "props": [
         {
@@ -1830,6 +1997,13 @@
       "displayName": "Rating",
       "category": "input-controls",
       "purpose": "Capture or display a star rating.",
+      "keywords": [
+        "stars",
+        "score",
+        "review",
+        "feedback",
+        "five star"
+      ],
       "importFrom": "@inspera/components",
       "props": [
         {
@@ -1904,6 +2078,15 @@
       "displayName": "OTP Input",
       "category": "input-controls",
       "purpose": "Enter a one-time verification code.",
+      "keywords": [
+        "pin",
+        "code",
+        "verification",
+        "two factor",
+        "2fa",
+        "one time password",
+        "passcode"
+      ],
       "importFrom": "@inspera/components",
       "props": [
         {
@@ -1964,6 +2147,14 @@
       "displayName": "Table",
       "category": "data-display",
       "purpose": "Display structured data in rows and columns.",
+      "keywords": [
+        "grid",
+        "data",
+        "rows",
+        "columns",
+        "datagrid",
+        "spreadsheet"
+      ],
       "importFrom": "@inspera/components",
       "props": [
         {
@@ -2053,6 +2244,14 @@
       "displayName": "Accordion",
       "category": "data-display",
       "purpose": "Show and hide sections of related content.",
+      "keywords": [
+        "collapse",
+        "expand",
+        "disclosure",
+        "faq",
+        "details",
+        "show hide"
+      ],
       "importFrom": "@inspera/components",
       "props": [
         {
@@ -2118,6 +2317,14 @@
       "displayName": "Tag",
       "category": "data-display",
       "purpose": "Label, categorize, or filter with a removable chip.",
+      "keywords": [
+        "chip",
+        "label",
+        "pill",
+        "keyword",
+        "category",
+        "token"
+      ],
       "importFrom": "@inspera/components",
       "props": [
         {
@@ -2196,6 +2403,13 @@
       "displayName": "Divider",
       "category": "data-display",
       "purpose": "Separate content with a thin rule.",
+      "keywords": [
+        "separator",
+        "rule",
+        "hr",
+        "line",
+        "split"
+      ],
       "importFrom": "@inspera/components",
       "props": [
         {
@@ -2250,6 +2464,13 @@
       "displayName": "Empty State",
       "category": "data-display",
       "purpose": "Communicate the absence of content and offer a next step.",
+      "keywords": [
+        "no results",
+        "blank",
+        "placeholder",
+        "zero state",
+        "nothing here"
+      ],
       "importFrom": "@inspera/components",
       "props": [
         {
@@ -2324,6 +2545,13 @@
       "displayName": "Avatar Group",
       "category": "data-display",
       "purpose": "Show a set of users as overlapping avatars with an overflow count.",
+      "keywords": [
+        "users",
+        "people",
+        "stack",
+        "facepile",
+        "team"
+      ],
       "importFrom": "@inspera/components",
       "props": [
         {
@@ -2381,6 +2609,14 @@
       "displayName": "Stat",
       "category": "data-display",
       "purpose": "Highlight a key metric with an optional trend.",
+      "keywords": [
+        "metric",
+        "kpi",
+        "number",
+        "figure",
+        "statistic",
+        "trend"
+      ],
       "importFrom": "@inspera/components",
       "props": [
         {
@@ -2455,6 +2691,12 @@
       "displayName": "List",
       "category": "data-display",
       "purpose": "Present a vertical series of related items.",
+      "keywords": [
+        "items",
+        "rows",
+        "stack",
+        "listing"
+      ],
       "importFrom": "@inspera/components",
       "props": [
         {
@@ -2524,6 +2766,13 @@
       "displayName": "Progress",
       "category": "feedback",
       "purpose": "Show completion of an ongoing task.",
+      "keywords": [
+        "loading",
+        "bar",
+        "percent",
+        "meter",
+        "completion"
+      ],
       "importFrom": "@inspera/components",
       "props": [
         {
@@ -2601,6 +2850,13 @@
       "displayName": "Spinner",
       "category": "feedback",
       "purpose": "Indicate an indeterminate loading state.",
+      "keywords": [
+        "loader",
+        "loading",
+        "busy",
+        "throbber",
+        "activity"
+      ],
       "importFrom": "@inspera/components",
       "props": [
         {
@@ -2657,6 +2913,13 @@
       "displayName": "Skeleton",
       "category": "feedback",
       "purpose": "Show placeholder shapes while content loads.",
+      "keywords": [
+        "placeholder",
+        "loading",
+        "shimmer",
+        "ghost",
+        "pending"
+      ],
       "importFrom": "@inspera/components",
       "props": [
         {
@@ -2723,6 +2986,13 @@
       "displayName": "Popover",
       "category": "feedback",
       "purpose": "Show interactive content anchored to a trigger.",
+      "keywords": [
+        "flyout",
+        "panel",
+        "bubble",
+        "dropdown panel",
+        "overlay"
+      ],
       "importFrom": "@inspera/components",
       "props": [
         {
@@ -2809,6 +3079,14 @@
       "displayName": "Drawer",
       "category": "feedback",
       "purpose": "Slide a panel in from the edge of the screen.",
+      "keywords": [
+        "sidebar",
+        "side panel",
+        "sheet",
+        "slide over",
+        "off canvas",
+        "flyout"
+      ],
       "importFrom": "@inspera/components",
       "props": [
         {
@@ -2897,6 +3175,12 @@
       "displayName": "Pagination",
       "category": "navigation",
       "purpose": "Navigate between pages of content.",
+      "keywords": [
+        "pager",
+        "pages",
+        "paging",
+        "next previous"
+      ],
       "importFrom": "@inspera/components",
       "props": [
         {
@@ -2971,6 +3255,14 @@
       "displayName": "Menu",
       "category": "navigation",
       "purpose": "Present a list of actions in a dropdown.",
+      "keywords": [
+        "dropdown",
+        "context menu",
+        "actions",
+        "overflow",
+        "kebab",
+        "more"
+      ],
       "importFrom": "@inspera/components",
       "props": [
         {
@@ -3055,6 +3347,14 @@
       "displayName": "Stepper",
       "category": "navigation",
       "purpose": "Show progress through a sequence of steps.",
+      "keywords": [
+        "wizard",
+        "steps",
+        "flow",
+        "onboarding",
+        "multi step",
+        "progress steps"
+      ],
       "importFrom": "@inspera/components",
       "props": [
         {
@@ -3120,6 +3420,13 @@
       "displayName": "Link",
       "category": "navigation",
       "purpose": "Navigate to another location or resource.",
+      "keywords": [
+        "anchor",
+        "href",
+        "hyperlink",
+        "navigate",
+        "url"
+      ],
       "importFrom": "@inspera/components",
       "props": [
         {

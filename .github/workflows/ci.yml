@@ -25,6 +25,9 @@ jobs:
       - name: Generated files are up to date
         run: pnpm verify:generated
 
+      - name: Search quality
+        run: pnpm audit:search
+
       - name: Build site
         run: pnpm build
 

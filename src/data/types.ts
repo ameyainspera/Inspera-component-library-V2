@@ -19,6 +19,12 @@ export interface ComponentSpec {
   exportName?: string
   category: Category
   purpose: string
+  /**
+   * Extra terms the sidebar search should match. People look for "modal", not
+   * "Dialog", and "dropdown", not "Select" — without these, search only works
+   * for someone who already knows the canonical name.
+   */
+  keywords?: string[]
   status: 'ready' | 'coming-soon'
   deprecatedAliases: string[]
   tokens: string[]

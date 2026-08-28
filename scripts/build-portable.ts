@@ -476,6 +476,9 @@ function buildApiJson() {
             displayName: c.name,
             category: c.category,
             purpose: c.purpose,
+            // Synonyms a person or model might use instead of the canonical
+            // name: "modal" for Dialog, "dropdown" for Select.
+            keywords: c.keywords ?? [],
             importFrom: '@inspera/components',
             props: componentApi[exportName].props,
             relatedTypes: componentApi[exportName].relatedTypes,

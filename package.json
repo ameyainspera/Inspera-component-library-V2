@@ -12,6 +12,7 @@
     "verify:generated": "bash scripts/verify-generated.sh",
     "typecheck": "tsc --noEmit",
     "audit:layout": "tsx scripts/audit-gallery.ts",
+    "audit:search": "tsx scripts/audit-search.ts",
     "build:pkg": "cd packages/components && tsup",
     "format": "oxfmt"
   },
