@@ -56,6 +56,8 @@ for (const slug of slugs) {
       return {
         label,
         overflowX: box ? box.scrollWidth - box.clientWidth : 0,
+        overflowY: box ? box.scrollHeight - box.clientHeight : 0,
+        clips: box ? getComputedStyle(box).overflowY !== 'visible' : false,
         cellWidth: box?.clientWidth ?? 0,
         contentWidth: inner?.getBoundingClientRect().width ?? 0,
         height: box?.clientHeight ?? 0,
@@ -68,7 +70,14 @@ for (const slug of slugs) {
 
   for (const c of result.cells) {
     if (c.overflowX > 1) {
-      problems.push(`${slug} · "${c.label}" overflows by ${c.overflowX}px (cell ${c.cellWidth}px)`)
+      problems.push(`${slug} · "${c.label}" overflows horizontally by ${c.overflowX}px (cell ${c.cellWidth}px)`)
+    }
+    // A floating panel (Popover, Menu) that spills below the cell is cut off
+    // whenever the cell clips — which `overflow-x: auto` silently causes,
+    // because a non-visible value on one axis forces the other to compute to
+    // auto rather than visible.
+    if (c.overflowY > 1 && c.clips) {
+      problems.push(`${slug} · "${c.label}" is cut off vertically by ${c.overflowY}px`)
     }
     if (c.height > 620) {
       problems.push(`${slug} · "${c.label}" is ${c.height}px tall`)

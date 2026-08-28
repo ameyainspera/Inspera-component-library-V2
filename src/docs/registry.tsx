@@ -33,64 +33,81 @@ const b = (v: string) => v === 'true'
 const fill = { width: '100%', display: 'flex', justifyContent: 'center' } as const
 
 /**
- * Minimum column width for a component's state gallery.
+ * How each component's state gallery should be laid out.
  *
  * Components size to their container, so the gallery grid — not the component
  * — decides how much room each state gets. A Stepper or Table needs far more
- * than a Badge, and a single grid track width for all 42 either crams the wide
- * ones or strands the narrow ones in acres of white space.
+ * than a Badge, and a single track width for all 42 either crams the wide ones
+ * or strands the narrow ones in white space.
+ *
+ * `floating` marks a preview that renders an absolutely-positioned panel
+ * (Popover, Menu, Tooltip). Those cells must not clip and must reserve height
+ * for the panel, or it gets cut off at the cell edge.
  */
+export interface GalleryLayout {
+  minWidth?: number
+  /**
+   * `minHeight` reserves room for the panel. `align: 'start'` pins the trigger
+   * to the top of the cell for panels that open downward — centred, the
+   * trigger sits mid-cell and the panel hangs out of the bottom.
+   */
+  floating?: { minHeight: number; align?: 'start' | 'center' }
+}
+
 export const GALLERY_MIN_WIDTH_DEFAULT = 220
 
-export const galleryMinWidth: Record<string, number> = {
+export const galleryLayout: Record<string, GalleryLayout> = {
   // Intrinsically small: many fit per row.
-  button: 180,
-  badge: 160,
-  tag: 180,
-  avatar: 160,
-  'avatar-group': 180,
-  spinner: 160,
-  link: 200,
-  checkbox: 200,
-  'radio-button': 200,
-  toggle: 200,
-  rating: 200,
+  button: { minWidth: 180 },
+  badge: { minWidth: 160 },
+  tag: { minWidth: 180 },
+  avatar: { minWidth: 160 },
+  'avatar-group': { minWidth: 180 },
+  spinner: { minWidth: 160 },
+  link: { minWidth: 200 },
+  checkbox: { minWidth: 200 },
+  'radio-button': { minWidth: 200 },
+  toggle: { minWidth: 200 },
+  rating: { minWidth: 200 },
 
   // Form controls and inline widgets.
-  'text-input': 300,
-  textarea: 300,
-  select: 300,
-  slider: 280,
-  'date-picker': 300,
-  'otp-input': 300,
-  'form-field': 300,
-  'radio-group': 260,
-  'checkbox-group': 260,
-  'segmented-control': 300,
-  progress: 260,
-  skeleton: 300,
-  divider: 260,
-  stat: 280,
-  breadcrumb: 320,
-  tabs: 320,
-  tooltip: 300,
-  menu: 300,
-  popover: 340,
-  pagination: 360,
-  'file-upload': 340,
+  'text-input': { minWidth: 300 },
+  textarea: { minWidth: 300 },
+  select: { minWidth: 300 },
+  slider: { minWidth: 280 },
+  'date-picker': { minWidth: 300 },
+  'otp-input': { minWidth: 300 },
+  'form-field': { minWidth: 300 },
+  'radio-group': { minWidth: 260 },
+  'checkbox-group': { minWidth: 260 },
+  'segmented-control': { minWidth: 300 },
+  progress: { minWidth: 260 },
+  skeleton: { minWidth: 300 },
+  divider: { minWidth: 260 },
+  stat: { minWidth: 280 },
+  breadcrumb: { minWidth: 320 },
+  tabs: { minWidth: 320 },
+  'file-upload': { minWidth: 340 },
+  pagination: { minWidth: 360 },
+
+  // Floating panels: never clip, and reserve room below the trigger.
+  tooltip: { minWidth: 300, floating: { minHeight: 150 } }, // opens either way — stay centred
+  popover: { minWidth: 340, floating: { minHeight: 220, align: 'start' } },
+  menu: { minWidth: 300, floating: { minHeight: 280, align: 'start' } },
 
   // Wide: full rows of content, or a scaled-down surface.
-  card: 340,
-  alert: 380,
-  'empty-state': 340,
-  snackbar: 360,
-  list: 400,
-  accordion: 400,
-  table: 420,
-  stepper: 400,
-  dialog: 600, // one per row: 400/480/560 must render true size to differ
-  drawer: 380,
+  card: { minWidth: 340 },
+  alert: { minWidth: 380 },
+  'empty-state': { minWidth: 340 },
+  snackbar: { minWidth: 360 },
+  list: { minWidth: 400 },
+  accordion: { minWidth: 400 },
+  table: { minWidth: 420 },
+  stepper: { minWidth: 400 },
+  dialog: { minWidth: 600 }, // one per row: 400/480/560 must render true size to differ
+  drawer: { minWidth: 380 },
 }
+
 
 export const registry: Record<string, RegistryEntry> = {
   button: {

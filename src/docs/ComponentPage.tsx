@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { components } from '../data/components'
 import { componentApi } from '../data/component-api.generated'
 import { componentDocs } from '../data/component-docs.generated'
-import { registry, galleryMinWidth, GALLERY_MIN_WIDTH_DEFAULT } from './registry'
+import { registry, galleryLayout, GALLERY_MIN_WIDTH_DEFAULT } from './registry'
 import {
   Panel, SectionTitle, SegmentedControl, PreviewCanvas, CodeBlock, CopyButton,
 } from './primitives'
@@ -28,6 +28,7 @@ export default function ComponentPage({ slug }: { slug: string }) {
   const entry = registry[slug]
   const props = componentApi[spec?.exportName ?? spec?.name.replace(/\s+/g, '') ?? '']?.props ?? []
   const doc = componentDocs[slug] ?? ''
+  const gallery = galleryLayout[slug] ?? {}
   const [values, setValues] = useState<Record<string, string>>(entry?.defaults ?? {})
 
   useEffect(() => {
@@ -77,7 +78,7 @@ export default function ComponentPage({ slug }: { slug: string }) {
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: `repeat(auto-fill, minmax(min(100%, ${galleryMinWidth[slug] ?? GALLERY_MIN_WIDTH_DEFAULT}px), 1fr))`,
+            gridTemplateColumns: `repeat(auto-fill, minmax(min(100%, ${gallery.minWidth ?? GALLERY_MIN_WIDTH_DEFAULT}px), 1fr))`,
             gap: 16,
           }}
         >
@@ -85,13 +86,17 @@ export default function ComponentPage({ slug }: { slug: string }) {
             <div key={g.label} style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               <div
                 style={{
-                  minHeight: 80,
+                  minHeight: gallery.floating?.minHeight ?? 80,
                   display: 'flex',
-                  alignItems: 'center',
+                  alignItems: gallery.floating?.align === 'start' ? 'flex-start' : 'center',
                   justifyContent: 'center',
-                  // Wide previews scroll rather than being cut off.
-                  overflowX: 'auto',
-                  minWidth: 0,
+                  // A floating panel must never be clipped. Note `overflow-x`
+                  // alone is not safe here: a non-visible value on one axis
+                  // forces the other to compute to `auto`, so setting only
+                  // overflow-x silently cropped Popover and Menu vertically.
+                  ...(gallery.floating
+                    ? { overflow: 'visible' }
+                    : { overflowX: 'auto' as const, minWidth: 0 }),
                   padding: 16,
                   border: '1px solid var(--border)',
                   borderRadius: 'var(--radius-md)',
