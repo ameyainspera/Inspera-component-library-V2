@@ -25,6 +25,10 @@ import { fileURLToPath } from 'node:url'
 
 import { componentList } from '../src/data/components'
 import { registry } from '../src/docs/registry'
+import {
+  contract, precedence, whenUnsure, patterns,
+  formRules, tableRules, feedbackHierarchy, checklist,
+} from '../src/data/guidance'
 import { extractComponentProps, type PropDoc } from './extract-props'
 import type { ComponentSpec } from '../src/data/types'
 import {
@@ -268,6 +272,8 @@ ${RULES}
 
 ${buildFoundations({ compact: false })}
 
+${buildGuidance()}
+
 ${sections}
 `
 }
@@ -374,14 +380,61 @@ const url = (path: string) => (BASE_URL ? `${BASE_URL}/${path}` : `./${path}`)
 const provenance = () =>
   `<!-- Inspera Design System v${VERSION} — generated ${new Date().toISOString().slice(0, 10)}. Do not edit. -->`
 
-const RULES = `- Use ONLY the ${componentList.length} components listed here. Do not invent variants or rename props.
-- **Prop names are camelCase and case-sensitive** (\`intent\`, not \`Intent\`). React
-  silently ignores an unknown prop, so a capitalised name renders the default
-  variant with no error at all. Copy prop names exactly as given.
-- **Variant *values* are Capitalised** (\`intent="Primary"\`, \`size="Medium"\`).
-- Never use a deprecated alias name; map it to the canonical component.
-- Style with the tokens — never hardcode an off-palette color.
-- Honor the accessibility notes (role, aria, keyboard) for every component.`
+const num = (items: string[]) => items.map((r, i) => `${i + 1}. ${r}`).join('\n')
+
+const RULES = `${num(contract)}
+
+**Prop names are camelCase and case-sensitive** (\`intent\`, not \`Intent\`). React
+silently ignores an unknown prop, so a capitalised name renders the default
+variant with no error at all. Variant *values* are Capitalised
+(\`intent="Primary"\`, \`size="Medium"\`).
+
+**When two instructions conflict**, this order wins:
+
+${num(precedence)}
+
+**When the spec does not answer your question:**
+
+${whenUnsure.map((r) => `- ${r}`).join('\n')}`
+
+/** Composition, form, table and feedback guidance — how to build a screen. */
+function buildGuidance(): string {
+  const patternBlocks = patterns
+    .map((p) =>
+      `#### ${p.name}\n\nBuild from: ${p.from.map((c) => `\`${c}\``).join(', ')}.\n\n` +
+      p.guidance.map((g) => `- ${g}`).join('\n'))
+    .join('\n\n')
+
+  return `## Composition patterns
+
+These are **compositions, not new components**. They do not authorise a new
+export — they say how to arrange the canonical ones. If a requested pattern is
+not here and not a canonical component, build it from canonical components and
+say so; do not invent a new one.
+
+${patternBlocks}
+
+## Forms
+
+${formRules.map((r) => `- ${r}`).join('\n')}
+
+## Data tables
+
+${tableRules.map((r) => `- ${r}`).join('\n')}
+
+## Which feedback component
+
+| Scope | Use |
+| --- | --- |
+${feedbackHierarchy.map((f) => `| ${f.scope} | ${f.use} |`).join('\n')}
+
+Never put something the user must retain or act on later in a Snackbar.
+
+## Before you call it done
+
+${checklist.map((c) => `**${c.group}**\n\n${c.items.map((i) => `- [ ] ${i}`).join('\n')}`).join('\n\n')}
+`
+}
 
 /**
  * Foundations — the design decisions every component is built from.
@@ -545,6 +598,7 @@ ${index}
 | --- | --- |
 | [llms-full.txt](${url('llms-full.txt')}) | The complete document — foundations plus every component inline |
 | [foundations.md](${url('foundations.md')}) | Colour, typography, spacing, radius, depth on their own |
+| [guidance.md](${url('guidance.md')}) | Composition patterns, form and table rules, the done checklist |
 | [api.json](${url('api.json')}) | Prop API, derived from the TypeScript types |
 | [tokens.css](${url('tokens.css')}) | Token custom properties + icon/keyframe runtime |
 | [inspera.theme.css](${url('inspera.theme.css')}) | Tailwind v4 \`@theme\` block |
@@ -685,11 +739,7 @@ ${where}
 
 ${buildFoundations({ compact: true })}
 
-## Before you finish
-
-Check every component you used against its \`c/<component>.md\`: prop names
-camelCase, variant values Capitalised, no hardcoded colors, accessibility notes
-implemented.
+${buildGuidance()}
 `
 
   return [
@@ -734,6 +784,12 @@ write('src/tokens.css', GENERATED_HEADER('src/data/tokens.ts') + buildRootCss())
 write('public/llms.txt', buildLlmsIndex())
 write('public/llms-full.txt', buildLlmsTxt())
 write('public/foundations.md', buildFoundationsDoc())
+write(
+  'public/guidance.md',
+  `${provenance()}\n\n# Inspera Design System — Composition & rules\n\n` +
+    `Version ${VERSION}. How to assemble the canonical components into screens.\n\n` +
+    `## Rules\n\n${RULES}\n\n${buildGuidance()}\n`,
+)
 for (const f of buildComponentFiles()) write(f.path, f.content)
 write('public/api.json', JSON.stringify(buildApiJson(), null, 2) + '\n')
 write('public/aliases.json', JSON.stringify(buildAliasesJson(), null, 2) + '\n')

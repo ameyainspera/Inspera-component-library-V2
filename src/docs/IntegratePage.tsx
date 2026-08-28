@@ -149,6 +149,7 @@ const ARTIFACTS = [
   { file: 'llms-full.txt', note: 'The complete guide — foundations + all 42 components.' },
   { file: 'llms.txt', note: 'Short index linking a spec per component. Paste this into a chat.' },
   { file: 'foundations.md', note: 'Colour, typography, spacing, radius, depth on their own.' },
+  { file: 'guidance.md', note: 'Composition patterns, form/table rules, the done checklist.' },
   { file: 'api.json', note: 'Prop API, derived from the TypeScript types.' },
   { file: 'tokens.css', note: 'Token custom properties + icon/keyframe runtime.' },
   { file: 'inspera.theme.css', note: 'Tailwind v4 @theme block.' },
