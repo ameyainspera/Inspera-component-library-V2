@@ -64,7 +64,7 @@ export default function DatePicker({
     }
   }, [open])
 
-  let border = '#C4C4C4'
+  let border = 'var(--border-control)'
   if (isError) border = 'var(--error)'
   else if (isFocused) border = 'var(--primary)'
 
@@ -76,7 +76,7 @@ export default function DatePicker({
     padding: '0 12px',
     borderRadius: 'var(--radius-md)',
     border: `1px solid ${border}`,
-    background: disabled ? '#F5F5F5' : '#FFFFFF',
+    background: disabled ? 'var(--surface-disabled)' : 'var(--white)',
     boxShadow: isFocused ? '0 0 0 3px var(--primary-focus-ring)' : isError ? '0 0 0 3px rgba(249,184,184,0.6)' : 'none',
     cursor: disabled ? 'not-allowed' : 'pointer',
     opacity: disabled ? 0.6 : 1,
@@ -120,7 +120,7 @@ export default function DatePicker({
         onClick={() => setOpen((o) => !o)}
         style={{ ...field, textAlign: 'left', font: 'inherit' }}
       >
-        <span style={{ flex: 1, fontSize: 16, color: current ? 'var(--text-primary)' : '#8C8C8C' }}>
+        <span style={{ flex: 1, fontSize: 16, color: current ? 'var(--text-primary)' : 'var(--text-placeholder)' }}>
           {current || placeholder}
         </span>
         <span className="material-symbols-outlined" style={{ fontSize: 20, color: 'var(--action-active)' }} aria-hidden>calendar_today</span>

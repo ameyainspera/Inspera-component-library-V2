@@ -17,8 +17,8 @@ export interface StatProps {
 }
 
 const deltaMap: Record<StatDeltaIntent, { color: string; icon: string }> = {
-  up: { color: '#2E7D32', icon: 'trending_up' },
-  down: { color: '#D32F2F', icon: 'trending_down' },
+  up: { color: 'var(--success)', icon: 'trending_up' },
+  down: { color: 'var(--error)', icon: 'trending_down' },
   neutral: { color: 'var(--muted-foreground)', icon: 'trending_flat' },
 }
 

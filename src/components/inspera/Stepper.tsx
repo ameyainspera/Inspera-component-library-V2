@@ -63,7 +63,7 @@ export default function Stepper({
           fontSize: 13,
           fontWeight: 600,
           background: completed || active ? 'var(--primary)' : 'transparent',
-          color: completed || active ? '#FFFFFF' : 'var(--gray-600)',
+          color: completed || active ? 'var(--white)' : 'var(--gray-600)',
           border: completed || active ? 'none' : '2px solid var(--border-strong)',
           boxShadow: active ? '0 0 0 4px var(--primary-focus-ring)' : 'none',
           transition: 'background 140ms ease, box-shadow 140ms ease',

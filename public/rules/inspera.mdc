@@ -69,6 +69,10 @@ Prefer a role token over a raw palette shade wherever one exists.
 
 **Text** — `var(--text-primary)` rgba(0, 0, 0, 0.87), `var(--text-secondary)` var(--gray-600), `var(--text-disabled)` var(--action-disabled), `var(--text-on-primary)` #ffffff
 
+**Status** — `var(--info-surface)` #E1F5FE, `var(--success-surface)` #E8F5E9, `var(--warning-surface)` #FFF3E0, `var(--error-surface)` #FFEBEE
+
+**Controls** — `var(--border-control)` #C4C4C4, `var(--border-control-strong)` #8C8C8C, `var(--text-placeholder)` #8C8C8C, `var(--surface-disabled)` #F5F5F5, `var(--surface-readonly)` var(--gray-100), `var(--surface-neutral)` #F0F0F0, `var(--avatar-surface)` #E0E0E0
+
 **Surface** — `var(--background)` var(--gray-100), `var(--surface)` var(--white), `var(--surface-sunken)` var(--gray-100), `var(--border)` var(--gray-200), `var(--border-strong)` var(--gray-300), `var(--border-interactive)` var(--gray-500), `var(--muted-foreground)` var(--gray-600)
 
 ### Typography

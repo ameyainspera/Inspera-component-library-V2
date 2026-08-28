@@ -19,9 +19,9 @@ export interface AvatarProps {
 
 const sizeMap: Record<AvatarSize, number> = { Small: 32, Medium: 40, Large: 56 }
 const statusColor: Record<Exclude<AvatarStatus, 'None'>, string> = {
-  Online: '#2E7D32',
-  Offline: '#949494',
-  Busy: '#D32F2F',
+  Online: 'var(--success)',
+  Offline: 'var(--gray-500)',
+  Busy: 'var(--error)',
 }
 
 export default function Avatar({
@@ -39,8 +39,8 @@ export default function Avatar({
     width: dim,
     height: dim,
     borderRadius: 'var(--radius-pill)',
-    background: '#E0E0E0',
-    color: '#272727',
+    background: 'var(--avatar-surface)',
+    color: 'var(--gray-900)',
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -74,7 +74,7 @@ export default function Avatar({
             height: dot,
             borderRadius: '9999px',
             background: statusColor[status],
-            border: '2px solid #FFFFFF',
+            border: '2px solid var(--white)',
           }}
         />
       )}

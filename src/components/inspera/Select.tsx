@@ -57,9 +57,9 @@ export default function Select({
     ? options.filter((o) => o.toLowerCase().includes(query.toLowerCase()))
     : options
 
-  let border = isError ? 'var(--error)' : '#C4C4C4'
+  let border = isError ? 'var(--error)' : 'var(--border-control)'
   if (open || forcedFocus) border = 'var(--primary)'
-  else if (state === 'Hover') border = '#8C8C8C'
+  else if (state === 'Hover') border = 'var(--border-control-strong)'
 
   const choose = (opt: string) => {
     setSelected(opt)
@@ -87,7 +87,7 @@ export default function Select({
     padding: '0 12px',
     borderRadius: 'var(--radius-md)',
     border: `1px solid ${border}`,
-    background: disabled ? '#F5F5F5' : '#FFFFFF',
+    background: disabled ? 'var(--surface-disabled)' : 'var(--white)',
     color: selected ? 'var(--text-primary)' : 'var(--muted-foreground)',
     fontFamily: 'var(--font-sans)',
     fontSize: 16,
@@ -131,7 +131,7 @@ export default function Select({
               margin: 0,
               padding: 4,
               listStyle: 'none',
-              background: '#FFFFFF',
+              background: 'var(--white)',
               border: '1px solid var(--border-strong)',
               borderRadius: 'var(--radius-md)',
               boxShadow: 'var(--shadow-200)',

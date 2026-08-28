@@ -16,11 +16,11 @@ export interface SnackbarProps {
 }
 
 const accentMap: Record<SnackbarIntent, { color: string; icon: string }> = {
-  Neutral: { color: '#FFFFFF', icon: 'notifications' },
-  Info: { color: '#7ABDFF', icon: 'info' },
-  Success: { color: '#8DECC5', icon: 'check_circle' },
-  Warning: { color: '#FED27C', icon: 'warning' },
-  Error: { color: '#F58484', icon: 'error' },
+  Neutral: { color: 'var(--white)', icon: 'notifications' },
+  Info: { color: 'var(--blue-400)', icon: 'info' },
+  Success: { color: 'var(--green-400)', icon: 'check_circle' },
+  Warning: { color: 'var(--orange-400)', icon: 'warning' },
+  Error: { color: 'var(--red-400)', icon: 'error' },
 }
 
 export default function Snackbar({
@@ -42,8 +42,8 @@ export default function Snackbar({
     height: 48,
     padding: '0 8px 0 16px',
     borderRadius: 'var(--radius-md)',
-    background: '#272727',
-    color: '#FFFFFF',
+    background: 'var(--gray-900)',
+    color: 'var(--white)',
     boxShadow: 'var(--shadow-300)',
   }
   return (

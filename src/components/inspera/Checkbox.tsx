@@ -33,7 +33,7 @@ export default function Checkbox({
   const isFocused = state === 'Focused'
   const dim = size === 'Small' ? 16 : 20
 
-  let border = isError ? 'var(--error)' : '#8C8C8C'
+  let border = isError ? 'var(--error)' : 'var(--border-control-strong)'
   if (state === 'Hover') border = 'var(--primary)'
 
   const box: CSSProperties = {
@@ -41,11 +41,11 @@ export default function Checkbox({
     height: dim,
     borderRadius: 'var(--radius-xs)',
     border: `2px solid ${isChecked ? 'var(--primary)' : border}`,
-    background: isChecked ? 'var(--primary)' : state === 'Hover' ? 'rgba(0,64,128,0.04)' : '#FFFFFF',
+    background: isChecked ? 'var(--primary)' : state === 'Hover' ? 'rgba(0,64,128,0.04)' : 'var(--white)',
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'center',
-    color: '#FFFFFF',
+    color: 'var(--white)',
     flexShrink: 0,
     boxShadow: isFocused ? '0 0 0 3px var(--primary-focus-ring)' : 'none',
     transform: state === 'Pressed' ? 'scale(0.92)' : 'none',

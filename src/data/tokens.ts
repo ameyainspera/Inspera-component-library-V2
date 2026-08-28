@@ -101,6 +101,90 @@ export interface SystemToken {
   note?: string
 }
 
+// ---------------------------------------------------------------------------
+// Control & status tokens.
+//
+// These values are rendered by the components today but were never defined as
+// tokens, so the spec told AI "never hardcode an off-palette colour" while the
+// reference components used ten of them. They are a second neutral ramp,
+// distinct from palette.gray — #C4C4C4 borders, not #BCBCBC.
+//
+// VALUES ARE AS-SHIPPED, NOT YET CONFIRMED AGAINST FIGMA. They are named and
+// centralised so that confirming them is a one-line edit here rather than a
+// hunt through 23 component files.
+// ---------------------------------------------------------------------------
+const PENDING = 'Pending Figma verification'
+
+export const statusSurfaces: SystemToken[] = [
+  { name: 'info-surface', value: '#E1F5FE', note: `Info Alert/Badge/Tag fill. ${PENDING}` },
+  { name: 'success-surface', value: '#E8F5E9', note: `Success fill. ${PENDING}` },
+  { name: 'warning-surface', value: '#FFF3E0', note: `Warning fill. ${PENDING}` },
+  { name: 'error-surface', value: '#FFEBEE', note: `Error fill. ${PENDING}` },
+]
+
+export const controlTokens: SystemToken[] = [
+  { name: 'border-control', value: '#C4C4C4', note: `Resting border on inputs, select, toggle track. ${PENDING}` },
+  { name: 'border-control-strong', value: '#8C8C8C', note: `Hover border; checkbox and radio resting border. ${PENDING}` },
+  { name: 'text-placeholder', value: '#8C8C8C', note: `Placeholder text. ${PENDING}` },
+  { name: 'surface-disabled', value: '#F5F5F5', note: `Disabled control fill. ${PENDING}` },
+  { name: 'surface-readonly', value: 'var(--gray-100)', note: 'Read-only control fill' },
+  { name: 'surface-neutral', value: '#F0F0F0', note: `Neutral Badge/Tag fill. ${PENDING}` },
+  { name: 'avatar-surface', value: '#E0E0E0', note: `Avatar fallback fill. ${PENDING}` },
+]
+
+// ---------------------------------------------------------------------------
+// Non-colour tokens. Without these an AI invents its own — z-index 99999,
+// a one-off 350ms transition, a breakpoint nobody else uses.
+// ---------------------------------------------------------------------------
+export const borderWidths = [
+  { token: 'default', value: '1px' },
+  { token: 'strong', value: '2px' },
+]
+
+export const focusRing = [
+  { name: 'focus-ring-width', value: '2px' },
+  { name: 'focus-ring-offset', value: '2px' },
+  { name: 'focus-ring-color', value: 'var(--primary)' },
+]
+
+export const motion = {
+  duration: [
+    { token: 'instant', value: '0ms', note: 'No transition' },
+    { token: 'fast', value: '100ms', note: 'Hover and focus' },
+    { token: 'normal', value: '200ms', note: 'Menus, popovers' },
+    { token: 'slow', value: '300ms', note: 'Dialogs, drawers' },
+  ],
+  easing: [
+    { token: 'standard', value: 'cubic-bezier(0.2, 0, 0, 1)', note: 'Default' },
+    { token: 'enter', value: 'cubic-bezier(0, 0, 0.2, 1)', note: 'Entering the screen' },
+    { token: 'exit', value: 'cubic-bezier(0.4, 0, 1, 1)', note: 'Leaving the screen' },
+  ],
+}
+
+/** Layering scale. Never use an arbitrary value such as 99999. */
+export const zIndex = [
+  { token: 'base', value: 0 },
+  { token: 'sticky', value: 100, note: 'Sticky headers and toolbars' },
+  { token: 'dropdown', value: 300, note: 'Select and Menu panels' },
+  { token: 'popover', value: 400 },
+  { token: 'overlay', value: 500, note: 'Dialog and Drawer scrim' },
+  { token: 'modal', value: 600, note: 'Dialog and Drawer surface' },
+  { token: 'toast', value: 700, note: 'Snackbar' },
+  { token: 'tooltip', value: 800 },
+]
+
+/**
+ * Shared layout thresholds, not device names. Components should respond to the
+ * space they are given rather than to a user-agent guess.
+ */
+export const breakpoints = [
+  { token: 'sm', value: 640 },
+  { token: 'md', value: 768 },
+  { token: 'lg', value: 1024 },
+  { token: 'xl', value: 1280 },
+  { token: '2xl', value: 1440 },
+]
+
 export const systemTokens: Record<string, SystemToken[]> = {
   Interaction: [
     { name: 'primary-hover-overlay', value: 'rgba(0, 64, 128, 0.04)', note: 'Primary tint on hover' },
@@ -116,6 +200,8 @@ export const systemTokens: Record<string, SystemToken[]> = {
     { name: 'text-disabled', value: 'var(--action-disabled)', note: 'Disabled text' },
     { name: 'text-on-primary', value: '#ffffff', note: 'Text on a primary-filled surface' },
   ],
+  Status: statusSurfaces,
+  Controls: controlTokens,
   Surface: [
     { name: 'background', value: 'var(--gray-100)', note: 'App canvas' },
     { name: 'surface', value: 'var(--white)', note: 'Raised surface (cards, panels, inputs)' },

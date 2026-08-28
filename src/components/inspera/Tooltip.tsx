@@ -31,7 +31,7 @@ function positionStyle(placement: TooltipPlacement): CSSProperties {
 
 function arrowStyle(placement: TooltipPlacement, dark: boolean): CSSProperties {
   const half = ARROW / 2
-  const bg = dark ? '#272727' : '#FFFFFF'
+  const bg = dark ? 'var(--gray-900)' : 'var(--white)'
   const border = dark ? 'transparent' : 'var(--border-strong)'
   const base: CSSProperties = { position: 'absolute', width: ARROW, height: ARROW, background: bg, zIndex: 31 }
   switch (placement) {
@@ -70,8 +70,8 @@ export default function Tooltip({
     width: 'max-content',
     padding: type === 'Accessibility' ? '10px 12px' : '8px 12px',
     borderRadius: 'var(--radius-sm)',
-    background: dark ? '#272727' : '#FFFFFF',
-    color: dark ? '#FFFFFF' : 'var(--text-primary)',
+    background: dark ? 'var(--gray-900)' : 'var(--white)',
+    color: dark ? 'var(--white)' : 'var(--text-primary)',
     border: dark ? 'none' : '1px solid var(--border-strong)',
     fontSize: type === 'Accessibility' ? 14 : 12,
     lineHeight: 1.4,

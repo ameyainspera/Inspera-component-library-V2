@@ -34,7 +34,7 @@ export default function Card({
     width: '100%',
     padding: padMap[padding],
     borderRadius: 'var(--radius-lg)',
-    background: '#FFFFFF',
+    background: 'var(--white)',
     color: 'var(--text-primary)',
     border: elevation === 'Outlined' ? '1px solid var(--border-strong)' : '1px solid transparent',
     boxShadow: elevation === 'Raised' ? 'var(--shadow-200)' : 'none',

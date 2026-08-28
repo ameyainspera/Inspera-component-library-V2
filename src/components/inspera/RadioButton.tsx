@@ -30,7 +30,7 @@ export default function RadioButton({
   const isError = state === 'Error'
   const isFocused = state === 'Focused'
 
-  let border = isError ? 'var(--error)' : '#8C8C8C'
+  let border = isError ? 'var(--error)' : 'var(--border-control-strong)'
   if (isSelected) border = 'var(--primary)'
   else if (state === 'Hover') border = 'var(--primary)'
 
@@ -39,7 +39,7 @@ export default function RadioButton({
     height: 20,
     borderRadius: 'var(--radius-pill)',
     border: `2px solid ${border}`,
-    background: state === 'Hover' ? 'rgba(0,64,128,0.04)' : '#FFFFFF',
+    background: state === 'Hover' ? 'rgba(0,64,128,0.04)' : 'var(--white)',
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'center',

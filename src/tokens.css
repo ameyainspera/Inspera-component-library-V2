@@ -122,6 +122,21 @@
   --text-disabled: var(--action-disabled); /* Disabled text */
   --text-on-primary: #ffffff; /* Text on a primary-filled surface */
 
+  /* Status */
+  --info-surface: #E1F5FE;  /* Info Alert/Badge/Tag fill. Pending Figma verification */
+  --success-surface: #E8F5E9; /* Success fill. Pending Figma verification */
+  --warning-surface: #FFF3E0; /* Warning fill. Pending Figma verification */
+  --error-surface: #FFEBEE; /* Error fill. Pending Figma verification */
+
+  /* Controls */
+  --border-control: #C4C4C4;      /* Resting border on inputs, select, toggle track. Pending Figma verification */
+  --border-control-strong: #8C8C8C; /* Hover border; checkbox and radio resting border. Pending Figma verification */
+  --text-placeholder: #8C8C8C;    /* Placeholder text. Pending Figma verification */
+  --surface-disabled: #F5F5F5;    /* Disabled control fill. Pending Figma verification */
+  --surface-readonly: var(--gray-100); /* Read-only control fill */
+  --surface-neutral: #F0F0F0;     /* Neutral Badge/Tag fill. Pending Figma verification */
+  --avatar-surface: #E0E0E0;      /* Avatar fallback fill. Pending Figma verification */
+
   /* Surface */
   --background: var(--gray-100); /* App canvas */
   --surface: var(--white);     /* Raised surface (cards, panels, inputs) */
@@ -158,6 +173,43 @@
   --shadow-200: 0px 8px 8px rgba(39, 39, 39, 0.08), 0px 4px 6px rgba(39, 39, 39, 0.12);
   --shadow-300: 0px 8px 16px rgba(39, 39, 39, 0.08), 0px 6px 8px rgba(39, 39, 39, 0.12);
   --shadow-500: 0px 10px 32px rgba(39, 39, 39, 0.1), 0px 6px 14px rgba(39, 39, 39, 0.12);
+
+  /* Border width */
+  --border-width-default: 1px;
+  --border-width-strong: 2px;
+
+  /* Focus ring */
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
+  --focus-ring-color: var(--primary);
+
+  /* Motion — duration */
+  --duration-instant: 0ms;   /* No transition */
+  --duration-fast: 100ms;    /* Hover and focus */
+  --duration-normal: 200ms;  /* Menus, popovers */
+  --duration-slow: 300ms;    /* Dialogs, drawers */
+
+  /* Motion — easing */
+  --easing-standard: cubic-bezier(0.2, 0, 0, 1); /* Default */
+  --easing-enter: cubic-bezier(0, 0, 0.2, 1); /* Entering the screen */
+  --easing-exit: cubic-bezier(0.4, 0, 1, 1); /* Leaving the screen */
+
+  /* Layering */
+  --z-base: 0;
+  --z-sticky: 100;     /* Sticky headers and toolbars */
+  --z-dropdown: 300;   /* Select and Menu panels */
+  --z-popover: 400;
+  --z-overlay: 500;    /* Dialog and Drawer scrim */
+  --z-modal: 600;      /* Dialog and Drawer surface */
+  --z-toast: 700;      /* Snackbar */
+  --z-tooltip: 800;
+
+  /* Breakpoints */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1440px;
 
   /* Typography — family */
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif; /* All UI text */

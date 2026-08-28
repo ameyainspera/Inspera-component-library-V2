@@ -15,11 +15,11 @@ export interface BadgeProps {
 }
 
 const intentMap: Record<BadgeIntent, { bg: string; fg: string; icon: string }> = {
-  Neutral: { bg: '#F0F0F0', fg: '#272727', icon: 'circle' },
-  Info: { bg: '#E1F5FE', fg: '#0288D1', icon: 'info' },
-  Success: { bg: '#E8F5E9', fg: '#2E7D32', icon: 'check_circle' },
-  Warning: { bg: '#FFF3E0', fg: '#EF6C00', icon: 'warning' },
-  Error: { bg: '#FFEBEE', fg: '#D32F2F', icon: 'error' },
+  Neutral: { bg: 'var(--surface-neutral)', fg: 'var(--gray-900)', icon: 'circle' },
+  Info: { bg: 'var(--info-surface)', fg: 'var(--info)', icon: 'info' },
+  Success: { bg: 'var(--success-surface)', fg: 'var(--success)', icon: 'check_circle' },
+  Warning: { bg: 'var(--warning-surface)', fg: 'var(--warning)', icon: 'warning' },
+  Error: { bg: 'var(--error-surface)', fg: 'var(--error)', icon: 'error' },
 }
 
 export default function Badge({

@@ -16,7 +16,7 @@ const sizeMap: Record<SpinnerSize, number> = { Small: 16, Medium: 24, Large: 40 
 const intentMap: Record<SpinnerIntent, string> = {
   Primary: 'var(--primary)',
   Neutral: 'var(--gray-600)',
-  Inverse: '#FFFFFF',
+  Inverse: 'var(--white)',
 }
 
 const srOnly: CSSProperties = {

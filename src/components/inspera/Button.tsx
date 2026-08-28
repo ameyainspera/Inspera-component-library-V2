@@ -21,13 +21,13 @@ export interface ButtonProps {
 }
 
 const intentMap: Record<ButtonIntent, { bg: string; fg: string; border: string }> = {
-  Primary: { bg: '#004080', fg: '#FFFFFF', border: 'transparent' },
-  Secondary: { bg: '#F7F7F7', fg: '#272727', border: '#595959' },
-  Outline: { bg: 'transparent', fg: '#004080', border: '#004080' },
-  Text: { bg: 'transparent', fg: '#004080', border: 'transparent' },
-  Success: { bg: '#2E7D32', fg: '#FFFFFF', border: 'transparent' },
-  Warning: { bg: '#EF6C00', fg: '#FFFFFF', border: 'transparent' },
-  Destructive: { bg: '#D32F2F', fg: '#FFFFFF', border: 'transparent' },
+  Primary: { bg: 'var(--primary)', fg: 'var(--white)', border: 'transparent' },
+  Secondary: { bg: 'var(--gray-100)', fg: 'var(--gray-900)', border: 'var(--gray-700)' },
+  Outline: { bg: 'transparent', fg: 'var(--primary)', border: 'var(--primary)' },
+  Text: { bg: 'transparent', fg: 'var(--primary)', border: 'transparent' },
+  Success: { bg: 'var(--success)', fg: 'var(--white)', border: 'transparent' },
+  Warning: { bg: 'var(--warning)', fg: 'var(--white)', border: 'transparent' },
+  Destructive: { bg: 'var(--error)', fg: 'var(--white)', border: 'transparent' },
 }
 
 const sizeMap: Record<ButtonSize, { h: number; px: number; gap: number }> = {
@@ -36,14 +36,16 @@ const sizeMap: Record<ButtonSize, { h: number; px: number; gap: number }> = {
   Large: { h: 48, px: 24, gap: 10 },
 }
 
-// Darken a solid hex by a percentage (used for the Pressed state).
-function darken(hex: string, amount: number): string {
-  if (!hex.startsWith('#')) return hex
-  const n = parseInt(hex.slice(1), 16)
-  const r = Math.max(0, ((n >> 16) & 255) * (1 - amount))
-  const g = Math.max(0, ((n >> 8) & 255) * (1 - amount))
-  const b = Math.max(0, (n & 255) * (1 - amount))
-  return `rgb(${r | 0}, ${g | 0}, ${b | 0})`
+/**
+ * Darken a colour by mixing it toward black, in CSS.
+ *
+ * This replaced JS hex arithmetic. Once the intent map became tokens, the old
+ * helper's `if (!hex.startsWith('#')) return hex` guard returned `var(--primary)`
+ * untouched, so Hover and Pressed silently stopped shading. color-mix works on
+ * whatever the token resolves to.
+ */
+function darken(color: string, amount: number): string {
+  return `color-mix(in srgb, ${color} ${Math.round((1 - amount) * 100)}%, black)`
 }
 
 export default function Button({
@@ -63,8 +65,8 @@ export default function Button({
   let background = c.bg
   if (state === 'Pressed' && isSolid) background = darken(c.bg, 0.18)
   else if (state === 'Hover' && isSolid) background = darken(c.bg, 0.1)
-  else if (state === 'Pressed' && !isSolid) background = 'rgba(0, 64, 128, 0.12)'
-  else if (state === 'Hover' && !isSolid) background = 'rgba(0, 64, 128, 0.08)'
+  else if (state === 'Pressed' && !isSolid) background = 'color-mix(in srgb, var(--primary) 12%, transparent)'
+  else if (state === 'Hover' && !isSolid) background = 'color-mix(in srgb, var(--primary) 8%, transparent)'
 
   const style: CSSProperties = {
     height: s.h,

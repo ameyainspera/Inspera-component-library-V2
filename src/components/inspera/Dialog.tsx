@@ -50,7 +50,7 @@ export default function Dialog({
     display: 'flex',
     flexDirection: 'column',
     borderRadius: 'var(--radius-lg)',
-    background: '#FFFFFF',
+    background: 'var(--white)',
     color: 'var(--text-primary)',
     boxShadow: 'var(--shadow-500)',
   }
@@ -65,7 +65,7 @@ export default function Dialog({
       }}>
         <h2 id="dialog-title" style={{
           margin: 0, fontSize: 22.78, fontWeight: 500, lineHeight: 1.12,
-          color: '#272727', letterSpacing: -0.2,
+          color: 'var(--gray-900)', letterSpacing: -0.2,
         }}>
           {title}
         </h2>
@@ -76,7 +76,7 @@ export default function Dialog({
             aria-label="Close dialog"
             style={{
               flexShrink: 0, background: 'none', border: 'none', padding: 8,
-              cursor: 'pointer', color: '#272727', display: 'inline-flex',
+              cursor: 'pointer', color: 'var(--gray-900)', display: 'inline-flex',
               borderRadius: 'var(--radius-pill)', lineHeight: 0,
             }}
           >
@@ -86,7 +86,7 @@ export default function Dialog({
       </div>
 
       {/* Body */}
-      <div style={{ padding: 32, fontSize: 16, lineHeight: '20px', color: '#272727' }}>
+      <div style={{ padding: 32, fontSize: 16, lineHeight: '20px', color: 'var(--gray-900)' }}>
         {body}
       </div>
 
@@ -113,7 +113,7 @@ export default function Dialog({
             onClick={onConfirm}
             style={{
               padding: '12px', borderRadius: 'var(--radius-sm)',
-              border: 'none', background: 'var(--primary)', color: '#FFFFFF',
+              border: 'none', background: 'var(--primary)', color: 'var(--white)',
               fontWeight: 500, fontSize: 16, lineHeight: '20px',
               cursor: 'pointer', fontFamily: 'var(--font-sans)',
               boxShadow: '0px 1px 0px 0px rgba(0,0,0,0.08), inset 0px -1px 0px 0px rgba(0,0,0,0.2)',

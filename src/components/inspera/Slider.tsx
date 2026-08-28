@@ -47,7 +47,7 @@ export default function Slider({
     width: 20,
     height: 20,
     borderRadius: '9999px',
-    background: '#FFFFFF',
+    background: 'var(--white)',
     border: '2px solid var(--primary)',
     boxShadow: isFocused ? '0 0 0 3px var(--primary-focus-ring)' : '0 1px 2px rgba(0,0,0,0.2)',
     pointerEvents: 'none',

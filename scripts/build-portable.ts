@@ -31,6 +31,7 @@ import {
   brandColors, semanticColors, brandAccents, palette,
   spacing, radius, shadows, typeScale,
   systemTokens, fonts, baseColors,
+  borderWidths, focusRing, motion, zIndex, breakpoints,
 } from '../src/data/tokens'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
@@ -84,6 +85,12 @@ function buildRootCss(): string {
   blocks.push(tokenBlock('Spacing', spacing.map((sp) => ({ name: `space-${sp.token}`, value: `${sp.value}px` }))))
   blocks.push(tokenBlock('Radius', radius.map((r) => ({ name: `radius-${r.token}`, value: `${r.value}px` }))))
   blocks.push(tokenBlock('Elevation', shadows.map((sh) => ({ name: `shadow-${sh.token}`, value: sh.value }))))
+  blocks.push(tokenBlock('Border width', borderWidths.map((b) => ({ name: `border-width-${b.token}`, value: b.value }))))
+  blocks.push(tokenBlock('Focus ring', focusRing))
+  blocks.push(tokenBlock('Motion — duration', motion.duration.map((d) => ({ name: `duration-${d.token}`, value: d.value, note: d.note }))))
+  blocks.push(tokenBlock('Motion — easing', motion.easing.map((e) => ({ name: `easing-${e.token}`, value: e.value, note: e.note }))))
+  blocks.push(tokenBlock('Layering', zIndex.map((z) => ({ name: `z-${z.token}`, value: String(z.value), note: z.note }))))
+  blocks.push(tokenBlock('Breakpoints', breakpoints.map((b) => ({ name: `breakpoint-${b.token}`, value: `${b.value}px` }))))
   blocks.push(tokenBlock('Typography — family', fonts))
   blocks.push(tokenBlock(
     'Typography — scale',

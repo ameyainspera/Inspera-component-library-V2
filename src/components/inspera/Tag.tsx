@@ -19,11 +19,11 @@ export interface TagProps {
 }
 
 const intentMap: Record<TagIntent, { bg: string; fg: string }> = {
-  Neutral: { bg: '#F0F0F0', fg: '#272727' },
-  Info: { bg: '#E1F5FE', fg: '#0288D1' },
-  Success: { bg: '#E8F5E9', fg: '#2E7D32' },
-  Warning: { bg: '#FFF3E0', fg: '#EF6C00' },
-  Error: { bg: '#FFEBEE', fg: '#D32F2F' },
+  Neutral: { bg: 'var(--surface-neutral)', fg: 'var(--gray-900)' },
+  Info: { bg: 'var(--info-surface)', fg: 'var(--info)' },
+  Success: { bg: 'var(--success-surface)', fg: 'var(--success)' },
+  Warning: { bg: 'var(--warning-surface)', fg: 'var(--warning)' },
+  Error: { bg: 'var(--error-surface)', fg: 'var(--error)' },
 }
 
 export default function Tag({

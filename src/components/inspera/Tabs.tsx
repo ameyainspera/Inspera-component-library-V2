@@ -65,7 +65,7 @@ export default function Tabs({
           borderTop: 'none',
           borderRight: 'none',
           borderLeft: 'none',
-          background: contained && on ? '#FFFFFF' : 'transparent',
+          background: contained && on ? 'var(--white)' : 'transparent',
           borderRadius: contained ? 'var(--radius-sm)' : 0,
           boxShadow: contained && on ? 'var(--shadow-100)' : 'none',
           borderBottom: !contained ? `2px solid ${on ? 'var(--primary)' : 'transparent'}` : 'none',
