@@ -1,5 +1,6 @@
-import { type ReactNode } from 'react'
-import { Panel, SectionTitle, CodeBlock, CopyButton } from './primitives'
+import { type ReactNode, useState } from 'react'
+import { componentList } from '../data/components'
+import { Panel, SectionTitle, CodeBlock, CopyButton, SegmentedControl } from './primitives'
 
 // ---------------------------------------------------------------------------
 // A single "context" card: which workspace, when to reach for it, and the
@@ -75,19 +76,170 @@ function Step({ n, title, children }: { n: number; title: string; children?: Rea
   )
 }
 
-const PRIMER_PROMPT = `You are building UI with the Inspera Design System.
+const COUNT = componentList.length
 
-Rules:
-- Use ONLY the 42 Inspera components (Button, TextInput, Select, Card,
-  Table, List, Dialog, Tabs, etc.). Do not invent variants or rename props.
-- Style everything with Inspera tokens — never hardcode off-palette colors.
-  Primary brand: #004080. Fonts: Inter (UI), JetBrains Mono (code),
-  Material Symbols Outlined (icons).
-- Follow the accessibility notes (roles, aria, keyboard) for every component.
+// Kept short on purpose. The old primer told people to paste a ~16k-token file
+// into every session; the index at /llms.txt is ~1.5k and links the rest, so a
+// model fetches only the components it actually uses.
+const specUrl = (path: string) =>
+  `${typeof window !== 'undefined' ? window.location.origin : ''}${path}`
 
-Full spec: <paste the contents of inspera-llms.txt, or link to it>.
+const primerPrompt = () => `You are building UI with the Inspera Design System.
 
-Now build: <describe the screen / flow / mockup you want>.`
+Read ${specUrl('/llms.txt')} first — it lists all ${COUNT} components and links a
+short spec for each one. Fetch the spec for every component you use.
+
+Non-negotiable:
+- Prop names are camelCase and case-sensitive (intent, not Intent). React
+  silently ignores an unknown prop, so wrong case renders the default variant
+  with no error.
+- Variant values are Capitalised: intent="Primary", size="Medium".
+- Style with Inspera tokens (var(--primary), var(--space-4)) — never hardcode
+  an off-palette color.
+
+Now build: <describe the screen or flow you want>.`
+
+interface ToolSetup {
+  id: string
+  label: string
+  file: string
+  where: string
+  note: string
+}
+
+const TOOL_SETUPS: ToolSetup[] = [
+  {
+    id: 'Cursor',
+    label: 'Cursor',
+    file: '/rules/inspera.mdc',
+    where: '.cursor/rules/inspera.mdc',
+    note: 'Applies to every .tsx/.jsx/.css file automatically — no per-chat priming.',
+  },
+  {
+    id: 'Claude Code',
+    label: 'Claude Code',
+    file: '/rules/CLAUDE.md',
+    where: 'CLAUDE.md',
+    note: 'Loaded into every session in that repo. Claude fetches per-component specs as it needs them.',
+  },
+  {
+    id: 'Copilot',
+    label: 'Copilot',
+    file: '/rules/copilot-instructions.md',
+    where: '.github/copilot-instructions.md',
+    note: 'Picked up by Copilot Chat and the coding agent across the repo.',
+  },
+  {
+    id: 'Windsurf',
+    label: 'Windsurf',
+    file: '/rules/.windsurfrules',
+    where: '.windsurfrules',
+    note: 'Repo-root rules file, read on every request.',
+  },
+  {
+    id: 'Other',
+    label: 'v0 / Bolt / ChatGPT',
+    file: '/rules/AGENTS.md',
+    where: 'AGENTS.md (or paste it)',
+    note: 'For chat-based tools with no rules file, paste this at the start of the session.',
+  },
+]
+
+const ARTIFACTS = [
+  { file: 'llms.txt', note: 'Component index — start here. ~1.5k tokens.' },
+  { file: 'llms-full.txt', note: 'Every component inline, when a tool cannot fetch.' },
+  { file: 'api.json', note: 'Prop API, derived from the TypeScript types.' },
+  { file: 'tokens.css', note: 'Token custom properties + icon/keyframe runtime.' },
+  { file: 'inspera.theme.css', note: 'Tailwind v4 @theme block.' },
+  { file: 'tokens.w3c.json', note: 'W3C Design Tokens format.' },
+  { file: 'aliases.json', note: 'Deprecated name → canonical component.' },
+]
+
+function ArtifactLink({ file, note }: { file: string; note: string }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, padding: '7px 0', borderBottom: '1px solid var(--border)' }}>
+      <a
+        href={`/${file}`}
+        target="_blank"
+        rel="noreferrer"
+        style={{ fontFamily: 'var(--font-mono)', fontSize: 13, color: 'var(--primary)', textDecoration: 'none', flexShrink: 0, minWidth: 168 }}
+      >
+        {file}
+      </a>
+      <span style={{ fontSize: 13, color: 'var(--muted-foreground)' }}>{note}</span>
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
+// "Set up for <tool>" — hands over the exact rules file and where it goes.
+// A rules file beats a pasted primer: it is loaded on every request in that
+// repo, so nobody has to remember to prime the session.
+// ---------------------------------------------------------------------------
+function ToolSetupCard() {
+  const [toolId, setToolId] = useState(TOOL_SETUPS[0].id)
+  const tool = TOOL_SETUPS.find((t) => t.id === toolId) ?? TOOL_SETUPS[0]
+
+  return (
+    <ContextCard
+      icon="smart_toy"
+      eyebrow="Cursor · Claude Code · Copilot · Windsurf · v0 · Bolt · ChatGPT"
+      title="Any AI builder"
+      blurb="Drop one rules file into the project and the tool stays on-system for every request — no per-chat priming, no pasting the whole spec."
+      best="Vibe-coding, prototypes, and any repo where you cannot install the private package."
+    >
+      <Step n={1} title="Pick your tool">
+        <SegmentedControl
+          label="Tool"
+          options={TOOL_SETUPS.map((t) => t.label)}
+          value={tool.label}
+          onChange={(label) => setToolId(TOOL_SETUPS.find((t) => t.label === label)?.id ?? TOOL_SETUPS[0].id)}
+        />
+      </Step>
+
+      <Step n={2} title={`Save it as ${tool.where}`}>
+        <p style={{ margin: 0, fontSize: 13, color: 'var(--muted-foreground)', lineHeight: 1.5 }}>{tool.note}</p>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+          <a
+            href={tool.file}
+            target="_blank"
+            rel="noreferrer"
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: 6, height: 32, padding: '0 12px',
+              borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-strong)',
+              background: 'var(--surface)', color: 'var(--gray-800)', textDecoration: 'none',
+              fontSize: 13, fontWeight: 500,
+            }}
+          >
+            <span className="material-symbols-outlined" style={{ fontSize: 16 }} aria-hidden>download</span>
+            Open {tool.where.split('/').pop()}
+          </a>
+          <CopyButton text={specUrl(tool.file)} label="Copy link" />
+        </div>
+        <CodeBlock
+          language="bash"
+          copyLabel="Copy"
+          code={`curl -o ${tool.where} ${specUrl(tool.file)}`}
+        />
+      </Step>
+
+      <Step n={3} title="Or prime a one-off chat">
+        <p style={{ margin: 0, fontSize: 13, color: 'var(--muted-foreground)', lineHeight: 1.5 }}>
+          For a tool with no rules file, paste this instead. It links the index rather than
+          inlining the system, so the model spends its context on your screen, not the spec.
+        </p>
+        <CodeBlock code={primerPrompt()} language="prompt" copyLabel="Copy primer" />
+      </Step>
+
+      <div>
+        <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 4, color: 'var(--gray-900)' }}>
+          Everything the library publishes
+        </div>
+        {ARTIFACTS.map((a) => <ArtifactLink key={a.file} {...a} />)}
+      </div>
+    </ContextCard>
+  )
+}
 
 export default function IntegratePage() {
   return (
@@ -114,7 +266,7 @@ export default function IntegratePage() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 14 }}>
           {[
             { icon: 'inventory_2', title: 'npm package', mono: '@inspera/components', note: 'Real React components + tokens.css for code projects.' },
-            { icon: 'description', title: 'Portable spec', mono: 'inspera-llms.txt', note: 'A single file any AI builder can read to stay on-brand.' },
+            { icon: 'description', title: 'Portable spec', mono: 'llms.txt', note: 'A small index any AI builder can read, linking a spec per component.' },
             { icon: 'widgets', title: 'Figma Make Kit', mono: 'kit/', note: 'Constrains the Make agent to Inspera components & tokens.' },
           ].map((f) => (
             <div key={f.title} style={{ border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', padding: 16, display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -155,39 +307,7 @@ export default function IntegratePage() {
       </ContextCard>
 
       {/* Any AI builder */}
-      <ContextCard
-        icon="smart_toy"
-        eyebrow="Cursor · v0 · Lovable · Bolt · Claude · ChatGPT"
-        title="Any AI builder"
-        blurb="Give the AI the portable spec so it knows the exact components, props, tokens, and accessibility rules. It then generates UI that matches Inspera even without the package installed."
-        best="Vibe-coding, prototypes, and chats where you can't install packages."
-      >
-        <Step n={1} title="Grab the portable spec">
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-            <a
-              href="/inspera-llms.txt"
-              target="_blank"
-              rel="noreferrer"
-              style={{
-                display: 'inline-flex', alignItems: 'center', gap: 6, height: 32, padding: '0 12px',
-                borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-strong)',
-                background: '#fff', color: 'var(--gray-800)', textDecoration: 'none', fontSize: 13, fontWeight: 500,
-              }}
-            >
-              <span className="material-symbols-outlined" style={{ fontSize: 16 }} aria-hidden>open_in_new</span>
-              Open inspera-llms.txt
-            </a>
-            <CopyButton text={`${typeof window !== 'undefined' ? window.location.origin : ''}/inspera-llms.txt`} label="Copy link" />
-          </div>
-        </Step>
-        <Step n={2} title="Prime the model, then describe your screen">
-          <p style={{ margin: 0, fontSize: 13, color: 'var(--muted-foreground)', lineHeight: 1.5 }}>
-            Paste the spec (or link it) at the start of your session, then ask for what you need.
-            Copy this primer to get going:
-          </p>
-          <CodeBlock code={PRIMER_PROMPT} language="prompt" copyLabel="Copy primer" />
-        </Step>
-      </ContextCard>
+      <ToolSetupCard />
 
       {/* Code project */}
       <ContextCard
@@ -236,8 +356,9 @@ export function SettingsScreen() {
               Why it stays consistent
             </div>
             <p style={{ margin: 0, fontSize: 14, color: 'var(--gray-700)', lineHeight: 1.55 }}>
-              All three formats are generated from the same source in <code style={{ fontFamily: 'var(--font-mono)', fontSize: 12 }}>src/</code>.
-              Whichever path you take, you get the same 42 components, the same tokens (Inter, JetBrains Mono, Material Symbols,
+              Every format is generated from the same source in <code style={{ fontFamily: 'var(--font-mono)', fontSize: 12 }}>src/</code>, and CI
+              fails if a generated file drifts from it.
+              Whichever path you take, you get the same {COUNT} components, the same tokens (Inter, JetBrains Mono, Material Symbols,
               the <code style={{ fontFamily: 'var(--font-mono)', fontSize: 12 }}>#004080</code> navy palette), and the same accessibility rules —
               so a mockup built in Figma Make and a production screen built in code look and behave the same.
             </p>

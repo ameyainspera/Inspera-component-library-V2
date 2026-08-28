@@ -59,3 +59,24 @@ consume. See [DISTRIBUTION.md](DISTRIBUTION.md).
 - Style with tokens (`var(--…)`); raw hex is rejected by lint.
 - Every component must satisfy the accessibility contract declared for it in
   `src/data/components.ts`.
+
+## The AI integration surface
+
+Everything an AI tool needs is generated into `public/` and layered by size, so
+a tool takes only what it can use:
+
+| Artifact | For |
+| --- | --- |
+| `llms.txt` | The index — ~1.5k tokens. What a person pastes. |
+| `c/<slug>.md` | One component, ~600 tokens. What an agent fetches on demand. |
+| `llms-full.txt` | Everything inline, for tools that cannot fetch. |
+| `api.json` | Prop API derived from the TypeScript types. |
+| `aliases.json` | Deprecated name → canonical component. |
+| `tokens.css` | Custom properties + icon/keyframe runtime. |
+| `inspera.theme.css` | Tailwind v4 `@theme` block. |
+| `tokens.w3c.json` | W3C Design Tokens format. |
+| `rules/*` | Drop-in rules files for Cursor, Claude Code, Copilot, Windsurf. |
+
+Links inside these files are relative by default. Once the site is hosted, set
+`INSPERA_DS_BASE_URL=https://your-host` before `pnpm generate` to emit absolute
+URLs, which the drop-in rules files need.

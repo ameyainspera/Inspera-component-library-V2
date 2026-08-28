@@ -1,0 +1,3162 @@
+{
+  "$schema": "https://inspera.design/schema/api.json",
+  "version": "1.0.0",
+  "generatedAt": "2026-08-28",
+  "description": "Inspera Design System component API, derived from the TypeScript interfaces. Prop names are camelCase and case-sensitive; variant values are Capitalised.",
+  "components": {
+    "Button": {
+      "slug": "button",
+      "displayName": "Button",
+      "category": "input-controls",
+      "purpose": "Trigger an action.",
+      "importFrom": "@inspera/components",
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "required": false,
+          "default": "'Button'"
+        },
+        {
+          "name": "intent",
+          "type": "'Success' | 'Warning' | 'Primary' | 'Secondary' | 'Outline' | 'Text' | 'Destructive'",
+          "required": false,
+          "default": "'Primary'",
+          "description": "Visual role / semantic weight. Values: Primary | Secondary | Outline | Text | Success | Warning | Destructive."
+        },
+        {
+          "name": "size",
+          "type": "'Small' | 'Medium' | 'Large'",
+          "required": false,
+          "default": "'Medium'",
+          "description": "Height 32 / 40 / 48. Values: Small | Medium | Large."
+        },
+        {
+          "name": "state",
+          "type": "'Default' | 'Hover' | 'Focused' | 'Pressed' | 'Disabled'",
+          "required": false,
+          "default": "'Default'",
+          "description": "Forces a visual state for documentation. Omit for real interactivity."
+        },
+        {
+          "name": "content",
+          "type": "'Text' | 'Icon + Text' | 'Text + Icon' | 'Text + Disclosure'",
+          "required": false,
+          "default": "'Text'",
+          "description": "Label / icon composition. Values: Text | Icon + Text | Text + Icon | Text + Disclosure."
+        },
+        {
+          "name": "icon",
+          "type": "string",
+          "required": false,
+          "default": "'add'"
+        },
+        {
+          "name": "onClick",
+          "type": "() => void",
+          "required": false
+        }
+      ],
+      "accessibility": {
+        "role": "button",
+        "keyboard": true,
+        "ariaNotes": [
+          "Icon-only buttons must have an accessible label"
+        ]
+      },
+      "usage": {
+        "do": [
+          "Use Primary for main actions",
+          "Use Secondary for alternative actions",
+          "Use Destructive only for destructive flows"
+        ],
+        "dont": [
+          "Do not create separate component files per intent",
+          "Do not use deprecated alias names"
+        ]
+      },
+      "deprecatedAliases": [
+        "Primary button",
+        "Secondary button",
+        "Outline button",
+        "Text button",
+        "Success button",
+        "Warning button"
+      ]
+    },
+    "TextInput": {
+      "slug": "text-input",
+      "displayName": "Text Input",
+      "category": "input-controls",
+      "purpose": "Collect single-line text input.",
+      "importFrom": "@inspera/components",
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "required": false,
+          "default": "'Label'",
+          "description": "Show the field label. Values: true | false."
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "required": false,
+          "default": "'Placeholder text'"
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "state",
+          "type": "'Error' | 'Default' | 'Hover' | 'Focused' | 'Disabled' | 'Filled' | 'ReadOnly'",
+          "required": false,
+          "default": "'Default'",
+          "description": "Forces a visual state for documentation. Omit for real interactivity."
+        },
+        {
+          "name": "size",
+          "type": "'Small' | 'Medium'",
+          "required": false,
+          "default": "'Medium'",
+          "description": "Control height. Values: Small | Medium."
+        },
+        {
+          "name": "leadingIcon",
+          "type": "string",
+          "required": false,
+          "description": "Show a leading icon. Values: true | false."
+        },
+        {
+          "name": "trailingIcon",
+          "type": "string",
+          "required": false,
+          "description": "Show a trailing icon. Values: true | false."
+        },
+        {
+          "name": "showLabel",
+          "type": "boolean",
+          "required": false,
+          "default": "true"
+        },
+        {
+          "name": "helpText",
+          "type": "string",
+          "required": false,
+          "description": "Show helper text. Values: true | false."
+        },
+        {
+          "name": "errorText",
+          "type": "string",
+          "required": false,
+          "description": "Show error message. Values: true | false."
+        },
+        {
+          "name": "onChange",
+          "type": "(value: string) => void",
+          "required": false
+        }
+      ],
+      "accessibility": {
+        "role": "textbox",
+        "keyboard": true,
+        "ariaNotes": [
+          "Always associate label with input using htmlFor/id",
+          "Error text must be linked via aria-describedby",
+          "Required fields must use aria-required"
+        ]
+      },
+      "usage": {
+        "do": [
+          "Always include a visible label",
+          "Provide clear placeholder text as a hint",
+          "Show error messages below the input"
+        ],
+        "dont": [
+          "Do not use placeholder as the only label",
+          "Do not disable inputs without explanation"
+        ]
+      },
+      "deprecatedAliases": [
+        "Text inputs",
+        "Content",
+        "Content (small)"
+      ]
+    },
+    "Checkbox": {
+      "slug": "checkbox",
+      "displayName": "Checkbox",
+      "category": "input-controls",
+      "purpose": "Allow multiple selection.",
+      "importFrom": "@inspera/components",
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "required": false,
+          "default": "'Checkbox label'"
+        },
+        {
+          "name": "checked",
+          "type": "boolean",
+          "required": false,
+          "description": "Checked state. Values: true | false."
+        },
+        {
+          "name": "state",
+          "type": "'Error' | 'Default' | 'Hover' | 'Focused' | 'Pressed' | 'Disabled'",
+          "required": false,
+          "default": "'Default'",
+          "description": "Forces a visual state for documentation. Omit for real interactivity."
+        },
+        {
+          "name": "withLabel",
+          "type": "boolean",
+          "required": false,
+          "default": "true",
+          "description": "Render the label. Values: true | false."
+        },
+        {
+          "name": "size",
+          "type": "'Small' | 'Medium'",
+          "required": false,
+          "default": "'Medium'",
+          "description": "Indicator size. Values: Small | Medium."
+        },
+        {
+          "name": "onChange",
+          "type": "(checked: boolean) => void",
+          "required": false
+        }
+      ],
+      "accessibility": {
+        "role": "checkbox",
+        "keyboard": true,
+        "ariaNotes": [
+          "Use aria-checked to reflect state",
+          "Group related checkboxes with fieldset and legend"
+        ]
+      },
+      "usage": {
+        "do": [
+          "Use for multi-select scenarios",
+          "Always provide a label for each checkbox",
+          "Group related options together"
+        ],
+        "dont": [
+          "Do not use for mutually exclusive options — use Radio Button instead",
+          "Do not use without a label"
+        ]
+      },
+      "deprecatedAliases": [
+        "Checkbox/Unchecked",
+        "Checkbox/Checked",
+        "Checkbox with label",
+        "Checkbox (fill width)",
+        "Checkbox (Cards)"
+      ]
+    },
+    "RadioButton": {
+      "slug": "radio-button",
+      "displayName": "Radio Button",
+      "category": "input-controls",
+      "purpose": "Allow single selection.",
+      "importFrom": "@inspera/components",
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "required": false,
+          "default": "'Radio option'"
+        },
+        {
+          "name": "selected",
+          "type": "boolean",
+          "required": false,
+          "description": "Selected state. Values: true | false."
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": false,
+          "default": "'radio'"
+        },
+        {
+          "name": "state",
+          "type": "'Error' | 'Default' | 'Hover' | 'Focused' | 'Pressed' | 'Disabled'",
+          "required": false,
+          "default": "'Default'",
+          "description": "Forces a visual state for documentation. Omit for real interactivity."
+        },
+        {
+          "name": "withLabel",
+          "type": "boolean",
+          "required": false,
+          "default": "true",
+          "description": "Render the label. Values: true | false."
+        },
+        {
+          "name": "onChange",
+          "type": "(selected: boolean) => void",
+          "required": false
+        }
+      ],
+      "accessibility": {
+        "role": "radio",
+        "keyboard": true,
+        "ariaNotes": [
+          "Use role=\"radiogroup\" for the group container",
+          "Use aria-checked to indicate selected state",
+          "Arrow keys navigate between options in the group"
+        ]
+      },
+      "usage": {
+        "do": [
+          "Use for mutually exclusive options",
+          "Always group inside a radiogroup",
+          "Pre-select a default when appropriate"
+        ],
+        "dont": [
+          "Do not use for multi-select — use Checkbox instead",
+          "Do not use a single radio button alone"
+        ]
+      },
+      "deprecatedAliases": [
+        "Radiobutton",
+        "Radiobuttons",
+        "Radio Button New-BonW",
+        "Radio Button New-BonY",
+        "Radio Button New-WonB",
+        "Radio Button New-YonB"
+      ]
+    },
+    "Select": {
+      "slug": "select",
+      "displayName": "Select",
+      "category": "input-controls",
+      "purpose": "Select one option from a list.",
+      "importFrom": "@inspera/components",
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "required": false,
+          "default": "'Country'",
+          "description": "Render the label. Values: true | false."
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "required": false,
+          "default": "'Select an option'"
+        },
+        {
+          "name": "options",
+          "type": "string[]",
+          "required": false,
+          "default": "defaultOptions"
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "state",
+          "type": "'Error' | 'Default' | 'Hover' | 'Focused' | 'Disabled' | 'Open'",
+          "required": false,
+          "default": "'Default'",
+          "description": "Forces a visual state for documentation. Omit for real interactivity."
+        },
+        {
+          "name": "widthMode",
+          "type": "'Fixed' | 'Content Adaptable'",
+          "required": false,
+          "default": "'Fixed'",
+          "description": "Trigger sizing. Values: Fixed | Content Adaptable."
+        },
+        {
+          "name": "showLabel",
+          "type": "boolean",
+          "required": false,
+          "default": "true"
+        },
+        {
+          "name": "search",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": "Filterable option list. Values: true | false."
+        },
+        {
+          "name": "onChange",
+          "type": "(value: string) => void",
+          "required": false
+        }
+      ],
+      "accessibility": {
+        "role": "combobox",
+        "keyboard": true,
+        "ariaNotes": [
+          "Use aria-expanded to indicate open state",
+          "Use aria-activedescendant for highlighted option",
+          "Support arrow key navigation through options"
+        ]
+      },
+      "usage": {
+        "do": [
+          "Use for 5+ options where space is limited",
+          "Always provide a label",
+          "Show a clear placeholder when no option is selected"
+        ],
+        "dont": [
+          "Do not use for fewer than 3 options — use Radio Button instead",
+          "Do not nest selects inside other selects"
+        ]
+      },
+      "deprecatedAliases": [
+        "Select / Fixed width",
+        "Select / Content adaptable",
+        "Dropdown",
+        "Dropdown with Label"
+      ]
+    },
+    "Toggle": {
+      "slug": "toggle",
+      "displayName": "Toggle",
+      "category": "input-controls",
+      "purpose": "Switch a setting on or off instantly.",
+      "importFrom": "@inspera/components",
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "required": false,
+          "default": "'Toggle setting'"
+        },
+        {
+          "name": "checked",
+          "type": "boolean",
+          "required": false,
+          "description": "On / off state. Values: true | false."
+        },
+        {
+          "name": "state",
+          "type": "'Default' | 'Hover' | 'Focused' | 'Disabled'",
+          "required": false,
+          "default": "'Default'",
+          "description": "Forces a visual state for documentation. Omit for real interactivity."
+        },
+        {
+          "name": "size",
+          "type": "'Small' | 'Medium'",
+          "required": false,
+          "default": "'Medium'",
+          "description": "Track / thumb size. Values: Small | Medium."
+        },
+        {
+          "name": "withLabel",
+          "type": "boolean",
+          "required": false,
+          "default": "true",
+          "description": "Render the label. Values: true | false."
+        },
+        {
+          "name": "onChange",
+          "type": "(checked: boolean) => void",
+          "required": false
+        }
+      ],
+      "accessibility": {
+        "role": "switch",
+        "keyboard": true,
+        "ariaNotes": [
+          "Use role=\"switch\" for the toggle",
+          "Use aria-checked to reflect on/off state",
+          "Space key toggles the switch"
+        ]
+      },
+      "usage": {
+        "do": [
+          "Use for immediate on/off settings",
+          "Provide a clear label describing the setting",
+          "Show the current state visually"
+        ],
+        "dont": [
+          "Do not use for form submissions — use Checkbox instead",
+          "Do not use without a visible label"
+        ]
+      },
+      "deprecatedAliases": [
+        "Switch",
+        "Toggle switch"
+      ]
+    },
+    "Card": {
+      "slug": "card",
+      "displayName": "Card",
+      "category": "data-display",
+      "purpose": "Group related content in a contained surface.",
+      "importFrom": "@inspera/components",
+      "props": [
+        {
+          "name": "title",
+          "type": "string",
+          "required": false,
+          "default": "'Card title'"
+        },
+        {
+          "name": "body",
+          "type": "string",
+          "required": false,
+          "default": "'Group related content in a contained surface using consistent padding and elevation.'"
+        },
+        {
+          "name": "elevation",
+          "type": "'Flat' | 'Raised' | 'Outlined'",
+          "required": false,
+          "default": "'Raised'",
+          "description": "Surface treatment. Values: Flat | Raised | Outlined."
+        },
+        {
+          "name": "padding",
+          "type": "'Default' | 'Compact' | 'Spacious'",
+          "required": false,
+          "default": "'Default'",
+          "description": "Internal padding (12 / 16 / 24). Values: Compact | Default | Spacious."
+        },
+        {
+          "name": "interactive",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": "Renders as a focusable button with hover elevation. Values: true | false."
+        },
+        {
+          "name": "children",
+          "type": "string | number | bigint | boolean | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> | Iterable<ReactNode> | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal | Promise<string | number | bigint | boolean | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null",
+          "required": false
+        },
+        {
+          "name": "onClick",
+          "type": "() => void",
+          "required": false
+        }
+      ],
+      "accessibility": {
+        "role": "article",
+        "keyboard": true,
+        "ariaNotes": [
+          "Interactive cards should use role=\"button\" or be wrapped in an anchor",
+          "Non-interactive cards use role=\"article\" or a semantic section"
+        ]
+      },
+      "usage": {
+        "do": [
+          "Use to group related content",
+          "Maintain consistent padding within a view",
+          "Use raised elevation for primary content cards"
+        ],
+        "dont": [
+          "Do not nest cards inside other cards",
+          "Do not use cards for layout-only purposes without content"
+        ]
+      },
+      "deprecatedAliases": []
+    },
+    "Badge": {
+      "slug": "badge",
+      "displayName": "Badge",
+      "category": "data-display",
+      "purpose": "Display a short status label or count.",
+      "importFrom": "@inspera/components",
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "required": false,
+          "default": "'Badge'"
+        },
+        {
+          "name": "intent",
+          "type": "'Info' | 'Success' | 'Warning' | 'Error' | 'Neutral'",
+          "required": false,
+          "default": "'Neutral'",
+          "description": "Semantic color. Values: Neutral | Info | Success | Warning | Error."
+        },
+        {
+          "name": "size",
+          "type": "'Small' | 'Medium'",
+          "required": false,
+          "default": "'Medium'",
+          "description": "Height 20 / 24. Values: Small | Medium."
+        },
+        {
+          "name": "withIcon",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": "Show a leading status icon. Values: true | false."
+        },
+        {
+          "name": "icon",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "accessibility": {
+        "role": "status",
+        "keyboard": false,
+        "ariaNotes": [
+          "Use aria-label for icon-only badges",
+          "Use role=\"status\" for dynamic count badges"
+        ]
+      },
+      "usage": {
+        "do": [
+          "Use for status indicators and counts",
+          "Keep labels short — 1 to 2 words",
+          "Use intent colors consistently"
+        ],
+        "dont": [
+          "Do not use for long text content",
+          "Do not make badges interactive without clear affordance"
+        ]
+      },
+      "deprecatedAliases": [
+        "Status Badge",
+        "Tag",
+        "Chip"
+      ]
+    },
+    "Avatar": {
+      "slug": "avatar",
+      "displayName": "Avatar",
+      "category": "data-display",
+      "purpose": "Represent a user or entity with an image or initials.",
+      "importFrom": "@inspera/components",
+      "props": [
+        {
+          "name": "size",
+          "type": "'Small' | 'Medium' | 'Large'",
+          "required": false,
+          "default": "'Medium'",
+          "description": "Diameter 32 / 40 / 56. Values: Small | Medium | Large."
+        },
+        {
+          "name": "content",
+          "type": "'Image' | 'Initials' | 'Icon'",
+          "required": false,
+          "default": "'Initials'",
+          "description": "What fills the avatar. Values: Image | Initials | Icon."
+        },
+        {
+          "name": "status",
+          "type": "'None' | 'Online' | 'Offline' | 'Busy'",
+          "required": false,
+          "default": "'None'",
+          "description": "Presence indicator dot. Values: None | Online | Offline | Busy."
+        },
+        {
+          "name": "initials",
+          "type": "string",
+          "required": false,
+          "default": "'JC'"
+        },
+        {
+          "name": "imageSrc",
+          "type": "string",
+          "required": false,
+          "default": "'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=112&h=112&fit=crop&auto=format'"
+        },
+        {
+          "name": "alt",
+          "type": "string",
+          "required": false,
+          "default": "'User avatar'"
+        },
+        {
+          "name": "icon",
+          "type": "string",
+          "required": false,
+          "default": "'person'"
+        }
+      ],
+      "accessibility": {
+        "role": "img",
+        "keyboard": false,
+        "ariaNotes": [
+          "Provide alt text for image avatars",
+          "Use aria-label for initials and icon variants"
+        ]
+      },
+      "usage": {
+        "do": [
+          "Use for user profiles and participant lists",
+          "Provide meaningful alt text",
+          "Use consistent sizing within a context"
+        ],
+        "dont": [
+          "Do not stretch or distort avatar images",
+          "Do not use random colors — use a deterministic palette"
+        ]
+      },
+      "deprecatedAliases": []
+    },
+    "Alert": {
+      "slug": "alert",
+      "displayName": "Alert",
+      "category": "feedback",
+      "purpose": "Display semantic inline feedback.",
+      "importFrom": "@inspera/components",
+      "props": [
+        {
+          "name": "title",
+          "type": "string",
+          "required": false,
+          "default": "'Heads up'"
+        },
+        {
+          "name": "message",
+          "type": "string",
+          "required": false,
+          "default": "'This is a contextual inline message that matches the intent severity.'"
+        },
+        {
+          "name": "intent",
+          "type": "'Info' | 'Success' | 'Warning' | 'Error'",
+          "required": false,
+          "default": "'Info'",
+          "description": "Severity / color. Values: Info | Success | Warning | Error."
+        },
+        {
+          "name": "layout",
+          "type": "'Simple' | 'With CTA' | 'With Close' | 'With CTA + Close'",
+          "required": false,
+          "default": "'Simple'",
+          "description": "Action affordances. Values: Simple | With CTA | With Close | With CTA + Close."
+        },
+        {
+          "name": "background",
+          "type": "boolean",
+          "required": false,
+          "default": "true",
+          "description": "Tinted fill vs. left-accent only. Values: true | false."
+        },
+        {
+          "name": "ctaLabel",
+          "type": "string",
+          "required": false,
+          "default": "'View details'"
+        },
+        {
+          "name": "onCta",
+          "type": "() => void",
+          "required": false
+        },
+        {
+          "name": "onClose",
+          "type": "() => void",
+          "required": false
+        }
+      ],
+      "accessibility": {
+        "role": "alert",
+        "keyboard": true,
+        "ariaNotes": [
+          "Use role=\"alert\" for important messages",
+          "Use aria-live=\"polite\" for non-critical alerts",
+          "Close button must have aria-label=\"Close alert\""
+        ]
+      },
+      "usage": {
+        "do": [
+          "Use for contextual inline messages",
+          "Match intent to message severity",
+          "Keep alert text concise"
+        ],
+        "dont": [
+          "Do not stack more than 2 alerts in the same area",
+          "Do not use alerts for permanent content"
+        ]
+      },
+      "deprecatedAliases": []
+    },
+    "Dialog": {
+      "slug": "dialog",
+      "displayName": "Dialog",
+      "category": "feedback",
+      "purpose": "Present content or actions that require user attention.",
+      "importFrom": "@inspera/components",
+      "props": [
+        {
+          "name": "title",
+          "type": "string",
+          "required": false,
+          "default": "'Dialog title'"
+        },
+        {
+          "name": "body",
+          "type": "string | number | bigint | boolean | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> | Iterable<ReactNode> | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal | Promise<string | number | bigint | boolean | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null",
+          "required": false,
+          "default": "'This is the dialog body. Provide context or a clear description of the action the user is about to take.'"
+        },
+        {
+          "name": "size",
+          "type": "'Small' | 'Medium' | 'Large'",
+          "required": false,
+          "default": "'Medium'",
+          "description": "Panel width 400 / 480 / 560. Values: Small | Medium | Large."
+        },
+        {
+          "name": "hasCloseButton",
+          "type": "boolean",
+          "required": false,
+          "default": "true",
+          "description": "Show the header close affordance. Values: true | false."
+        },
+        {
+          "name": "hasActions",
+          "type": "boolean",
+          "required": false,
+          "default": "true",
+          "description": "Show the footer action buttons. Values: true | false."
+        },
+        {
+          "name": "confirmLabel",
+          "type": "string",
+          "required": false,
+          "default": "'Continue'"
+        },
+        {
+          "name": "cancelLabel",
+          "type": "string",
+          "required": false,
+          "default": "'Cancel'"
+        },
+        {
+          "name": "open",
+          "type": "boolean",
+          "required": false,
+          "default": "true"
+        },
+        {
+          "name": "embedded",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": "Render just the panel (no overlay) — used for documentation previews."
+        },
+        {
+          "name": "onClose",
+          "type": "() => void",
+          "required": false
+        },
+        {
+          "name": "onConfirm",
+          "type": "() => void",
+          "required": false
+        }
+      ],
+      "accessibility": {
+        "role": "dialog",
+        "keyboard": true,
+        "ariaNotes": [
+          "Use role=\"dialog\" with aria-modal=\"true\"",
+          "Set aria-labelledby to the dialog title",
+          "Trap focus inside the dialog when open",
+          "Return focus to trigger element on close",
+          "Escape key closes the dialog"
+        ]
+      },
+      "usage": {
+        "do": [
+          "Use for confirmations and critical decisions",
+          "Always provide a way to close the dialog",
+          "Keep dialog content focused and concise"
+        ],
+        "dont": [
+          "Do not open dialogs from other dialogs",
+          "Do not use for non-blocking information — use Alert instead"
+        ]
+      },
+      "deprecatedAliases": [
+        "Modal",
+        "Popup"
+      ]
+    },
+    "Snackbar": {
+      "slug": "snackbar",
+      "displayName": "Snackbar",
+      "category": "feedback",
+      "purpose": "Show brief, non-blocking feedback at the bottom of the screen.",
+      "importFrom": "@inspera/components",
+      "props": [
+        {
+          "name": "message",
+          "type": "string",
+          "required": false,
+          "default": "'Assessment saved successfully.'"
+        },
+        {
+          "name": "intent",
+          "type": "'Info' | 'Success' | 'Warning' | 'Error' | 'Neutral'",
+          "required": false,
+          "default": "'Neutral'",
+          "description": "Accent icon color. Values: Neutral | Info | Success | Warning | Error."
+        },
+        {
+          "name": "hasAction",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": "Show an inline action (e.g. Undo). Values: true | false."
+        },
+        {
+          "name": "hasClose",
+          "type": "boolean",
+          "required": false,
+          "default": "true",
+          "description": "Show the dismiss button. Values: true | false."
+        },
+        {
+          "name": "actionLabel",
+          "type": "string",
+          "required": false,
+          "default": "'Undo'"
+        },
+        {
+          "name": "onAction",
+          "type": "() => void",
+          "required": false
+        },
+        {
+          "name": "onClose",
+          "type": "() => void",
+          "required": false
+        }
+      ],
+      "accessibility": {
+        "role": "status",
+        "keyboard": true,
+        "ariaNotes": [
+          "Use role=\"status\" with aria-live=\"polite\"",
+          "Action button must be focusable",
+          "Auto-dismiss timing must be generous (5s minimum)"
+        ]
+      },
+      "usage": {
+        "do": [
+          "Use for brief confirmation messages",
+          "Include an undo action when appropriate",
+          "Limit to one snackbar at a time"
+        ],
+        "dont": [
+          "Do not use for critical errors — use Alert or Dialog instead",
+          "Do not stack multiple snackbars"
+        ]
+      },
+      "deprecatedAliases": [
+        "Toast",
+        "Notification bar"
+      ]
+    },
+    "Tooltip": {
+      "slug": "tooltip",
+      "displayName": "Tooltip",
+      "category": "feedback",
+      "purpose": "Provide contextual help on hover or focus.",
+      "importFrom": "@inspera/components",
+      "props": [
+        {
+          "name": "content",
+          "type": "string",
+          "required": false,
+          "default": "'Supplementary help text'"
+        },
+        {
+          "name": "placement",
+          "type": "'Left' | 'Right' | 'Bottom' | 'Top'",
+          "required": false,
+          "default": "'Top'",
+          "description": "Position relative to the trigger. Values: Top | Bottom | Left | Right."
+        },
+        {
+          "name": "theme",
+          "type": "'Light' | 'Dark'",
+          "required": false,
+          "default": "'Dark'",
+          "description": "Surface color. Values: Light | Dark."
+        },
+        {
+          "name": "type",
+          "type": "'Default' | 'Accessibility'",
+          "required": false,
+          "default": "'Default'",
+          "description": "Accessibility type uses larger text. Values: Default | Accessibility."
+        },
+        {
+          "name": "children",
+          "type": "string | number | bigint | boolean | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> | Iterable<ReactNode> | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal | Promise<string | number | bigint | boolean | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null",
+          "required": false
+        },
+        {
+          "name": "forceVisible",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": "Keep the tooltip visible regardless of hover — used for documentation."
+        }
+      ],
+      "accessibility": {
+        "role": "tooltip",
+        "keyboard": true,
+        "ariaNotes": [
+          "Use role=\"tooltip\" on the tooltip element",
+          "Link trigger and tooltip with aria-describedby",
+          "Escape key dismisses the tooltip",
+          "Tooltip must not contain interactive content"
+        ]
+      },
+      "usage": {
+        "do": [
+          "Use for supplementary information",
+          "Keep tooltip text short and scannable",
+          "Position to avoid clipping viewport edges"
+        ],
+        "dont": [
+          "Do not put critical information only in tooltips",
+          "Do not use for interactive content — use Popover instead"
+        ]
+      },
+      "deprecatedAliases": [
+        "Tooltips",
+        "Walkthrough",
+        "a11y tooltips"
+      ]
+    },
+    "Tabs": {
+      "slug": "tabs",
+      "displayName": "Tabs",
+      "category": "navigation",
+      "purpose": "Organize content into switchable panels.",
+      "importFrom": "@inspera/components",
+      "props": [
+        {
+          "name": "items",
+          "type": "TabItem[]",
+          "required": false,
+          "default": "defaultItems"
+        },
+        {
+          "name": "style",
+          "type": "'Underline' | 'Contained'",
+          "required": false,
+          "default": "'Underline'",
+          "description": "Visual treatment. Values: Underline | Contained."
+        },
+        {
+          "name": "size",
+          "type": "'Small' | 'Medium'",
+          "required": false,
+          "default": "'Medium'",
+          "description": "Tab height 40 / 48. Values: Small | Medium."
+        },
+        {
+          "name": "fullWidth",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": "Stretch tabs to fill the row. Values: true | false."
+        },
+        {
+          "name": "value",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "onChange",
+          "type": "(index: number) => void",
+          "required": false
+        }
+      ],
+      "accessibility": {
+        "role": "tablist",
+        "keyboard": true,
+        "ariaNotes": [
+          "Use role=\"tablist\" on the tab container",
+          "Each tab uses role=\"tab\" with aria-selected",
+          "Tab panels use role=\"tabpanel\" linked by aria-labelledby",
+          "Arrow keys navigate between tabs"
+        ]
+      },
+      "usage": {
+        "do": [
+          "Use to organize related content sections",
+          "Label tabs clearly and concisely",
+          "Use a maximum of 6 tabs per set"
+        ],
+        "dont": [
+          "Do not use tabs for sequential steps — use a stepper instead",
+          "Do not nest tab sets inside other tab sets"
+        ]
+      },
+      "deprecatedAliases": [
+        "Tab bar",
+        "Tab navigation"
+      ]
+    },
+    "Breadcrumb": {
+      "slug": "breadcrumb",
+      "displayName": "Breadcrumb",
+      "category": "navigation",
+      "purpose": "Show the user's current location in a hierarchy.",
+      "importFrom": "@inspera/components",
+      "props": [
+        {
+          "name": "items",
+          "type": "string[]",
+          "required": false,
+          "default": "defaultItems"
+        },
+        {
+          "name": "separator",
+          "type": "'Slash' | 'Chevron'",
+          "required": false,
+          "default": "'Chevron'",
+          "description": "Divider glyph between items. Values: Slash | Chevron."
+        },
+        {
+          "name": "size",
+          "type": "'Small' | 'Medium'",
+          "required": false,
+          "default": "'Medium'",
+          "description": "Text size 14 / 16. Values: Small | Medium."
+        },
+        {
+          "name": "onNavigate",
+          "type": "(index: number) => void",
+          "required": false
+        }
+      ],
+      "accessibility": {
+        "role": "navigation",
+        "keyboard": true,
+        "ariaNotes": [
+          "Wrap in nav with aria-label=\"Breadcrumb\"",
+          "Use an ordered list for semantic structure",
+          "Mark current page with aria-current=\"page\""
+        ]
+      },
+      "usage": {
+        "do": [
+          "Use for hierarchical navigation structures",
+          "Always include the current page as the last item",
+          "Keep breadcrumb labels concise"
+        ],
+        "dont": [
+          "Do not use for flat navigation",
+          "Do not make the current page breadcrumb a link"
+        ]
+      },
+      "deprecatedAliases": [
+        "Breadcrumbs",
+        "Path navigation"
+      ]
+    },
+    "Textarea": {
+      "slug": "textarea",
+      "displayName": "Textarea",
+      "category": "input-controls",
+      "purpose": "Collect multi-line text input.",
+      "importFrom": "@inspera/components",
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "required": false,
+          "default": "'Description'"
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "required": false,
+          "default": "'Placeholder text'"
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "rows",
+          "type": "number",
+          "required": false,
+          "default": "4",
+          "description": "Visible text rows."
+        },
+        {
+          "name": "size",
+          "type": "'Small' | 'Medium'",
+          "required": false,
+          "default": "'Medium'",
+          "description": "Vertical padding density. Values: Small | Medium."
+        },
+        {
+          "name": "state",
+          "type": "'Error' | 'Default' | 'Hover' | 'Focused' | 'Disabled' | 'Filled' | 'ReadOnly'",
+          "required": false,
+          "default": "'Default'",
+          "description": "Forces a visual state for documentation. Omit for real interactivity."
+        },
+        {
+          "name": "showLabel",
+          "type": "boolean",
+          "required": false,
+          "default": "true",
+          "description": "Show the field label. Values: true | false."
+        },
+        {
+          "name": "helpText",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "errorText",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "maxLength",
+          "type": "number",
+          "required": false,
+          "description": "Maximum character length."
+        },
+        {
+          "name": "showCount",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": "Show character counter. Values: true | false."
+        },
+        {
+          "name": "onChange",
+          "type": "(value: string) => void",
+          "required": false
+        }
+      ],
+      "accessibility": {
+        "role": "textbox",
+        "keyboard": true,
+        "ariaNotes": [
+          "Always associate label with textarea using htmlFor/id",
+          "Error text must be linked via aria-describedby",
+          "aria-invalid reflects the error state"
+        ]
+      },
+      "usage": {
+        "do": [
+          "Always include a visible label",
+          "Use rows to hint expected length",
+          "Show a character counter when a max length applies"
+        ],
+        "dont": [
+          "Do not use for single-line input — use Text Input instead",
+          "Do not disable resize without reason"
+        ]
+      },
+      "deprecatedAliases": [
+        "Text area",
+        "Multiline input",
+        "Comment box"
+      ]
+    },
+    "FormField": {
+      "slug": "form-field",
+      "displayName": "Form Field",
+      "category": "input-controls",
+      "purpose": "Standardize label, control, and help/error layout around any input.",
+      "importFrom": "@inspera/components",
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "required": false,
+          "description": "Field label text."
+        },
+        {
+          "name": "htmlFor",
+          "type": "string",
+          "required": false,
+          "description": "id of the wrapped control for label association."
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": "Show a required asterisk. Values: true | false."
+        },
+        {
+          "name": "helpText",
+          "type": "string",
+          "required": false,
+          "description": "Helper text shown below the control."
+        },
+        {
+          "name": "errorText",
+          "type": "string",
+          "required": false,
+          "description": "Error message; replaces help text when present."
+        },
+        {
+          "name": "children",
+          "type": "string | number | bigint | boolean | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> | Iterable<ReactNode> | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal | Promise<string | number | bigint | boolean | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null",
+          "required": true
+        }
+      ],
+      "accessibility": {
+        "role": "group",
+        "keyboard": true,
+        "ariaNotes": [
+          "Associate the label with the control via htmlFor/id",
+          "Link error and help text with aria-describedby on the control",
+          "Required fields should set aria-required on the control"
+        ]
+      },
+      "usage": {
+        "do": [
+          "Wrap any single control for consistent spacing",
+          "Use htmlFor to link the label to the control",
+          "Show only one of help or error at a time"
+        ],
+        "dont": [
+          "Do not wrap multiple unrelated controls",
+          "Do not omit the label for accessibility"
+        ]
+      },
+      "deprecatedAliases": [
+        "Field wrapper",
+        "Input group"
+      ]
+    },
+    "Slider": {
+      "slug": "slider",
+      "displayName": "Slider",
+      "category": "input-controls",
+      "purpose": "Select a numeric value from a continuous range.",
+      "importFrom": "@inspera/components",
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "required": false,
+          "default": "'Value'"
+        },
+        {
+          "name": "min",
+          "type": "number",
+          "required": false,
+          "default": "0",
+          "description": "Minimum value."
+        },
+        {
+          "name": "max",
+          "type": "number",
+          "required": false,
+          "default": "100",
+          "description": "Maximum value."
+        },
+        {
+          "name": "value",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "step",
+          "type": "number",
+          "required": false,
+          "default": "1",
+          "description": "Increment granularity."
+        },
+        {
+          "name": "state",
+          "type": "'Default' | 'Focused' | 'Disabled'",
+          "required": false,
+          "default": "'Default'",
+          "description": "Forces a visual state for documentation. Omit for real interactivity."
+        },
+        {
+          "name": "showValue",
+          "type": "boolean",
+          "required": false,
+          "default": "true",
+          "description": "Show the current value. Values: true | false."
+        },
+        {
+          "name": "showLabel",
+          "type": "boolean",
+          "required": false,
+          "default": "true",
+          "description": "Show the field label. Values: true | false."
+        },
+        {
+          "name": "onChange",
+          "type": "(value: number) => void",
+          "required": false
+        }
+      ],
+      "accessibility": {
+        "role": "slider",
+        "keyboard": true,
+        "ariaNotes": [
+          "Use role=\"slider\" with aria-valuemin / aria-valuemax / aria-valuenow",
+          "Provide an accessible label via aria-label",
+          "Arrow keys adjust the value"
+        ]
+      },
+      "usage": {
+        "do": [
+          "Use for adjustable numeric ranges",
+          "Show the current value for precision",
+          "Provide a clear label"
+        ],
+        "dont": [
+          "Do not use for exact numeric entry — use Text Input instead",
+          "Do not use without min/max bounds"
+        ]
+      },
+      "deprecatedAliases": [
+        "Range",
+        "Range slider"
+      ]
+    },
+    "SegmentedControl": {
+      "slug": "segmented-control",
+      "displayName": "Segmented Control",
+      "category": "input-controls",
+      "purpose": "Choose one option from a small set of mutually exclusive segments.",
+      "importFrom": "@inspera/components",
+      "props": [
+        {
+          "name": "items",
+          "type": "string[]",
+          "required": false,
+          "default": "['Day', 'Week', 'Month']",
+          "description": "Segment labels."
+        },
+        {
+          "name": "value",
+          "type": "number",
+          "required": false,
+          "description": "Active segment index."
+        },
+        {
+          "name": "size",
+          "type": "'Small' | 'Medium'",
+          "required": false,
+          "default": "'Medium'",
+          "description": "Segment height. Values: Small | Medium."
+        },
+        {
+          "name": "fullWidth",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": "Stretch to fill the row. Values: true | false."
+        },
+        {
+          "name": "onChange",
+          "type": "(index: number) => void",
+          "required": false
+        }
+      ],
+      "accessibility": {
+        "role": "radiogroup",
+        "keyboard": true,
+        "ariaNotes": [
+          "Container uses role=\"radiogroup\"",
+          "Each segment uses role=\"radio\" with aria-checked",
+          "Arrow keys move between segments"
+        ]
+      },
+      "usage": {
+        "do": [
+          "Use for 2–4 mutually exclusive views",
+          "Keep labels short and parallel",
+          "Show the active segment clearly"
+        ],
+        "dont": [
+          "Do not use for more than 4 options — use Tabs or Select",
+          "Do not use for multi-select"
+        ]
+      },
+      "deprecatedAliases": [
+        "Segment control",
+        "Toggle group",
+        "Button group"
+      ]
+    },
+    "DatePicker": {
+      "slug": "date-picker",
+      "displayName": "Date Picker",
+      "category": "input-controls",
+      "purpose": "Select a calendar date from a popover.",
+      "importFrom": "@inspera/components",
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "required": false,
+          "default": "'Date'"
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": false,
+          "description": "Selected date (YYYY-MM-DD)."
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "required": false,
+          "default": "'Select date'",
+          "description": "Trigger placeholder."
+        },
+        {
+          "name": "state",
+          "type": "'Error' | 'Default' | 'Focused' | 'Disabled'",
+          "required": false,
+          "default": "'Default'",
+          "description": "Forces a visual state for documentation. Omit for real interactivity."
+        },
+        {
+          "name": "showLabel",
+          "type": "boolean",
+          "required": false,
+          "default": "true",
+          "description": "Show the field label. Values: true | false."
+        },
+        {
+          "name": "defaultOpen",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": "Open the calendar initially. Values: true | false."
+        },
+        {
+          "name": "onChange",
+          "type": "(iso: string) => void",
+          "required": false
+        }
+      ],
+      "accessibility": {
+        "role": "dialog",
+        "keyboard": true,
+        "ariaNotes": [
+          "Trigger uses aria-haspopup=\"dialog\" and aria-expanded",
+          "Popover uses role=\"dialog\" with a label",
+          "Day cells are buttons with descriptive aria-labels",
+          "Escape closes the popover"
+        ]
+      },
+      "usage": {
+        "do": [
+          "Use for selecting a single calendar date",
+          "Highlight today and the selected day",
+          "Provide clear month navigation"
+        ],
+        "dont": [
+          "Do not use for free-form date typing without validation",
+          "Do not trap keyboard focus without an escape"
+        ]
+      },
+      "deprecatedAliases": [
+        "Calendar input",
+        "Date field"
+      ]
+    },
+    "FileUpload": {
+      "slug": "file-upload",
+      "displayName": "File Upload",
+      "category": "input-controls",
+      "purpose": "Upload files via drag-and-drop or browse.",
+      "importFrom": "@inspera/components",
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "required": false,
+          "default": "'Upload files'"
+        },
+        {
+          "name": "accept",
+          "type": "string",
+          "required": false,
+          "description": "Accepted MIME types / extensions."
+        },
+        {
+          "name": "multiple",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": "Allow multiple files. Values: true | false."
+        },
+        {
+          "name": "state",
+          "type": "'Error' | 'Default' | 'Disabled' | 'Dragging'",
+          "required": false,
+          "default": "'Default'",
+          "description": "Forces a visual state for documentation. Omit for real interactivity."
+        },
+        {
+          "name": "helpText",
+          "type": "string",
+          "required": false,
+          "default": "'PNG, JPG or PDF up to 10MB'",
+          "description": "Constraint hint text."
+        },
+        {
+          "name": "onFiles",
+          "type": "(files: File[]) => void",
+          "required": false
+        }
+      ],
+      "accessibility": {
+        "role": "button",
+        "keyboard": true,
+        "ariaNotes": [
+          "Dropzone uses role=\"button\" and is keyboard focusable",
+          "Enter / Space open the file browser",
+          "Provide an accessible label describing the action"
+        ]
+      },
+      "usage": {
+        "do": [
+          "Support both drag-and-drop and click-to-browse",
+          "State accepted file types and size limits",
+          "Give visible drag feedback"
+        ],
+        "dont": [
+          "Do not hide the browse affordance",
+          "Do not omit constraint help text"
+        ]
+      },
+      "deprecatedAliases": [
+        "Dropzone",
+        "File dropzone",
+        "Uploader"
+      ]
+    },
+    "RadioGroup": {
+      "slug": "radio-group",
+      "displayName": "Radio Group",
+      "category": "input-controls",
+      "purpose": "Group mutually exclusive radio options.",
+      "importFrom": "@inspera/components",
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": false,
+          "description": "Shared input name for the group."
+        },
+        {
+          "name": "options",
+          "type": "RadioOption[]",
+          "required": false,
+          "default": "DEFAULT_OPTIONS",
+          "description": "Radio options."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": false,
+          "description": "Selected option value."
+        },
+        {
+          "name": "orientation",
+          "type": "'Vertical' | 'Horizontal'",
+          "required": false,
+          "default": "'Vertical'",
+          "description": "Layout direction. Values: Vertical | Horizontal."
+        },
+        {
+          "name": "state",
+          "type": "'Error' | 'Default' | 'Disabled'",
+          "required": false,
+          "default": "'Default'",
+          "description": "Forces a visual state for documentation. Omit for real interactivity."
+        },
+        {
+          "name": "onChange",
+          "type": "(value: string) => void",
+          "required": false
+        }
+      ],
+      "accessibility": {
+        "role": "radiogroup",
+        "keyboard": true,
+        "ariaNotes": [
+          "Container uses role=\"radiogroup\" with an accessible label",
+          "Each option is a radio with aria-checked",
+          "Arrow keys navigate between options"
+        ]
+      },
+      "usage": {
+        "do": [
+          "Use for single selection among 2–6 options",
+          "Provide a group label",
+          "Pre-select a sensible default"
+        ],
+        "dont": [
+          "Do not use for multi-select — use Checkbox Group",
+          "Do not use a single radio alone"
+        ]
+      },
+      "deprecatedAliases": [
+        "Radio list",
+        "Option group"
+      ]
+    },
+    "CheckboxGroup": {
+      "slug": "checkbox-group",
+      "displayName": "Checkbox Group",
+      "category": "input-controls",
+      "purpose": "Group related multi-select checkboxes.",
+      "importFrom": "@inspera/components",
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "options",
+          "type": "CheckboxOption[]",
+          "required": false,
+          "default": "DEFAULT_OPTIONS",
+          "description": "Checkbox options."
+        },
+        {
+          "name": "value",
+          "type": "string[]",
+          "required": false,
+          "description": "Selected option values."
+        },
+        {
+          "name": "orientation",
+          "type": "'Vertical' | 'Horizontal'",
+          "required": false,
+          "default": "'Vertical'",
+          "description": "Layout direction. Values: Vertical | Horizontal."
+        },
+        {
+          "name": "state",
+          "type": "'Error' | 'Default' | 'Disabled'",
+          "required": false,
+          "default": "'Default'",
+          "description": "Forces a visual state for documentation. Omit for real interactivity."
+        },
+        {
+          "name": "onChange",
+          "type": "(value: string[]) => void",
+          "required": false
+        }
+      ],
+      "accessibility": {
+        "role": "group",
+        "keyboard": true,
+        "ariaNotes": [
+          "Container uses role=\"group\" with aria-labelledby",
+          "Each option is a checkbox with aria-checked",
+          "Group related options under a shared legend/label"
+        ]
+      },
+      "usage": {
+        "do": [
+          "Use for selecting multiple related options",
+          "Provide a group label",
+          "Keep options parallel and concise"
+        ],
+        "dont": [
+          "Do not use for mutually exclusive options — use Radio Group",
+          "Do not omit the group label"
+        ]
+      },
+      "deprecatedAliases": [
+        "Checkbox list",
+        "Multi-select group"
+      ]
+    },
+    "Rating": {
+      "slug": "rating",
+      "displayName": "Rating",
+      "category": "input-controls",
+      "purpose": "Capture or display a star rating.",
+      "importFrom": "@inspera/components",
+      "props": [
+        {
+          "name": "value",
+          "type": "number",
+          "required": false,
+          "default": "0",
+          "description": "Current rating."
+        },
+        {
+          "name": "max",
+          "type": "number",
+          "required": false,
+          "default": "5",
+          "description": "Number of stars."
+        },
+        {
+          "name": "size",
+          "type": "'Small' | 'Medium'",
+          "required": false,
+          "default": "'Medium'",
+          "description": "Star size. Values: Small | Medium."
+        },
+        {
+          "name": "readOnly",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": "Display-only mode. Values: true | false."
+        },
+        {
+          "name": "showValue",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": "Show numeric value. Values: true | false."
+        },
+        {
+          "name": "onChange",
+          "type": "(value: number) => void",
+          "required": false
+        }
+      ],
+      "accessibility": {
+        "role": "radiogroup",
+        "keyboard": true,
+        "ariaNotes": [
+          "Container uses role=\"radiogroup\" with an accessible label",
+          "Each star is a radio with aria-checked and an aria-label",
+          "Arrow keys adjust the rating"
+        ]
+      },
+      "usage": {
+        "do": [
+          "Use for feedback and review scores",
+          "Show hover preview when interactive",
+          "Use read-only mode to display aggregate scores"
+        ],
+        "dont": [
+          "Do not use for precise numeric input",
+          "Do not omit accessible labels on stars"
+        ]
+      },
+      "deprecatedAliases": [
+        "Star rating",
+        "Stars"
+      ]
+    },
+    "OtpInput": {
+      "slug": "otp-input",
+      "displayName": "OTP Input",
+      "category": "input-controls",
+      "purpose": "Enter a one-time verification code.",
+      "importFrom": "@inspera/components",
+      "props": [
+        {
+          "name": "length",
+          "type": "number",
+          "required": false,
+          "default": "6",
+          "description": "Number of digit boxes."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": false,
+          "description": "Current code value."
+        },
+        {
+          "name": "state",
+          "type": "'Error' | 'Default' | 'Focused' | 'Disabled'",
+          "required": false,
+          "default": "'Default'",
+          "description": "Forces a visual state for documentation. Omit for real interactivity."
+        },
+        {
+          "name": "onChange",
+          "type": "(value: string) => void",
+          "required": false
+        }
+      ],
+      "accessibility": {
+        "role": "textbox",
+        "keyboard": true,
+        "ariaNotes": [
+          "Each box has an aria-label \"Digit N\"",
+          "aria-invalid reflects the error state",
+          "Backspace moves focus to the previous box; paste distributes digits"
+        ]
+      },
+      "usage": {
+        "do": [
+          "Auto-advance focus as digits are entered",
+          "Support paste of the full code",
+          "Use a monospace font for even alignment"
+        ],
+        "dont": [
+          "Do not require manual box-by-box focus",
+          "Do not allow non-numeric characters"
+        ]
+      },
+      "deprecatedAliases": [
+        "PIN input",
+        "Verification code",
+        "Code input"
+      ]
+    },
+    "Table": {
+      "slug": "table",
+      "displayName": "Table",
+      "category": "data-display",
+      "purpose": "Display structured data in rows and columns.",
+      "importFrom": "@inspera/components",
+      "props": [
+        {
+          "name": "columns",
+          "type": "TableColumn[]",
+          "required": false,
+          "default": "defaultColumns",
+          "description": "Column definitions."
+        },
+        {
+          "name": "rows",
+          "type": "Record<string, ReactNode>[]",
+          "required": false,
+          "default": "defaultRows",
+          "description": "Row data keyed by column."
+        },
+        {
+          "name": "size",
+          "type": "'Default' | 'Compact'",
+          "required": false,
+          "default": "'Default'",
+          "description": "Row height density. Values: Compact | Default."
+        },
+        {
+          "name": "striped",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": "Zebra-stripe rows. Values: true | false."
+        },
+        {
+          "name": "hoverable",
+          "type": "boolean",
+          "required": false,
+          "default": "true",
+          "description": "Highlight rows on hover. Values: true | false."
+        },
+        {
+          "name": "selectable",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": "Add a row selection column. Values: true | false."
+        },
+        {
+          "name": "caption",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "onRowClick",
+          "type": "(row: Record<string, ReactNode>, index: number) => void",
+          "required": false
+        }
+      ],
+      "accessibility": {
+        "role": "table",
+        "keyboard": true,
+        "ariaNotes": [
+          "Use semantic table / thead / tbody markup",
+          "Header cells use scope=\"col\"",
+          "Provide a caption or aria-label describing the table"
+        ]
+      },
+      "usage": {
+        "do": [
+          "Use for comparable, structured records",
+          "Right-align numeric columns",
+          "Keep headers concise"
+        ],
+        "dont": [
+          "Do not use tables for page layout",
+          "Do not overload rows with unrelated actions"
+        ]
+      },
+      "deprecatedAliases": [
+        "Data table",
+        "Grid",
+        "Datagrid"
+      ]
+    },
+    "Accordion": {
+      "slug": "accordion",
+      "displayName": "Accordion",
+      "category": "data-display",
+      "purpose": "Show and hide sections of related content.",
+      "importFrom": "@inspera/components",
+      "props": [
+        {
+          "name": "items",
+          "type": "AccordionItem[]",
+          "required": false,
+          "default": "defaultItems",
+          "description": "Accordion sections."
+        },
+        {
+          "name": "type",
+          "type": "'Single' | 'Multiple'",
+          "required": false,
+          "default": "'Single'",
+          "description": "Allow one or many open at once. Values: Single | Multiple."
+        },
+        {
+          "name": "defaultOpenIndex",
+          "type": "number",
+          "required": false,
+          "default": "0",
+          "description": "Initially open section."
+        },
+        {
+          "name": "iconPosition",
+          "type": "'Left' | 'Right'",
+          "required": false,
+          "default": "'Right'",
+          "description": "Chevron placement. Values: Left | Right."
+        }
+      ],
+      "accessibility": {
+        "role": "region",
+        "keyboard": true,
+        "ariaNotes": [
+          "Header is a button with aria-expanded and aria-controls",
+          "Panel uses role=\"region\" linked via aria-labelledby",
+          "Enter / Space toggle the section"
+        ]
+      },
+      "usage": {
+        "do": [
+          "Use to progressively disclose content",
+          "Keep section titles scannable",
+          "Use Single mode when only one section is relevant at a time"
+        ],
+        "dont": [
+          "Do not nest accordions deeply",
+          "Do not hide critical content behind collapsed sections"
+        ]
+      },
+      "deprecatedAliases": [
+        "Disclosure",
+        "Collapse",
+        "Expander"
+      ]
+    },
+    "Tag": {
+      "slug": "tag",
+      "displayName": "Tag",
+      "category": "data-display",
+      "purpose": "Label, categorize, or filter with a removable chip.",
+      "importFrom": "@inspera/components",
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "required": true,
+          "description": "Tag text."
+        },
+        {
+          "name": "intent",
+          "type": "'Info' | 'Success' | 'Warning' | 'Error' | 'Neutral'",
+          "required": false,
+          "default": "'Neutral'",
+          "description": "Semantic color. Values: Neutral | Info | Success | Warning | Error."
+        },
+        {
+          "name": "size",
+          "type": "'Small' | 'Medium'",
+          "required": false,
+          "default": "'Medium'",
+          "description": "Tag height. Values: Small | Medium."
+        },
+        {
+          "name": "removable",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": "Show a remove affordance. Values: true | false."
+        },
+        {
+          "name": "leadingIcon",
+          "type": "string",
+          "required": false,
+          "description": "Optional leading icon."
+        },
+        {
+          "name": "onRemove",
+          "type": "() => void",
+          "required": false
+        },
+        {
+          "name": "onClick",
+          "type": "() => void",
+          "required": false
+        }
+      ],
+      "accessibility": {
+        "role": "status",
+        "keyboard": true,
+        "ariaNotes": [
+          "Removable tags expose a button with aria-label \"Remove {label}\"",
+          "Interactive tags must be keyboard focusable",
+          "Use aria-label for icon-only tags"
+        ]
+      },
+      "usage": {
+        "do": [
+          "Use for filters, categories, and selections",
+          "Keep labels to 1–2 words",
+          "Provide a remove control when tags are dismissible"
+        ],
+        "dont": [
+          "Do not use for status that never changes — use Badge",
+          "Do not pack long text into a tag"
+        ]
+      },
+      "deprecatedAliases": [
+        "Chip",
+        "Pill",
+        "Label"
+      ]
+    },
+    "Divider": {
+      "slug": "divider",
+      "displayName": "Divider",
+      "category": "data-display",
+      "purpose": "Separate content with a thin rule.",
+      "importFrom": "@inspera/components",
+      "props": [
+        {
+          "name": "orientation",
+          "type": "'Vertical' | 'Horizontal'",
+          "required": false,
+          "default": "'Horizontal'",
+          "description": "Divider direction. Values: Horizontal | Vertical."
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "required": false,
+          "description": "Optional centered label (horizontal only)."
+        },
+        {
+          "name": "spacing",
+          "type": "'Default' | 'Compact' | 'Spacious'",
+          "required": false,
+          "default": "'Default'",
+          "description": "Surrounding margin. Values: Compact | Default | Spacious."
+        }
+      ],
+      "accessibility": {
+        "role": "separator",
+        "keyboard": false,
+        "ariaNotes": [
+          "Use role=\"separator\" with aria-orientation",
+          "Purely decorative dividers may be aria-hidden"
+        ]
+      },
+      "usage": {
+        "do": [
+          "Use to group and separate related content",
+          "Use a labeled divider to introduce a section",
+          "Keep dividers hairline-thin"
+        ],
+        "dont": [
+          "Do not overuse dividers where whitespace suffices",
+          "Do not use heavy rules"
+        ]
+      },
+      "deprecatedAliases": [
+        "Separator",
+        "Rule",
+        "HR"
+      ]
+    },
+    "EmptyState": {
+      "slug": "empty-state",
+      "displayName": "Empty State",
+      "category": "data-display",
+      "purpose": "Communicate the absence of content and offer a next step.",
+      "importFrom": "@inspera/components",
+      "props": [
+        {
+          "name": "icon",
+          "type": "string",
+          "required": false,
+          "default": "'inbox'",
+          "description": "Material Symbols icon name."
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "required": false,
+          "default": "'No results found'",
+          "description": "Primary message."
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "default": "'Try adjusting your filters or search terms.'",
+          "description": "Supporting explanation."
+        },
+        {
+          "name": "actionLabel",
+          "type": "string",
+          "required": false,
+          "description": "Optional primary action label."
+        },
+        {
+          "name": "onAction",
+          "type": "() => void",
+          "required": false
+        },
+        {
+          "name": "size",
+          "type": "'Small' | 'Medium'",
+          "required": false,
+          "default": "'Medium'",
+          "description": "Overall scale. Values: Small | Medium."
+        }
+      ],
+      "accessibility": {
+        "role": "status",
+        "keyboard": true,
+        "ariaNotes": [
+          "Announce dynamically-appearing empty states with role=\"status\"",
+          "The action must be a real focusable button",
+          "The illustration/icon is decorative (aria-hidden)"
+        ]
+      },
+      "usage": {
+        "do": [
+          "Explain why the area is empty",
+          "Offer a clear next action when possible",
+          "Keep the tone helpful"
+        ],
+        "dont": [
+          "Do not leave empty areas blank with no guidance",
+          "Do not use for transient loading — use Skeleton"
+        ]
+      },
+      "deprecatedAliases": [
+        "Blank slate",
+        "Zero state",
+        "No data"
+      ]
+    },
+    "AvatarGroup": {
+      "slug": "avatar-group",
+      "displayName": "Avatar Group",
+      "category": "data-display",
+      "purpose": "Show a set of users as overlapping avatars with an overflow count.",
+      "importFrom": "@inspera/components",
+      "props": [
+        {
+          "name": "avatars",
+          "type": "AvatarGroupItem[]",
+          "required": false,
+          "default": "defaultAvatars",
+          "description": "Avatars to display."
+        },
+        {
+          "name": "max",
+          "type": "number",
+          "required": false,
+          "default": "4",
+          "description": "Maximum shown before overflow."
+        },
+        {
+          "name": "size",
+          "type": "'Small' | 'Medium' | 'Large'",
+          "required": false,
+          "default": "'Medium'",
+          "description": "Avatar diameter. Values: Small | Medium | Large."
+        }
+      ],
+      "accessibility": {
+        "role": "group",
+        "keyboard": false,
+        "ariaNotes": [
+          "Wrap in a group with an aria-label describing the set",
+          "Each avatar keeps its own accessible label",
+          "The overflow chip states the hidden count"
+        ]
+      },
+      "usage": {
+        "do": [
+          "Use for participant and collaborator lists",
+          "Cap visible avatars and show a +N overflow",
+          "Keep sizing consistent within a context"
+        ],
+        "dont": [
+          "Do not show dozens of avatars inline",
+          "Do not omit the overflow count"
+        ]
+      },
+      "deprecatedAliases": [
+        "Avatar stack",
+        "Facepile"
+      ]
+    },
+    "Stat": {
+      "slug": "stat",
+      "displayName": "Stat",
+      "category": "data-display",
+      "purpose": "Highlight a key metric with an optional trend.",
+      "importFrom": "@inspera/components",
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "required": true,
+          "default": "'Average score'",
+          "description": "Metric name."
+        },
+        {
+          "name": "value",
+          "type": "string | number",
+          "required": true,
+          "default": "'84%'",
+          "description": "Metric value. Values: string | number."
+        },
+        {
+          "name": "delta",
+          "type": "string",
+          "required": false,
+          "default": "'+4.2%'",
+          "description": "Change indicator text."
+        },
+        {
+          "name": "deltaIntent",
+          "type": "'up' | 'down' | 'neutral'",
+          "required": false,
+          "default": "'up'",
+          "description": "Trend direction / color. Values: up | down | neutral."
+        },
+        {
+          "name": "icon",
+          "type": "string",
+          "required": false,
+          "description": "Optional leading icon."
+        },
+        {
+          "name": "helpText",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "accessibility": {
+        "role": "group",
+        "keyboard": false,
+        "ariaNotes": [
+          "Associate the value with its label for screen readers",
+          "Convey trend with text, not color alone",
+          "Use aria-label to summarize the metric and change"
+        ]
+      },
+      "usage": {
+        "do": [
+          "Use for dashboard summaries",
+          "Pair a value with a clear label",
+          "Indicate trend direction with an icon and text"
+        ],
+        "dont": [
+          "Do not rely on color alone for the delta",
+          "Do not crowd many stats without spacing"
+        ]
+      },
+      "deprecatedAliases": [
+        "Metric",
+        "KPI",
+        "Stat card"
+      ]
+    },
+    "List": {
+      "slug": "list",
+      "displayName": "List",
+      "category": "data-display",
+      "purpose": "Present a vertical series of related items.",
+      "importFrom": "@inspera/components",
+      "props": [
+        {
+          "name": "items",
+          "type": "ListItem[]",
+          "required": false,
+          "default": "defaultItems",
+          "description": "List rows."
+        },
+        {
+          "name": "divided",
+          "type": "boolean",
+          "required": false,
+          "default": "true",
+          "description": "Show dividers between rows. Values: true | false."
+        },
+        {
+          "name": "interactive",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": "Make rows clickable. Values: true | false."
+        },
+        {
+          "name": "size",
+          "type": "'Default' | 'Compact'",
+          "required": false,
+          "default": "'Default'",
+          "description": "Row density. Values: Compact | Default."
+        },
+        {
+          "name": "onItemClick",
+          "type": "(item: ListItem, index: number) => void",
+          "required": false
+        }
+      ],
+      "accessibility": {
+        "role": "list",
+        "keyboard": true,
+        "ariaNotes": [
+          "Use semantic list markup (ul / li)",
+          "Interactive rows are buttons and keyboard focusable",
+          "Provide meaningful text for each item"
+        ]
+      },
+      "usage": {
+        "do": [
+          "Use for settings, results, and simple records",
+          "Keep primary text scannable",
+          "Use secondary text for supporting detail"
+        ],
+        "dont": [
+          "Do not use for comparable tabular data — use Table",
+          "Do not make only part of a row clickable"
+        ]
+      },
+      "deprecatedAliases": [
+        "List view",
+        "Item list"
+      ]
+    },
+    "Progress": {
+      "slug": "progress",
+      "displayName": "Progress",
+      "category": "feedback",
+      "purpose": "Show completion of an ongoing task.",
+      "importFrom": "@inspera/components",
+      "props": [
+        {
+          "name": "variant",
+          "type": "'Linear' | 'Circular'",
+          "required": false,
+          "default": "'Linear'",
+          "description": "Bar or ring. Values: Linear | Circular."
+        },
+        {
+          "name": "value",
+          "type": "number",
+          "required": false,
+          "default": "60",
+          "description": "Completion percentage 0–100. Ignored when indeterminate."
+        },
+        {
+          "name": "indeterminate",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": "Unknown-duration animation. Values: true | false."
+        },
+        {
+          "name": "size",
+          "type": "'Small' | 'Medium' | 'Large'",
+          "required": false,
+          "default": "'Medium'",
+          "description": "Bar height / ring diameter. Values: Small | Medium | Large."
+        },
+        {
+          "name": "intent",
+          "type": "'Success' | 'Warning' | 'Error' | 'Primary'",
+          "required": false,
+          "default": "'Primary'",
+          "description": "Fill color. Values: Primary | Success | Warning | Error."
+        },
+        {
+          "name": "showValue",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": "Render the percentage. Values: true | false."
+        }
+      ],
+      "accessibility": {
+        "role": "progressbar",
+        "keyboard": false,
+        "ariaNotes": [
+          "Use role=\"progressbar\" with aria-valuenow / min / max",
+          "Omit aria-valuenow when indeterminate",
+          "Provide an accessible label for the task"
+        ]
+      },
+      "usage": {
+        "do": [
+          "Use determinate progress when completion is known",
+          "Use indeterminate for unknown-duration waits",
+          "Match intent color to context"
+        ],
+        "dont": [
+          "Do not use for very short operations",
+          "Do not fake progress values"
+        ]
+      },
+      "deprecatedAliases": [
+        "Progress bar",
+        "Loading bar",
+        "Meter"
+      ]
+    },
+    "Spinner": {
+      "slug": "spinner",
+      "displayName": "Spinner",
+      "category": "feedback",
+      "purpose": "Indicate an indeterminate loading state.",
+      "importFrom": "@inspera/components",
+      "props": [
+        {
+          "name": "size",
+          "type": "'Small' | 'Medium' | 'Large'",
+          "required": false,
+          "default": "'Medium'",
+          "description": "Diameter 16 / 24 / 40. Values: Small | Medium | Large."
+        },
+        {
+          "name": "intent",
+          "type": "'Neutral' | 'Primary' | 'Inverse'",
+          "required": false,
+          "default": "'Primary'",
+          "description": "Arc color. Values: Primary | Neutral | Inverse."
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "required": false,
+          "default": "'Loading'",
+          "description": "Accessible label."
+        }
+      ],
+      "accessibility": {
+        "role": "status",
+        "keyboard": false,
+        "ariaNotes": [
+          "Use role=\"status\" with aria-live=\"polite\"",
+          "Provide an accessible label via aria-label",
+          "Include visually-hidden loading text"
+        ]
+      },
+      "usage": {
+        "do": [
+          "Use for short, indeterminate waits",
+          "Use Inverse on dark surfaces",
+          "Pair with context describing what is loading"
+        ],
+        "dont": [
+          "Do not use where determinate Progress is possible",
+          "Do not show multiple competing spinners"
+        ]
+      },
+      "deprecatedAliases": [
+        "Loader",
+        "Loading indicator",
+        "Activity indicator"
+      ]
+    },
+    "Skeleton": {
+      "slug": "skeleton",
+      "displayName": "Skeleton",
+      "category": "feedback",
+      "purpose": "Show placeholder shapes while content loads.",
+      "importFrom": "@inspera/components",
+      "props": [
+        {
+          "name": "variant",
+          "type": "'Text' | 'Rect' | 'Circle'",
+          "required": false,
+          "default": "'Text'",
+          "description": "Placeholder shape. Values: Text | Rect | Circle."
+        },
+        {
+          "name": "width",
+          "type": "string | number",
+          "required": false,
+          "description": "Explicit width. Values: string | number."
+        },
+        {
+          "name": "height",
+          "type": "string | number",
+          "required": false,
+          "description": "Explicit height. Values: string | number."
+        },
+        {
+          "name": "lines",
+          "type": "number",
+          "required": false,
+          "default": "1",
+          "description": "Number of text lines. Only applies to the Text variant."
+        },
+        {
+          "name": "radius",
+          "type": "string | number",
+          "required": false
+        }
+      ],
+      "accessibility": {
+        "role": "presentation",
+        "keyboard": false,
+        "ariaNotes": [
+          "Skeletons are decorative and aria-hidden",
+          "Announce the real content once loaded",
+          "Mirror the layout of the content being loaded"
+        ]
+      },
+      "usage": {
+        "do": [
+          "Match skeleton shapes to real content",
+          "Use for perceived performance on initial load",
+          "Replace with content as soon as it arrives"
+        ],
+        "dont": [
+          "Do not animate skeletons indefinitely",
+          "Do not use for user-triggered actions — use Spinner"
+        ]
+      },
+      "deprecatedAliases": [
+        "Placeholder",
+        "Shimmer",
+        "Ghost"
+      ]
+    },
+    "Popover": {
+      "slug": "popover",
+      "displayName": "Popover",
+      "category": "feedback",
+      "purpose": "Show interactive content anchored to a trigger.",
+      "importFrom": "@inspera/components",
+      "props": [
+        {
+          "name": "trigger",
+          "type": "string | number | bigint | boolean | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> | Iterable<ReactNode> | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal | Promise<string | number | bigint | boolean | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null",
+          "required": false,
+          "description": "Element that toggles the popover."
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "required": false,
+          "default": "'Popover title'",
+          "description": "Optional panel heading."
+        },
+        {
+          "name": "content",
+          "type": "string | number | bigint | boolean | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> | Iterable<ReactNode> | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal | Promise<string | number | bigint | boolean | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null",
+          "required": false,
+          "default": "'Popover content with interactive elements.'",
+          "description": "Popover body content."
+        },
+        {
+          "name": "placement",
+          "type": "'Left' | 'Right' | 'Bottom' | 'Top'",
+          "required": false,
+          "default": "'Bottom'",
+          "description": "Position relative to the trigger. Values: Top | Bottom | Left | Right."
+        },
+        {
+          "name": "open",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "name": "defaultOpen",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": "Open on mount. Values: true | false."
+        },
+        {
+          "name": "forceVisible",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": "Keep the panel visible regardless of state — used for documentation."
+        },
+        {
+          "name": "onOpenChange",
+          "type": "(open: boolean) => void",
+          "required": false
+        }
+      ],
+      "accessibility": {
+        "role": "dialog",
+        "keyboard": true,
+        "ariaNotes": [
+          "Trigger uses aria-haspopup and aria-expanded",
+          "Panel uses role=\"dialog\"",
+          "Escape and outside-click close the popover",
+          "May contain interactive content (unlike Tooltip)"
+        ]
+      },
+      "usage": {
+        "do": [
+          "Use for rich, interactive overflow content",
+          "Anchor to the triggering element",
+          "Allow dismissal via Escape and outside click"
+        ],
+        "dont": [
+          "Do not use for simple hover hints — use Tooltip",
+          "Do not stack popovers"
+        ]
+      },
+      "deprecatedAliases": [
+        "Flyout",
+        "Overlay panel"
+      ]
+    },
+    "Drawer": {
+      "slug": "drawer",
+      "displayName": "Drawer",
+      "category": "feedback",
+      "purpose": "Slide a panel in from the edge of the screen.",
+      "importFrom": "@inspera/components",
+      "props": [
+        {
+          "name": "open",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": "Visibility. Values: true | false."
+        },
+        {
+          "name": "side",
+          "type": "'Left' | 'Right' | 'Bottom'",
+          "required": false,
+          "default": "'Right'",
+          "description": "Edge it slides from. Values: Right | Left | Bottom."
+        },
+        {
+          "name": "size",
+          "type": "'Small' | 'Medium' | 'Large'",
+          "required": false,
+          "default": "'Medium'",
+          "description": "Panel width / height. Values: Small | Medium | Large."
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "required": false,
+          "default": "'Panel'",
+          "description": "Header title."
+        },
+        {
+          "name": "hasCloseButton",
+          "type": "boolean",
+          "required": false,
+          "default": "true",
+          "description": "Show the close affordance. Values: true | false."
+        },
+        {
+          "name": "children",
+          "type": "string | number | bigint | boolean | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> | Iterable<ReactNode> | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal | Promise<string | number | bigint | boolean | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null",
+          "required": false
+        },
+        {
+          "name": "embedded",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": "Render just the panel inline (no overlay/scrim) — used for documentation previews."
+        },
+        {
+          "name": "onClose",
+          "type": "() => void",
+          "required": false
+        }
+      ],
+      "accessibility": {
+        "role": "dialog",
+        "keyboard": true,
+        "ariaNotes": [
+          "Use role=\"dialog\" with aria-modal=\"true\"",
+          "Set aria-labelledby to the drawer title",
+          "Trap focus while open and restore it on close",
+          "Escape closes the drawer"
+        ]
+      },
+      "usage": {
+        "do": [
+          "Use for secondary tasks and detail panels",
+          "Provide a clear close control",
+          "Return focus to the trigger on close"
+        ],
+        "dont": [
+          "Do not use for critical confirmations — use Dialog",
+          "Do not open multiple drawers at once"
+        ]
+      },
+      "deprecatedAliases": [
+        "Sheet",
+        "Side panel",
+        "Off-canvas"
+      ]
+    },
+    "Pagination": {
+      "slug": "pagination",
+      "displayName": "Pagination",
+      "category": "navigation",
+      "purpose": "Navigate between pages of content.",
+      "importFrom": "@inspera/components",
+      "props": [
+        {
+          "name": "page",
+          "type": "number",
+          "required": false,
+          "default": "1",
+          "description": "Current page (1-based)."
+        },
+        {
+          "name": "pageCount",
+          "type": "number",
+          "required": false,
+          "default": "10",
+          "description": "Total number of pages."
+        },
+        {
+          "name": "siblingCount",
+          "type": "number",
+          "required": false,
+          "default": "1",
+          "description": "Pages shown either side of current."
+        },
+        {
+          "name": "size",
+          "type": "'Small' | 'Medium'",
+          "required": false,
+          "default": "'Medium'",
+          "description": "Control height. Values: Small | Medium."
+        },
+        {
+          "name": "showEdges",
+          "type": "boolean",
+          "required": false,
+          "default": "true",
+          "description": "Show first / last controls. Values: true | false."
+        },
+        {
+          "name": "onChange",
+          "type": "(page: number) => void",
+          "required": false
+        }
+      ],
+      "accessibility": {
+        "role": "navigation",
+        "keyboard": true,
+        "ariaNotes": [
+          "Wrap in nav with aria-label=\"Pagination\"",
+          "Mark the current page with aria-current=\"page\"",
+          "Disable and aria-disable prev/next at the bounds"
+        ]
+      },
+      "usage": {
+        "do": [
+          "Use for long, paged result sets",
+          "Show current, first, and last pages",
+          "Collapse large gaps with an ellipsis"
+        ],
+        "dont": [
+          "Do not use for a handful of items",
+          "Do not hide the current page indicator"
+        ]
+      },
+      "deprecatedAliases": [
+        "Pager",
+        "Page navigation"
+      ]
+    },
+    "Menu": {
+      "slug": "menu",
+      "displayName": "Menu",
+      "category": "navigation",
+      "purpose": "Present a list of actions in a dropdown.",
+      "importFrom": "@inspera/components",
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "required": false,
+          "default": "'Actions'",
+          "description": "Trigger label."
+        },
+        {
+          "name": "items",
+          "type": "MenuItem[]",
+          "required": false,
+          "default": "sampleItems",
+          "description": "Menu items."
+        },
+        {
+          "name": "placement",
+          "type": "'Bottom Start' | 'Bottom End'",
+          "required": false,
+          "default": "'Bottom Start'",
+          "description": "Alignment to trigger. Values: Bottom Start | Bottom End."
+        },
+        {
+          "name": "open",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "name": "defaultOpen",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": "Open on mount. Values: true | false."
+        },
+        {
+          "name": "forceVisible",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": "Always render the open menu, for documentation."
+        },
+        {
+          "name": "onSelect",
+          "type": "(label: string) => void",
+          "required": false
+        }
+      ],
+      "accessibility": {
+        "role": "menu",
+        "keyboard": true,
+        "ariaNotes": [
+          "Trigger uses aria-haspopup=\"menu\" and aria-expanded",
+          "Items use role=\"menuitem\"",
+          "Arrow keys move, Enter selects, Escape closes",
+          "Outside click closes the menu"
+        ]
+      },
+      "usage": {
+        "do": [
+          "Use for grouped actions and overflow",
+          "Separate destructive actions with a divider",
+          "Keep item labels action-oriented"
+        ],
+        "dont": [
+          "Do not use for selecting a value — use Select",
+          "Do not nest menus more than one level"
+        ]
+      },
+      "deprecatedAliases": [
+        "Dropdown menu",
+        "Action menu",
+        "Context menu",
+        "Overflow menu"
+      ]
+    },
+    "Stepper": {
+      "slug": "stepper",
+      "displayName": "Stepper",
+      "category": "navigation",
+      "purpose": "Show progress through a sequence of steps.",
+      "importFrom": "@inspera/components",
+      "props": [
+        {
+          "name": "steps",
+          "type": "Step[]",
+          "required": false,
+          "default": "defaultSteps",
+          "description": "Ordered steps."
+        },
+        {
+          "name": "activeStep",
+          "type": "number",
+          "required": false,
+          "default": "1",
+          "description": "Zero-based index of the current step."
+        },
+        {
+          "name": "orientation",
+          "type": "'Vertical' | 'Horizontal'",
+          "required": false,
+          "default": "'Horizontal'",
+          "description": "Layout direction. Values: Horizontal | Vertical."
+        },
+        {
+          "name": "size",
+          "type": "'Small' | 'Medium'",
+          "required": false,
+          "default": "'Medium'",
+          "description": "Indicator size. Values: Small | Medium."
+        }
+      ],
+      "accessibility": {
+        "role": "list",
+        "keyboard": false,
+        "ariaNotes": [
+          "Use an ordered list for step semantics",
+          "Mark the current step with aria-current=\"step\"",
+          "Convey completion with an icon, not color alone"
+        ]
+      },
+      "usage": {
+        "do": [
+          "Use for multi-step flows and wizards",
+          "Show completed, current, and upcoming states",
+          "Keep step labels short"
+        ],
+        "dont": [
+          "Do not use for non-sequential navigation — use Tabs",
+          "Do not exceed a handful of steps"
+        ]
+      },
+      "deprecatedAliases": [
+        "Wizard",
+        "Progress steps",
+        "Step indicator"
+      ]
+    },
+    "Link": {
+      "slug": "link",
+      "displayName": "Link",
+      "category": "navigation",
+      "purpose": "Navigate to another location or resource.",
+      "importFrom": "@inspera/components",
+      "props": [
+        {
+          "name": "children",
+          "type": "string | number | bigint | boolean | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> | Iterable<ReactNode> | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal | Promise<string | number | bigint | boolean | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactPortal | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').ReactElement<unknown, string | import('/Users/inspera/Documents/Working Mockups/Component Library V2/node_modules/.pnpm/@types+react@19.2.14/node_modules/@types/react/index').JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null",
+          "required": false
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "required": false,
+          "default": "'Learn more'"
+        },
+        {
+          "name": "href",
+          "type": "string",
+          "required": false,
+          "default": "'#'"
+        },
+        {
+          "name": "intent",
+          "type": "'Default' | 'Muted'",
+          "required": false,
+          "default": "'Default'",
+          "description": "Color emphasis. Values: Default | Muted."
+        },
+        {
+          "name": "size",
+          "type": "'Small' | 'Medium'",
+          "required": false,
+          "default": "'Medium'",
+          "description": "Text size. Values: Small | Medium."
+        },
+        {
+          "name": "underline",
+          "type": "'None' | 'Hover' | 'Always'",
+          "required": false,
+          "default": "'Hover'",
+          "description": "Underline behavior. Values: Always | Hover | None."
+        },
+        {
+          "name": "external",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": "Open in a new tab with an icon. Values: true | false."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": "Non-interactive state. Values: true | false."
+        },
+        {
+          "name": "leadingIcon",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "trailingIcon",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "onClick",
+          "type": "(e: React.MouseEvent) => void",
+          "required": false
+        }
+      ],
+      "accessibility": {
+        "role": "link",
+        "keyboard": true,
+        "ariaNotes": [
+          "Use a real anchor with a valid href",
+          "External links set target=\"_blank\" and rel=\"noreferrer\"",
+          "Disabled links set aria-disabled and prevent navigation",
+          "Focus ring is visible on keyboard focus"
+        ]
+      },
+      "usage": {
+        "do": [
+          "Use for navigation, not actions",
+          "Signal external links with an icon",
+          "Keep link text descriptive"
+        ],
+        "dont": [
+          "Do not use links to trigger actions — use Button",
+          "Do not use \"click here\" as link text"
+        ]
+      },
+      "deprecatedAliases": [
+        "Hyperlink",
+        "Text link",
+        "Anchor"
+      ]
+    }
+  }
+}

@@ -332,6 +332,255 @@ function buildKitManifest() {
 }
 
 // ---------------------------------------------------------------------------
+// The AI integration surface.
+//
+// Layered on purpose. The single 16k-token spec was too large to paste into
+// most chat contexts and burned budget in every builder, so tools got all of it
+// or none of it. Now each tool takes the strongest form it can consume:
+//   llms.txt        small index — what you paste
+//   c/<slug>.md     one component — what an agent fetches
+//   llms-full.txt   everything inline — the fallback
+//   api.json        the prop API, machine-readable
+// ---------------------------------------------------------------------------
+const VERSION = JSON.parse(
+  readFileSync(join(root, 'packages/components/package.json'), 'utf8'),
+).version as string
+
+/** Absolute base for generated links. Unset until a host is chosen. */
+const BASE_URL = (process.env.INSPERA_DS_BASE_URL ?? '').replace(/\/$/, '')
+const url = (path: string) => (BASE_URL ? `${BASE_URL}/${path}` : `./${path}`)
+
+const provenance = () =>
+  `<!-- Inspera Design System v${VERSION} — generated ${new Date().toISOString().slice(0, 10)}. Do not edit. -->`
+
+const RULES = `- Use ONLY the ${componentList.length} components listed here. Do not invent variants or rename props.
+- **Prop names are camelCase and case-sensitive** (\`intent\`, not \`Intent\`). React
+  silently ignores an unknown prop, so a capitalised name renders the default
+  variant with no error at all. Copy prop names exactly as given.
+- **Variant *values* are Capitalised** (\`intent="Primary"\`, \`size="Medium"\`).
+- Never use a deprecated alias name; map it to the canonical component.
+- Style with the tokens — never hardcode an off-palette color.
+- Honor the accessibility notes (role, aria, keyboard) for every component.`
+
+const TOKEN_SUMMARY = () =>
+  [
+    ...brandColors.map((c) => `- ${c.name}: ${c.value} — ${c.note}`),
+    ...semanticColors.map((c) => `- ${c.name}: ${c.value}`),
+    ...brandAccents.map((c) => `- accent.${c.name}: ${c.value}`),
+    `- palette families (100–900 each): ${Object.keys(palette).join(', ')} — e.g. \`var(--blue-600)\``,
+    `- radius: ${radius.map((r) => `${r.token} ${r.value}px`).join(', ')}`,
+    `- spacing (px): ${spacing.map((sp) => sp.value).join(', ')} — \`var(--space-1)\`…\`var(--space-16)\``,
+    `- fonts: Inter (UI), JetBrains Mono (code), Material Symbols Outlined (icons)`,
+  ].join('\n')
+
+/** The small index — this is what a person pastes into a chat. */
+function buildLlmsIndex(): string {
+  const byCategory: Record<string, ComponentSpec[]> = {}
+  for (const c of componentList) (byCategory[c.category] ??= []).push(c)
+
+  const index = Object.entries(byCategory)
+    .map(([cat, list]) =>
+      `### ${cat}\n\n` +
+      list.map((c) => `- [${c.name}](${url(`c/${c.slug}.md`)}) — ${c.purpose}`).join('\n'))
+    .join('\n\n')
+
+  return `# Inspera Design System — AI build guide
+
+> Version ${VERSION}. Generate on-brand Inspera UI in any AI builder.
+> This index is deliberately small. Fetch the linked file for each component
+> you actually use, rather than loading the whole system.
+
+If the project can install packages, prefer the real components — they enforce
+this spec at runtime:
+
+\`\`\`bash
+npm i @inspera/components   # private registry
+\`\`\`
+\`\`\`tsx
+import '@inspera/components/tokens.css'
+import { Button, TextInput } from '@inspera/components'
+\`\`\`
+
+Otherwise follow the definitions in the linked files verbatim.
+
+## Rules
+
+${RULES}
+
+## Tokens
+
+${TOKEN_SUMMARY()}
+
+Every token is a CSS custom property: \`var(--primary)\`, \`var(--radius-md)\`,
+\`var(--space-4)\`, \`var(--gray-700)\`. Import the stylesheet once at your app root.
+
+## Components
+
+${index}
+
+## Machine-readable artifacts
+
+| File | What it is |
+| --- | --- |
+| [llms-full.txt](${url('llms-full.txt')}) | Every component inline, one document |
+| [api.json](${url('api.json')}) | Prop API, derived from the TypeScript types |
+| [tokens.css](${url('tokens.css')}) | Token custom properties + icon/keyframe runtime |
+| [inspera.theme.css](${url('inspera.theme.css')}) | Tailwind v4 \`@theme\` block |
+| [tokens.w3c.json](${url('tokens.w3c.json')}) | W3C Design Tokens format |
+| [aliases.json](${url('aliases.json')}) | Deprecated name → canonical component |
+`
+}
+
+/** One self-contained file per component, for agents that fetch on demand. */
+function buildComponentFiles(): { path: string; content: string }[] {
+  return componentList.map((c) => ({
+    path: `public/c/${c.slug}.md`,
+    content: `${provenance()}
+
+# Inspera — ${c.name}
+
+${RULES}
+
+${componentMarkdown(c, '@inspera/components')}
+
+---
+
+Tokens: ${url('tokens.css')} · Full system: ${url('llms.txt')}
+`,
+  }))
+}
+
+/** Prop API as data, so tools can validate rather than infer. */
+function buildApiJson() {
+  return {
+    $schema: 'https://inspera.design/schema/api.json',
+    version: VERSION,
+    generatedAt: new Date().toISOString().slice(0, 10),
+    description:
+      'Inspera Design System component API, derived from the TypeScript interfaces. ' +
+      'Prop names are camelCase and case-sensitive; variant values are Capitalised.',
+    components: Object.fromEntries(
+      componentList.map((c) => {
+        const exportName = exportNameFor(c)
+        return [
+          exportName,
+          {
+            slug: c.slug,
+            displayName: c.name,
+            category: c.category,
+            purpose: c.purpose,
+            importFrom: '@inspera/components',
+            props: componentApi[exportName],
+            accessibility: c.accessibility,
+            usage: c.usage,
+            deprecatedAliases: c.deprecatedAliases,
+          },
+        ]
+      }),
+    ),
+  }
+}
+
+/** Deprecated name → canonical component, so tools can auto-migrate. */
+function buildAliasesJson() {
+  const aliases: Record<string, string> = {}
+  for (const c of componentList) {
+    for (const a of c.deprecatedAliases) aliases[a] = exportNameFor(c)
+  }
+  return { version: VERSION, description: 'Deprecated Inspera name → canonical component export.', aliases }
+}
+
+/** Tailwind v4 @theme — most AI builders emit Tailwind, so meet them there. */
+function buildTailwindTheme(): string {
+  const lines: string[] = []
+  const push = (label: string, entries: [string, string][]) => {
+    lines.push(`  /* ${label} */`)
+    for (const [k, v] of entries) lines.push(`  ${k}: ${v};`)
+    lines.push('')
+  }
+
+  push('Brand & semantic', [
+    ...brandColors.map((c) => [`--color-${c.name.replace('.main', '')}`, c.value] as [string, string]),
+    ...semanticColors.map((c) => [`--color-${c.name}`, c.value] as [string, string]),
+    ...brandAccents.map((c) => [`--color-accent-${c.name}`, c.value] as [string, string]),
+  ])
+  for (const [family, shades] of Object.entries(palette)) {
+    push(`Palette — ${family}`, Object.entries(shades).map(([sh, v]) => [`--color-${family}-${sh}`, v]))
+  }
+  push('Radius', radius.map((r) => [`--radius-${r.token}`, `${r.value}px`]))
+  push('Spacing', spacing.map((sp) => [`--spacing-${sp.token}`, `${sp.value}px`]))
+  push('Elevation', shadows.map((sh) => [`--shadow-${sh.token}`, sh.value]))
+  push('Typography', [
+    ['--font-sans', "'Inter', system-ui, sans-serif"],
+    ['--font-mono', "'JetBrains Mono', ui-monospace, monospace"],
+    ...typeScale.map((t) => [`--text-${cssName(t.token)}`, `${t.size}px`] as [string, string]),
+  ])
+
+  return `/* Inspera Design System v${VERSION} — Tailwind v4 theme. GENERATED, do not edit.
+
+   Most AI builders emit Tailwind utilities, so this exposes every Inspera token
+   as a Tailwind theme value: bg-primary, text-gray-700, rounded-md, p-4, shadow-200.
+
+   Usage — in your global stylesheet, after the Tailwind import:
+     @import 'tailwindcss';
+     @import './inspera.theme.css';
+*/
+
+@theme {
+${lines.join('\n').trimEnd()}
+}
+`
+}
+
+// ---------------------------------------------------------------------------
+// Per-tool rule files. Each is a thin pointer at the canonical artifacts, so
+// dropping one into a repo configures that tool without pasting 16k tokens.
+// ---------------------------------------------------------------------------
+function toolRules(): { path: string; content: string }[] {
+  const where = BASE_URL
+    ? `Fetch them from ${BASE_URL}/`
+    : `They live in this repo's \`public/\` directory (set INSPERA_DS_BASE_URL and regenerate to emit absolute URLs)`
+
+  const body = `# Inspera Design System
+
+All UI in this project uses the Inspera Design System (v${VERSION}).
+
+${RULES}
+
+## Reference
+
+${where}
+
+- \`llms.txt\` — component index. Read this first.
+- \`c/<component>.md\` — full spec for one component. Fetch only what you use.
+- \`api.json\` — every prop, type and default, machine-readable.
+- \`tokens.css\` — import once at the app root.
+- \`inspera.theme.css\` — Tailwind v4 \`@theme\` block, if this project uses Tailwind.
+
+## Tokens
+
+${TOKEN_SUMMARY()}
+
+## Before you finish
+
+Check every component you used against its \`c/<component>.md\`: prop names
+camelCase, variant values Capitalised, no hardcoded colors, accessibility notes
+implemented.
+`
+
+  return [
+    { path: 'public/rules/AGENTS.md', content: body },
+    { path: 'public/rules/CLAUDE.md', content: body },
+    { path: 'public/rules/copilot-instructions.md', content: body },
+    { path: 'public/rules/.windsurfrules', content: body },
+    {
+      path: 'public/rules/inspera.mdc',
+      content: `---\ndescription: Inspera Design System — component and token rules\nglobs: ["**/*.tsx", "**/*.jsx", "**/*.css"]\nalwaysApply: true\n---\n\n${body}`,
+    },
+  ]
+}
+
+// ---------------------------------------------------------------------------
 console.log('Generating distribution outputs from source of truth…')
 const distributedCss = buildDistributedCss()
 write(
@@ -358,10 +607,17 @@ write(
     '\n',
 )
 write('src/tokens.css', GENERATED_HEADER('src/data/tokens.ts') + buildRootCss())
-write('public/inspera-llms.txt', buildLlmsTxt())
+write('public/llms.txt', buildLlmsIndex())
+write('public/llms-full.txt', buildLlmsTxt())
+for (const f of buildComponentFiles()) write(f.path, f.content)
+write('public/api.json', JSON.stringify(buildApiJson(), null, 2) + '\n')
+write('public/aliases.json', JSON.stringify(buildAliasesJson(), null, 2) + '\n')
+write('public/inspera.theme.css', buildTailwindTheme())
 write('public/tokens.w3c.json', JSON.stringify(buildW3CTokens(), null, 2) + '\n')
 write('packages/components/tokens.css', distributedCss)
+write('public/tokens.css', distributedCss)
 write('kit/styles.css', distributedCss)
+for (const f of toolRules()) write(f.path, f.content)
 write('kit/guidelines/components.md', buildKitComponentsMd())
 write('kit/guidelines/tokens.md', buildKitTokensMd())
 write('kit/.figma/make/kit.json', JSON.stringify(buildKitManifest(), null, 2) + '\n')

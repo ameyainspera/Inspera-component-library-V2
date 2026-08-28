@@ -64,7 +64,7 @@ export default function App() {
         </button>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
           <a
-            href="/inspera-llms.txt"
+            href="/llms.txt"
             target="_blank"
             rel="noreferrer"
             style={{
@@ -73,7 +73,7 @@ export default function App() {
               background: 'var(--surface)', color: 'var(--gray-800)', textDecoration: 'none',
               fontSize: 13, fontWeight: 500,
             }}
-            title="Portable spec for any AI builder"
+            title="Portable spec index for any AI builder"
           >
             <span className="material-symbols-outlined" style={{ fontSize: 18 }} aria-hidden>description</span>
             AI spec

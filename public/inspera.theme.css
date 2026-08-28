@@ -1,0 +1,151 @@
+/* Inspera Design System v1.0.0 — Tailwind v4 theme. GENERATED, do not edit.
+
+   Most AI builders emit Tailwind utilities, so this exposes every Inspera token
+   as a Tailwind theme value: bg-primary, text-gray-700, rounded-md, p-4, shadow-200.
+
+   Usage — in your global stylesheet, after the Tailwind import:
+     @import 'tailwindcss';
+     @import './inspera.theme.css';
+*/
+
+@theme {
+  /* Brand & semantic */
+  --color-primary: #004080;
+  --color-secondary: #322060;
+  --color-error: #D32F2F;
+  --color-warning: #EF6C00;
+  --color-info: #0288D1;
+  --color-success: #2E7D32;
+  --color-accent-zest: #FA5101;
+  --color-accent-berry: #89239A;
+  --color-accent-algae: #00A788;
+
+  /* Palette — gray */
+  --color-gray-100: #F7F7F7;
+  --color-gray-200: #EDEDED;
+  --color-gray-300: #D9D9D9;
+  --color-gray-400: #BCBCBC;
+  --color-gray-500: #949494;
+  --color-gray-600: #7A7A7A;
+  --color-gray-700: #595959;
+  --color-gray-800: #404040;
+  --color-gray-900: #272727;
+
+  /* Palette — blue */
+  --color-blue-100: #F0F7FF;
+  --color-blue-200: #DBEDFF;
+  --color-blue-300: #B3D9FF;
+  --color-blue-400: #7ABDFF;
+  --color-blue-500: #3399FF;
+  --color-blue-600: #007BF5;
+  --color-blue-700: #0059B3;
+  --color-blue-800: #004080;
+  --color-blue-900: #002E5C;
+
+  /* Palette — green */
+  --color-green-100: #F2FDF8;
+  --color-green-200: #E0FAEF;
+  --color-green-300: #BDF4DD;
+  --color-green-400: #8DECC5;
+  --color-green-500: #50E2A5;
+  --color-green-600: #1BA76D;
+  --color-green-700: #147B50;
+  --color-green-800: #106542;
+  --color-green-900: #0D4F33;
+
+  /* Palette — red */
+  --color-red-100: #FEF1F1;
+  --color-red-200: #FCDEDE;
+  --color-red-300: #F9B8B8;
+  --color-red-400: #F58484;
+  --color-red-500: #F04242;
+  --color-red-600: #E21212;
+  --color-red-700: #A50D0D;
+  --color-red-800: #760A0A;
+  --color-red-900: #550707;
+
+  /* Palette — yellow */
+  --color-yellow-100: #FFFCF0;
+  --color-yellow-200: #FFF8DC;
+  --color-yellow-300: #FEF0B3;
+  --color-yellow-400: #FEE67C;
+  --color-yellow-500: #FDD835;
+  --color-yellow-600: #F2C602;
+  --color-yellow-700: #B19102;
+  --color-yellow-800: #7E6701;
+  --color-yellow-900: #5B4A01;
+
+  /* Palette — orange */
+  --color-orange-100: #FFFAF0;
+  --color-orange-200: #FFF3DC;
+  --color-orange-300: #FEE5B3;
+  --color-orange-400: #FED27C;
+  --color-orange-500: #FDBA35;
+  --color-orange-600: #F2A202;
+  --color-orange-700: #D99102;
+  --color-orange-800: #7E5501;
+  --color-orange-900: #5B3D01;
+
+  /* Palette — purple */
+  --color-purple-100: #F6F4FB;
+  --color-purple-200: #E9E4F6;
+  --color-purple-300: #D0C6EC;
+  --color-purple-400: #9F88D7;
+  --color-purple-500: #8366CC;
+  --color-purple-600: #603DB8;
+  --color-purple-700: #462D86;
+  --color-purple-800: #322060;
+  --color-purple-900: #241745;
+
+  /* Palette — pink */
+  --color-pink-100: #FEF1F5;
+  --color-pink-200: #FCDFE8;
+  --color-pink-300: #F8B9CE;
+  --color-pink-400: #F386AB;
+  --color-pink-500: #ED457D;
+  --color-pink-600: #DF1659;
+  --color-pink-700: #A21041;
+  --color-pink-800: #740B2E;
+  --color-pink-900: #540821;
+
+  /* Radius */
+  --radius-none: 0px;
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-pill: 9999px;
+
+  /* Spacing */
+  --spacing-0: 0px;
+  --spacing-1: 4px;
+  --spacing-2: 8px;
+  --spacing-3: 12px;
+  --spacing-4: 16px;
+  --spacing-5: 20px;
+  --spacing-6: 24px;
+  --spacing-8: 32px;
+  --spacing-10: 40px;
+  --spacing-12: 48px;
+  --spacing-16: 64px;
+
+  /* Elevation */
+  --shadow-100: 0px 4px 4px rgba(39, 39, 39, 0.08), 0px 2px 4px rgba(39, 39, 39, 0.12);
+  --shadow-200: 0px 8px 8px rgba(39, 39, 39, 0.08), 0px 4px 6px rgba(39, 39, 39, 0.12);
+  --shadow-300: 0px 8px 16px rgba(39, 39, 39, 0.08), 0px 6px 8px rgba(39, 39, 39, 0.12);
+  --shadow-500: 0px 10px 32px rgba(39, 39, 39, 0.1), 0px 6px 14px rgba(39, 39, 39, 0.12);
+
+  /* Typography */
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --text-heading-h1: 28.83px;
+  --text-heading-h2: 22.78px;
+  --text-heading-h3: 20.25px;
+  --text-heading-h4: 18px;
+  --text-heading-h5: 16px;
+  --text-body-mdRegular: 16px;
+  --text-body-mdMedium: 16px;
+  --text-body-semiBold16: 16px;
+  --text-body-caption: 12px;
+}

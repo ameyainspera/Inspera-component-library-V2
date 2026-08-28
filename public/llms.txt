@@ -1,0 +1,115 @@
+# Inspera Design System — AI build guide
+
+> Version 1.0.0. Generate on-brand Inspera UI in any AI builder.
+> This index is deliberately small. Fetch the linked file for each component
+> you actually use, rather than loading the whole system.
+
+If the project can install packages, prefer the real components — they enforce
+this spec at runtime:
+
+```bash
+npm i @inspera/components   # private registry
+```
+```tsx
+import '@inspera/components/tokens.css'
+import { Button, TextInput } from '@inspera/components'
+```
+
+Otherwise follow the definitions in the linked files verbatim.
+
+## Rules
+
+- Use ONLY the 42 components listed here. Do not invent variants or rename props.
+- **Prop names are camelCase and case-sensitive** (`intent`, not `Intent`). React
+  silently ignores an unknown prop, so a capitalised name renders the default
+  variant with no error at all. Copy prop names exactly as given.
+- **Variant *values* are Capitalised** (`intent="Primary"`, `size="Medium"`).
+- Never use a deprecated alias name; map it to the canonical component.
+- Style with the tokens — never hardcode an off-palette color.
+- Honor the accessibility notes (role, aria, keyboard) for every component.
+
+## Tokens
+
+- primary.main: #004080 — Primary brand / interactive
+- secondary.main: #322060 — Secondary brand, used sparingly
+- error: #D32F2F
+- warning: #EF6C00
+- info: #0288D1
+- success: #2E7D32
+- accent.zest: #FA5101
+- accent.berry: #89239A
+- accent.algae: #00A788
+- palette families (100–900 each): gray, blue, green, red, yellow, orange, purple, pink — e.g. `var(--blue-600)`
+- radius: none 0px, xs 2px, sm 4px, md 8px, lg 12px, xl 16px, pill 9999px
+- spacing (px): 0, 4, 8, 12, 16, 20, 24, 32, 40, 48, 64 — `var(--space-1)`…`var(--space-16)`
+- fonts: Inter (UI), JetBrains Mono (code), Material Symbols Outlined (icons)
+
+Every token is a CSS custom property: `var(--primary)`, `var(--radius-md)`,
+`var(--space-4)`, `var(--gray-700)`. Import the stylesheet once at your app root.
+
+## Components
+
+### input-controls
+
+- [Button](./c/button.md) — Trigger an action.
+- [Text Input](./c/text-input.md) — Collect single-line text input.
+- [Checkbox](./c/checkbox.md) — Allow multiple selection.
+- [Radio Button](./c/radio-button.md) — Allow single selection.
+- [Select](./c/select.md) — Select one option from a list.
+- [Toggle](./c/toggle.md) — Switch a setting on or off instantly.
+- [Textarea](./c/textarea.md) — Collect multi-line text input.
+- [Form Field](./c/form-field.md) — Standardize label, control, and help/error layout around any input.
+- [Slider](./c/slider.md) — Select a numeric value from a continuous range.
+- [Segmented Control](./c/segmented-control.md) — Choose one option from a small set of mutually exclusive segments.
+- [Date Picker](./c/date-picker.md) — Select a calendar date from a popover.
+- [File Upload](./c/file-upload.md) — Upload files via drag-and-drop or browse.
+- [Radio Group](./c/radio-group.md) — Group mutually exclusive radio options.
+- [Checkbox Group](./c/checkbox-group.md) — Group related multi-select checkboxes.
+- [Rating](./c/rating.md) — Capture or display a star rating.
+- [OTP Input](./c/otp-input.md) — Enter a one-time verification code.
+
+### data-display
+
+- [Card](./c/card.md) — Group related content in a contained surface.
+- [Badge](./c/badge.md) — Display a short status label or count.
+- [Avatar](./c/avatar.md) — Represent a user or entity with an image or initials.
+- [Table](./c/table.md) — Display structured data in rows and columns.
+- [Accordion](./c/accordion.md) — Show and hide sections of related content.
+- [Tag](./c/tag.md) — Label, categorize, or filter with a removable chip.
+- [Divider](./c/divider.md) — Separate content with a thin rule.
+- [Empty State](./c/empty-state.md) — Communicate the absence of content and offer a next step.
+- [Avatar Group](./c/avatar-group.md) — Show a set of users as overlapping avatars with an overflow count.
+- [Stat](./c/stat.md) — Highlight a key metric with an optional trend.
+- [List](./c/list.md) — Present a vertical series of related items.
+
+### feedback
+
+- [Alert](./c/alert.md) — Display semantic inline feedback.
+- [Dialog](./c/dialog.md) — Present content or actions that require user attention.
+- [Snackbar](./c/snackbar.md) — Show brief, non-blocking feedback at the bottom of the screen.
+- [Tooltip](./c/tooltip.md) — Provide contextual help on hover or focus.
+- [Progress](./c/progress.md) — Show completion of an ongoing task.
+- [Spinner](./c/spinner.md) — Indicate an indeterminate loading state.
+- [Skeleton](./c/skeleton.md) — Show placeholder shapes while content loads.
+- [Popover](./c/popover.md) — Show interactive content anchored to a trigger.
+- [Drawer](./c/drawer.md) — Slide a panel in from the edge of the screen.
+
+### navigation
+
+- [Tabs](./c/tabs.md) — Organize content into switchable panels.
+- [Breadcrumb](./c/breadcrumb.md) — Show the user's current location in a hierarchy.
+- [Pagination](./c/pagination.md) — Navigate between pages of content.
+- [Menu](./c/menu.md) — Present a list of actions in a dropdown.
+- [Stepper](./c/stepper.md) — Show progress through a sequence of steps.
+- [Link](./c/link.md) — Navigate to another location or resource.
+
+## Machine-readable artifacts
+
+| File | What it is |
+| --- | --- |
+| [llms-full.txt](./llms-full.txt) | Every component inline, one document |
+| [api.json](./api.json) | Prop API, derived from the TypeScript types |
+| [tokens.css](./tokens.css) | Token custom properties + icon/keyframe runtime |
+| [inspera.theme.css](./inspera.theme.css) | Tailwind v4 `@theme` block |
+| [tokens.w3c.json](./tokens.w3c.json) | W3C Design Tokens format |
+| [aliases.json](./aliases.json) | Deprecated name → canonical component |
