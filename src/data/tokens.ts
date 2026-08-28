@@ -64,10 +64,20 @@ export const spacing = [
   { token: '12', value: 48 }, { token: '16', value: 64 },
 ]
 
+/**
+ * Corner radius. The system is deliberately restrained: small-to-medium radii
+ * everywhere, and pills reserved for controls that are conceptually round.
+ * `usage` says when to reach for each; which components actually use it is
+ * derived from the code, not asserted here — see radius-usage.generated.ts.
+ */
 export const radius = [
-  { token: 'none', value: 0 }, { token: 'xs', value: 2 }, { token: 'sm', value: 4 },
-  { token: 'md', value: 8 }, { token: 'lg', value: 12 }, { token: 'xl', value: 16 },
-  { token: 'pill', value: 9999 },
+  { token: 'none', value: 0, usage: 'Flush edges — table cells, full-bleed surfaces, anything that meets another edge.' },
+  { token: 'xs', value: 2, usage: 'The smallest indicators, where 4px would read as a visible curve.' },
+  { token: 'sm', value: 4, usage: 'Controls: buttons, tags, segments, menu items.' },
+  { token: 'md', value: 8, usage: 'Inputs, alerts and floating panels — the system default.' },
+  { token: 'lg', value: 12, usage: 'Large surfaces that contain other components: cards, dialogs, drawers.' },
+  { token: 'xl', value: 16, usage: 'Reserved for oversized surfaces. Nothing uses it today; prefer lg.' },
+  { token: 'pill', value: 9999, usage: 'Only for shapes that are conceptually round: toggles, badges, radios, avatars.' },
 ]
 
 export const shadows = [

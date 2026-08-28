@@ -3,6 +3,7 @@ import {
   brandColors, semanticColors, brandAccents, palette,
   spacing, radius, shadows, typeScale,
 } from '../data/tokens'
+import { radiusUsage } from '../data/radius-usage.generated'
 import { Panel, SectionTitle } from './primitives'
 
 function PaletteShade({ shade, hex, family }: { shade: string; hex: string; family: string }) {
@@ -126,18 +127,63 @@ export default function FoundationsPage() {
           </div>
         </Panel>
 
-        <Panel>
-          <SectionTitle>Radius</SectionTitle>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16 }}>
-            {radius.map((r) => (
-              <div key={r.token} style={{ textAlign: 'center' }}>
-                <div style={{ width: 56, height: 56, background: 'var(--blue-100)', border: '2px solid var(--primary)', borderRadius: Math.min(r.value, 28) }} />
-                <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, marginTop: 6 }}>{r.token}</div>
-              </div>
-            ))}
-          </div>
-        </Panel>
+
       </div>
+
+      <Panel>
+        <SectionTitle sub="Corner rounding. Each row shows the shape at true size, the value, the variable to reference, and which components actually use it — read from the component source, not asserted here.">
+          Radius
+        </SectionTitle>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          {radius.map((r) => {
+            const users = radiusUsage[r.token] ?? []
+            return (
+              <div
+                key={r.token}
+                style={{
+                  display: 'flex', alignItems: 'flex-start', gap: 16,
+                  padding: '14px 0', borderBottom: '1px solid var(--border)',
+                }}
+              >
+                {/* True size — not clamped, so `pill` reads as a pill and `xs` as a hairline curve. */}
+                <div
+                  style={{
+                    width: 56, height: 56, flexShrink: 0,
+                    background: 'var(--blue-100)',
+                    border: '2px solid var(--primary)',
+                    borderRadius: r.value,
+                  }}
+                  aria-hidden
+                />
+                <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 4 }}>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, flexWrap: 'wrap' }}>
+                    <code style={{ fontFamily: 'var(--font-mono)', fontSize: 13, fontWeight: 600, color: 'var(--gray-900)' }}>
+                      {r.token}
+                    </code>
+                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--primary)' }}>
+                      var(--radius-{r.token})
+                    </span>
+                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--muted-foreground)' }}>
+                      {r.value === 9999 ? '9999px · fully round' : `${r.value}px`}
+                    </span>
+                  </div>
+                  <p style={{ margin: 0, fontSize: 13, color: 'var(--gray-700)', lineHeight: 1.45 }}>{r.usage}</p>
+                  <div style={{ fontSize: 12, color: 'var(--muted-foreground)' }}>
+                    {users.length > 0 ? (
+                      <>
+                        <span style={{ fontWeight: 500 }}>Used by </span>
+                        {users.join(', ')}
+                      </>
+                    ) : (
+                      <em>Not currently used by any component.</em>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </Panel>
 
       <Panel>
         <SectionTitle>Elevation</SectionTitle>

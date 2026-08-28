@@ -258,17 +258,20 @@ Use the scale — no arbitrary pixel values.
 ### Radius
 
 Small-to-medium radii: `sm` for controls, `md` for inputs and alerts,
-`lg` for cards and dialogs. Pills only for toggles, badges, radios, avatars.
+`lg` for cards and dialogs. Pills only for shapes that are conceptually round.
 
-| Token | CSS variable | Value |
-| --- | --- | --- |
-| `none` | `var(--radius-none)` | 0px |
-| `xs` | `var(--radius-xs)` | 2px |
-| `sm` | `var(--radius-sm)` | 4px |
-| `md` | `var(--radius-md)` | 8px |
-| `lg` | `var(--radius-lg)` | 12px |
-| `xl` | `var(--radius-xl)` | 16px |
-| `pill` | `var(--radius-pill)` | 9999px |
+"Used by" is read from the component source, so it reflects what the library
+actually does rather than what this document claims.
+
+| Token | CSS variable | Value | When to use | Used by |
+| --- | --- | --- | --- | --- |
+| `none` | `var(--radius-none)` | 0px | Flush edges — table cells, full-bleed surfaces, anything that meets another edge. | — |
+| `xs` | `var(--radius-xs)` | 2px | The smallest indicators, where 4px would read as a visible curve. | Checkbox, Link |
+| `sm` | `var(--radius-sm)` | 4px | Controls: buttons, tags, segments, menu items. | Button, DatePicker, Dialog, List, Menu, Popover, SegmentedControl, Select, Skeleton, Tabs, Tooltip |
+| `md` | `var(--radius-md)` | 8px | Inputs, alerts and floating panels — the system default. | Accordion, Alert, DatePicker, Drawer, FileUpload, List, Menu, OtpInput, Pagination, Popover, SegmentedControl, Select, Skeleton, Snackbar, Table, Tabs, TextInput, Textarea |
+| `lg` | `var(--radius-lg)` | 12px | Large surfaces that contain other components: cards, dialogs, drawers. | Card, Dialog, Stat |
+| `xl` | `var(--radius-xl)` | 16px | Reserved for oversized surfaces. Nothing uses it today; prefer lg. | — |
+| `pill` | `var(--radius-pill)` | fully round | Only for shapes that are conceptually round: toggles, badges, radios, avatars. | Avatar, Badge, Dialog, Progress, RadioButton, Skeleton, Slider, Stepper, Tag, Toggle, Tooltip |
 
 ### Depth / elevation
 
