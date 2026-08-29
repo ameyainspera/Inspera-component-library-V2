@@ -1,5 +1,6 @@
 import { useState, useMemo, useCallback, useEffect } from 'react'
 import { iconsByCategory, allIcons, ICON_CATEGORIES, totalIconCount } from '../data/icons'
+import IconDetailPanel from './IconDetailPanel'
 import type { IconCategory } from '../data/icons'
 import type { IconStyle } from '../components/inspera/Icon'
 
@@ -90,8 +91,11 @@ export default function IconsPage() {
   const [opsz, setOpsz] = useState(24)
   const [search, setSearch] = useState('')
   const [category, setCategory] = useState<IconCategory>('All')
+  const [selected, setSelected] = useState<string | null>(null)
   const [toast, setToast] = useState<string | null>(null)
   const [toastKey, setToastKey] = useState(0)
+
+  const selectIcon = useCallback((name: string) => setSelected(name), [])
 
   const copyIcon = useCallback((name: string) => {
     try {
@@ -112,6 +116,12 @@ export default function IconsPage() {
     const t = setTimeout(() => setToast(null), 2000)
     return () => clearTimeout(t)
   }, [toast, toastKey])
+
+  const selectedCategory = useMemo(() => {
+    if (!selected) return ''
+    const hit = Object.entries(iconsByCategory).find(([, names]) => names.includes(selected))
+    return hit ? hit[0] : 'Icon'
+  }, [selected])
 
   const filtered = useMemo(() => {
     const pool = category === 'All' ? allIcons : iconsByCategory[category as Exclude<IconCategory, 'All'>] ?? []
@@ -307,8 +317,9 @@ export default function IconsPage() {
         </div>{/* end controls panel */}
       </div>{/* end static controls zone */}
 
-      {/* ── Scrollable content ── */}
-      <div style={{ flex: 1, overflowY: 'auto', padding: '20px 40px 32px' }}>
+      {/* ── Scrollable content, with the detail panel beside it ── */}
+      <div style={{ display: 'flex', flex: 1, minHeight: 0 }}>
+      <div style={{ flex: 1, minWidth: 0, overflowY: 'auto', padding: '20px 40px 32px' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
 
       {/* Results count */}
@@ -350,7 +361,7 @@ export default function IconsPage() {
               weight={weight}
               grade={grade}
               opsz={opsz}
-              onCopy={copyIcon}
+              onCopy={selectIcon}
             />
           ))}
         </div>
@@ -422,6 +433,17 @@ export default function IconsPage() {
 
         </div>{/* end inner maxWidth wrapper */}
       </div>{/* end scrollable zone */}
+
+      {selected && (
+        <IconDetailPanel
+          key={selected}
+          name={selected}
+          iconStyle={iconStyle}
+          category={selectedCategory}
+          onClose={() => setSelected(null)}
+        />
+      )}
+      </div>{/* end content + panel row */}
 
       {toast && <CopyToast key={toastKey} name={toast} />}
     </div>
