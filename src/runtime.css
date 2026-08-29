@@ -62,3 +62,114 @@
     width: 40%;
   }
 }
+
+/* ---------------------------------------------------------------------------
+   Interaction states.
+
+   Inline styles cannot express :hover or :focus-visible, so the components
+   carried a `state` prop that froze a look instead — which meant a Button
+   never responded to the mouse in a real application, only in the docs.
+
+   Behaviour lives here. Every rule pairs a real pseudo-class with a
+   [data-force-state] attribute, so the documentation gallery can still show
+   Hover or Pressed without a pointer, and the same declaration drives both.
+   Components supply their own colours through the --inspera-* custom
+   properties so one rule set covers every variant.
+   --------------------------------------------------------------------------- */
+
+.inspera-interactive {
+  transition:
+    background var(--duration-fast) var(--easing-standard),
+    border-color var(--duration-fast) var(--easing-standard),
+    box-shadow var(--duration-fast) var(--easing-standard),
+    transform var(--duration-fast) var(--easing-standard);
+}
+
+/* Focus is never removed, only made visible on keyboard navigation. */
+.inspera-interactive:focus-visible,
+.inspera-interactive[data-force-state='Focused'] {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* --- Button -------------------------------------------------------------
+   The resting values live here, not inline. An inline `background` outranks
+   any class selector, so setting it on the element silently defeated the
+   :hover rule below — the component looked wired up and did nothing. */
+
+.inspera-button {
+  background: var(--inspera-bg);
+  color: var(--inspera-fg);
+  border-color: var(--inspera-border);
+  box-shadow: var(--inspera-shadow);
+}
+
+.inspera-button:hover:not(:disabled),
+.inspera-button[data-force-state='Hover'] {
+  background: var(--inspera-bg-hover);
+  box-shadow: var(--inspera-shadow-hover);
+}
+
+.inspera-button:active:not(:disabled),
+.inspera-button[data-force-state='Pressed'] {
+  background: var(--inspera-bg-active);
+  box-shadow: var(--inspera-shadow-active);
+  transform: translateY(1px);
+}
+
+/* --- Fields: input, textarea, select, date picker, OTP -------------------
+   Resting border lives here so the hover and focus rules can win. Fields ring
+   with a box-shadow rather than an outline, which is what the library draws. */
+
+.inspera-field {
+  border-color: var(--border-control);
+}
+
+.inspera-field:hover:not([data-disabled='true']):not([data-readonly='true']),
+.inspera-field[data-force-state='Hover'] {
+  border-color: var(--border-control-strong);
+}
+
+/* The :not() guards are repeated here deliberately. Without them the hover
+   rule above is more specific, so a focused field that still had the pointer
+   over it kept the hover border instead of the focus one. */
+.inspera-field:focus-within:not([data-disabled='true']),
+.inspera-field[data-force-state='Focused']:not([data-disabled='true']),
+.inspera-field[data-force-state='Open']:not([data-disabled='true']) {
+  border-color: var(--primary);
+  box-shadow: var(--effect-state-focus);
+}
+
+/* Invalid wins over hover and focus — the error must stay legible. */
+.inspera-field[data-invalid='true'],
+.inspera-field[data-invalid='true']:hover,
+.inspera-field[data-invalid='true']:focus-within {
+  border-color: var(--error);
+  box-shadow: var(--effect-state-error);
+}
+
+/* --- Selection controls: checkbox, radio, toggle ------------------------- */
+
+.inspera-control:hover:not([data-disabled='true']) .inspera-control-indicator,
+.inspera-control[data-force-state='Hover'] .inspera-control-indicator {
+  border-color: var(--border-control-strong);
+}
+
+.inspera-control:has(:focus-visible) .inspera-control-indicator,
+.inspera-control[data-force-state='Focused'] .inspera-control-indicator {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* --- Rows and items that respond to the pointer ------------------------- */
+
+.inspera-row:hover:not([data-disabled='true']),
+.inspera-row[data-force-state='Hover'] {
+  background: var(--action-hover);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .inspera-interactive {
+    transition: none;
+  }
+}

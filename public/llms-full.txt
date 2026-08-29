@@ -594,7 +594,7 @@ import { Button } from '@inspera/components'
 | `label` | `string` | `'Button'` | The button text. Start with a verb — "Save", not "OK". |
 | `intent` | `'Primary' \| 'Secondary' \| 'Outline' \| 'Text' \| 'Success' \| 'Warning' \| 'Destructive'` | `'Primary'` | Visual role / semantic weight. |
 | `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Height 32 / 40 / 48. |
-| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Pressed' \| 'Disabled'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
+| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Pressed' \| 'Disabled'` | — | Freezes a visual state so documentation can show it without a pointer. Leave unset in application code — hover, focus and active are handled in CSS and work on their own. |
 | `content` | `'Text' \| 'Icon + Text' \| 'Text + Icon' \| 'Text + Disclosure'` | `'Text'` | Label / icon composition. |
 | `icon` | `string` | `'add'` | Material Symbols name. Only rendered by the icon-bearing content variants. |
 | `onClick` | `() => void` | — | Fired on click and on Enter or Space. |

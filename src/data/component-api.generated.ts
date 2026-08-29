@@ -280,8 +280,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "name": "state",
         "type": "'Default' | 'Hover' | 'Focused' | 'Pressed' | 'Disabled'",
         "required": false,
-        "default": "'Default'",
-        "description": "Forces a visual state for documentation. Omit for real interactivity."
+        "description": "Freezes a visual state so documentation can show it without a pointer. Leave unset in application code — hover, focus and active are handled in CSS and work on their own."
       },
       {
         "name": "content",

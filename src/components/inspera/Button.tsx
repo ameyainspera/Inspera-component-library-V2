@@ -13,7 +13,11 @@ export interface ButtonProps {
   intent?: ButtonIntent
   /** Height 32 / 40 / 48. */
   size?: ButtonSize
-  /** Forces a visual state for documentation. Omit for real interactivity. */
+  /**
+   * Freezes a visual state so documentation can show it without a pointer.
+   * Leave unset in application code — hover, focus and active are handled in
+   * CSS and work on their own.
+   */
   state?: ButtonState
   /** Label / icon composition. */
   content?: ButtonContent
@@ -55,7 +59,7 @@ export default function Button({
   label = 'Button',
   intent = 'Primary',
   size = 'Medium',
-  state = 'Default',
+  state,
   content = 'Text',
   icon = 'add',
   onClick,
@@ -65,41 +69,36 @@ export default function Button({
   const isSolid = c.bg !== 'transparent'
   const disabled = state === 'Disabled'
 
-  let background = c.bg
-  if (state === 'Pressed' && isSolid) background = darken(c.bg, 0.18)
-  else if (state === 'Hover' && isSolid) background = darken(c.bg, 0.1)
-  else if (state === 'Pressed' && !isSolid) background = 'color-mix(in srgb, var(--primary) 12%, transparent)'
-  else if (state === 'Hover' && !isSolid) background = 'color-mix(in srgb, var(--primary) 8%, transparent)'
-
-  const style: CSSProperties = {
+  // Hover and pressed are CSS (see .inspera-button in runtime.css). The
+  // component only supplies the colours; the pseudo-classes do the rest, so a
+  // Button reacts to a real pointer instead of only to a prop.
+  const style: CSSProperties & Record<string, string | number> = {
+    '--inspera-bg': c.bg,
+    '--inspera-fg': c.fg,
+    '--inspera-border': c.border,
+    '--inspera-shadow': isSolid ? 'var(--effect-button-shadow)' : 'none',
+    '--inspera-bg-hover': isSolid ? darken(c.bg, 0.1) : 'color-mix(in srgb, var(--primary) 8%, transparent)',
+    '--inspera-bg-active': isSolid ? darken(c.bg, 0.18) : 'color-mix(in srgb, var(--primary) 12%, transparent)',
+    '--inspera-shadow-hover': isSolid
+      ? 'inset 0px -1px 0px rgba(0,0,0,0.2), 0px 2px 6px rgba(0,64,128,0.24)'
+      : 'none',
+    '--inspera-shadow-active': isSolid ? 'inset 0px 1px 2px rgba(0,0,0,0.24)' : 'none',
     height: s.h,
     minWidth: 80,
     padding: `0 ${s.px}px`,
     gap: s.gap,
     borderRadius: 'var(--radius-sm)',
-    background,
-    color: c.fg,
-    border: `1px solid ${c.border}`,
+    borderWidth: 'var(--border-width-default)',
+    borderStyle: 'solid',
     fontFamily: 'var(--font-sans)',
-    fontSize: 16,
+    fontSize: 'var(--default-16-medium-size)',
     fontWeight: 600,
-    lineHeight: '140%',
+    lineHeight: 'var(--default-16-medium-line-height)',
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'center',
     cursor: disabled ? 'not-allowed' : 'pointer',
     opacity: disabled ? 0.38 : 1,
-    outline: state === 'Focused' ? '2px solid var(--primary-focus-ring)' : 'none',
-    outlineOffset: 2,
-    boxShadow: !isSolid
-      ? 'none'
-      : state === 'Hover'
-        ? 'inset 0px -1px 0px rgba(0,0,0,0.2), 0px 2px 6px rgba(0,64,128,0.24)'
-        : state === 'Pressed'
-          ? 'inset 0px 1px 2px rgba(0,0,0,0.24)'
-          : 'inset 0px -1px 0px rgba(0,0,0,0.2), 0px 1px 0px rgba(0,0,0,0.08)',
-    transform: state === 'Pressed' ? 'translateY(1px)' : 'none',
-    transition: 'background 120ms ease, box-shadow 120ms ease, transform 120ms ease',
     whiteSpace: 'nowrap',
   }
 
@@ -112,6 +111,8 @@ export default function Button({
   return (
     <button
       type="button"
+      className="inspera-interactive inspera-button"
+      data-force-state={state && state !== 'Default' ? state : undefined}
       style={style}
       disabled={disabled}
       onClick={onClick}

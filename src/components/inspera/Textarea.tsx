@@ -55,10 +55,6 @@ export default function Textarea({
   const isError = state === 'Error'
   const isFocused = focused || state === 'Focused'
 
-  let border = 'var(--border-control)'
-  if (isError) border = 'var(--error)'
-  else if (isFocused) border = 'var(--primary)'
-  else if (state === 'Hover') border = 'var(--border-control-strong)'
 
   const padY = size === 'Small' ? 6 : 8
 
@@ -67,10 +63,9 @@ export default function Textarea({
     flexDirection: 'column',
     padding: `${padY}px 12px`,
     borderRadius: 'var(--radius-md)',
-    border: `1px solid ${border}`,
+    borderWidth: 'var(--border-width-default)',
+    borderStyle: 'solid',
     background: disabled ? 'var(--surface-disabled)' : readOnly ? 'var(--gray-100)' : 'var(--white)',
-    boxShadow: isFocused ? '0 0 0 3px var(--primary-focus-ring)' : isError ? '0 0 0 3px rgba(249,184,184,0.6)' : 'none',
-    transition: 'border-color 120ms ease, box-shadow 120ms ease',
     opacity: disabled ? 0.6 : 1,
   }
 
@@ -81,7 +76,14 @@ export default function Textarea({
           {label}
         </label>
       )}
-      <div style={field}>
+      <div
+        className="inspera-interactive inspera-field"
+        data-force-state={state && state !== 'Default' ? state : undefined}
+        data-invalid={isError || undefined}
+        data-disabled={disabled || undefined}
+        data-readonly={readOnly || undefined}
+        style={field}
+      >
         <textarea
           id={id}
           value={current}
