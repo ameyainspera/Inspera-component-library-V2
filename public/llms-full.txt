@@ -948,6 +948,7 @@ import { Textarea } from '@inspera/components'
   size="Medium"
   showCount={false}
   maxLength={280}
+  helpText="Keep it constructive."
 />
 ```
 
@@ -2252,6 +2253,7 @@ import { Stepper } from '@inspera/components'
   steps={[{ label: 'Details' }, { label: 'Questions' }, { label: 'Review' }]}
   activeStep={1}
   orientation="Horizontal"
+  size="Medium"
 />
 ```
 

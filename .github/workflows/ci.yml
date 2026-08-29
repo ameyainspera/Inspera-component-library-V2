@@ -35,6 +35,11 @@ jobs:
       - name: Recipes match their components
         run: pnpm audit:recipes
 
+      # The playground's copyable JSX has to be the code that produced the
+      # preview, or it hands people something that does not build what they saw.
+      - name: Playground JSX matches its controls
+        run: pnpm audit:snippets
+
       - name: Build site
         run: pnpm build
 

@@ -55,6 +55,7 @@ import { Stepper } from '@inspera/components'
   steps={[{ label: 'Details' }, { label: 'Questions' }, { label: 'Review' }]}
   activeStep={1}
   orientation="Horizontal"
+  size="Medium"
 />
 ```
 

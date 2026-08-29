@@ -29,6 +29,16 @@ export interface RegistryEntry {
 
 const b = (v: string) => v === 'true'
 
+/**
+ * Render a JSX attribute only when it departs from the component's own
+ * default, in idiomatic form — bare for a true flag, `={false}` to switch one
+ * off. These snippets are the copyable example an AI learns the API from, so
+ * they should read like code someone would write, not like an exhaustive dump
+ * of every prop at its default value.
+ */
+const flag = (name: string, on: boolean, dflt: boolean) =>
+  on === dflt ? '' : on ? `\n  ${name}` : `\n  ${name}={false}`
+
 /** Full-width gallery wrapper that keeps a narrower component centred. */
 const fill = { width: '100%', display: 'flex', justifyContent: 'center' } as const
 
@@ -189,7 +199,7 @@ export const registry: Record<string, RegistryEntry> = {
       { label: 'Disabled', node: <Checkbox label="Option" state="Disabled" checked /> },
     ],
     snippet: (v) =>
-      `<Checkbox\n  label="Send me product updates"\n  checked={${v.checked}}\n  size="${v.size}"\n/>`,
+      `<Checkbox\n  label="Send me product updates"\n  checked={${v.checked}}\n  size="${v.size}"${flag('withLabel', b(v.withLabel), true)}\n/>`,
   },
 
   'radio-button': {
@@ -216,7 +226,7 @@ export const registry: Record<string, RegistryEntry> = {
       { label: 'Disabled', node: <RadioButton label="Option" state="Disabled" selected /> },
     ],
     snippet: (v) =>
-      `<RadioButton\n  label="Standard delivery"\n  name="delivery"\n  selected={${v.selected}}\n/>`,
+      `<RadioButton\n  label="Standard delivery"\n  name="delivery"\n  selected={${v.selected}}${flag('withLabel', b(v.withLabel), true)}\n/>`,
   },
 
   select: {
@@ -267,7 +277,7 @@ export const registry: Record<string, RegistryEntry> = {
       { label: 'Disabled (on)', node: <Toggle label="Setting" state="Disabled" checked /> },
     ],
     snippet: (v) =>
-      `<Toggle\n  label="Enable notifications"\n  checked={${v.checked}}\n  size="${v.size}"\n/>`,
+      `<Toggle\n  label="Enable notifications"\n  checked={${v.checked}}\n  size="${v.size}"${flag('withLabel', b(v.withLabel), true)}\n/>`,
   },
 
   card: {
@@ -482,7 +492,7 @@ export const registry: Record<string, RegistryEntry> = {
       node: <Textarea label="Feedback" placeholder="Share your thoughts…" state={s} showLabel={false} rows={3} />,
     })),
     snippet: (v) =>
-      `<Textarea\n  label="Feedback"\n  placeholder="Share your thoughts…"\n  size="${v.size}"\n  showCount={${v.showCount}}\n  maxLength={280}\n/>`,
+      `<Textarea\n  label="Feedback"\n  placeholder="Share your thoughts…"\n  size="${v.size}"\n  showCount={${v.showCount}}\n  maxLength={280}${b(v.showHelp) ? '\n  helpText="Keep it constructive."' : ''}\n/>`,
   },
 
   'form-field': {
@@ -507,7 +517,7 @@ export const registry: Record<string, RegistryEntry> = {
       { label: 'Required + error', node: <FormField label="Email" htmlFor="ff-g2" required errorText="Required field."><TextInput label="Email" showLabel={false} state="Error" /></FormField> },
     ],
     snippet: (v) =>
-      `<FormField\n  label="Email address"\n  htmlFor="email"\n  required={${v.required}}\n  helpText="We'll never share your email."\n>\n  <TextInput id="email" showLabel={false} />\n</FormField>`,
+      `<FormField\n  label="Email address"\n  htmlFor="email"\n  required={${v.required}}\n  helpText="We'll never share your email."${b(v.showError) ? '\n  errorText="Enter a valid email address."' : ''}\n>\n  <TextInput id="email" showLabel={false}${b(v.showError) ? ' state="Error"' : ''} />\n</FormField>`,
   },
 
   slider: {
@@ -560,7 +570,7 @@ export const registry: Record<string, RegistryEntry> = {
       { label: 'Disabled', node: <DatePicker label="Due date" showLabel={false} state="Disabled" /> },
     ],
     snippet: (v) =>
-      `<DatePicker\n  label="Due date"\n  value="2026-08-19"\n  onChange={setDate}\n/>`,
+      `<DatePicker\n  label="Due date"\n  value="2026-08-19"\n  onChange={setDate}${flag('defaultOpen', b(v.defaultOpen), false)}\n/>`,
   },
 
   'file-upload': {
@@ -652,7 +662,7 @@ export const registry: Record<string, RegistryEntry> = {
       { label: '5 of 5', node: <Rating value={5} showValue /> },
     ],
     snippet: (v) =>
-      `<Rating\n  value={3}\n  max={5}\n  size="${v.size}"\n  readOnly={${v.readOnly}}\n/>`,
+      `<Rating\n  value={3}\n  max={5}\n  size="${v.size}"\n  readOnly={${v.readOnly}}${flag('showValue', b(v.showValue), false)}\n/>`,
   },
 
   'otp-input': {
@@ -702,7 +712,7 @@ export const registry: Record<string, RegistryEntry> = {
       { label: 'Striped', node: <Table striped columns={[{ key: 'a', header: 'Name' }, { key: 'b', header: 'Score', align: 'right' }]} rows={[{ a: 'Ada', b: 92 }, { a: 'Linus', b: 88 }]} /> },
     ],
     snippet: (v) =>
-      `<Table\n  size="${v.size}"\n  striped={${v.striped}}\n  columns={[{ key: 'name', header: 'Assessment' }]}\n  rows={[{ name: 'Algebra Quiz' }]}\n/>`,
+      `<Table\n  size="${v.size}"\n  striped={${v.striped}}${flag('hoverable', b(v.hoverable), true)}\n  columns={[{ key: 'name', header: 'Assessment' }]}\n  rows={[{ name: 'Algebra Quiz' }]}\n/>`,
   },
 
   accordion: {
@@ -1070,7 +1080,7 @@ export const registry: Record<string, RegistryEntry> = {
       { label: 'Vertical', node: <Stepper orientation="Vertical" activeStep={2} /> },
     ],
     snippet: (v) =>
-      `<Stepper\n  steps={[{ label: 'Details' }, { label: 'Questions' }, { label: 'Review' }]}\n  activeStep={${v.activeStep}}\n  orientation="${v.orientation}"\n/>`,
+      `<Stepper\n  steps={[{ label: 'Details' }, { label: 'Questions' }, { label: 'Review' }]}\n  activeStep={${v.activeStep}}\n  orientation="${v.orientation}"\n  size="${v.size}"\n/>`,
   },
 
   link: {
@@ -1096,7 +1106,7 @@ export const registry: Record<string, RegistryEntry> = {
       { label: 'Muted', node: <Link label="Skip for now" intent="Muted" /> },
     ],
     snippet: (v) =>
-      `<Link\n  href="/docs"\n  label="Learn more"\n  intent="${v.intent}"\n  underline="${v.underline}"\n  external={${v.external}}\n/>`,
+      `<Link\n  href="/docs"\n  label="Learn more"\n  intent="${v.intent}"\n  underline="${v.underline}"\n  external={${v.external}}${flag('disabled', b(v.disabled), false)}\n/>`,
   },
 }
 

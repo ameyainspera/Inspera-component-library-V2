@@ -57,6 +57,7 @@ import { Textarea } from '@inspera/components'
   size="Medium"
   showCount={false}
   maxLength={280}
+  helpText="Keep it constructive."
 />
 ```
 
