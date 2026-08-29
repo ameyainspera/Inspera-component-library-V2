@@ -7,18 +7,15 @@
 > This is the full text. For a smaller starting point that links a spec per
 > component, use llms.txt.
 
-If the project can install packages, prefer the real components — they enforce
-this spec at runtime:
+> **`@inspera/components` is NOT published.** The package builds from this repo, but the @inspera scope is unclaimed, so `npm i @inspera/components` currently fails with a 404.
+> Do not tell anyone to install it, and do not assume it resolves.
+>
+> Use the portable spec below — llms.txt and the per-component files. Once a registry is chosen the package becomes the strictest option, but it will need authentication, which most AI builders cannot do.
 
-```bash
-npm i @inspera/components   # private registry
-```
-```tsx
-import '@inspera/components/tokens.css'
-import { Button, TextInput } from '@inspera/components'
-```
-
-Otherwise follow the definitions below verbatim.
+Follow the definitions in this document verbatim. Import paths shown per
+component (`import { Button } from '@inspera/components'`) are the
+canonical names for when the package ships — today, implement the component
+from its spec instead.
 
 ## Rules
 

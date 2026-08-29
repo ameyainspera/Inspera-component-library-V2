@@ -15,7 +15,7 @@ Everything below is generated or packaged from these — nothing is maintained t
 
 | Output | For | Enforcement | Command |
 | --- | --- | --- | --- |
-| **npm package** `@inspera/components` | Code-based builders (Cursor, v0, Lovable, Bolt) & hand-written React | Strong — real importable components | `pnpm build:pkg` (`packages/components/`) |
+| **npm package** `@inspera/components` | Hand-written React, once published | Strong — real importable components, but **not published yet** | `pnpm build:pkg` (`packages/components/`) |
 | **Portable spec** `public/inspera-llms.txt` + `public/tokens.w3c.json` | Any LLM tool (Claude, ChatGPT, paste/link) | Advisory — the model follows it | `pnpm generate` |
 | **Figma Make kit** `kit/` | Figma Make specifically | Strongest, but Make-only | `pnpm generate` + publish in Figma (`kit/README.md`) |
 
@@ -30,6 +30,11 @@ pnpm build:pkg   # @inspera/components → dist (ESM + .d.ts)
 
 ## Honest limits
 
-- **npm package** works only where dependencies can be installed; the consumer wires fonts.
+- **npm package** is **not published**. It builds from this repo, but the
+  `@inspera` scope is unclaimed, so `npm i @inspera/components` returns a 404.
+  Status lives in `src/data/distribution.ts` — flipping `published` there
+  updates the site and every generated spec. Note that even once published on a
+  private registry, most AI builders (v0, Lovable, Bolt, Figma Make) cannot
+  authenticate, so the portable spec stays their only route.
 - **Portable spec** is advisory — nothing enforces it; it's the universal fallback.
 - **Make kit** truly enforces, but only inside Figma Make, and publishing is a manual Figma action.

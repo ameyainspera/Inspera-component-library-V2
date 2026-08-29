@@ -1,5 +1,6 @@
 import { type ReactNode, useState } from 'react'
 import { componentList } from '../data/components'
+import { componentsPackage } from '../data/distribution'
 import { Panel, SectionTitle, CodeBlock, CopyButton, SegmentedControl } from './primitives'
 
 // ---------------------------------------------------------------------------
@@ -178,6 +179,40 @@ function ArtifactLink({ file, note }: { file: string; note: string }) {
 // A rules file beats a pasted primer: it is loaded on every request in that
 // repo, so nobody has to remember to prime the session.
 // ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+// The package is real and builds from this repo, but it has never been
+// published. Saying so plainly beats letting someone run the install and get a
+// 404 with no explanation.
+// ---------------------------------------------------------------------------
+function NotPublishedNotice() {
+  return (
+    <div
+      role="note"
+      style={{
+        display: 'flex', gap: 12, alignItems: 'flex-start',
+        padding: '12px 14px', borderRadius: 'var(--radius-md)',
+        background: 'var(--warning-surface)',
+        border: '1px solid var(--warning)',
+      }}
+    >
+      <span className="material-symbols-outlined" style={{ fontSize: 20, color: 'var(--warning)', flexShrink: 0 }} aria-hidden>
+        info
+      </span>
+      <div style={{ minWidth: 0 }}>
+        <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--gray-900)', marginBottom: 4 }}>
+          Not published yet
+        </div>
+        <p style={{ margin: '0 0 6px', fontSize: 13, color: 'var(--gray-700)', lineHeight: 1.5 }}>
+          {componentsPackage.status}
+        </p>
+        <p style={{ margin: 0, fontSize: 13, color: 'var(--gray-700)', lineHeight: 1.5 }}>
+          {componentsPackage.insteadUse}
+        </p>
+      </div>
+    </div>
+  )
+}
+
 function ToolSetupCard() {
   const [toolId, setToolId] = useState(TOOL_SETUPS[0].id)
   const tool = TOOL_SETUPS.find((t) => t.id === toolId) ?? TOOL_SETUPS[0]
@@ -267,7 +302,7 @@ export default function IntegratePage() {
         </SectionTitle>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 14 }}>
           {[
-            { icon: 'inventory_2', title: 'npm package', mono: '@inspera/components', note: 'Real React components + tokens.css for code projects.' },
+            { icon: 'inventory_2', title: 'npm package', mono: '@inspera/components', note: 'Real React components + tokens.css. Builds from this repo; not published to a registry yet.' },
             { icon: 'description', title: 'Portable spec', mono: 'llms.txt', note: 'A small index any AI builder can read, linking a spec per component.' },
             { icon: 'widgets', title: 'Figma Make Kit', mono: 'kit/', note: 'Constrains the Make agent to Inspera components & tokens.' },
           ].map((f) => (
@@ -315,12 +350,21 @@ export default function IntegratePage() {
       <ContextCard
         icon="code"
         eyebrow="React codebase"
-        title="Code projects"
-        blurb="Install the real components and import the token stylesheet. This is the strictest path — the components enforce the spec at runtime, so consistency is guaranteed."
-        best="Production apps and anywhere the AI can install dependencies."
+        title={`Code projects — ${componentsPackage.name}`}
+        blurb="The real components as an importable package. Once published this is the strictest path, because the components enforce the spec at runtime rather than an AI interpreting it."
+        best="Production apps, once the package is available on a registry."
       >
-        <Step n={1} title="Install the package">
-          <CodeBlock code={`npm i @inspera/components`} language="bash" copyLabel="Copy" />
+        {!componentsPackage.published && <NotPublishedNotice />}
+        <Step n={1} title={componentsPackage.published ? 'Install the package' : 'Install — once published'}>
+          <CodeBlock
+            code={
+              componentsPackage.published
+                ? `npm i ${componentsPackage.name}`
+                : `# Not available yet — this returns 404 today.\n# npm i ${componentsPackage.name}`
+            }
+            language="bash"
+            copyLabel="Copy"
+          />
         </Step>
         <Step n={2} title="Import tokens once, then use components">
           <CodeBlock
@@ -345,7 +389,9 @@ export function SettingsScreen() {
         </Step>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: 'var(--gray-700)' }}>
           <span className="material-symbols-outlined" style={{ fontSize: 16, color: 'var(--primary)' }} aria-hidden>lightbulb</span>
-          Point your AI assistant (Cursor, Copilot, Claude Code) at this package and it will scaffold with the real components.
+          {componentsPackage.published
+            ? 'Point your AI assistant (Cursor, Copilot, Claude Code) at this package and it will scaffold with the real components.'
+            : 'Until it ships, point your AI assistant at the rules file above instead — it links the per-component specs, which is the working equivalent today.'}
         </div>
       </ContextCard>
 

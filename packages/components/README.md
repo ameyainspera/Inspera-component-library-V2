@@ -2,7 +2,17 @@
 
 Canonical [Inspera Design System](../../README.md) components and tokens for React — the real, importable source of truth. Use this in any code-based AI builder (Cursor, v0, Lovable, Bolt) or hand-written React app so generated UI is on-brand and consistent.
 
-## Install
+## Status
+
+> **Not published.** This package builds from the repo, but it has never been
+> pushed to a registry — the `@inspera` scope is unclaimed, so
+> `npm i @inspera/components` returns a 404. Publishing is one edit in
+> `src/data/distribution.ts` plus a `publishConfig` here.
+>
+> Until then, use the portable spec in `public/` — `llms.txt` and the
+> per-component files under `public/c/`.
+
+## Install (once published)
 
 ```bash
 npm i @inspera/components

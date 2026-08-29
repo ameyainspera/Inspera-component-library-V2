@@ -1,4 +1,4 @@
-<!-- Inspera Design System v1.0.0 — generated 2026-08-28. Do not edit. -->
+<!-- Inspera Design System v1.0.0 — generated 2026-08-29. Do not edit. -->
 
 # Inspera — Checkbox
 

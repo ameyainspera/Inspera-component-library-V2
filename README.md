@@ -42,7 +42,7 @@ src/index.css             Token custom properties + font wiring.
 
 scripts/build-portable.ts The single generator. One source in, every artifact out.
 public/                   Generated AI-facing artifacts (spec, tokens, registry).
-packages/components/      @inspera/components — the npm package (private registry).
+packages/components/      @inspera/components — the npm package. Builds, but not yet published.
 kit/                      The Figma Make kit.
 docs/history/             Superseded documents, kept for provenance.
 ```

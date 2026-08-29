@@ -25,6 +25,7 @@ import { fileURLToPath } from 'node:url'
 
 import { componentList } from '../src/data/components'
 import { registry } from '../src/docs/registry'
+import { componentsPackage } from '../src/data/distribution'
 import {
   contract, precedence, whenUnsure, patterns,
   formRules, tableRules, feedbackHierarchy, checklist,
@@ -280,18 +281,7 @@ function buildLlmsTxt(): string {
 > This is the full text. For a smaller starting point that links a spec per
 > component, use llms.txt.
 
-If the project can install packages, prefer the real components — they enforce
-this spec at runtime:
-
-\`\`\`bash
-npm i @inspera/components   # private registry
-\`\`\`
-\`\`\`tsx
-import '@inspera/components/tokens.css'
-import { Button, TextInput } from '@inspera/components'
-\`\`\`
-
-Otherwise follow the definitions below verbatim.
+${packageBlock()}
 
 ## Rules
 
@@ -648,6 +638,38 @@ Focus is never removed, only replaced by something at least as visible:
 `
 }
 
+/**
+ * The install block, told straight. The package builds from this repo but is
+ * unpublished, so printing `npm i @inspera/components` as an instruction sends
+ * every reader to a 404. Flip `published` in src/data/distribution.ts and this
+ * becomes the real instruction everywhere.
+ */
+function packageBlock(): string {
+  if (componentsPackage.published) {
+    return `If the project can install packages, prefer the real components — they enforce
+this spec at runtime:
+
+\`\`\`bash
+npm i ${componentsPackage.name}
+\`\`\`
+\`\`\`tsx
+import '${componentsPackage.name}/tokens.css'
+import { Button, TextInput } from '${componentsPackage.name}'
+\`\`\`
+
+Otherwise follow the definitions below verbatim.`
+  }
+  return `> **\`${componentsPackage.name}\` is NOT published.** ${componentsPackage.status}
+> Do not tell anyone to install it, and do not assume it resolves.
+>
+> ${componentsPackage.insteadUse}
+
+Follow the definitions in this document verbatim. Import paths shown per
+component (\`import { Button } from '${componentsPackage.name}'\`) are the
+canonical names for when the package ships — today, implement the component
+from its spec instead.`
+}
+
 /** The small index — this is what a person pastes into a chat. */
 function buildLlmsIndex(): string {
   const byCategory: Record<string, ComponentSpec[]> = {}
@@ -665,18 +687,7 @@ function buildLlmsIndex(): string {
 > This index is deliberately small. Fetch the linked file for each component
 > you actually use, rather than loading the whole system.
 
-If the project can install packages, prefer the real components — they enforce
-this spec at runtime:
-
-\`\`\`bash
-npm i @inspera/components   # private registry
-\`\`\`
-\`\`\`tsx
-import '@inspera/components/tokens.css'
-import { Button, TextInput } from '@inspera/components'
-\`\`\`
-
-Otherwise follow the definitions in the linked files verbatim.
+${packageBlock()}
 
 ## Rules
 
