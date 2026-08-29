@@ -57,12 +57,12 @@ import { FileUpload } from '@inspera/components'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | `'Upload files'` |  |
+| `label` | `string` | `'Upload files'` | Field label describing what to upload. |
 | `accept` | `string` | — | Accepted MIME types / extensions. |
-| `multiple` | `boolean` | `false` | Allow multiple files. Values: true \| false. |
+| `multiple` | `boolean` | `false` | Allow multiple files. |
 | `state` | `'Default' \| 'Dragging' \| 'Disabled' \| 'Error'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
 | `helpText` | `string` | `'PNG, JPG or PDF up to 10MB'` | Constraint hint text. |
-| `onFiles` | `(files: File[]) => void` | — |  |
+| `onFiles` | `(files: File[]) => void` | — | Fired with the selected files, from both drop and browse. |
 
 **Accessibility** — role `button`, keyboard operable. Dropzone uses role="button" and is keyboard focusable; Enter / Space open the file browser; Provide an accessible label describing the action.
 

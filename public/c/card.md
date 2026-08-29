@@ -57,13 +57,13 @@ import { Card } from '@inspera/components'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `title` | `string` | `'Card title'` |  |
-| `body` | `string` | `'Group related content in a contained surface using consistent padding and elevation.'` |  |
-| `elevation` | `'Flat' \| 'Raised' \| 'Outlined'` | `'Raised'` | Surface treatment. Values: Flat \| Raised \| Outlined. |
-| `padding` | `'Compact' \| 'Default' \| 'Spacious'` | `'Default'` | Internal padding (12 / 16 / 24). Values: Compact \| Default \| Spacious. |
-| `interactive` | `boolean` | `false` | Renders as a focusable button with hover elevation. Values: true \| false. |
-| `children` | `ReactNode` | — |  |
-| `onClick` | `() => void` | — |  |
+| `title` | `string` | `'Card title'` | Optional heading for the card. |
+| `body` | `string` | `'Group related content in a contained surface using consistent padding and elevation.'` | Short body copy. For anything richer, pass children instead. |
+| `elevation` | `'Flat' \| 'Raised' \| 'Outlined'` | `'Raised'` | Surface treatment. |
+| `padding` | `'Compact' \| 'Default' \| 'Spacious'` | `'Default'` | Internal padding (12 / 16 / 24). |
+| `interactive` | `boolean` | `false` | Renders as a focusable button with hover elevation. |
+| `children` | `ReactNode` | — | Card contents. Takes precedence over title and body. |
+| `onClick` | `() => void` | — | Fired when an interactive card is activated. Set interactive as well, or there is no affordance. |
 
 **Accessibility** — role `article`, keyboard operable. Interactive cards should use role="button" or be wrapped in an anchor; Non-interactive cards use role="article" or a semantic section.
 

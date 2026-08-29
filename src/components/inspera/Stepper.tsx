@@ -13,9 +13,9 @@ export interface StepperProps {
   steps?: Step[]
   /** Zero-based index of the current step. */
   activeStep?: number
-  /** Layout direction. Values: Horizontal | Vertical. */
+  /** Layout direction. */
   orientation?: StepperOrientation
-  /** Indicator size. Values: Small | Medium. */
+  /** Indicator size. */
   size?: StepperSize
 }
 

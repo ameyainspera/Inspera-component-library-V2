@@ -3,15 +3,19 @@ import { type CSSProperties } from 'react'
 export type SnackbarIntent = 'Neutral' | 'Info' | 'Success' | 'Warning' | 'Error'
 
 export interface SnackbarProps {
+  /** What happened. One short sentence. */
   message?: string
-  /** Accent icon color. Values: Neutral | Info | Success | Warning | Error. */
+  /** Accent icon color. */
   intent?: SnackbarIntent
-  /** Show an inline action (e.g. Undo). Values: true | false. */
+  /** Show an inline action (e.g. Undo). */
   hasAction?: boolean
-  /** Show the dismiss button. Values: true | false. */
+  /** Show the dismiss button. */
   hasClose?: boolean
+  /** Label for the inline action, typically "Undo". */
   actionLabel?: string
+  /** Fired when the inline action is activated. */
   onAction?: () => void
+  /** Fired when dismissed. */
   onClose?: () => void
 }
 

@@ -9,14 +9,17 @@ export interface TabItem {
 }
 
 export interface TabsProps {
+  /** The tabs, in order. */
   items?: TabItem[]
-  /** Visual treatment. Values: Underline | Contained. */
+  /** Visual treatment. */
   style?: TabsStyle
-  /** Tab height 40 / 48. Values: Small | Medium. */
+  /** Tab height 40 / 48. */
   size?: TabsSize
-  /** Stretch tabs to fill the row. Values: true | false. */
+  /** Stretch tabs to fill the row. */
   fullWidth?: boolean
+  /** Index of the active tab. Controlled — pair with onChange. */
   value?: number
+  /** Fired with the index of the newly selected tab. */
   onChange?: (index: number) => void
 }
 

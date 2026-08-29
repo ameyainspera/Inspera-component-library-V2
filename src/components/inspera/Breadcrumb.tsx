@@ -4,11 +4,13 @@ export type BreadcrumbSeparator = 'Slash' | 'Chevron'
 export type BreadcrumbSize = 'Small' | 'Medium'
 
 export interface BreadcrumbProps {
+  /** Trail from root to current page. The last entry is the current page and is not a link. */
   items?: string[]
-  /** Divider glyph between items. Values: Slash | Chevron. */
+  /** Divider glyph between items. */
   separator?: BreadcrumbSeparator
-  /** Text size 14 / 16. Values: Small | Medium. */
+  /** Text size 14 / 16. */
   size?: BreadcrumbSize
+  /** Fired with the index of the crumb that was clicked. */
   onNavigate?: (index: number) => void
 }
 

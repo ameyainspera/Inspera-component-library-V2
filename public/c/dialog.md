@@ -60,17 +60,17 @@ import { Dialog } from '@inspera/components'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `title` | `string` | `'Dialog title'` |  |
-| `body` | `ReactNode` | `'This is the dialog body. Provide context or a clear description of the action the user is about to take.'` |  |
-| `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Panel width 400 / 480 / 560. Values: Small \| Medium \| Large. |
-| `hasCloseButton` | `boolean` | `true` | Show the header close affordance. Values: true \| false. |
-| `hasActions` | `boolean` | `true` | Show the footer action buttons. Values: true \| false. |
-| `confirmLabel` | `string` | `'Continue'` |  |
-| `cancelLabel` | `string` | `'Cancel'` |  |
-| `open` | `boolean` | `true` |  |
+| `title` | `string` | `'Dialog title'` | Dialog heading. Also the accessible name. |
+| `body` | `ReactNode` | `'This is the dialog body. Provide context or a clear description of the action the user is about to take.'` | Dialog content. |
+| `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Panel width 400 / 480 / 560. |
+| `hasCloseButton` | `boolean` | `true` | Show the header close affordance. |
+| `hasActions` | `boolean` | `true` | Show the footer action buttons. |
+| `confirmLabel` | `string` | `'Continue'` | Label for the confirming action. Name the action — "Delete", not "OK". |
+| `cancelLabel` | `string` | `'Cancel'` | Label for the dismissing action. |
+| `open` | `boolean` | `true` | Whether the dialog is shown. Controlled — pair with onClose. |
 | `embedded` | `boolean` | `false` | Render just the panel (no overlay) — used for documentation previews. |
-| `onClose` | `() => void` | — |  |
-| `onConfirm` | `() => void` | — |  |
+| `onClose` | `() => void` | — | Fired on the close button, the overlay, and Escape. |
+| `onConfirm` | `() => void` | — | Fired when the confirming action is activated. |
 
 **Accessibility** — role `dialog`, keyboard operable. Use role="dialog" with aria-modal="true"; Set aria-labelledby to the dialog title; Trap focus inside the dialog when open; Return focus to trigger element on close; Escape key closes the dialog.
 

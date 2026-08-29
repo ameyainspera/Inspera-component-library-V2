@@ -10,15 +10,17 @@ export interface CheckboxOption {
 }
 
 export interface CheckboxGroupProps {
+  /** Group label, announced as the fieldset legend. */
   label?: string
   /** Checkbox options. */
   options?: CheckboxOption[]
   /** Selected option values. */
   value?: string[]
-  /** Layout direction. Values: Vertical | Horizontal. */
+  /** Layout direction. */
   orientation?: CheckboxGroupOrientation
   /** Forces a visual state for documentation. Omit for real interactivity. */
   state?: CheckboxGroupState
+  /** Fired with the full array of selected values. */
   onChange?: (value: string[]) => void
 }
 

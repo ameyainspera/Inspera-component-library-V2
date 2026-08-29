@@ -60,11 +60,11 @@ import { Popover } from '@inspera/components'
 | `trigger` | `ReactNode` | — | Element that toggles the popover. |
 | `title` | `string` | `'Popover title'` | Optional panel heading. |
 | `content` | `ReactNode` | `'Popover content with interactive elements.'` | Popover body content. |
-| `placement` | `'Top' \| 'Bottom' \| 'Left' \| 'Right'` | `'Bottom'` | Position relative to the trigger. Values: Top \| Bottom \| Left \| Right. |
-| `open` | `boolean` | — |  |
-| `defaultOpen` | `boolean` | `false` | Open on mount. Values: true \| false. |
+| `placement` | `'Top' \| 'Bottom' \| 'Left' \| 'Right'` | `'Bottom'` | Position relative to the trigger. |
+| `open` | `boolean` | — | Controlled open state. Leave unset to let the popover manage itself. |
+| `defaultOpen` | `boolean` | `false` | Open on mount. |
 | `forceVisible` | `boolean` | `false` | Keep the panel visible regardless of state — used for documentation. |
-| `onOpenChange` | `(open: boolean) => void` | — |  |
+| `onOpenChange` | `(open: boolean) => void` | — | Fired when the popover opens or closes. |
 
 **Accessibility** — role `dialog`, keyboard operable. Trigger uses aria-haspopup and aria-expanded; Panel uses role="dialog"; Escape and outside-click close the popover; May contain interactive content (unlike Tooltip).
 

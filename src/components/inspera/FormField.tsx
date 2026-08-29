@@ -5,12 +5,13 @@ export interface FormFieldProps {
   label?: string
   /** id of the wrapped control for label association. */
   htmlFor?: string
-  /** Show a required asterisk. Values: true | false. */
+  /** Show a required asterisk. */
   required?: boolean
   /** Helper text shown below the control. */
   helpText?: string
   /** Error message; replaces help text when present. */
   errorText?: string
+  /** The control this field wraps. Exactly one. */
   children: ReactNode
 }
 

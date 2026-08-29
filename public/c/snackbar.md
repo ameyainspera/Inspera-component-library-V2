@@ -57,13 +57,13 @@ import { Snackbar } from '@inspera/components'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `message` | `string` | `'Assessment saved successfully.'` |  |
-| `intent` | `'Neutral' \| 'Info' \| 'Success' \| 'Warning' \| 'Error'` | `'Neutral'` | Accent icon color. Values: Neutral \| Info \| Success \| Warning \| Error. |
-| `hasAction` | `boolean` | `false` | Show an inline action (e.g. Undo). Values: true \| false. |
-| `hasClose` | `boolean` | `true` | Show the dismiss button. Values: true \| false. |
-| `actionLabel` | `string` | `'Undo'` |  |
-| `onAction` | `() => void` | — |  |
-| `onClose` | `() => void` | — |  |
+| `message` | `string` | `'Assessment saved successfully.'` | What happened. One short sentence. |
+| `intent` | `'Neutral' \| 'Info' \| 'Success' \| 'Warning' \| 'Error'` | `'Neutral'` | Accent icon color. |
+| `hasAction` | `boolean` | `false` | Show an inline action (e.g. Undo). |
+| `hasClose` | `boolean` | `true` | Show the dismiss button. |
+| `actionLabel` | `string` | `'Undo'` | Label for the inline action, typically "Undo". |
+| `onAction` | `() => void` | — | Fired when the inline action is activated. |
+| `onClose` | `() => void` | — | Fired when dismissed. |
 
 **Accessibility** — role `status`, keyboard operable. Use role="status" with aria-live="polite"; Action button must be focusable; Auto-dismiss timing must be generous (5s minimum).
 

@@ -3,6 +3,7 @@ import { type CSSProperties, useEffect, useId, useRef, useState } from 'react'
 export type DatePickerState = 'Default' | 'Focused' | 'Disabled' | 'Error'
 
 export interface DatePickerProps {
+  /** Field label. */
   label?: string
   /** Selected date (YYYY-MM-DD). */
   value?: string
@@ -10,10 +11,11 @@ export interface DatePickerProps {
   placeholder?: string
   /** Forces a visual state for documentation. Omit for real interactivity. */
   state?: DatePickerState
-  /** Show the field label. Values: true | false. */
+  /** Show the field label. */
   showLabel?: boolean
-  /** Open the calendar initially. Values: true | false. */
+  /** Open the calendar initially. */
   defaultOpen?: boolean
+  /** Fired with the selected date as an ISO string (YYYY-MM-DD). */
   onChange?: (iso: string) => void
 }
 

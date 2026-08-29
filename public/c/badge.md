@@ -57,11 +57,11 @@ import { Badge } from '@inspera/components'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | `'Badge'` |  |
-| `intent` | `'Neutral' \| 'Info' \| 'Success' \| 'Warning' \| 'Error'` | `'Neutral'` | Semantic color. Values: Neutral \| Info \| Success \| Warning \| Error. |
-| `size` | `'Small' \| 'Medium'` | `'Medium'` | Height 20 / 24. Values: Small \| Medium. |
-| `withIcon` | `boolean` | `false` | Show a leading status icon. Values: true \| false. |
-| `icon` | `string` | — |  |
+| `label` | `string` | `'Badge'` | The badge text. One or two words. |
+| `intent` | `'Neutral' \| 'Info' \| 'Success' \| 'Warning' \| 'Error'` | `'Neutral'` | Semantic color. |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Height 20 / 24. |
+| `withIcon` | `boolean` | `false` | Show a leading status icon. |
+| `icon` | `string` | — | Material Symbols name shown before the label when withIcon is set. |
 
 **Accessibility** — role `status`. Use aria-label for icon-only badges; Use role="status" for dynamic count badges.
 

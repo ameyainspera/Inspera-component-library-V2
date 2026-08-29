@@ -3,20 +3,23 @@ import { type CSSProperties, useId, useState } from 'react'
 export type SliderState = 'Default' | 'Focused' | 'Disabled'
 
 export interface SliderProps {
+  /** Field label describing what is being adjusted. */
   label?: string
   /** Minimum value. */
   min?: number
   /** Maximum value. */
   max?: number
+  /** Current value. Controlled — pair with onChange. */
   value?: number
   /** Increment granularity. */
   step?: number
   /** Forces a visual state for documentation. Omit for real interactivity. */
   state?: SliderState
-  /** Show the current value. Values: true | false. */
+  /** Show the current value. */
   showValue?: boolean
-  /** Show the field label. Values: true | false. */
+  /** Show the field label. */
   showLabel?: boolean
+  /** Fired as the value changes, by drag or arrow key. */
   onChange?: (value: number) => void
 }
 

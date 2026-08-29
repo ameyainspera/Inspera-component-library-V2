@@ -10,6 +10,7 @@ export interface RadioOption {
 }
 
 export interface RadioGroupProps {
+  /** Group label, announced as the radiogroup name. */
   label?: string
   /** Shared input name for the group. */
   name?: string
@@ -17,10 +18,11 @@ export interface RadioGroupProps {
   options?: RadioOption[]
   /** Selected option value. */
   value?: string
-  /** Layout direction. Values: Vertical | Horizontal. */
+  /** Layout direction. */
   orientation?: RadioGroupOrientation
   /** Forces a visual state for documentation. Omit for real interactivity. */
   state?: RadioGroupState
+  /** Fired with the newly selected value. */
   onChange?: (value: string) => void
 }
 

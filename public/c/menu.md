@@ -59,11 +59,11 @@ import { Menu } from '@inspera/components'
 | --- | --- | --- | --- |
 | `label` | `string` | `'Actions'` | Trigger label. |
 | `items` | `MenuItem[]` | `sampleItems` | Menu items. |
-| `placement` | `'Bottom Start' \| 'Bottom End'` | `'Bottom Start'` | Alignment to trigger. Values: Bottom Start \| Bottom End. |
-| `open` | `boolean` | — |  |
-| `defaultOpen` | `boolean` | `false` | Open on mount. Values: true \| false. |
+| `placement` | `'Bottom Start' \| 'Bottom End'` | `'Bottom Start'` | Alignment to trigger. |
+| `open` | `boolean` | — | Controlled open state. Leave unset to let the menu manage itself. |
+| `defaultOpen` | `boolean` | `false` | Open on mount. |
 | `forceVisible` | `boolean` | `false` | Always render the open menu, for documentation. |
-| `onSelect` | `(label: string) => void` | — |  |
+| `onSelect` | `(label: string) => void` | — | Fired with the label of the chosen item. |
 
 ```ts
 export interface MenuItem {

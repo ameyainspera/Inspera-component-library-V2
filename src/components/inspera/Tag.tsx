@@ -6,15 +6,17 @@ export type TagSize = 'Small' | 'Medium'
 export interface TagProps {
   /** Tag text. */
   label: string
-  /** Semantic color. Values: Neutral | Info | Success | Warning | Error. */
+  /** Semantic color. */
   intent?: TagIntent
-  /** Tag height. Values: Small | Medium. */
+  /** Tag height. */
   size?: TagSize
-  /** Show a remove affordance. Values: true | false. */
+  /** Show a remove affordance. */
   removable?: boolean
   /** Optional leading icon. */
   leadingIcon?: string
+  /** Fired when the remove control is activated. Set removable as well. */
   onRemove?: () => void
+  /** Fired when the tag itself is activated. */
   onClick?: () => void
 }
 

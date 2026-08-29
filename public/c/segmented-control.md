@@ -59,9 +59,9 @@ import { SegmentedControl } from '@inspera/components'
 | --- | --- | --- | --- |
 | `items` | `string[]` | `['Day', 'Week', 'Month']` | Segment labels. |
 | `value` | `number` | — | Active segment index. |
-| `size` | `'Small' \| 'Medium'` | `'Medium'` | Segment height. Values: Small \| Medium. |
-| `fullWidth` | `boolean` | `false` | Stretch to fill the row. Values: true \| false. |
-| `onChange` | `(index: number) => void` | — |  |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Segment height. |
+| `fullWidth` | `boolean` | `false` | Stretch to fill the row. |
+| `onChange` | `(index: number) => void` | — | Fired with the index of the chosen segment. |
 
 **Accessibility** — role `radiogroup`, keyboard operable. Container uses role="radiogroup"; Each segment uses role="radio" with aria-checked; Arrow keys move between segments.
 

@@ -58,13 +58,13 @@ import { RadioGroup } from '@inspera/components'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | — |  |
+| `label` | `string` | — | Group label, announced as the radiogroup name. |
 | `name` | `string` | — | Shared input name for the group. |
 | `options` | `RadioOption[]` | `DEFAULT_OPTIONS` | Radio options. |
 | `value` | `string` | — | Selected option value. |
-| `orientation` | `'Vertical' \| 'Horizontal'` | `'Vertical'` | Layout direction. Values: Vertical \| Horizontal. |
+| `orientation` | `'Vertical' \| 'Horizontal'` | `'Vertical'` | Layout direction. |
 | `state` | `'Default' \| 'Disabled' \| 'Error'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
-| `onChange` | `(value: string) => void` | — |  |
+| `onChange` | `(value: string) => void` | — | Fired with the newly selected value. |
 
 ```ts
 export interface RadioOption {

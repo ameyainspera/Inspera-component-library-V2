@@ -4,16 +4,21 @@ export type AlertIntent = 'Info' | 'Success' | 'Warning' | 'Error'
 export type AlertLayout = 'Simple' | 'With CTA' | 'With Close' | 'With CTA + Close'
 
 export interface AlertProps {
+  /** Short headline stating what happened. */
   title?: string
+  /** Supporting detail. Keep it to one or two sentences. */
   message?: string
-  /** Severity / color. Values: Info | Success | Warning | Error. */
+  /** Severity / color. */
   intent?: AlertIntent
-  /** Action affordances. Values: Simple | With CTA | With Close | With CTA + Close. */
+  /** Action affordances. */
   layout?: AlertLayout
-  /** Tinted fill vs. left-accent only. Values: true | false. */
+  /** Tinted fill vs. left-accent only. */
   background?: boolean
+  /** Label for the inline action. Only rendered by the "With CTA" layouts. */
   ctaLabel?: string
+  /** Fired when the inline action is activated. */
   onCta?: () => void
+  /** Fired when the alert is dismissed. Only rendered by the "With Close" layouts. */
   onClose?: () => void
 }
 

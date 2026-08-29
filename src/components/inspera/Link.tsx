@@ -5,21 +5,27 @@ export type LinkSize = 'Small' | 'Medium'
 export type LinkUnderline = 'Always' | 'Hover' | 'None'
 
 export interface LinkProps {
+  /** Link text. Takes precedence over label. */
   children?: ReactNode
+  /** Link text, when not passing children. */
   label?: string
+  /** Destination URL. Always provide a real one. */
   href?: string
-  /** Color emphasis. Values: Default | Muted. */
+  /** Color emphasis. */
   intent?: LinkIntent
-  /** Text size. Values: Small | Medium. */
+  /** Text size. */
   size?: LinkSize
-  /** Underline behavior. Values: Always | Hover | None. */
+  /** Underline behavior. */
   underline?: LinkUnderline
-  /** Open in a new tab with an icon. Values: true | false. */
+  /** Open in a new tab with an icon. */
   external?: boolean
-  /** Non-interactive state. Values: true | false. */
+  /** Non-interactive state. */
   disabled?: boolean
+  /** Material Symbols name shown before the text. */
   leadingIcon?: string
+  /** Material Symbols name shown after the text. */
   trailingIcon?: string
+  /** Fired on activation. Use for routing, not to replace href. */
   onClick?: (e: React.MouseEvent) => void
 }
 

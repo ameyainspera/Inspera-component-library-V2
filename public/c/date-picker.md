@@ -56,13 +56,13 @@ import { DatePicker } from '@inspera/components'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | `'Date'` |  |
+| `label` | `string` | `'Date'` | Field label. |
 | `value` | `string` | — | Selected date (YYYY-MM-DD). |
 | `placeholder` | `string` | `'Select date'` | Trigger placeholder. |
 | `state` | `'Default' \| 'Focused' \| 'Disabled' \| 'Error'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
-| `showLabel` | `boolean` | `true` | Show the field label. Values: true \| false. |
-| `defaultOpen` | `boolean` | `false` | Open the calendar initially. Values: true \| false. |
-| `onChange` | `(iso: string) => void` | — |  |
+| `showLabel` | `boolean` | `true` | Show the field label. |
+| `defaultOpen` | `boolean` | `false` | Open the calendar initially. |
+| `onChange` | `(iso: string) => void` | — | Fired with the selected date as an ISO string (YYYY-MM-DD). |
 
 **Accessibility** — role `dialog`, keyboard operable. Trigger uses aria-haspopup="dialog" and aria-expanded; Popover uses role="dialog" with a label; Day cells are buttons with descriptive aria-labels; Escape closes the popover.
 

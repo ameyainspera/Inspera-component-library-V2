@@ -20,7 +20,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "'Single' | 'Multiple'",
         "required": false,
         "default": "'Single'",
-        "description": "Allow one or many open at once. Values: Single | Multiple."
+        "description": "Allow one or many open at once."
       },
       {
         "name": "defaultOpenIndex",
@@ -34,7 +34,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "'Left' | 'Right'",
         "required": false,
         "default": "'Right'",
-        "description": "Chevron placement. Values: Left | Right."
+        "description": "Chevron placement."
       }
     ],
     "relatedTypes": {
@@ -47,50 +47,55 @@ export const componentApi: Record<string, ComponentApi> = {
         "name": "title",
         "type": "string",
         "required": false,
-        "default": "'Heads up'"
+        "default": "'Heads up'",
+        "description": "Short headline stating what happened."
       },
       {
         "name": "message",
         "type": "string",
         "required": false,
-        "default": "'This is a contextual inline message that matches the intent severity.'"
+        "default": "'This is a contextual inline message that matches the intent severity.'",
+        "description": "Supporting detail. Keep it to one or two sentences."
       },
       {
         "name": "intent",
         "type": "'Info' | 'Success' | 'Warning' | 'Error'",
         "required": false,
         "default": "'Info'",
-        "description": "Severity / color. Values: Info | Success | Warning | Error."
+        "description": "Severity / color."
       },
       {
         "name": "layout",
         "type": "'Simple' | 'With CTA' | 'With Close' | 'With CTA + Close'",
         "required": false,
         "default": "'Simple'",
-        "description": "Action affordances. Values: Simple | With CTA | With Close | With CTA + Close."
+        "description": "Action affordances."
       },
       {
         "name": "background",
         "type": "boolean",
         "required": false,
         "default": "true",
-        "description": "Tinted fill vs. left-accent only. Values: true | false."
+        "description": "Tinted fill vs. left-accent only."
       },
       {
         "name": "ctaLabel",
         "type": "string",
         "required": false,
-        "default": "'View details'"
+        "default": "'View details'",
+        "description": "Label for the inline action. Only rendered by the \"With CTA\" layouts."
       },
       {
         "name": "onCta",
         "type": "() => void",
-        "required": false
+        "required": false,
+        "description": "Fired when the inline action is activated."
       },
       {
         "name": "onClose",
         "type": "() => void",
-        "required": false
+        "required": false,
+        "description": "Fired when the alert is dismissed. Only rendered by the \"With Close\" layouts."
       }
     ],
     "relatedTypes": {}
@@ -102,45 +107,49 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "'Small' | 'Medium' | 'Large'",
         "required": false,
         "default": "'Medium'",
-        "description": "Diameter 32 / 40 / 56. Values: Small | Medium | Large."
+        "description": "Diameter 32 / 40 / 56."
       },
       {
         "name": "content",
         "type": "'Image' | 'Initials' | 'Icon'",
         "required": false,
         "default": "'Initials'",
-        "description": "What fills the avatar. Values: Image | Initials | Icon."
+        "description": "What fills the avatar."
       },
       {
         "name": "status",
         "type": "'None' | 'Online' | 'Offline' | 'Busy'",
         "required": false,
         "default": "'None'",
-        "description": "Presence indicator dot. Values: None | Online | Offline | Busy."
+        "description": "Presence indicator dot."
       },
       {
         "name": "initials",
         "type": "string",
         "required": false,
-        "default": "'JC'"
+        "default": "'JC'",
+        "description": "One or two letters, used when content is Initials. Derive from the name rather than asking for them."
       },
       {
         "name": "imageSrc",
         "type": "string",
         "required": false,
-        "default": "'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=112&h=112&fit=crop&auto=format'"
+        "default": "'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=112&h=112&fit=crop&auto=format'",
+        "description": "Image URL, used when content is Image. Falls back to initials if it fails to load."
       },
       {
         "name": "alt",
         "type": "string",
         "required": false,
-        "default": "'User avatar'"
+        "default": "'User avatar'",
+        "description": "Alternative text for the image. Required whenever an image is shown."
       },
       {
         "name": "icon",
         "type": "string",
         "required": false,
-        "default": "'person'"
+        "default": "'person'",
+        "description": "Material Symbols name, used when content is Icon."
       }
     ],
     "relatedTypes": {}
@@ -166,7 +175,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "AvatarSize",
         "required": false,
         "default": "'Medium'",
-        "description": "Avatar diameter. Values: Small | Medium | Large."
+        "description": "Avatar diameter."
       }
     ],
     "relatedTypes": {
@@ -179,33 +188,35 @@ export const componentApi: Record<string, ComponentApi> = {
         "name": "label",
         "type": "string",
         "required": false,
-        "default": "'Badge'"
+        "default": "'Badge'",
+        "description": "The badge text. One or two words."
       },
       {
         "name": "intent",
         "type": "'Neutral' | 'Info' | 'Success' | 'Warning' | 'Error'",
         "required": false,
         "default": "'Neutral'",
-        "description": "Semantic color. Values: Neutral | Info | Success | Warning | Error."
+        "description": "Semantic color."
       },
       {
         "name": "size",
         "type": "'Small' | 'Medium'",
         "required": false,
         "default": "'Medium'",
-        "description": "Height 20 / 24. Values: Small | Medium."
+        "description": "Height 20 / 24."
       },
       {
         "name": "withIcon",
         "type": "boolean",
         "required": false,
         "default": "false",
-        "description": "Show a leading status icon. Values: true | false."
+        "description": "Show a leading status icon."
       },
       {
         "name": "icon",
         "type": "string",
-        "required": false
+        "required": false,
+        "description": "Material Symbols name shown before the label when withIcon is set."
       }
     ],
     "relatedTypes": {}
@@ -216,26 +227,28 @@ export const componentApi: Record<string, ComponentApi> = {
         "name": "items",
         "type": "string[]",
         "required": false,
-        "default": "defaultItems"
+        "default": "defaultItems",
+        "description": "Trail from root to current page. The last entry is the current page and is not a link."
       },
       {
         "name": "separator",
         "type": "'Slash' | 'Chevron'",
         "required": false,
         "default": "'Chevron'",
-        "description": "Divider glyph between items. Values: Slash | Chevron."
+        "description": "Divider glyph between items."
       },
       {
         "name": "size",
         "type": "'Small' | 'Medium'",
         "required": false,
         "default": "'Medium'",
-        "description": "Text size 14 / 16. Values: Small | Medium."
+        "description": "Text size 14 / 16."
       },
       {
         "name": "onNavigate",
         "type": "(index: number) => void",
-        "required": false
+        "required": false,
+        "description": "Fired with the index of the crumb that was clicked."
       }
     ],
     "relatedTypes": {}
@@ -246,21 +259,22 @@ export const componentApi: Record<string, ComponentApi> = {
         "name": "label",
         "type": "string",
         "required": false,
-        "default": "'Button'"
+        "default": "'Button'",
+        "description": "The button text. Start with a verb — \"Save\", not \"OK\"."
       },
       {
         "name": "intent",
         "type": "'Primary' | 'Secondary' | 'Outline' | 'Text' | 'Success' | 'Warning' | 'Destructive'",
         "required": false,
         "default": "'Primary'",
-        "description": "Visual role / semantic weight. Values: Primary | Secondary | Outline | Text | Success | Warning | Destructive."
+        "description": "Visual role / semantic weight."
       },
       {
         "name": "size",
         "type": "'Small' | 'Medium' | 'Large'",
         "required": false,
         "default": "'Medium'",
-        "description": "Height 32 / 40 / 48. Values: Small | Medium | Large."
+        "description": "Height 32 / 40 / 48."
       },
       {
         "name": "state",
@@ -274,18 +288,20 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "'Text' | 'Icon + Text' | 'Text + Icon' | 'Text + Disclosure'",
         "required": false,
         "default": "'Text'",
-        "description": "Label / icon composition. Values: Text | Icon + Text | Text + Icon | Text + Disclosure."
+        "description": "Label / icon composition."
       },
       {
         "name": "icon",
         "type": "string",
         "required": false,
-        "default": "'add'"
+        "default": "'add'",
+        "description": "Material Symbols name. Only rendered by the icon-bearing content variants."
       },
       {
         "name": "onClick",
         "type": "() => void",
-        "required": false
+        "required": false,
+        "description": "Fired on click and on Enter or Space."
       }
     ],
     "relatedTypes": {}
@@ -296,44 +312,48 @@ export const componentApi: Record<string, ComponentApi> = {
         "name": "title",
         "type": "string",
         "required": false,
-        "default": "'Card title'"
+        "default": "'Card title'",
+        "description": "Optional heading for the card."
       },
       {
         "name": "body",
         "type": "string",
         "required": false,
-        "default": "'Group related content in a contained surface using consistent padding and elevation.'"
+        "default": "'Group related content in a contained surface using consistent padding and elevation.'",
+        "description": "Short body copy. For anything richer, pass children instead."
       },
       {
         "name": "elevation",
         "type": "'Flat' | 'Raised' | 'Outlined'",
         "required": false,
         "default": "'Raised'",
-        "description": "Surface treatment. Values: Flat | Raised | Outlined."
+        "description": "Surface treatment."
       },
       {
         "name": "padding",
         "type": "'Compact' | 'Default' | 'Spacious'",
         "required": false,
         "default": "'Default'",
-        "description": "Internal padding (12 / 16 / 24). Values: Compact | Default | Spacious."
+        "description": "Internal padding (12 / 16 / 24)."
       },
       {
         "name": "interactive",
         "type": "boolean",
         "required": false,
         "default": "false",
-        "description": "Renders as a focusable button with hover elevation. Values: true | false."
+        "description": "Renders as a focusable button with hover elevation."
       },
       {
         "name": "children",
         "type": "ReactNode",
-        "required": false
+        "required": false,
+        "description": "Card contents. Takes precedence over title and body."
       },
       {
         "name": "onClick",
         "type": "() => void",
-        "required": false
+        "required": false,
+        "description": "Fired when an interactive card is activated. Set interactive as well, or there is no affordance."
       }
     ],
     "relatedTypes": {}
@@ -344,13 +364,14 @@ export const componentApi: Record<string, ComponentApi> = {
         "name": "label",
         "type": "string",
         "required": false,
-        "default": "'Checkbox label'"
+        "default": "'Checkbox label'",
+        "description": "Text beside the box. Always provide one."
       },
       {
         "name": "checked",
         "type": "boolean",
         "required": false,
-        "description": "Checked state. Values: true | false."
+        "description": "Checked state."
       },
       {
         "name": "state",
@@ -364,19 +385,20 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "boolean",
         "required": false,
         "default": "true",
-        "description": "Render the label. Values: true | false."
+        "description": "Render the label."
       },
       {
         "name": "size",
         "type": "'Small' | 'Medium'",
         "required": false,
         "default": "'Medium'",
-        "description": "Indicator size. Values: Small | Medium."
+        "description": "Indicator size."
       },
       {
         "name": "onChange",
         "type": "(checked: boolean) => void",
-        "required": false
+        "required": false,
+        "description": "Fired with the new checked state."
       }
     ],
     "relatedTypes": {}
@@ -386,7 +408,8 @@ export const componentApi: Record<string, ComponentApi> = {
       {
         "name": "label",
         "type": "string",
-        "required": false
+        "required": false,
+        "description": "Group label, announced as the fieldset legend."
       },
       {
         "name": "options",
@@ -406,7 +429,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "'Vertical' | 'Horizontal'",
         "required": false,
         "default": "'Vertical'",
-        "description": "Layout direction. Values: Vertical | Horizontal."
+        "description": "Layout direction."
       },
       {
         "name": "state",
@@ -418,7 +441,8 @@ export const componentApi: Record<string, ComponentApi> = {
       {
         "name": "onChange",
         "type": "(value: string[]) => void",
-        "required": false
+        "required": false,
+        "description": "Fired with the full array of selected values."
       }
     ],
     "relatedTypes": {
@@ -431,7 +455,8 @@ export const componentApi: Record<string, ComponentApi> = {
         "name": "label",
         "type": "string",
         "required": false,
-        "default": "'Date'"
+        "default": "'Date'",
+        "description": "Field label."
       },
       {
         "name": "value",
@@ -458,19 +483,20 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "boolean",
         "required": false,
         "default": "true",
-        "description": "Show the field label. Values: true | false."
+        "description": "Show the field label."
       },
       {
         "name": "defaultOpen",
         "type": "boolean",
         "required": false,
         "default": "false",
-        "description": "Open the calendar initially. Values: true | false."
+        "description": "Open the calendar initially."
       },
       {
         "name": "onChange",
         "type": "(iso: string) => void",
-        "required": false
+        "required": false,
+        "description": "Fired with the selected date as an ISO string (YYYY-MM-DD)."
       }
     ],
     "relatedTypes": {}
@@ -481,52 +507,57 @@ export const componentApi: Record<string, ComponentApi> = {
         "name": "title",
         "type": "string",
         "required": false,
-        "default": "'Dialog title'"
+        "default": "'Dialog title'",
+        "description": "Dialog heading. Also the accessible name."
       },
       {
         "name": "body",
         "type": "ReactNode",
         "required": false,
-        "default": "'This is the dialog body. Provide context or a clear description of the action the user is about to take.'"
+        "default": "'This is the dialog body. Provide context or a clear description of the action the user is about to take.'",
+        "description": "Dialog content."
       },
       {
         "name": "size",
         "type": "'Small' | 'Medium' | 'Large'",
         "required": false,
         "default": "'Medium'",
-        "description": "Panel width 400 / 480 / 560. Values: Small | Medium | Large."
+        "description": "Panel width 400 / 480 / 560."
       },
       {
         "name": "hasCloseButton",
         "type": "boolean",
         "required": false,
         "default": "true",
-        "description": "Show the header close affordance. Values: true | false."
+        "description": "Show the header close affordance."
       },
       {
         "name": "hasActions",
         "type": "boolean",
         "required": false,
         "default": "true",
-        "description": "Show the footer action buttons. Values: true | false."
+        "description": "Show the footer action buttons."
       },
       {
         "name": "confirmLabel",
         "type": "string",
         "required": false,
-        "default": "'Continue'"
+        "default": "'Continue'",
+        "description": "Label for the confirming action. Name the action — \"Delete\", not \"OK\"."
       },
       {
         "name": "cancelLabel",
         "type": "string",
         "required": false,
-        "default": "'Cancel'"
+        "default": "'Cancel'",
+        "description": "Label for the dismissing action."
       },
       {
         "name": "open",
         "type": "boolean",
         "required": false,
-        "default": "true"
+        "default": "true",
+        "description": "Whether the dialog is shown. Controlled — pair with onClose."
       },
       {
         "name": "embedded",
@@ -538,12 +569,14 @@ export const componentApi: Record<string, ComponentApi> = {
       {
         "name": "onClose",
         "type": "() => void",
-        "required": false
+        "required": false,
+        "description": "Fired on the close button, the overlay, and Escape."
       },
       {
         "name": "onConfirm",
         "type": "() => void",
-        "required": false
+        "required": false,
+        "description": "Fired when the confirming action is activated."
       }
     ],
     "relatedTypes": {}
@@ -555,7 +588,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "'Horizontal' | 'Vertical'",
         "required": false,
         "default": "'Horizontal'",
-        "description": "Divider direction. Values: Horizontal | Vertical."
+        "description": "Divider direction."
       },
       {
         "name": "label",
@@ -568,7 +601,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "'Compact' | 'Default' | 'Spacious'",
         "required": false,
         "default": "'Default'",
-        "description": "Surrounding margin. Values: Compact | Default | Spacious."
+        "description": "Surrounding margin."
       }
     ],
     "relatedTypes": {}
@@ -580,21 +613,21 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "boolean",
         "required": false,
         "default": "false",
-        "description": "Visibility. Values: true | false."
+        "description": "Visibility."
       },
       {
         "name": "side",
         "type": "'Right' | 'Left' | 'Bottom'",
         "required": false,
         "default": "'Right'",
-        "description": "Edge it slides from. Values: Right | Left | Bottom."
+        "description": "Edge it slides from."
       },
       {
         "name": "size",
         "type": "'Small' | 'Medium' | 'Large'",
         "required": false,
         "default": "'Medium'",
-        "description": "Panel width / height. Values: Small | Medium | Large."
+        "description": "Panel width / height."
       },
       {
         "name": "title",
@@ -608,12 +641,13 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "boolean",
         "required": false,
         "default": "true",
-        "description": "Show the close affordance. Values: true | false."
+        "description": "Show the close affordance."
       },
       {
         "name": "children",
         "type": "ReactNode",
-        "required": false
+        "required": false,
+        "description": "Panel contents."
       },
       {
         "name": "embedded",
@@ -625,7 +659,8 @@ export const componentApi: Record<string, ComponentApi> = {
       {
         "name": "onClose",
         "type": "() => void",
-        "required": false
+        "required": false,
+        "description": "Fired on the close button, the scrim, and Escape."
       }
     ],
     "relatedTypes": {}
@@ -662,14 +697,15 @@ export const componentApi: Record<string, ComponentApi> = {
       {
         "name": "onAction",
         "type": "() => void",
-        "required": false
+        "required": false,
+        "description": "Fired when the action is activated. Only rendered when actionLabel is set."
       },
       {
         "name": "size",
         "type": "'Small' | 'Medium'",
         "required": false,
         "default": "'Medium'",
-        "description": "Overall scale. Values: Small | Medium."
+        "description": "Overall scale."
       }
     ],
     "relatedTypes": {}
@@ -680,7 +716,8 @@ export const componentApi: Record<string, ComponentApi> = {
         "name": "label",
         "type": "string",
         "required": false,
-        "default": "'Upload files'"
+        "default": "'Upload files'",
+        "description": "Field label describing what to upload."
       },
       {
         "name": "accept",
@@ -693,7 +730,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "boolean",
         "required": false,
         "default": "false",
-        "description": "Allow multiple files. Values: true | false."
+        "description": "Allow multiple files."
       },
       {
         "name": "state",
@@ -712,7 +749,8 @@ export const componentApi: Record<string, ComponentApi> = {
       {
         "name": "onFiles",
         "type": "(files: File[]) => void",
-        "required": false
+        "required": false,
+        "description": "Fired with the selected files, from both drop and browse."
       }
     ],
     "relatedTypes": {}
@@ -736,7 +774,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "boolean",
         "required": false,
         "default": "false",
-        "description": "Show a required asterisk. Values: true | false."
+        "description": "Show a required asterisk."
       },
       {
         "name": "helpText",
@@ -753,7 +791,8 @@ export const componentApi: Record<string, ComponentApi> = {
       {
         "name": "children",
         "type": "ReactNode",
-        "required": true
+        "required": true,
+        "description": "The control this field wraps. Exactly one."
       }
     ],
     "relatedTypes": {}
@@ -763,63 +802,74 @@ export const componentApi: Record<string, ComponentApi> = {
       {
         "name": "name",
         "type": "string",
-        "required": true
+        "required": true,
+        "description": "Material Symbols ligature name, e.g. \"search\" or \"check_circle\"."
       },
       {
         "name": "style",
         "type": "'outlined' | 'rounded' | 'sharp'",
         "required": false,
-        "default": "'outlined'"
+        "default": "'outlined'",
+        "description": "Which Material Symbols face to use."
       },
       {
         "name": "size",
         "type": "number",
         "required": false,
-        "default": "24"
+        "default": "24",
+        "description": "Rendered size in px. 16 compact, 20 in controls, 24 standalone."
       },
       {
         "name": "fill",
         "type": "0 | 1",
         "required": false,
-        "default": "0"
+        "default": "0",
+        "description": "Filled (1) or outlined (0). Filled reads as a status glyph."
       },
       {
         "name": "weight",
         "type": "100 | 200 | 300 | 400 | 500 | 600 | 700",
         "required": false,
-        "default": "400"
+        "default": "400",
+        "description": "Stroke weight. 400 matches body text."
       },
       {
         "name": "grade",
         "type": "-25 | 0 | 200",
         "required": false,
-        "default": "0"
+        "default": "0",
+        "description": "Optical grade. Use 200 on dark backgrounds to hold weight."
       },
       {
         "name": "opticalSize",
         "type": "20 | 24 | 40 | 48",
         "required": false,
-        "default": "24"
+        "default": "24",
+        "description": "Optical size axis. Match to the rendered size."
       },
       {
         "name": "color",
         "type": "string",
-        "required": false
+        "required": false,
+        "description": "Icon colour. Defaults to currentColor so it inherits from text."
       },
       {
         "name": "className",
         "type": "string",
-        "required": false
+        "required": false,
+        "description": "Additional classes, merged with the Material Symbols class."
       },
       {
         "name": "aria-label",
         "type": "string",
-        "required": false
+        "required": false,
+        "description": "Accessible name. Required when the icon carries meaning on its own."
       },
       {
         "name": "aria-hidden",
         "type": "boolean | 'true' | 'false'",
-        "required": false
+        "required": false,
+        "description": "Hides the icon from assistive technology. Defaults to true unless aria-label is set."
       }
     ],
     "relatedTypes": {}
@@ -829,69 +879,75 @@ export const componentApi: Record<string, ComponentApi> = {
       {
         "name": "children",
         "type": "ReactNode",
-        "required": false
+        "required": false,
+        "description": "Link text. Takes precedence over label."
       },
       {
         "name": "label",
         "type": "string",
         "required": false,
-        "default": "'Learn more'"
+        "default": "'Learn more'",
+        "description": "Link text, when not passing children."
       },
       {
         "name": "href",
         "type": "string",
         "required": false,
-        "default": "'#'"
+        "default": "'#'",
+        "description": "Destination URL. Always provide a real one."
       },
       {
         "name": "intent",
         "type": "'Default' | 'Muted'",
         "required": false,
         "default": "'Default'",
-        "description": "Color emphasis. Values: Default | Muted."
+        "description": "Color emphasis."
       },
       {
         "name": "size",
         "type": "'Small' | 'Medium'",
         "required": false,
         "default": "'Medium'",
-        "description": "Text size. Values: Small | Medium."
+        "description": "Text size."
       },
       {
         "name": "underline",
         "type": "'Always' | 'Hover' | 'None'",
         "required": false,
         "default": "'Hover'",
-        "description": "Underline behavior. Values: Always | Hover | None."
+        "description": "Underline behavior."
       },
       {
         "name": "external",
         "type": "boolean",
         "required": false,
         "default": "false",
-        "description": "Open in a new tab with an icon. Values: true | false."
+        "description": "Open in a new tab with an icon."
       },
       {
         "name": "disabled",
         "type": "boolean",
         "required": false,
         "default": "false",
-        "description": "Non-interactive state. Values: true | false."
+        "description": "Non-interactive state."
       },
       {
         "name": "leadingIcon",
         "type": "string",
-        "required": false
+        "required": false,
+        "description": "Material Symbols name shown before the text."
       },
       {
         "name": "trailingIcon",
         "type": "string",
-        "required": false
+        "required": false,
+        "description": "Material Symbols name shown after the text."
       },
       {
         "name": "onClick",
         "type": "(e: React.MouseEvent) => void",
-        "required": false
+        "required": false,
+        "description": "Fired on activation. Use for routing, not to replace href."
       }
     ],
     "relatedTypes": {}
@@ -910,26 +966,27 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "boolean",
         "required": false,
         "default": "true",
-        "description": "Show dividers between rows. Values: true | false."
+        "description": "Show dividers between rows."
       },
       {
         "name": "interactive",
         "type": "boolean",
         "required": false,
         "default": "false",
-        "description": "Make rows clickable. Values: true | false."
+        "description": "Make rows clickable."
       },
       {
         "name": "size",
         "type": "'Compact' | 'Default'",
         "required": false,
         "default": "'Default'",
-        "description": "Row density. Values: Compact | Default."
+        "description": "Row density."
       },
       {
         "name": "onItemClick",
         "type": "(item: ListItem, index: number) => void",
-        "required": false
+        "required": false,
+        "description": "Fired with the item and its index. Set interactive as well."
       }
     ],
     "relatedTypes": {
@@ -957,19 +1014,20 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "'Bottom Start' | 'Bottom End'",
         "required": false,
         "default": "'Bottom Start'",
-        "description": "Alignment to trigger. Values: Bottom Start | Bottom End."
+        "description": "Alignment to trigger."
       },
       {
         "name": "open",
         "type": "boolean",
-        "required": false
+        "required": false,
+        "description": "Controlled open state. Leave unset to let the menu manage itself."
       },
       {
         "name": "defaultOpen",
         "type": "boolean",
         "required": false,
         "default": "false",
-        "description": "Open on mount. Values: true | false."
+        "description": "Open on mount."
       },
       {
         "name": "forceVisible",
@@ -981,7 +1039,8 @@ export const componentApi: Record<string, ComponentApi> = {
       {
         "name": "onSelect",
         "type": "(label: string) => void",
-        "required": false
+        "required": false,
+        "description": "Fired with the label of the chosen item."
       }
     ],
     "relatedTypes": {
@@ -1013,7 +1072,8 @@ export const componentApi: Record<string, ComponentApi> = {
       {
         "name": "onChange",
         "type": "(value: string) => void",
-        "required": false
+        "required": false,
+        "description": "Fired with the full code as digits are entered or pasted."
       }
     ],
     "relatedTypes": {}
@@ -1046,19 +1106,20 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "'Small' | 'Medium'",
         "required": false,
         "default": "'Medium'",
-        "description": "Control height. Values: Small | Medium."
+        "description": "Control height."
       },
       {
         "name": "showEdges",
         "type": "boolean",
         "required": false,
         "default": "true",
-        "description": "Show first / last controls. Values: true | false."
+        "description": "Show first / last controls."
       },
       {
         "name": "onChange",
         "type": "(page: number) => void",
-        "required": false
+        "required": false,
+        "description": "Fired with the requested page number, 1-based."
       }
     ],
     "relatedTypes": {}
@@ -1090,19 +1151,20 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "'Top' | 'Bottom' | 'Left' | 'Right'",
         "required": false,
         "default": "'Bottom'",
-        "description": "Position relative to the trigger. Values: Top | Bottom | Left | Right."
+        "description": "Position relative to the trigger."
       },
       {
         "name": "open",
         "type": "boolean",
-        "required": false
+        "required": false,
+        "description": "Controlled open state. Leave unset to let the popover manage itself."
       },
       {
         "name": "defaultOpen",
         "type": "boolean",
         "required": false,
         "default": "false",
-        "description": "Open on mount. Values: true | false."
+        "description": "Open on mount."
       },
       {
         "name": "forceVisible",
@@ -1114,7 +1176,8 @@ export const componentApi: Record<string, ComponentApi> = {
       {
         "name": "onOpenChange",
         "type": "(open: boolean) => void",
-        "required": false
+        "required": false,
+        "description": "Fired when the popover opens or closes."
       }
     ],
     "relatedTypes": {}
@@ -1126,7 +1189,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "'Linear' | 'Circular'",
         "required": false,
         "default": "'Linear'",
-        "description": "Bar or ring. Values: Linear | Circular."
+        "description": "Bar or ring."
       },
       {
         "name": "value",
@@ -1140,28 +1203,28 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "boolean",
         "required": false,
         "default": "false",
-        "description": "Unknown-duration animation. Values: true | false."
+        "description": "Unknown-duration animation."
       },
       {
         "name": "size",
         "type": "'Small' | 'Medium' | 'Large'",
         "required": false,
         "default": "'Medium'",
-        "description": "Bar height / ring diameter. Values: Small | Medium | Large."
+        "description": "Bar height / ring diameter."
       },
       {
         "name": "intent",
         "type": "'Primary' | 'Success' | 'Warning' | 'Error'",
         "required": false,
         "default": "'Primary'",
-        "description": "Fill color. Values: Primary | Success | Warning | Error."
+        "description": "Fill color."
       },
       {
         "name": "showValue",
         "type": "boolean",
         "required": false,
         "default": "false",
-        "description": "Render the percentage. Values: true | false."
+        "description": "Render the percentage."
       }
     ],
     "relatedTypes": {}
@@ -1172,19 +1235,21 @@ export const componentApi: Record<string, ComponentApi> = {
         "name": "label",
         "type": "string",
         "required": false,
-        "default": "'Radio option'"
+        "default": "'Radio option'",
+        "description": "Text beside the control. Always provide one."
       },
       {
         "name": "selected",
         "type": "boolean",
         "required": false,
-        "description": "Selected state. Values: true | false."
+        "description": "Selected state."
       },
       {
         "name": "name",
         "type": "string",
         "required": false,
-        "default": "'radio'"
+        "default": "'radio'",
+        "description": "Shared form name. Every radio in a group must use the same value."
       },
       {
         "name": "state",
@@ -1198,12 +1263,13 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "boolean",
         "required": false,
         "default": "true",
-        "description": "Render the label. Values: true | false."
+        "description": "Render the label."
       },
       {
         "name": "onChange",
         "type": "(selected: boolean) => void",
-        "required": false
+        "required": false,
+        "description": "Fired when this option becomes selected."
       }
     ],
     "relatedTypes": {}
@@ -1213,7 +1279,8 @@ export const componentApi: Record<string, ComponentApi> = {
       {
         "name": "label",
         "type": "string",
-        "required": false
+        "required": false,
+        "description": "Group label, announced as the radiogroup name."
       },
       {
         "name": "name",
@@ -1239,7 +1306,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "'Vertical' | 'Horizontal'",
         "required": false,
         "default": "'Vertical'",
-        "description": "Layout direction. Values: Vertical | Horizontal."
+        "description": "Layout direction."
       },
       {
         "name": "state",
@@ -1251,7 +1318,8 @@ export const componentApi: Record<string, ComponentApi> = {
       {
         "name": "onChange",
         "type": "(value: string) => void",
-        "required": false
+        "required": false,
+        "description": "Fired with the newly selected value."
       }
     ],
     "relatedTypes": {
@@ -1279,26 +1347,27 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "'Small' | 'Medium'",
         "required": false,
         "default": "'Medium'",
-        "description": "Star size. Values: Small | Medium."
+        "description": "Star size."
       },
       {
         "name": "readOnly",
         "type": "boolean",
         "required": false,
         "default": "false",
-        "description": "Display-only mode. Values: true | false."
+        "description": "Display-only mode."
       },
       {
         "name": "showValue",
         "type": "boolean",
         "required": false,
         "default": "false",
-        "description": "Show numeric value. Values: true | false."
+        "description": "Show numeric value."
       },
       {
         "name": "onChange",
         "type": "(value: number) => void",
-        "required": false
+        "required": false,
+        "description": "Fired with the chosen rating. Not fired when readOnly."
       }
     ],
     "relatedTypes": {}
@@ -1323,19 +1392,20 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "'Small' | 'Medium'",
         "required": false,
         "default": "'Medium'",
-        "description": "Segment height. Values: Small | Medium."
+        "description": "Segment height."
       },
       {
         "name": "fullWidth",
         "type": "boolean",
         "required": false,
         "default": "false",
-        "description": "Stretch to fill the row. Values: true | false."
+        "description": "Stretch to fill the row."
       },
       {
         "name": "onChange",
         "type": "(index: number) => void",
-        "required": false
+        "required": false,
+        "description": "Fired with the index of the chosen segment."
       }
     ],
     "relatedTypes": {}
@@ -1347,24 +1417,27 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "string",
         "required": false,
         "default": "'Country'",
-        "description": "Render the label. Values: true | false."
+        "description": "Render the label."
       },
       {
         "name": "placeholder",
         "type": "string",
         "required": false,
-        "default": "'Select an option'"
+        "default": "'Select an option'",
+        "description": "Shown when nothing is selected. Not a substitute for the label."
       },
       {
         "name": "options",
         "type": "string[]",
         "required": false,
-        "default": "defaultOptions"
+        "default": "defaultOptions",
+        "description": "The selectable values, in the order they should appear."
       },
       {
         "name": "value",
         "type": "string",
-        "required": false
+        "required": false,
+        "description": "Selected value. Controlled — pair with onChange."
       },
       {
         "name": "state",
@@ -1378,25 +1451,27 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "'Fixed' | 'Content Adaptable'",
         "required": false,
         "default": "'Fixed'",
-        "description": "Trigger sizing. Values: Fixed | Content Adaptable."
+        "description": "Trigger sizing."
       },
       {
         "name": "showLabel",
         "type": "boolean",
         "required": false,
-        "default": "true"
+        "default": "true",
+        "description": "Render the visible label. Hiding it still requires an accessible name."
       },
       {
         "name": "search",
         "type": "boolean",
         "required": false,
         "default": "false",
-        "description": "Filterable option list. Values: true | false."
+        "description": "Filterable option list."
       },
       {
         "name": "onChange",
         "type": "(value: string) => void",
-        "required": false
+        "required": false,
+        "description": "Fired with the selected value."
       }
     ],
     "relatedTypes": {}
@@ -1408,19 +1483,19 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "'Text' | 'Rect' | 'Circle'",
         "required": false,
         "default": "'Text'",
-        "description": "Placeholder shape. Values: Text | Rect | Circle."
+        "description": "Placeholder shape."
       },
       {
         "name": "width",
         "type": "string | number",
         "required": false,
-        "description": "Explicit width. Values: string | number."
+        "description": "Explicit width."
       },
       {
         "name": "height",
         "type": "string | number",
         "required": false,
-        "description": "Explicit height. Values: string | number."
+        "description": "Explicit height."
       },
       {
         "name": "lines",
@@ -1432,7 +1507,8 @@ export const componentApi: Record<string, ComponentApi> = {
       {
         "name": "radius",
         "type": "string | number",
-        "required": false
+        "required": false,
+        "description": "Corner radius override. Match the shape being stood in for."
       }
     ],
     "relatedTypes": {}
@@ -1443,7 +1519,8 @@ export const componentApi: Record<string, ComponentApi> = {
         "name": "label",
         "type": "string",
         "required": false,
-        "default": "'Value'"
+        "default": "'Value'",
+        "description": "Field label describing what is being adjusted."
       },
       {
         "name": "min",
@@ -1462,7 +1539,8 @@ export const componentApi: Record<string, ComponentApi> = {
       {
         "name": "value",
         "type": "number",
-        "required": false
+        "required": false,
+        "description": "Current value. Controlled — pair with onChange."
       },
       {
         "name": "step",
@@ -1483,19 +1561,20 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "boolean",
         "required": false,
         "default": "true",
-        "description": "Show the current value. Values: true | false."
+        "description": "Show the current value."
       },
       {
         "name": "showLabel",
         "type": "boolean",
         "required": false,
         "default": "true",
-        "description": "Show the field label. Values: true | false."
+        "description": "Show the field label."
       },
       {
         "name": "onChange",
         "type": "(value: number) => void",
-        "required": false
+        "required": false,
+        "description": "Fired as the value changes, by drag or arrow key."
       }
     ],
     "relatedTypes": {}
@@ -1506,44 +1585,48 @@ export const componentApi: Record<string, ComponentApi> = {
         "name": "message",
         "type": "string",
         "required": false,
-        "default": "'Assessment saved successfully.'"
+        "default": "'Assessment saved successfully.'",
+        "description": "What happened. One short sentence."
       },
       {
         "name": "intent",
         "type": "'Neutral' | 'Info' | 'Success' | 'Warning' | 'Error'",
         "required": false,
         "default": "'Neutral'",
-        "description": "Accent icon color. Values: Neutral | Info | Success | Warning | Error."
+        "description": "Accent icon color."
       },
       {
         "name": "hasAction",
         "type": "boolean",
         "required": false,
         "default": "false",
-        "description": "Show an inline action (e.g. Undo). Values: true | false."
+        "description": "Show an inline action (e.g. Undo)."
       },
       {
         "name": "hasClose",
         "type": "boolean",
         "required": false,
         "default": "true",
-        "description": "Show the dismiss button. Values: true | false."
+        "description": "Show the dismiss button."
       },
       {
         "name": "actionLabel",
         "type": "string",
         "required": false,
-        "default": "'Undo'"
+        "default": "'Undo'",
+        "description": "Label for the inline action, typically \"Undo\"."
       },
       {
         "name": "onAction",
         "type": "() => void",
-        "required": false
+        "required": false,
+        "description": "Fired when the inline action is activated."
       },
       {
         "name": "onClose",
         "type": "() => void",
-        "required": false
+        "required": false,
+        "description": "Fired when dismissed."
       }
     ],
     "relatedTypes": {}
@@ -1555,14 +1638,14 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "'Small' | 'Medium' | 'Large'",
         "required": false,
         "default": "'Medium'",
-        "description": "Diameter 16 / 24 / 40. Values: Small | Medium | Large."
+        "description": "Diameter 16 / 24 / 40."
       },
       {
         "name": "intent",
         "type": "'Primary' | 'Neutral' | 'Inverse'",
         "required": false,
         "default": "'Primary'",
-        "description": "Arc color. Values: Primary | Neutral | Inverse."
+        "description": "Arc color."
       },
       {
         "name": "label",
@@ -1588,7 +1671,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "string | number",
         "required": true,
         "default": "'84%'",
-        "description": "Metric value. Values: string | number."
+        "description": "Metric value."
       },
       {
         "name": "delta",
@@ -1602,7 +1685,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "'up' | 'down' | 'neutral'",
         "required": false,
         "default": "'up'",
-        "description": "Trend direction / color. Values: up | down | neutral."
+        "description": "Trend direction / color."
       },
       {
         "name": "icon",
@@ -1613,7 +1696,8 @@ export const componentApi: Record<string, ComponentApi> = {
       {
         "name": "helpText",
         "type": "string",
-        "required": false
+        "required": false,
+        "description": "Optional context below the value, such as the comparison period."
       }
     ],
     "relatedTypes": {}
@@ -1639,14 +1723,14 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "'Horizontal' | 'Vertical'",
         "required": false,
         "default": "'Horizontal'",
-        "description": "Layout direction. Values: Horizontal | Vertical."
+        "description": "Layout direction."
       },
       {
         "name": "size",
         "type": "'Small' | 'Medium'",
         "required": false,
         "default": "'Medium'",
-        "description": "Indicator size. Values: Small | Medium."
+        "description": "Indicator size."
       }
     ],
     "relatedTypes": {
@@ -1674,38 +1758,40 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "'Compact' | 'Default'",
         "required": false,
         "default": "'Default'",
-        "description": "Row height density. Values: Compact | Default."
+        "description": "Row height density."
       },
       {
         "name": "striped",
         "type": "boolean",
         "required": false,
         "default": "false",
-        "description": "Zebra-stripe rows. Values: true | false."
+        "description": "Zebra-stripe rows."
       },
       {
         "name": "hoverable",
         "type": "boolean",
         "required": false,
         "default": "true",
-        "description": "Highlight rows on hover. Values: true | false."
+        "description": "Highlight rows on hover."
       },
       {
         "name": "selectable",
         "type": "boolean",
         "required": false,
         "default": "false",
-        "description": "Add a row selection column. Values: true | false."
+        "description": "Add a row selection column."
       },
       {
         "name": "caption",
         "type": "string",
-        "required": false
+        "required": false,
+        "description": "Describes the table for screen readers. Provide one unless a heading already names it."
       },
       {
         "name": "onRowClick",
         "type": "(row: Record<string, ReactNode>, index: number) => void",
-        "required": false
+        "required": false,
+        "description": "Fired with the row data and its index."
       }
     ],
     "relatedTypes": {
@@ -1718,38 +1804,41 @@ export const componentApi: Record<string, ComponentApi> = {
         "name": "items",
         "type": "TabItem[]",
         "required": false,
-        "default": "defaultItems"
+        "default": "defaultItems",
+        "description": "The tabs, in order."
       },
       {
         "name": "style",
         "type": "'Underline' | 'Contained'",
         "required": false,
         "default": "'Underline'",
-        "description": "Visual treatment. Values: Underline | Contained."
+        "description": "Visual treatment."
       },
       {
         "name": "size",
         "type": "'Small' | 'Medium'",
         "required": false,
         "default": "'Medium'",
-        "description": "Tab height 40 / 48. Values: Small | Medium."
+        "description": "Tab height 40 / 48."
       },
       {
         "name": "fullWidth",
         "type": "boolean",
         "required": false,
         "default": "false",
-        "description": "Stretch tabs to fill the row. Values: true | false."
+        "description": "Stretch tabs to fill the row."
       },
       {
         "name": "value",
         "type": "number",
-        "required": false
+        "required": false,
+        "description": "Index of the active tab. Controlled — pair with onChange."
       },
       {
         "name": "onChange",
         "type": "(index: number) => void",
-        "required": false
+        "required": false,
+        "description": "Fired with the index of the newly selected tab."
       }
     ],
     "relatedTypes": {
@@ -1769,21 +1858,21 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "'Neutral' | 'Info' | 'Success' | 'Warning' | 'Error'",
         "required": false,
         "default": "'Neutral'",
-        "description": "Semantic color. Values: Neutral | Info | Success | Warning | Error."
+        "description": "Semantic color."
       },
       {
         "name": "size",
         "type": "'Small' | 'Medium'",
         "required": false,
         "default": "'Medium'",
-        "description": "Tag height. Values: Small | Medium."
+        "description": "Tag height."
       },
       {
         "name": "removable",
         "type": "boolean",
         "required": false,
         "default": "false",
-        "description": "Show a remove affordance. Values: true | false."
+        "description": "Show a remove affordance."
       },
       {
         "name": "leadingIcon",
@@ -1794,12 +1883,14 @@ export const componentApi: Record<string, ComponentApi> = {
       {
         "name": "onRemove",
         "type": "() => void",
-        "required": false
+        "required": false,
+        "description": "Fired when the remove control is activated. Set removable as well."
       },
       {
         "name": "onClick",
         "type": "() => void",
-        "required": false
+        "required": false,
+        "description": "Fired when the tag itself is activated."
       }
     ],
     "relatedTypes": {}
@@ -1811,18 +1902,20 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "string",
         "required": false,
         "default": "'Label'",
-        "description": "Show the field label. Values: true | false."
+        "description": "Show the field label."
       },
       {
         "name": "placeholder",
         "type": "string",
         "required": false,
-        "default": "'Placeholder text'"
+        "default": "'Placeholder text'",
+        "description": "Hint shown when empty. Not a substitute for the label."
       },
       {
         "name": "value",
         "type": "string",
-        "required": false
+        "required": false,
+        "description": "Current value. Controlled — pair with onChange."
       },
       {
         "name": "state",
@@ -1836,42 +1929,44 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "'Small' | 'Medium'",
         "required": false,
         "default": "'Medium'",
-        "description": "Control height. Values: Small | Medium."
+        "description": "Control height."
       },
       {
         "name": "leadingIcon",
         "type": "string",
         "required": false,
-        "description": "Show a leading icon. Values: true | false."
+        "description": "Show a leading icon."
       },
       {
         "name": "trailingIcon",
         "type": "string",
         "required": false,
-        "description": "Show a trailing icon. Values: true | false."
+        "description": "Show a trailing icon."
       },
       {
         "name": "showLabel",
         "type": "boolean",
         "required": false,
-        "default": "true"
+        "default": "true",
+        "description": "Render the visible label. Hiding it still requires an accessible name."
       },
       {
         "name": "helpText",
         "type": "string",
         "required": false,
-        "description": "Show helper text. Values: true | false."
+        "description": "Show helper text."
       },
       {
         "name": "errorText",
         "type": "string",
         "required": false,
-        "description": "Show error message. Values: true | false."
+        "description": "Show error message."
       },
       {
         "name": "onChange",
         "type": "(value: string) => void",
-        "required": false
+        "required": false,
+        "description": "Fired with the new value on every keystroke."
       }
     ],
     "relatedTypes": {}
@@ -1882,18 +1977,21 @@ export const componentApi: Record<string, ComponentApi> = {
         "name": "label",
         "type": "string",
         "required": false,
-        "default": "'Description'"
+        "default": "'Description'",
+        "description": "Field label."
       },
       {
         "name": "placeholder",
         "type": "string",
         "required": false,
-        "default": "'Placeholder text'"
+        "default": "'Placeholder text'",
+        "description": "Hint shown when empty. Not a substitute for the label."
       },
       {
         "name": "value",
         "type": "string",
-        "required": false
+        "required": false,
+        "description": "Current value. Controlled — pair with onChange."
       },
       {
         "name": "rows",
@@ -1907,7 +2005,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "'Small' | 'Medium'",
         "required": false,
         "default": "'Medium'",
-        "description": "Vertical padding density. Values: Small | Medium."
+        "description": "Vertical padding density."
       },
       {
         "name": "state",
@@ -1921,17 +2019,19 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "boolean",
         "required": false,
         "default": "true",
-        "description": "Show the field label. Values: true | false."
+        "description": "Show the field label."
       },
       {
         "name": "helpText",
         "type": "string",
-        "required": false
+        "required": false,
+        "description": "Guidance shown below the field. Replaced by errorText when invalid."
       },
       {
         "name": "errorText",
         "type": "string",
-        "required": false
+        "required": false,
+        "description": "Validation message. Linked to the control via aria-describedby."
       },
       {
         "name": "maxLength",
@@ -1944,12 +2044,13 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "boolean",
         "required": false,
         "default": "false",
-        "description": "Show character counter. Values: true | false."
+        "description": "Show character counter."
       },
       {
         "name": "onChange",
         "type": "(value: string) => void",
-        "required": false
+        "required": false,
+        "description": "Fired with the new value on every keystroke."
       }
     ],
     "relatedTypes": {}
@@ -1960,13 +2061,14 @@ export const componentApi: Record<string, ComponentApi> = {
         "name": "label",
         "type": "string",
         "required": false,
-        "default": "'Toggle setting'"
+        "default": "'Toggle setting'",
+        "description": "Text beside the switch describing the setting."
       },
       {
         "name": "checked",
         "type": "boolean",
         "required": false,
-        "description": "On / off state. Values: true | false."
+        "description": "On / off state."
       },
       {
         "name": "state",
@@ -1980,19 +2082,20 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "'Small' | 'Medium'",
         "required": false,
         "default": "'Medium'",
-        "description": "Track / thumb size. Values: Small | Medium."
+        "description": "Track / thumb size."
       },
       {
         "name": "withLabel",
         "type": "boolean",
         "required": false,
         "default": "true",
-        "description": "Render the label. Values: true | false."
+        "description": "Render the label."
       },
       {
         "name": "onChange",
         "type": "(checked: boolean) => void",
-        "required": false
+        "required": false,
+        "description": "Fired with the new on/off state."
       }
     ],
     "relatedTypes": {}
@@ -2003,33 +2106,35 @@ export const componentApi: Record<string, ComponentApi> = {
         "name": "content",
         "type": "string",
         "required": false,
-        "default": "'Supplementary help text'"
+        "default": "'Supplementary help text'",
+        "description": "The hint text. Keep it short; never put essential information here alone."
       },
       {
         "name": "placement",
         "type": "'Top' | 'Bottom' | 'Left' | 'Right'",
         "required": false,
         "default": "'Top'",
-        "description": "Position relative to the trigger. Values: Top | Bottom | Left | Right."
+        "description": "Position relative to the trigger."
       },
       {
         "name": "theme",
         "type": "'Light' | 'Dark'",
         "required": false,
         "default": "'Dark'",
-        "description": "Surface color. Values: Light | Dark."
+        "description": "Surface color."
       },
       {
         "name": "type",
         "type": "'Default' | 'Accessibility'",
         "required": false,
         "default": "'Default'",
-        "description": "Accessibility type uses larger text. Values: Default | Accessibility."
+        "description": "Accessibility type uses larger text."
       },
       {
         "name": "children",
         "type": "ReactNode",
-        "required": false
+        "required": false,
+        "description": "The element the tooltip describes."
       },
       {
         "name": "forceVisible",

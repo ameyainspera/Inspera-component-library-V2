@@ -58,18 +58,18 @@ import { Textarea } from '@inspera/components'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | `'Description'` |  |
-| `placeholder` | `string` | `'Placeholder text'` |  |
-| `value` | `string` | — |  |
+| `label` | `string` | `'Description'` | Field label. |
+| `placeholder` | `string` | `'Placeholder text'` | Hint shown when empty. Not a substitute for the label. |
+| `value` | `string` | — | Current value. Controlled — pair with onChange. |
 | `rows` | `number` | `4` | Visible text rows. |
-| `size` | `'Small' \| 'Medium'` | `'Medium'` | Vertical padding density. Values: Small \| Medium. |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Vertical padding density. |
 | `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Filled' \| 'Error' \| 'Disabled' \| 'ReadOnly'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
-| `showLabel` | `boolean` | `true` | Show the field label. Values: true \| false. |
-| `helpText` | `string` | — |  |
-| `errorText` | `string` | — |  |
+| `showLabel` | `boolean` | `true` | Show the field label. |
+| `helpText` | `string` | — | Guidance shown below the field. Replaced by errorText when invalid. |
+| `errorText` | `string` | — | Validation message. Linked to the control via aria-describedby. |
 | `maxLength` | `number` | — | Maximum character length. |
-| `showCount` | `boolean` | `false` | Show character counter. Values: true \| false. |
-| `onChange` | `(value: string) => void` | — |  |
+| `showCount` | `boolean` | `false` | Show character counter. |
+| `onChange` | `(value: string) => void` | — | Fired with the new value on every keystroke. |
 
 **Accessibility** — role `textbox`, keyboard operable. Always associate label with textarea using htmlFor/id; Error text must be linked via aria-describedby; aria-invalid reflects the error state.
 

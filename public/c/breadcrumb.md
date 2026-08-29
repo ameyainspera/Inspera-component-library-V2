@@ -56,10 +56,10 @@ import { Breadcrumb } from '@inspera/components'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `items` | `string[]` | `defaultItems` |  |
-| `separator` | `'Slash' \| 'Chevron'` | `'Chevron'` | Divider glyph between items. Values: Slash \| Chevron. |
-| `size` | `'Small' \| 'Medium'` | `'Medium'` | Text size 14 / 16. Values: Small \| Medium. |
-| `onNavigate` | `(index: number) => void` | — |  |
+| `items` | `string[]` | `defaultItems` | Trail from root to current page. The last entry is the current page and is not a link. |
+| `separator` | `'Slash' \| 'Chevron'` | `'Chevron'` | Divider glyph between items. |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Text size 14 / 16. |
+| `onNavigate` | `(index: number) => void` | — | Fired with the index of the crumb that was clicked. |
 
 **Accessibility** — role `navigation`, keyboard operable. Wrap in nav with aria-label="Breadcrumb"; Use an ordered list for semantic structure; Mark current page with aria-current="page".
 

@@ -58,12 +58,12 @@ import { Tag } from '@inspera/components'
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `label` **(required)** | `string` | — | Tag text. |
-| `intent` | `'Neutral' \| 'Info' \| 'Success' \| 'Warning' \| 'Error'` | `'Neutral'` | Semantic color. Values: Neutral \| Info \| Success \| Warning \| Error. |
-| `size` | `'Small' \| 'Medium'` | `'Medium'` | Tag height. Values: Small \| Medium. |
-| `removable` | `boolean` | `false` | Show a remove affordance. Values: true \| false. |
+| `intent` | `'Neutral' \| 'Info' \| 'Success' \| 'Warning' \| 'Error'` | `'Neutral'` | Semantic color. |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Tag height. |
+| `removable` | `boolean` | `false` | Show a remove affordance. |
 | `leadingIcon` | `string` | — | Optional leading icon. |
-| `onRemove` | `() => void` | — |  |
-| `onClick` | `() => void` | — |  |
+| `onRemove` | `() => void` | — | Fired when the remove control is activated. Set removable as well. |
+| `onClick` | `() => void` | — | Fired when the tag itself is activated. |
 
 **Accessibility** — role `status`, keyboard operable. Removable tags expose a button with aria-label "Remove {label}"; Interactive tags must be keyboard focusable; Use aria-label for icon-only tags.
 

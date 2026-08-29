@@ -5,15 +5,19 @@ export type AvatarContent = 'Image' | 'Initials' | 'Icon'
 export type AvatarStatus = 'None' | 'Online' | 'Offline' | 'Busy'
 
 export interface AvatarProps {
-  /** Diameter 32 / 40 / 56. Values: Small | Medium | Large. */
+  /** Diameter 32 / 40 / 56. */
   size?: AvatarSize
-  /** What fills the avatar. Values: Image | Initials | Icon. */
+  /** What fills the avatar. */
   content?: AvatarContent
-  /** Presence indicator dot. Values: None | Online | Offline | Busy. */
+  /** Presence indicator dot. */
   status?: AvatarStatus
+  /** One or two letters, used when content is Initials. Derive from the name rather than asking for them. */
   initials?: string
+  /** Image URL, used when content is Image. Falls back to initials if it fails to load. */
   imageSrc?: string
+  /** Alternative text for the image. Required whenever an image is shown. */
   alt?: string
+  /** Material Symbols name, used when content is Icon. */
   icon?: string
 }
 

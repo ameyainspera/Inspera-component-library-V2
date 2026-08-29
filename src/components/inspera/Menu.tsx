@@ -15,13 +15,15 @@ export interface MenuProps {
   label?: string
   /** Menu items. */
   items?: MenuItem[]
-  /** Alignment to trigger. Values: Bottom Start | Bottom End. */
+  /** Alignment to trigger. */
   placement?: MenuPlacement
+  /** Controlled open state. Leave unset to let the menu manage itself. */
   open?: boolean
-  /** Open on mount. Values: true | false. */
+  /** Open on mount. */
   defaultOpen?: boolean
   /** Always render the open menu, for documentation. */
   forceVisible?: boolean
+  /** Fired with the label of the chosen item. */
   onSelect?: (label: string) => void
 }
 

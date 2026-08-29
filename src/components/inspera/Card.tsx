@@ -4,15 +4,19 @@ export type CardElevation = 'Flat' | 'Raised' | 'Outlined'
 export type CardPadding = 'Compact' | 'Default' | 'Spacious'
 
 export interface CardProps {
+  /** Optional heading for the card. */
   title?: string
+  /** Short body copy. For anything richer, pass children instead. */
   body?: string
-  /** Surface treatment. Values: Flat | Raised | Outlined. */
+  /** Surface treatment. */
   elevation?: CardElevation
-  /** Internal padding (12 / 16 / 24). Values: Compact | Default | Spacious. */
+  /** Internal padding (12 / 16 / 24). */
   padding?: CardPadding
-  /** Renders as a focusable button with hover elevation. Values: true | false. */
+  /** Renders as a focusable button with hover elevation. */
   interactive?: boolean
+  /** Card contents. Takes precedence over title and body. */
   children?: ReactNode
+  /** Fired when an interactive card is activated. Set interactive as well, or there is no affordance. */
   onClick?: () => void
 }
 

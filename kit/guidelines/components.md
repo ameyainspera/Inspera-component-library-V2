@@ -22,13 +22,13 @@ import { Button } from '@inspera/kit'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | `'Button'` |  |
-| `intent` | `'Primary' \| 'Secondary' \| 'Outline' \| 'Text' \| 'Success' \| 'Warning' \| 'Destructive'` | `'Primary'` | Visual role / semantic weight. Values: Primary \| Secondary \| Outline \| Text \| Success \| Warning \| Destructive. |
-| `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Height 32 / 40 / 48. Values: Small \| Medium \| Large. |
+| `label` | `string` | `'Button'` | The button text. Start with a verb — "Save", not "OK". |
+| `intent` | `'Primary' \| 'Secondary' \| 'Outline' \| 'Text' \| 'Success' \| 'Warning' \| 'Destructive'` | `'Primary'` | Visual role / semantic weight. |
+| `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Height 32 / 40 / 48. |
 | `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Pressed' \| 'Disabled'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
-| `content` | `'Text' \| 'Icon + Text' \| 'Text + Icon' \| 'Text + Disclosure'` | `'Text'` | Label / icon composition. Values: Text \| Icon + Text \| Text + Icon \| Text + Disclosure. |
-| `icon` | `string` | `'add'` |  |
-| `onClick` | `() => void` | — |  |
+| `content` | `'Text' \| 'Icon + Text' \| 'Text + Icon' \| 'Text + Disclosure'` | `'Text'` | Label / icon composition. |
+| `icon` | `string` | `'add'` | Material Symbols name. Only rendered by the icon-bearing content variants. |
+| `onClick` | `() => void` | — | Fired on click and on Enter or Space. |
 
 **Accessibility** — role `button`, keyboard operable. Icon-only buttons must have an accessible label.
 
@@ -54,17 +54,17 @@ import { TextInput } from '@inspera/kit'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | `'Label'` | Show the field label. Values: true \| false. |
-| `placeholder` | `string` | `'Placeholder text'` |  |
-| `value` | `string` | — |  |
+| `label` | `string` | `'Label'` | Show the field label. |
+| `placeholder` | `string` | `'Placeholder text'` | Hint shown when empty. Not a substitute for the label. |
+| `value` | `string` | — | Current value. Controlled — pair with onChange. |
 | `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Disabled' \| 'Error' \| 'Filled' \| 'ReadOnly'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
-| `size` | `'Small' \| 'Medium'` | `'Medium'` | Control height. Values: Small \| Medium. |
-| `leadingIcon` | `string` | — | Show a leading icon. Values: true \| false. |
-| `trailingIcon` | `string` | — | Show a trailing icon. Values: true \| false. |
-| `showLabel` | `boolean` | `true` |  |
-| `helpText` | `string` | — | Show helper text. Values: true \| false. |
-| `errorText` | `string` | — | Show error message. Values: true \| false. |
-| `onChange` | `(value: string) => void` | — |  |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Control height. |
+| `leadingIcon` | `string` | — | Show a leading icon. |
+| `trailingIcon` | `string` | — | Show a trailing icon. |
+| `showLabel` | `boolean` | `true` | Render the visible label. Hiding it still requires an accessible name. |
+| `helpText` | `string` | — | Show helper text. |
+| `errorText` | `string` | — | Show error message. |
+| `onChange` | `(value: string) => void` | — | Fired with the new value on every keystroke. |
 
 **Accessibility** — role `textbox`, keyboard operable. Always associate label with input using htmlFor/id; Error text must be linked via aria-describedby; Required fields must use aria-required.
 
@@ -90,12 +90,12 @@ import { Checkbox } from '@inspera/kit'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | `'Checkbox label'` |  |
-| `checked` | `boolean` | — | Checked state. Values: true \| false. |
+| `label` | `string` | `'Checkbox label'` | Text beside the box. Always provide one. |
+| `checked` | `boolean` | — | Checked state. |
 | `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Pressed' \| 'Disabled' \| 'Error'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
-| `withLabel` | `boolean` | `true` | Render the label. Values: true \| false. |
-| `size` | `'Small' \| 'Medium'` | `'Medium'` | Indicator size. Values: Small \| Medium. |
-| `onChange` | `(checked: boolean) => void` | — |  |
+| `withLabel` | `boolean` | `true` | Render the label. |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Indicator size. |
+| `onChange` | `(checked: boolean) => void` | — | Fired with the new checked state. |
 
 **Accessibility** — role `checkbox`, keyboard operable. Use aria-checked to reflect state; Group related checkboxes with fieldset and legend.
 
@@ -121,12 +121,12 @@ import { RadioButton } from '@inspera/kit'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | `'Radio option'` |  |
-| `selected` | `boolean` | — | Selected state. Values: true \| false. |
-| `name` | `string` | `'radio'` |  |
+| `label` | `string` | `'Radio option'` | Text beside the control. Always provide one. |
+| `selected` | `boolean` | — | Selected state. |
+| `name` | `string` | `'radio'` | Shared form name. Every radio in a group must use the same value. |
 | `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Pressed' \| 'Disabled' \| 'Error'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
-| `withLabel` | `boolean` | `true` | Render the label. Values: true \| false. |
-| `onChange` | `(selected: boolean) => void` | — |  |
+| `withLabel` | `boolean` | `true` | Render the label. |
+| `onChange` | `(selected: boolean) => void` | — | Fired when this option becomes selected. |
 
 **Accessibility** — role `radio`, keyboard operable. Use role="radiogroup" for the group container; Use aria-checked to indicate selected state; Arrow keys navigate between options in the group.
 
@@ -153,15 +153,15 @@ import { Select } from '@inspera/kit'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | `'Country'` | Render the label. Values: true \| false. |
-| `placeholder` | `string` | `'Select an option'` |  |
-| `options` | `string[]` | `defaultOptions` |  |
-| `value` | `string` | — |  |
+| `label` | `string` | `'Country'` | Render the label. |
+| `placeholder` | `string` | `'Select an option'` | Shown when nothing is selected. Not a substitute for the label. |
+| `options` | `string[]` | `defaultOptions` | The selectable values, in the order they should appear. |
+| `value` | `string` | — | Selected value. Controlled — pair with onChange. |
 | `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Disabled' \| 'Error' \| 'Open'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
-| `widthMode` | `'Fixed' \| 'Content Adaptable'` | `'Fixed'` | Trigger sizing. Values: Fixed \| Content Adaptable. |
-| `showLabel` | `boolean` | `true` |  |
-| `search` | `boolean` | `false` | Filterable option list. Values: true \| false. |
-| `onChange` | `(value: string) => void` | — |  |
+| `widthMode` | `'Fixed' \| 'Content Adaptable'` | `'Fixed'` | Trigger sizing. |
+| `showLabel` | `boolean` | `true` | Render the visible label. Hiding it still requires an accessible name. |
+| `search` | `boolean` | `false` | Filterable option list. |
+| `onChange` | `(value: string) => void` | — | Fired with the selected value. |
 
 **Accessibility** — role `combobox`, keyboard operable. Use aria-expanded to indicate open state; Use aria-activedescendant for highlighted option; Support arrow key navigation through options.
 
@@ -187,12 +187,12 @@ import { Toggle } from '@inspera/kit'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | `'Toggle setting'` |  |
-| `checked` | `boolean` | — | On / off state. Values: true \| false. |
+| `label` | `string` | `'Toggle setting'` | Text beside the switch describing the setting. |
+| `checked` | `boolean` | — | On / off state. |
 | `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Disabled'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
-| `size` | `'Small' \| 'Medium'` | `'Medium'` | Track / thumb size. Values: Small \| Medium. |
-| `withLabel` | `boolean` | `true` | Render the label. Values: true \| false. |
-| `onChange` | `(checked: boolean) => void` | — |  |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Track / thumb size. |
+| `withLabel` | `boolean` | `true` | Render the label. |
+| `onChange` | `(checked: boolean) => void` | — | Fired with the new on/off state. |
 
 **Accessibility** — role `switch`, keyboard operable. Use role="switch" for the toggle; Use aria-checked to reflect on/off state; Space key toggles the switch.
 
@@ -220,18 +220,18 @@ import { Textarea } from '@inspera/kit'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | `'Description'` |  |
-| `placeholder` | `string` | `'Placeholder text'` |  |
-| `value` | `string` | — |  |
+| `label` | `string` | `'Description'` | Field label. |
+| `placeholder` | `string` | `'Placeholder text'` | Hint shown when empty. Not a substitute for the label. |
+| `value` | `string` | — | Current value. Controlled — pair with onChange. |
 | `rows` | `number` | `4` | Visible text rows. |
-| `size` | `'Small' \| 'Medium'` | `'Medium'` | Vertical padding density. Values: Small \| Medium. |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Vertical padding density. |
 | `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Filled' \| 'Error' \| 'Disabled' \| 'ReadOnly'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
-| `showLabel` | `boolean` | `true` | Show the field label. Values: true \| false. |
-| `helpText` | `string` | — |  |
-| `errorText` | `string` | — |  |
+| `showLabel` | `boolean` | `true` | Show the field label. |
+| `helpText` | `string` | — | Guidance shown below the field. Replaced by errorText when invalid. |
+| `errorText` | `string` | — | Validation message. Linked to the control via aria-describedby. |
 | `maxLength` | `number` | — | Maximum character length. |
-| `showCount` | `boolean` | `false` | Show character counter. Values: true \| false. |
-| `onChange` | `(value: string) => void` | — |  |
+| `showCount` | `boolean` | `false` | Show character counter. |
+| `onChange` | `(value: string) => void` | — | Fired with the new value on every keystroke. |
 
 **Accessibility** — role `textbox`, keyboard operable. Always associate label with textarea using htmlFor/id; Error text must be linked via aria-describedby; aria-invalid reflects the error state.
 
@@ -262,10 +262,10 @@ import { FormField } from '@inspera/kit'
 | --- | --- | --- | --- |
 | `label` | `string` | — | Field label text. |
 | `htmlFor` | `string` | — | id of the wrapped control for label association. |
-| `required` | `boolean` | `false` | Show a required asterisk. Values: true \| false. |
+| `required` | `boolean` | `false` | Show a required asterisk. |
 | `helpText` | `string` | — | Helper text shown below the control. |
 | `errorText` | `string` | — | Error message; replaces help text when present. |
-| `children` **(required)** | `ReactNode` | — |  |
+| `children` **(required)** | `ReactNode` | — | The control this field wraps. Exactly one. |
 
 **Accessibility** — role `group`, keyboard operable. Associate the label with the control via htmlFor/id; Link error and help text with aria-describedby on the control; Required fields should set aria-required on the control.
 
@@ -293,15 +293,15 @@ import { Slider } from '@inspera/kit'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | `'Value'` |  |
+| `label` | `string` | `'Value'` | Field label describing what is being adjusted. |
 | `min` | `number` | `0` | Minimum value. |
 | `max` | `number` | `100` | Maximum value. |
-| `value` | `number` | — |  |
+| `value` | `number` | — | Current value. Controlled — pair with onChange. |
 | `step` | `number` | `1` | Increment granularity. |
 | `state` | `'Default' \| 'Focused' \| 'Disabled'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
-| `showValue` | `boolean` | `true` | Show the current value. Values: true \| false. |
-| `showLabel` | `boolean` | `true` | Show the field label. Values: true \| false. |
-| `onChange` | `(value: number) => void` | — |  |
+| `showValue` | `boolean` | `true` | Show the current value. |
+| `showLabel` | `boolean` | `true` | Show the field label. |
+| `onChange` | `(value: number) => void` | — | Fired as the value changes, by drag or arrow key. |
 
 **Accessibility** — role `slider`, keyboard operable. Use role="slider" with aria-valuemin / aria-valuemax / aria-valuenow; Provide an accessible label via aria-label; Arrow keys adjust the value.
 
@@ -330,9 +330,9 @@ import { SegmentedControl } from '@inspera/kit'
 | --- | --- | --- | --- |
 | `items` | `string[]` | `['Day', 'Week', 'Month']` | Segment labels. |
 | `value` | `number` | — | Active segment index. |
-| `size` | `'Small' \| 'Medium'` | `'Medium'` | Segment height. Values: Small \| Medium. |
-| `fullWidth` | `boolean` | `false` | Stretch to fill the row. Values: true \| false. |
-| `onChange` | `(index: number) => void` | — |  |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Segment height. |
+| `fullWidth` | `boolean` | `false` | Stretch to fill the row. |
+| `onChange` | `(index: number) => void` | — | Fired with the index of the chosen segment. |
 
 **Accessibility** — role `radiogroup`, keyboard operable. Container uses role="radiogroup"; Each segment uses role="radio" with aria-checked; Arrow keys move between segments.
 
@@ -358,13 +358,13 @@ import { DatePicker } from '@inspera/kit'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | `'Date'` |  |
+| `label` | `string` | `'Date'` | Field label. |
 | `value` | `string` | — | Selected date (YYYY-MM-DD). |
 | `placeholder` | `string` | `'Select date'` | Trigger placeholder. |
 | `state` | `'Default' \| 'Focused' \| 'Disabled' \| 'Error'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
-| `showLabel` | `boolean` | `true` | Show the field label. Values: true \| false. |
-| `defaultOpen` | `boolean` | `false` | Open the calendar initially. Values: true \| false. |
-| `onChange` | `(iso: string) => void` | — |  |
+| `showLabel` | `boolean` | `true` | Show the field label. |
+| `defaultOpen` | `boolean` | `false` | Open the calendar initially. |
+| `onChange` | `(iso: string) => void` | — | Fired with the selected date as an ISO string (YYYY-MM-DD). |
 
 **Accessibility** — role `dialog`, keyboard operable. Trigger uses aria-haspopup="dialog" and aria-expanded; Popover uses role="dialog" with a label; Day cells are buttons with descriptive aria-labels; Escape closes the popover.
 
@@ -391,12 +391,12 @@ import { FileUpload } from '@inspera/kit'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | `'Upload files'` |  |
+| `label` | `string` | `'Upload files'` | Field label describing what to upload. |
 | `accept` | `string` | — | Accepted MIME types / extensions. |
-| `multiple` | `boolean` | `false` | Allow multiple files. Values: true \| false. |
+| `multiple` | `boolean` | `false` | Allow multiple files. |
 | `state` | `'Default' \| 'Dragging' \| 'Disabled' \| 'Error'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
 | `helpText` | `string` | `'PNG, JPG or PDF up to 10MB'` | Constraint hint text. |
-| `onFiles` | `(files: File[]) => void` | — |  |
+| `onFiles` | `(files: File[]) => void` | — | Fired with the selected files, from both drop and browse. |
 
 **Accessibility** — role `button`, keyboard operable. Dropzone uses role="button" and is keyboard focusable; Enter / Space open the file browser; Provide an accessible label describing the action.
 
@@ -424,13 +424,13 @@ import { RadioGroup } from '@inspera/kit'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | — |  |
+| `label` | `string` | — | Group label, announced as the radiogroup name. |
 | `name` | `string` | — | Shared input name for the group. |
 | `options` | `RadioOption[]` | `DEFAULT_OPTIONS` | Radio options. |
 | `value` | `string` | — | Selected option value. |
-| `orientation` | `'Vertical' \| 'Horizontal'` | `'Vertical'` | Layout direction. Values: Vertical \| Horizontal. |
+| `orientation` | `'Vertical' \| 'Horizontal'` | `'Vertical'` | Layout direction. |
 | `state` | `'Default' \| 'Disabled' \| 'Error'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
-| `onChange` | `(value: string) => void` | — |  |
+| `onChange` | `(value: string) => void` | — | Fired with the newly selected value. |
 
 ```ts
 export interface RadioOption {
@@ -464,12 +464,12 @@ import { CheckboxGroup } from '@inspera/kit'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | — |  |
+| `label` | `string` | — | Group label, announced as the fieldset legend. |
 | `options` | `CheckboxOption[]` | `DEFAULT_OPTIONS` | Checkbox options. |
 | `value` | `string[]` | — | Selected option values. |
-| `orientation` | `'Vertical' \| 'Horizontal'` | `'Vertical'` | Layout direction. Values: Vertical \| Horizontal. |
+| `orientation` | `'Vertical' \| 'Horizontal'` | `'Vertical'` | Layout direction. |
 | `state` | `'Default' \| 'Disabled' \| 'Error'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
-| `onChange` | `(value: string[]) => void` | — |  |
+| `onChange` | `(value: string[]) => void` | — | Fired with the full array of selected values. |
 
 ```ts
 export interface CheckboxOption {
@@ -505,10 +505,10 @@ import { Rating } from '@inspera/kit'
 | --- | --- | --- | --- |
 | `value` | `number` | `0` | Current rating. |
 | `max` | `number` | `5` | Number of stars. |
-| `size` | `'Small' \| 'Medium'` | `'Medium'` | Star size. Values: Small \| Medium. |
-| `readOnly` | `boolean` | `false` | Display-only mode. Values: true \| false. |
-| `showValue` | `boolean` | `false` | Show numeric value. Values: true \| false. |
-| `onChange` | `(value: number) => void` | — |  |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Star size. |
+| `readOnly` | `boolean` | `false` | Display-only mode. |
+| `showValue` | `boolean` | `false` | Show numeric value. |
+| `onChange` | `(value: number) => void` | — | Fired with the chosen rating. Not fired when readOnly. |
 
 **Accessibility** — role `radiogroup`, keyboard operable. Container uses role="radiogroup" with an accessible label; Each star is a radio with aria-checked and an aria-label; Arrow keys adjust the rating.
 
@@ -537,7 +537,7 @@ import { OtpInput } from '@inspera/kit'
 | `length` | `number` | `6` | Number of digit boxes. |
 | `value` | `string` | — | Current code value. |
 | `state` | `'Default' \| 'Focused' \| 'Error' \| 'Disabled'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
-| `onChange` | `(value: string) => void` | — |  |
+| `onChange` | `(value: string) => void` | — | Fired with the full code as digits are entered or pasted. |
 
 **Accessibility** — role `textbox`, keyboard operable. Each box has an aria-label "Digit N"; aria-invalid reflects the error state; Backspace moves focus to the previous box; paste distributes digits.
 
@@ -566,13 +566,13 @@ import { Card } from '@inspera/kit'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `title` | `string` | `'Card title'` |  |
-| `body` | `string` | `'Group related content in a contained surface using consistent padding and elevation.'` |  |
-| `elevation` | `'Flat' \| 'Raised' \| 'Outlined'` | `'Raised'` | Surface treatment. Values: Flat \| Raised \| Outlined. |
-| `padding` | `'Compact' \| 'Default' \| 'Spacious'` | `'Default'` | Internal padding (12 / 16 / 24). Values: Compact \| Default \| Spacious. |
-| `interactive` | `boolean` | `false` | Renders as a focusable button with hover elevation. Values: true \| false. |
-| `children` | `ReactNode` | — |  |
-| `onClick` | `() => void` | — |  |
+| `title` | `string` | `'Card title'` | Optional heading for the card. |
+| `body` | `string` | `'Group related content in a contained surface using consistent padding and elevation.'` | Short body copy. For anything richer, pass children instead. |
+| `elevation` | `'Flat' \| 'Raised' \| 'Outlined'` | `'Raised'` | Surface treatment. |
+| `padding` | `'Compact' \| 'Default' \| 'Spacious'` | `'Default'` | Internal padding (12 / 16 / 24). |
+| `interactive` | `boolean` | `false` | Renders as a focusable button with hover elevation. |
+| `children` | `ReactNode` | — | Card contents. Takes precedence over title and body. |
+| `onClick` | `() => void` | — | Fired when an interactive card is activated. Set interactive as well, or there is no affordance. |
 
 **Accessibility** — role `article`, keyboard operable. Interactive cards should use role="button" or be wrapped in an anchor; Non-interactive cards use role="article" or a semantic section.
 
@@ -597,11 +597,11 @@ import { Badge } from '@inspera/kit'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | `'Badge'` |  |
-| `intent` | `'Neutral' \| 'Info' \| 'Success' \| 'Warning' \| 'Error'` | `'Neutral'` | Semantic color. Values: Neutral \| Info \| Success \| Warning \| Error. |
-| `size` | `'Small' \| 'Medium'` | `'Medium'` | Height 20 / 24. Values: Small \| Medium. |
-| `withIcon` | `boolean` | `false` | Show a leading status icon. Values: true \| false. |
-| `icon` | `string` | — |  |
+| `label` | `string` | `'Badge'` | The badge text. One or two words. |
+| `intent` | `'Neutral' \| 'Info' \| 'Success' \| 'Warning' \| 'Error'` | `'Neutral'` | Semantic color. |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Height 20 / 24. |
+| `withIcon` | `boolean` | `false` | Show a leading status icon. |
+| `icon` | `string` | — | Material Symbols name shown before the label when withIcon is set. |
 
 **Accessibility** — role `status`. Use aria-label for icon-only badges; Use role="status" for dynamic count badges.
 
@@ -627,13 +627,13 @@ import { Avatar } from '@inspera/kit'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Diameter 32 / 40 / 56. Values: Small \| Medium \| Large. |
-| `content` | `'Image' \| 'Initials' \| 'Icon'` | `'Initials'` | What fills the avatar. Values: Image \| Initials \| Icon. |
-| `status` | `'None' \| 'Online' \| 'Offline' \| 'Busy'` | `'None'` | Presence indicator dot. Values: None \| Online \| Offline \| Busy. |
-| `initials` | `string` | `'JC'` |  |
-| `imageSrc` | `string` | `'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=112&h=112&fit=crop&auto=format'` |  |
-| `alt` | `string` | `'User avatar'` |  |
-| `icon` | `string` | `'person'` |  |
+| `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Diameter 32 / 40 / 56. |
+| `content` | `'Image' \| 'Initials' \| 'Icon'` | `'Initials'` | What fills the avatar. |
+| `status` | `'None' \| 'Online' \| 'Offline' \| 'Busy'` | `'None'` | Presence indicator dot. |
+| `initials` | `string` | `'JC'` | One or two letters, used when content is Initials. Derive from the name rather than asking for them. |
+| `imageSrc` | `string` | `'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=112&h=112&fit=crop&auto=format'` | Image URL, used when content is Image. Falls back to initials if it fails to load. |
+| `alt` | `string` | `'User avatar'` | Alternative text for the image. Required whenever an image is shown. |
+| `icon` | `string` | `'person'` | Material Symbols name, used when content is Icon. |
 
 **Accessibility** — role `img`. Provide alt text for image avatars; Use aria-label for initials and icon variants.
 
@@ -660,12 +660,12 @@ import { Table } from '@inspera/kit'
 | --- | --- | --- | --- |
 | `columns` | `TableColumn[]` | `defaultColumns` | Column definitions. |
 | `rows` | `Record<string, ReactNode>[]` | `defaultRows` | Row data keyed by column. |
-| `size` | `'Compact' \| 'Default'` | `'Default'` | Row height density. Values: Compact \| Default. |
-| `striped` | `boolean` | `false` | Zebra-stripe rows. Values: true \| false. |
-| `hoverable` | `boolean` | `true` | Highlight rows on hover. Values: true \| false. |
-| `selectable` | `boolean` | `false` | Add a row selection column. Values: true \| false. |
-| `caption` | `string` | — |  |
-| `onRowClick` | `(row: Record<string, ReactNode>, index: number) => void` | — |  |
+| `size` | `'Compact' \| 'Default'` | `'Default'` | Row height density. |
+| `striped` | `boolean` | `false` | Zebra-stripe rows. |
+| `hoverable` | `boolean` | `true` | Highlight rows on hover. |
+| `selectable` | `boolean` | `false` | Add a row selection column. |
+| `caption` | `string` | — | Describes the table for screen readers. Provide one unless a heading already names it. |
+| `onRowClick` | `(row: Record<string, ReactNode>, index: number) => void` | — | Fired with the row data and its index. |
 
 ```ts
 export interface TableColumn {
@@ -701,9 +701,9 @@ import { Accordion } from '@inspera/kit'
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `items` | `AccordionItem[]` | `defaultItems` | Accordion sections. |
-| `type` | `'Single' \| 'Multiple'` | `'Single'` | Allow one or many open at once. Values: Single \| Multiple. |
+| `type` | `'Single' \| 'Multiple'` | `'Single'` | Allow one or many open at once. |
 | `defaultOpenIndex` | `number` | `0` | Initially open section. |
-| `iconPosition` | `'Left' \| 'Right'` | `'Right'` | Chevron placement. Values: Left \| Right. |
+| `iconPosition` | `'Left' \| 'Right'` | `'Right'` | Chevron placement. |
 
 ```ts
 export interface AccordionItem {
@@ -738,12 +738,12 @@ import { Tag } from '@inspera/kit'
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `label` **(required)** | `string` | — | Tag text. |
-| `intent` | `'Neutral' \| 'Info' \| 'Success' \| 'Warning' \| 'Error'` | `'Neutral'` | Semantic color. Values: Neutral \| Info \| Success \| Warning \| Error. |
-| `size` | `'Small' \| 'Medium'` | `'Medium'` | Tag height. Values: Small \| Medium. |
-| `removable` | `boolean` | `false` | Show a remove affordance. Values: true \| false. |
+| `intent` | `'Neutral' \| 'Info' \| 'Success' \| 'Warning' \| 'Error'` | `'Neutral'` | Semantic color. |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Tag height. |
+| `removable` | `boolean` | `false` | Show a remove affordance. |
 | `leadingIcon` | `string` | — | Optional leading icon. |
-| `onRemove` | `() => void` | — |  |
-| `onClick` | `() => void` | — |  |
+| `onRemove` | `() => void` | — | Fired when the remove control is activated. Set removable as well. |
+| `onClick` | `() => void` | — | Fired when the tag itself is activated. |
 
 **Accessibility** — role `status`, keyboard operable. Removable tags expose a button with aria-label "Remove {label}"; Interactive tags must be keyboard focusable; Use aria-label for icon-only tags.
 
@@ -768,9 +768,9 @@ import { Divider } from '@inspera/kit'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `orientation` | `'Horizontal' \| 'Vertical'` | `'Horizontal'` | Divider direction. Values: Horizontal \| Vertical. |
+| `orientation` | `'Horizontal' \| 'Vertical'` | `'Horizontal'` | Divider direction. |
 | `label` | `string` | — | Optional centered label (horizontal only). |
-| `spacing` | `'Compact' \| 'Default' \| 'Spacious'` | `'Default'` | Surrounding margin. Values: Compact \| Default \| Spacious. |
+| `spacing` | `'Compact' \| 'Default' \| 'Spacious'` | `'Default'` | Surrounding margin. |
 
 **Accessibility** — role `separator`. Use role="separator" with aria-orientation; Purely decorative dividers may be aria-hidden.
 
@@ -802,8 +802,8 @@ import { EmptyState } from '@inspera/kit'
 | `title` | `string` | `'No results found'` | Primary message. |
 | `description` | `string` | `'Try adjusting your filters or search terms.'` | Supporting explanation. |
 | `actionLabel` | `string` | — | Optional primary action label. |
-| `onAction` | `() => void` | — |  |
-| `size` | `'Small' \| 'Medium'` | `'Medium'` | Overall scale. Values: Small \| Medium. |
+| `onAction` | `() => void` | — | Fired when the action is activated. Only rendered when actionLabel is set. |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Overall scale. |
 
 **Accessibility** — role `status`, keyboard operable. Announce dynamically-appearing empty states with role="status"; The action must be a real focusable button; The illustration/icon is decorative (aria-hidden).
 
@@ -831,7 +831,7 @@ import { AvatarGroup } from '@inspera/kit'
 | --- | --- | --- | --- |
 | `avatars` | `AvatarGroupItem[]` | `defaultAvatars` | Avatars to display. |
 | `max` | `number` | `4` | Maximum shown before overflow. |
-| `size` | `AvatarSize` | `'Medium'` | Avatar diameter. Values: Small \| Medium \| Large. |
+| `size` | `AvatarSize` | `'Medium'` | Avatar diameter. |
 
 ```ts
 export interface AvatarGroupItem {
@@ -867,11 +867,11 @@ import { Stat } from '@inspera/kit'
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `label` **(required)** | `string` | `'Average score'` | Metric name. |
-| `value` **(required)** | `string \| number` | `'84%'` | Metric value. Values: string \| number. |
+| `value` **(required)** | `string \| number` | `'84%'` | Metric value. |
 | `delta` | `string` | `'+4.2%'` | Change indicator text. |
-| `deltaIntent` | `'up' \| 'down' \| 'neutral'` | `'up'` | Trend direction / color. Values: up \| down \| neutral. |
+| `deltaIntent` | `'up' \| 'down' \| 'neutral'` | `'up'` | Trend direction / color. |
 | `icon` | `string` | — | Optional leading icon. |
-| `helpText` | `string` | — |  |
+| `helpText` | `string` | — | Optional context below the value, such as the comparison period. |
 
 **Accessibility** — role `group`. Associate the value with its label for screen readers; Convey trend with text, not color alone; Use aria-label to summarize the metric and change.
 
@@ -899,10 +899,10 @@ import { List } from '@inspera/kit'
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `items` | `ListItem[]` | `defaultItems` | List rows. |
-| `divided` | `boolean` | `true` | Show dividers between rows. Values: true \| false. |
-| `interactive` | `boolean` | `false` | Make rows clickable. Values: true \| false. |
-| `size` | `'Compact' \| 'Default'` | `'Default'` | Row density. Values: Compact \| Default. |
-| `onItemClick` | `(item: ListItem, index: number) => void` | — |  |
+| `divided` | `boolean` | `true` | Show dividers between rows. |
+| `interactive` | `boolean` | `false` | Make rows clickable. |
+| `size` | `'Compact' \| 'Default'` | `'Default'` | Row density. |
+| `onItemClick` | `(item: ListItem, index: number) => void` | — | Fired with the item and its index. Set interactive as well. |
 
 ```ts
 export interface ListItem {
@@ -941,14 +941,14 @@ import { Alert } from '@inspera/kit'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `title` | `string` | `'Heads up'` |  |
-| `message` | `string` | `'This is a contextual inline message that matches the intent severity.'` |  |
-| `intent` | `'Info' \| 'Success' \| 'Warning' \| 'Error'` | `'Info'` | Severity / color. Values: Info \| Success \| Warning \| Error. |
-| `layout` | `'Simple' \| 'With CTA' \| 'With Close' \| 'With CTA + Close'` | `'Simple'` | Action affordances. Values: Simple \| With CTA \| With Close \| With CTA + Close. |
-| `background` | `boolean` | `true` | Tinted fill vs. left-accent only. Values: true \| false. |
-| `ctaLabel` | `string` | `'View details'` |  |
-| `onCta` | `() => void` | — |  |
-| `onClose` | `() => void` | — |  |
+| `title` | `string` | `'Heads up'` | Short headline stating what happened. |
+| `message` | `string` | `'This is a contextual inline message that matches the intent severity.'` | Supporting detail. Keep it to one or two sentences. |
+| `intent` | `'Info' \| 'Success' \| 'Warning' \| 'Error'` | `'Info'` | Severity / color. |
+| `layout` | `'Simple' \| 'With CTA' \| 'With Close' \| 'With CTA + Close'` | `'Simple'` | Action affordances. |
+| `background` | `boolean` | `true` | Tinted fill vs. left-accent only. |
+| `ctaLabel` | `string` | `'View details'` | Label for the inline action. Only rendered by the "With CTA" layouts. |
+| `onCta` | `() => void` | — | Fired when the inline action is activated. |
+| `onClose` | `() => void` | — | Fired when the alert is dismissed. Only rendered by the "With Close" layouts. |
 
 **Accessibility** — role `alert`, keyboard operable. Use role="alert" for important messages; Use aria-live="polite" for non-critical alerts; Close button must have aria-label="Close alert".
 
@@ -976,17 +976,17 @@ import { Dialog } from '@inspera/kit'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `title` | `string` | `'Dialog title'` |  |
-| `body` | `ReactNode` | `'This is the dialog body. Provide context or a clear description of the action the user is about to take.'` |  |
-| `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Panel width 400 / 480 / 560. Values: Small \| Medium \| Large. |
-| `hasCloseButton` | `boolean` | `true` | Show the header close affordance. Values: true \| false. |
-| `hasActions` | `boolean` | `true` | Show the footer action buttons. Values: true \| false. |
-| `confirmLabel` | `string` | `'Continue'` |  |
-| `cancelLabel` | `string` | `'Cancel'` |  |
-| `open` | `boolean` | `true` |  |
+| `title` | `string` | `'Dialog title'` | Dialog heading. Also the accessible name. |
+| `body` | `ReactNode` | `'This is the dialog body. Provide context or a clear description of the action the user is about to take.'` | Dialog content. |
+| `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Panel width 400 / 480 / 560. |
+| `hasCloseButton` | `boolean` | `true` | Show the header close affordance. |
+| `hasActions` | `boolean` | `true` | Show the footer action buttons. |
+| `confirmLabel` | `string` | `'Continue'` | Label for the confirming action. Name the action — "Delete", not "OK". |
+| `cancelLabel` | `string` | `'Cancel'` | Label for the dismissing action. |
+| `open` | `boolean` | `true` | Whether the dialog is shown. Controlled — pair with onClose. |
 | `embedded` | `boolean` | `false` | Render just the panel (no overlay) — used for documentation previews. |
-| `onClose` | `() => void` | — |  |
-| `onConfirm` | `() => void` | — |  |
+| `onClose` | `() => void` | — | Fired on the close button, the overlay, and Escape. |
+| `onConfirm` | `() => void` | — | Fired when the confirming action is activated. |
 
 **Accessibility** — role `dialog`, keyboard operable. Use role="dialog" with aria-modal="true"; Set aria-labelledby to the dialog title; Trap focus inside the dialog when open; Return focus to trigger element on close; Escape key closes the dialog.
 
@@ -1013,13 +1013,13 @@ import { Snackbar } from '@inspera/kit'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `message` | `string` | `'Assessment saved successfully.'` |  |
-| `intent` | `'Neutral' \| 'Info' \| 'Success' \| 'Warning' \| 'Error'` | `'Neutral'` | Accent icon color. Values: Neutral \| Info \| Success \| Warning \| Error. |
-| `hasAction` | `boolean` | `false` | Show an inline action (e.g. Undo). Values: true \| false. |
-| `hasClose` | `boolean` | `true` | Show the dismiss button. Values: true \| false. |
-| `actionLabel` | `string` | `'Undo'` |  |
-| `onAction` | `() => void` | — |  |
-| `onClose` | `() => void` | — |  |
+| `message` | `string` | `'Assessment saved successfully.'` | What happened. One short sentence. |
+| `intent` | `'Neutral' \| 'Info' \| 'Success' \| 'Warning' \| 'Error'` | `'Neutral'` | Accent icon color. |
+| `hasAction` | `boolean` | `false` | Show an inline action (e.g. Undo). |
+| `hasClose` | `boolean` | `true` | Show the dismiss button. |
+| `actionLabel` | `string` | `'Undo'` | Label for the inline action, typically "Undo". |
+| `onAction` | `() => void` | — | Fired when the inline action is activated. |
+| `onClose` | `() => void` | — | Fired when dismissed. |
 
 **Accessibility** — role `status`, keyboard operable. Use role="status" with aria-live="polite"; Action button must be focusable; Auto-dismiss timing must be generous (5s minimum).
 
@@ -1048,11 +1048,11 @@ import { Tooltip } from '@inspera/kit'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `content` | `string` | `'Supplementary help text'` |  |
-| `placement` | `'Top' \| 'Bottom' \| 'Left' \| 'Right'` | `'Top'` | Position relative to the trigger. Values: Top \| Bottom \| Left \| Right. |
-| `theme` | `'Light' \| 'Dark'` | `'Dark'` | Surface color. Values: Light \| Dark. |
-| `type` | `'Default' \| 'Accessibility'` | `'Default'` | Accessibility type uses larger text. Values: Default \| Accessibility. |
-| `children` | `ReactNode` | — |  |
+| `content` | `string` | `'Supplementary help text'` | The hint text. Keep it short; never put essential information here alone. |
+| `placement` | `'Top' \| 'Bottom' \| 'Left' \| 'Right'` | `'Top'` | Position relative to the trigger. |
+| `theme` | `'Light' \| 'Dark'` | `'Dark'` | Surface color. |
+| `type` | `'Default' \| 'Accessibility'` | `'Default'` | Accessibility type uses larger text. |
+| `children` | `ReactNode` | — | The element the tooltip describes. |
 | `forceVisible` | `boolean` | `false` | Keep the tooltip visible regardless of hover — used for documentation. |
 
 **Accessibility** — role `tooltip`, keyboard operable. Use role="tooltip" on the tooltip element; Link trigger and tooltip with aria-describedby; Escape key dismisses the tooltip; Tooltip must not contain interactive content.
@@ -1082,12 +1082,12 @@ import { Progress } from '@inspera/kit'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `variant` | `'Linear' \| 'Circular'` | `'Linear'` | Bar or ring. Values: Linear \| Circular. |
+| `variant` | `'Linear' \| 'Circular'` | `'Linear'` | Bar or ring. |
 | `value` | `number` | `60` | Completion percentage 0–100. Ignored when indeterminate. |
-| `indeterminate` | `boolean` | `false` | Unknown-duration animation. Values: true \| false. |
-| `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Bar height / ring diameter. Values: Small \| Medium \| Large. |
-| `intent` | `'Primary' \| 'Success' \| 'Warning' \| 'Error'` | `'Primary'` | Fill color. Values: Primary \| Success \| Warning \| Error. |
-| `showValue` | `boolean` | `false` | Render the percentage. Values: true \| false. |
+| `indeterminate` | `boolean` | `false` | Unknown-duration animation. |
+| `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Bar height / ring diameter. |
+| `intent` | `'Primary' \| 'Success' \| 'Warning' \| 'Error'` | `'Primary'` | Fill color. |
+| `showValue` | `boolean` | `false` | Render the percentage. |
 
 **Accessibility** — role `progressbar`. Use role="progressbar" with aria-valuenow / min / max; Omit aria-valuenow when indeterminate; Provide an accessible label for the task.
 
@@ -1113,8 +1113,8 @@ import { Spinner } from '@inspera/kit'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Diameter 16 / 24 / 40. Values: Small \| Medium \| Large. |
-| `intent` | `'Primary' \| 'Neutral' \| 'Inverse'` | `'Primary'` | Arc color. Values: Primary \| Neutral \| Inverse. |
+| `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Diameter 16 / 24 / 40. |
+| `intent` | `'Primary' \| 'Neutral' \| 'Inverse'` | `'Primary'` | Arc color. |
 | `label` | `string` | `'Loading'` | Accessible label. |
 
 **Accessibility** — role `status`. Use role="status" with aria-live="polite"; Provide an accessible label via aria-label; Include visually-hidden loading text.
@@ -1140,11 +1140,11 @@ import { Skeleton } from '@inspera/kit'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `variant` | `'Text' \| 'Rect' \| 'Circle'` | `'Text'` | Placeholder shape. Values: Text \| Rect \| Circle. |
-| `width` | `string \| number` | — | Explicit width. Values: string \| number. |
-| `height` | `string \| number` | — | Explicit height. Values: string \| number. |
+| `variant` | `'Text' \| 'Rect' \| 'Circle'` | `'Text'` | Placeholder shape. |
+| `width` | `string \| number` | — | Explicit width. |
+| `height` | `string \| number` | — | Explicit height. |
 | `lines` | `number` | `1` | Number of text lines. Only applies to the Text variant. |
-| `radius` | `string \| number` | — |  |
+| `radius` | `string \| number` | — | Corner radius override. Match the shape being stood in for. |
 
 **Accessibility** — role `presentation`. Skeletons are decorative and aria-hidden; Announce the real content once loaded; Mirror the layout of the content being loaded.
 
@@ -1174,11 +1174,11 @@ import { Popover } from '@inspera/kit'
 | `trigger` | `ReactNode` | — | Element that toggles the popover. |
 | `title` | `string` | `'Popover title'` | Optional panel heading. |
 | `content` | `ReactNode` | `'Popover content with interactive elements.'` | Popover body content. |
-| `placement` | `'Top' \| 'Bottom' \| 'Left' \| 'Right'` | `'Bottom'` | Position relative to the trigger. Values: Top \| Bottom \| Left \| Right. |
-| `open` | `boolean` | — |  |
-| `defaultOpen` | `boolean` | `false` | Open on mount. Values: true \| false. |
+| `placement` | `'Top' \| 'Bottom' \| 'Left' \| 'Right'` | `'Bottom'` | Position relative to the trigger. |
+| `open` | `boolean` | — | Controlled open state. Leave unset to let the popover manage itself. |
+| `defaultOpen` | `boolean` | `false` | Open on mount. |
 | `forceVisible` | `boolean` | `false` | Keep the panel visible regardless of state — used for documentation. |
-| `onOpenChange` | `(open: boolean) => void` | — |  |
+| `onOpenChange` | `(open: boolean) => void` | — | Fired when the popover opens or closes. |
 
 **Accessibility** — role `dialog`, keyboard operable. Trigger uses aria-haspopup and aria-expanded; Panel uses role="dialog"; Escape and outside-click close the popover; May contain interactive content (unlike Tooltip).
 
@@ -1209,14 +1209,14 @@ import { Drawer } from '@inspera/kit'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `open` | `boolean` | `false` | Visibility. Values: true \| false. |
-| `side` | `'Right' \| 'Left' \| 'Bottom'` | `'Right'` | Edge it slides from. Values: Right \| Left \| Bottom. |
-| `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Panel width / height. Values: Small \| Medium \| Large. |
+| `open` | `boolean` | `false` | Visibility. |
+| `side` | `'Right' \| 'Left' \| 'Bottom'` | `'Right'` | Edge it slides from. |
+| `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Panel width / height. |
 | `title` | `string` | `'Panel'` | Header title. |
-| `hasCloseButton` | `boolean` | `true` | Show the close affordance. Values: true \| false. |
-| `children` | `ReactNode` | — |  |
+| `hasCloseButton` | `boolean` | `true` | Show the close affordance. |
+| `children` | `ReactNode` | — | Panel contents. |
 | `embedded` | `boolean` | `false` | Render just the panel inline (no overlay/scrim) — used for documentation previews. |
-| `onClose` | `() => void` | — |  |
+| `onClose` | `() => void` | — | Fired on the close button, the scrim, and Escape. |
 
 **Accessibility** — role `dialog`, keyboard operable. Use role="dialog" with aria-modal="true"; Set aria-labelledby to the drawer title; Trap focus while open and restore it on close; Escape closes the drawer.
 
@@ -1245,12 +1245,12 @@ import { Tabs } from '@inspera/kit'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `items` | `TabItem[]` | `defaultItems` |  |
-| `style` | `'Underline' \| 'Contained'` | `'Underline'` | Visual treatment. Values: Underline \| Contained. |
-| `size` | `'Small' \| 'Medium'` | `'Medium'` | Tab height 40 / 48. Values: Small \| Medium. |
-| `fullWidth` | `boolean` | `false` | Stretch tabs to fill the row. Values: true \| false. |
-| `value` | `number` | — |  |
-| `onChange` | `(index: number) => void` | — |  |
+| `items` | `TabItem[]` | `defaultItems` | The tabs, in order. |
+| `style` | `'Underline' \| 'Contained'` | `'Underline'` | Visual treatment. |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Tab height 40 / 48. |
+| `fullWidth` | `boolean` | `false` | Stretch tabs to fill the row. |
+| `value` | `number` | — | Index of the active tab. Controlled — pair with onChange. |
+| `onChange` | `(index: number) => void` | — | Fired with the index of the newly selected tab. |
 
 ```ts
 export interface TabItem {
@@ -1283,10 +1283,10 @@ import { Breadcrumb } from '@inspera/kit'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `items` | `string[]` | `defaultItems` |  |
-| `separator` | `'Slash' \| 'Chevron'` | `'Chevron'` | Divider glyph between items. Values: Slash \| Chevron. |
-| `size` | `'Small' \| 'Medium'` | `'Medium'` | Text size 14 / 16. Values: Small \| Medium. |
-| `onNavigate` | `(index: number) => void` | — |  |
+| `items` | `string[]` | `defaultItems` | Trail from root to current page. The last entry is the current page and is not a link. |
+| `separator` | `'Slash' \| 'Chevron'` | `'Chevron'` | Divider glyph between items. |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Text size 14 / 16. |
+| `onNavigate` | `(index: number) => void` | — | Fired with the index of the crumb that was clicked. |
 
 **Accessibility** — role `navigation`, keyboard operable. Wrap in nav with aria-label="Breadcrumb"; Use an ordered list for semantic structure; Mark current page with aria-current="page".
 
@@ -1317,9 +1317,9 @@ import { Pagination } from '@inspera/kit'
 | `page` | `number` | `1` | Current page (1-based). |
 | `pageCount` | `number` | `10` | Total number of pages. |
 | `siblingCount` | `number` | `1` | Pages shown either side of current. |
-| `size` | `'Small' \| 'Medium'` | `'Medium'` | Control height. Values: Small \| Medium. |
-| `showEdges` | `boolean` | `true` | Show first / last controls. Values: true \| false. |
-| `onChange` | `(page: number) => void` | — |  |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Control height. |
+| `showEdges` | `boolean` | `true` | Show first / last controls. |
+| `onChange` | `(page: number) => void` | — | Fired with the requested page number, 1-based. |
 
 **Accessibility** — role `navigation`, keyboard operable. Wrap in nav with aria-label="Pagination"; Mark the current page with aria-current="page"; Disable and aria-disable prev/next at the bounds.
 
@@ -1348,11 +1348,11 @@ import { Menu } from '@inspera/kit'
 | --- | --- | --- | --- |
 | `label` | `string` | `'Actions'` | Trigger label. |
 | `items` | `MenuItem[]` | `sampleItems` | Menu items. |
-| `placement` | `'Bottom Start' \| 'Bottom End'` | `'Bottom Start'` | Alignment to trigger. Values: Bottom Start \| Bottom End. |
-| `open` | `boolean` | — |  |
-| `defaultOpen` | `boolean` | `false` | Open on mount. Values: true \| false. |
+| `placement` | `'Bottom Start' \| 'Bottom End'` | `'Bottom Start'` | Alignment to trigger. |
+| `open` | `boolean` | — | Controlled open state. Leave unset to let the menu manage itself. |
+| `defaultOpen` | `boolean` | `false` | Open on mount. |
 | `forceVisible` | `boolean` | `false` | Always render the open menu, for documentation. |
-| `onSelect` | `(label: string) => void` | — |  |
+| `onSelect` | `(label: string) => void` | — | Fired with the label of the chosen item. |
 
 ```ts
 export interface MenuItem {
@@ -1390,8 +1390,8 @@ import { Stepper } from '@inspera/kit'
 | --- | --- | --- | --- |
 | `steps` | `Step[]` | `defaultSteps` | Ordered steps. |
 | `activeStep` | `number` | `1` | Zero-based index of the current step. |
-| `orientation` | `'Horizontal' \| 'Vertical'` | `'Horizontal'` | Layout direction. Values: Horizontal \| Vertical. |
-| `size` | `'Small' \| 'Medium'` | `'Medium'` | Indicator size. Values: Small \| Medium. |
+| `orientation` | `'Horizontal' \| 'Vertical'` | `'Horizontal'` | Layout direction. |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Indicator size. |
 
 ```ts
 export interface Step {
@@ -1426,17 +1426,17 @@ import { Link } from '@inspera/kit'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `children` | `ReactNode` | — |  |
-| `label` | `string` | `'Learn more'` |  |
-| `href` | `string` | `'#'` |  |
-| `intent` | `'Default' \| 'Muted'` | `'Default'` | Color emphasis. Values: Default \| Muted. |
-| `size` | `'Small' \| 'Medium'` | `'Medium'` | Text size. Values: Small \| Medium. |
-| `underline` | `'Always' \| 'Hover' \| 'None'` | `'Hover'` | Underline behavior. Values: Always \| Hover \| None. |
-| `external` | `boolean` | `false` | Open in a new tab with an icon. Values: true \| false. |
-| `disabled` | `boolean` | `false` | Non-interactive state. Values: true \| false. |
-| `leadingIcon` | `string` | — |  |
-| `trailingIcon` | `string` | — |  |
-| `onClick` | `(e: React.MouseEvent) => void` | — |  |
+| `children` | `ReactNode` | — | Link text. Takes precedence over label. |
+| `label` | `string` | `'Learn more'` | Link text, when not passing children. |
+| `href` | `string` | `'#'` | Destination URL. Always provide a real one. |
+| `intent` | `'Default' \| 'Muted'` | `'Default'` | Color emphasis. |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Text size. |
+| `underline` | `'Always' \| 'Hover' \| 'None'` | `'Hover'` | Underline behavior. |
+| `external` | `boolean` | `false` | Open in a new tab with an icon. |
+| `disabled` | `boolean` | `false` | Non-interactive state. |
+| `leadingIcon` | `string` | — | Material Symbols name shown before the text. |
+| `trailingIcon` | `string` | — | Material Symbols name shown after the text. |
+| `onClick` | `(e: React.MouseEvent) => void` | — | Fired on activation. Use for routing, not to replace href. |
 
 **Accessibility** — role `link`, keyboard operable. Use a real anchor with a valid href; External links set target="_blank" and rel="noreferrer"; Disabled links set aria-disabled and prevent navigation; Focus ring is visible on keyboard focus.
 

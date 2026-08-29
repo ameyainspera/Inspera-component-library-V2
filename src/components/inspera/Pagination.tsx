@@ -9,10 +9,11 @@ export interface PaginationProps {
   pageCount?: number
   /** Pages shown either side of current. */
   siblingCount?: number
-  /** Control height. Values: Small | Medium. */
+  /** Control height. */
   size?: PaginationSize
-  /** Show first / last controls. Values: true | false. */
+  /** Show first / last controls. */
   showEdges?: boolean
+  /** Fired with the requested page number, 1-based. */
   onChange?: (page: number) => void
 }
 

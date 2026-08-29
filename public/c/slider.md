@@ -58,15 +58,15 @@ import { Slider } from '@inspera/components'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | `'Value'` |  |
+| `label` | `string` | `'Value'` | Field label describing what is being adjusted. |
 | `min` | `number` | `0` | Minimum value. |
 | `max` | `number` | `100` | Maximum value. |
-| `value` | `number` | — |  |
+| `value` | `number` | — | Current value. Controlled — pair with onChange. |
 | `step` | `number` | `1` | Increment granularity. |
 | `state` | `'Default' \| 'Focused' \| 'Disabled'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
-| `showValue` | `boolean` | `true` | Show the current value. Values: true \| false. |
-| `showLabel` | `boolean` | `true` | Show the field label. Values: true \| false. |
-| `onChange` | `(value: number) => void` | — |  |
+| `showValue` | `boolean` | `true` | Show the current value. |
+| `showLabel` | `boolean` | `true` | Show the field label. |
+| `onChange` | `(value: number) => void` | — | Fired as the value changes, by drag or arrow key. |
 
 **Accessibility** — role `slider`, keyboard operable. Use role="slider" with aria-valuemin / aria-valuemax / aria-valuenow; Provide an accessible label via aria-label; Arrow keys adjust the value.
 

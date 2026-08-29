@@ -5,18 +5,23 @@ export type SelectState =
 export type SelectWidthMode = 'Fixed' | 'Content Adaptable'
 
 export interface SelectProps {
-  /** Render the label. Values: true | false. */
+  /** Render the label. */
   label?: string
+  /** Shown when nothing is selected. Not a substitute for the label. */
   placeholder?: string
+  /** The selectable values, in the order they should appear. */
   options?: string[]
+  /** Selected value. Controlled — pair with onChange. */
   value?: string
   /** Forces a visual state for documentation. Omit for real interactivity. */
   state?: SelectState
-  /** Trigger sizing. Values: Fixed | Content Adaptable. */
+  /** Trigger sizing. */
   widthMode?: SelectWidthMode
+  /** Render the visible label. Hiding it still requires an accessible name. */
   showLabel?: boolean
-  /** Filterable option list. Values: true | false. */
+  /** Filterable option list. */
   search?: boolean
+  /** Fired with the selected value. */
   onChange?: (value: string) => void
 }
 

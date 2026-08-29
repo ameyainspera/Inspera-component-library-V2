@@ -7,16 +7,19 @@ export type ButtonState = 'Default' | 'Hover' | 'Focused' | 'Pressed' | 'Disable
 export type ButtonContent = 'Text' | 'Icon + Text' | 'Text + Icon' | 'Text + Disclosure'
 
 export interface ButtonProps {
+  /** The button text. Start with a verb — "Save", not "OK". */
   label?: string
-  /** Visual role / semantic weight. Values: Primary | Secondary | Outline | Text | Success | Warning | Destructive. */
+  /** Visual role / semantic weight. */
   intent?: ButtonIntent
-  /** Height 32 / 40 / 48. Values: Small | Medium | Large. */
+  /** Height 32 / 40 / 48. */
   size?: ButtonSize
   /** Forces a visual state for documentation. Omit for real interactivity. */
   state?: ButtonState
-  /** Label / icon composition. Values: Text | Icon + Text | Text + Icon | Text + Disclosure. */
+  /** Label / icon composition. */
   content?: ButtonContent
+  /** Material Symbols name. Only rendered by the icon-bearing content variants. */
   icon?: string
+  /** Fired on click and on Enter or Space. */
   onClick?: () => void
 }
 

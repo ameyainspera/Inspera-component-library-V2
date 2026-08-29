@@ -9,6 +9,7 @@ export interface OtpInputProps {
   value?: string
   /** Forces a visual state for documentation. Omit for real interactivity. */
   state?: OtpInputState
+  /** Fired with the full code as digits are entered or pasted. */
   onChange?: (value: string) => void
 }
 

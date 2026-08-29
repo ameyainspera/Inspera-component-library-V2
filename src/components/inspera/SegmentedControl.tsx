@@ -7,10 +7,11 @@ export interface SegmentedControlProps {
   items?: string[]
   /** Active segment index. */
   value?: number
-  /** Segment height. Values: Small | Medium. */
+  /** Segment height. */
   size?: SegmentedControlSize
-  /** Stretch to fill the row. Values: true | false. */
+  /** Stretch to fill the row. */
   fullWidth?: boolean
+  /** Fired with the index of the chosen segment. */
   onChange?: (index: number) => void
 }
 

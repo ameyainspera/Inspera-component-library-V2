@@ -3,20 +3,27 @@ import { type CSSProperties, type ReactNode, useEffect } from 'react'
 export type DialogSize = 'Small' | 'Medium' | 'Large'
 
 export interface DialogProps {
+  /** Dialog heading. Also the accessible name. */
   title?: string
+  /** Dialog content. */
   body?: ReactNode
-  /** Panel width 400 / 480 / 560. Values: Small | Medium | Large. */
+  /** Panel width 400 / 480 / 560. */
   size?: DialogSize
-  /** Show the header close affordance. Values: true | false. */
+  /** Show the header close affordance. */
   hasCloseButton?: boolean
-  /** Show the footer action buttons. Values: true | false. */
+  /** Show the footer action buttons. */
   hasActions?: boolean
+  /** Label for the confirming action. Name the action — "Delete", not "OK". */
   confirmLabel?: string
+  /** Label for the dismissing action. */
   cancelLabel?: string
+  /** Whether the dialog is shown. Controlled — pair with onClose. */
   open?: boolean
   /** Render just the panel (no overlay) — used for documentation previews. */
   embedded?: boolean
+  /** Fired on the close button, the overlay, and Escape. */
   onClose?: () => void
+  /** Fired when the confirming action is activated. */
   onConfirm?: () => void
 }
 

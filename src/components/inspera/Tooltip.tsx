@@ -5,13 +5,15 @@ export type TooltipTheme = 'Light' | 'Dark'
 export type TooltipType = 'Default' | 'Accessibility'
 
 export interface TooltipProps {
+  /** The hint text. Keep it short; never put essential information here alone. */
   content?: string
-  /** Position relative to the trigger. Values: Top | Bottom | Left | Right. */
+  /** Position relative to the trigger. */
   placement?: TooltipPlacement
-  /** Surface color. Values: Light | Dark. */
+  /** Surface color. */
   theme?: TooltipTheme
-  /** Accessibility type uses larger text. Values: Default | Accessibility. */
+  /** Accessibility type uses larger text. */
   type?: TooltipType
+  /** The element the tooltip describes. */
   children?: ReactNode
   /** Keep the tooltip visible regardless of hover — used for documentation. */
   forceVisible?: boolean

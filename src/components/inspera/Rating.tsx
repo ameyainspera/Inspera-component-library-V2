@@ -7,12 +7,13 @@ export interface RatingProps {
   value?: number
   /** Number of stars. */
   max?: number
-  /** Star size. Values: Small | Medium. */
+  /** Star size. */
   size?: RatingSize
-  /** Display-only mode. Values: true | false. */
+  /** Display-only mode. */
   readOnly?: boolean
-  /** Show numeric value. Values: true | false. */
+  /** Show numeric value. */
   showValue?: boolean
+  /** Fired with the chosen rating. Not fired when readOnly. */
   onChange?: (value: number) => void
 }
 

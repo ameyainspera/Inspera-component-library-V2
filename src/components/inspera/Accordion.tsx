@@ -11,11 +11,11 @@ export interface AccordionItem {
 export interface AccordionProps {
   /** Accordion sections. */
   items?: AccordionItem[]
-  /** Allow one or many open at once. Values: Single | Multiple. */
+  /** Allow one or many open at once. */
   type?: AccordionType
   /** Initially open section. */
   defaultOpenIndex?: number
-  /** Chevron placement. Values: Left | Right. */
+  /** Chevron placement. */
   iconPosition?: AccordionIconPosition
 }
 

@@ -58,8 +58,8 @@ import { Stepper } from '@inspera/components'
 | --- | --- | --- | --- |
 | `steps` | `Step[]` | `defaultSteps` | Ordered steps. |
 | `activeStep` | `number` | `1` | Zero-based index of the current step. |
-| `orientation` | `'Horizontal' \| 'Vertical'` | `'Horizontal'` | Layout direction. Values: Horizontal \| Vertical. |
-| `size` | `'Small' \| 'Medium'` | `'Medium'` | Indicator size. Values: Small \| Medium. |
+| `orientation` | `'Horizontal' \| 'Vertical'` | `'Horizontal'` | Layout direction. |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Indicator size. |
 
 ```ts
 export interface Step {

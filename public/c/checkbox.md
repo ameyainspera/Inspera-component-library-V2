@@ -56,12 +56,12 @@ import { Checkbox } from '@inspera/components'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | `'Checkbox label'` |  |
-| `checked` | `boolean` | — | Checked state. Values: true \| false. |
+| `label` | `string` | `'Checkbox label'` | Text beside the box. Always provide one. |
+| `checked` | `boolean` | — | Checked state. |
 | `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Pressed' \| 'Disabled' \| 'Error'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
-| `withLabel` | `boolean` | `true` | Render the label. Values: true \| false. |
-| `size` | `'Small' \| 'Medium'` | `'Medium'` | Indicator size. Values: Small \| Medium. |
-| `onChange` | `(checked: boolean) => void` | — |  |
+| `withLabel` | `boolean` | `true` | Render the label. |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Indicator size. |
+| `onChange` | `(checked: boolean) => void` | — | Fired with the new checked state. |
 
 **Accessibility** — role `checkbox`, keyboard operable. Use aria-checked to reflect state; Group related checkboxes with fieldset and legend.
 

@@ -4,19 +4,21 @@ export type DrawerSide = 'Right' | 'Left' | 'Bottom'
 export type DrawerSize = 'Small' | 'Medium' | 'Large'
 
 export interface DrawerProps {
-  /** Visibility. Values: true | false. */
+  /** Visibility. */
   open?: boolean
-  /** Edge it slides from. Values: Right | Left | Bottom. */
+  /** Edge it slides from. */
   side?: DrawerSide
-  /** Panel width / height. Values: Small | Medium | Large. */
+  /** Panel width / height. */
   size?: DrawerSize
   /** Header title. */
   title?: string
-  /** Show the close affordance. Values: true | false. */
+  /** Show the close affordance. */
   hasCloseButton?: boolean
+  /** Panel contents. */
   children?: ReactNode
   /** Render just the panel inline (no overlay/scrim) — used for documentation previews. */
   embedded?: boolean
+  /** Fired on the close button, the scrim, and Escape. */
   onClose?: () => void
 }
 

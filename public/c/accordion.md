@@ -57,9 +57,9 @@ import { Accordion } from '@inspera/components'
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `items` | `AccordionItem[]` | `defaultItems` | Accordion sections. |
-| `type` | `'Single' \| 'Multiple'` | `'Single'` | Allow one or many open at once. Values: Single \| Multiple. |
+| `type` | `'Single' \| 'Multiple'` | `'Single'` | Allow one or many open at once. |
 | `defaultOpenIndex` | `number` | `0` | Initially open section. |
-| `iconPosition` | `'Left' \| 'Right'` | `'Right'` | Chevron placement. Values: Left \| Right. |
+| `iconPosition` | `'Left' \| 'Right'` | `'Right'` | Chevron placement. |
 
 ```ts
 export interface AccordionItem {

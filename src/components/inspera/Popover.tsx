@@ -9,13 +9,15 @@ export interface PopoverProps {
   title?: string
   /** Popover body content. */
   content?: ReactNode
-  /** Position relative to the trigger. Values: Top | Bottom | Left | Right. */
+  /** Position relative to the trigger. */
   placement?: PopoverPlacement
+  /** Controlled open state. Leave unset to let the popover manage itself. */
   open?: boolean
-  /** Open on mount. Values: true | false. */
+  /** Open on mount. */
   defaultOpen?: boolean
   /** Keep the panel visible regardless of state — used for documentation. */
   forceVisible?: boolean
+  /** Fired when the popover opens or closes. */
   onOpenChange?: (open: boolean) => void
 }
 

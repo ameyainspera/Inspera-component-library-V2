@@ -4,14 +4,17 @@ export type RadioState =
   | 'Default' | 'Hover' | 'Focused' | 'Pressed' | 'Disabled' | 'Error'
 
 export interface RadioButtonProps {
+  /** Text beside the control. Always provide one. */
   label?: string
-  /** Selected state. Values: true | false. */
+  /** Selected state. */
   selected?: boolean
+  /** Shared form name. Every radio in a group must use the same value. */
   name?: string
   /** Forces a visual state for documentation. Omit for real interactivity. */
   state?: RadioState
-  /** Render the label. Values: true | false. */
+  /** Render the label. */
   withLabel?: boolean
+  /** Fired when this option becomes selected. */
   onChange?: (selected: boolean) => void
 }
 

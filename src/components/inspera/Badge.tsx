@@ -4,13 +4,15 @@ export type BadgeIntent = 'Neutral' | 'Info' | 'Success' | 'Warning' | 'Error'
 export type BadgeSize = 'Small' | 'Medium'
 
 export interface BadgeProps {
+  /** The badge text. One or two words. */
   label?: string
-  /** Semantic color. Values: Neutral | Info | Success | Warning | Error. */
+  /** Semantic color. */
   intent?: BadgeIntent
-  /** Height 20 / 24. Values: Small | Medium. */
+  /** Height 20 / 24. */
   size?: BadgeSize
-  /** Show a leading status icon. Values: true | false. */
+  /** Show a leading status icon. */
   withIcon?: boolean
+  /** Material Symbols name shown before the label when withIcon is set. */
   icon?: string
 }
 

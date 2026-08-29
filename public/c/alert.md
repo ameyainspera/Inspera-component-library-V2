@@ -58,14 +58,14 @@ import { Alert } from '@inspera/components'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `title` | `string` | `'Heads up'` |  |
-| `message` | `string` | `'This is a contextual inline message that matches the intent severity.'` |  |
-| `intent` | `'Info' \| 'Success' \| 'Warning' \| 'Error'` | `'Info'` | Severity / color. Values: Info \| Success \| Warning \| Error. |
-| `layout` | `'Simple' \| 'With CTA' \| 'With Close' \| 'With CTA + Close'` | `'Simple'` | Action affordances. Values: Simple \| With CTA \| With Close \| With CTA + Close. |
-| `background` | `boolean` | `true` | Tinted fill vs. left-accent only. Values: true \| false. |
-| `ctaLabel` | `string` | `'View details'` |  |
-| `onCta` | `() => void` | — |  |
-| `onClose` | `() => void` | — |  |
+| `title` | `string` | `'Heads up'` | Short headline stating what happened. |
+| `message` | `string` | `'This is a contextual inline message that matches the intent severity.'` | Supporting detail. Keep it to one or two sentences. |
+| `intent` | `'Info' \| 'Success' \| 'Warning' \| 'Error'` | `'Info'` | Severity / color. |
+| `layout` | `'Simple' \| 'With CTA' \| 'With Close' \| 'With CTA + Close'` | `'Simple'` | Action affordances. |
+| `background` | `boolean` | `true` | Tinted fill vs. left-accent only. |
+| `ctaLabel` | `string` | `'View details'` | Label for the inline action. Only rendered by the "With CTA" layouts. |
+| `onCta` | `() => void` | — | Fired when the inline action is activated. |
+| `onClose` | `() => void` | — | Fired when the alert is dismissed. Only rendered by the "With Close" layouts. |
 
 **Accessibility** — role `alert`, keyboard operable. Use role="alert" for important messages; Use aria-live="polite" for non-critical alerts; Close button must have aria-label="Close alert".
 

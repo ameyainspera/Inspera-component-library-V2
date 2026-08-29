@@ -56,17 +56,17 @@ import { TextInput } from '@inspera/components'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | `'Label'` | Show the field label. Values: true \| false. |
-| `placeholder` | `string` | `'Placeholder text'` |  |
-| `value` | `string` | — |  |
+| `label` | `string` | `'Label'` | Show the field label. |
+| `placeholder` | `string` | `'Placeholder text'` | Hint shown when empty. Not a substitute for the label. |
+| `value` | `string` | — | Current value. Controlled — pair with onChange. |
 | `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Disabled' \| 'Error' \| 'Filled' \| 'ReadOnly'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
-| `size` | `'Small' \| 'Medium'` | `'Medium'` | Control height. Values: Small \| Medium. |
-| `leadingIcon` | `string` | — | Show a leading icon. Values: true \| false. |
-| `trailingIcon` | `string` | — | Show a trailing icon. Values: true \| false. |
-| `showLabel` | `boolean` | `true` |  |
-| `helpText` | `string` | — | Show helper text. Values: true \| false. |
-| `errorText` | `string` | — | Show error message. Values: true \| false. |
-| `onChange` | `(value: string) => void` | — |  |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Control height. |
+| `leadingIcon` | `string` | — | Show a leading icon. |
+| `trailingIcon` | `string` | — | Show a trailing icon. |
+| `showLabel` | `boolean` | `true` | Render the visible label. Hiding it still requires an accessible name. |
+| `helpText` | `string` | — | Show helper text. |
+| `errorText` | `string` | — | Show error message. |
+| `onChange` | `(value: string) => void` | — | Fired with the new value on every keystroke. |
 
 **Accessibility** — role `textbox`, keyboard operable. Always associate label with input using htmlFor/id; Error text must be linked via aria-describedby; Required fields must use aria-required.
 

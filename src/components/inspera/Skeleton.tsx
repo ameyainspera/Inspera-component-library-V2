@@ -3,14 +3,15 @@ import { type CSSProperties } from 'react'
 export type SkeletonVariant = 'Text' | 'Rect' | 'Circle'
 
 export interface SkeletonProps {
-  /** Placeholder shape. Values: Text | Rect | Circle. */
+  /** Placeholder shape. */
   variant?: SkeletonVariant
-  /** Explicit width. Values: string | number. */
+  /** Explicit width. */
   width?: string | number
-  /** Explicit height. Values: string | number. */
+  /** Explicit height. */
   height?: string | number
   /** Number of text lines. Only applies to the Text variant. */
   lines?: number
+  /** Corner radius override. Match the shape being stood in for. */
   radius?: string | number
 }
 

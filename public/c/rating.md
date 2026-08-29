@@ -59,10 +59,10 @@ import { Rating } from '@inspera/components'
 | --- | --- | --- | --- |
 | `value` | `number` | `0` | Current rating. |
 | `max` | `number` | `5` | Number of stars. |
-| `size` | `'Small' \| 'Medium'` | `'Medium'` | Star size. Values: Small \| Medium. |
-| `readOnly` | `boolean` | `false` | Display-only mode. Values: true \| false. |
-| `showValue` | `boolean` | `false` | Show numeric value. Values: true \| false. |
-| `onChange` | `(value: number) => void` | — |  |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Star size. |
+| `readOnly` | `boolean` | `false` | Display-only mode. |
+| `showValue` | `boolean` | `false` | Show numeric value. |
+| `onChange` | `(value: number) => void` | — | Fired with the chosen rating. Not fired when readOnly. |
 
 **Accessibility** — role `radiogroup`, keyboard operable. Container uses role="radiogroup" with an accessible label; Each star is a radio with aria-checked and an aria-label; Arrow keys adjust the rating.
 

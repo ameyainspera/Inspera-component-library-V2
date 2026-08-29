@@ -59,12 +59,12 @@ import { Table } from '@inspera/components'
 | --- | --- | --- | --- |
 | `columns` | `TableColumn[]` | `defaultColumns` | Column definitions. |
 | `rows` | `Record<string, ReactNode>[]` | `defaultRows` | Row data keyed by column. |
-| `size` | `'Compact' \| 'Default'` | `'Default'` | Row height density. Values: Compact \| Default. |
-| `striped` | `boolean` | `false` | Zebra-stripe rows. Values: true \| false. |
-| `hoverable` | `boolean` | `true` | Highlight rows on hover. Values: true \| false. |
-| `selectable` | `boolean` | `false` | Add a row selection column. Values: true \| false. |
-| `caption` | `string` | — |  |
-| `onRowClick` | `(row: Record<string, ReactNode>, index: number) => void` | — |  |
+| `size` | `'Compact' \| 'Default'` | `'Default'` | Row height density. |
+| `striped` | `boolean` | `false` | Zebra-stripe rows. |
+| `hoverable` | `boolean` | `true` | Highlight rows on hover. |
+| `selectable` | `boolean` | `false` | Add a row selection column. |
+| `caption` | `string` | — | Describes the table for screen readers. Provide one unless a heading already names it. |
+| `onRowClick` | `(row: Record<string, ReactNode>, index: number) => void` | — | Fired with the row data and its index. |
 
 ```ts
 export interface TableColumn {

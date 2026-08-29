@@ -57,12 +57,12 @@ import { Tabs } from '@inspera/components'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `items` | `TabItem[]` | `defaultItems` |  |
-| `style` | `'Underline' \| 'Contained'` | `'Underline'` | Visual treatment. Values: Underline \| Contained. |
-| `size` | `'Small' \| 'Medium'` | `'Medium'` | Tab height 40 / 48. Values: Small \| Medium. |
-| `fullWidth` | `boolean` | `false` | Stretch tabs to fill the row. Values: true \| false. |
-| `value` | `number` | — |  |
-| `onChange` | `(index: number) => void` | — |  |
+| `items` | `TabItem[]` | `defaultItems` | The tabs, in order. |
+| `style` | `'Underline' \| 'Contained'` | `'Underline'` | Visual treatment. |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Tab height 40 / 48. |
+| `fullWidth` | `boolean` | `false` | Stretch tabs to fill the row. |
+| `value` | `number` | — | Index of the active tab. Controlled — pair with onChange. |
+| `onChange` | `(index: number) => void` | — | Fired with the index of the newly selected tab. |
 
 ```ts
 export interface TabItem {

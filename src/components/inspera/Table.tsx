@@ -14,15 +14,17 @@ export interface TableProps {
   columns?: TableColumn[]
   /** Row data keyed by column. */
   rows?: Record<string, ReactNode>[]
-  /** Row height density. Values: Compact | Default. */
+  /** Row height density. */
   size?: TableSize
-  /** Zebra-stripe rows. Values: true | false. */
+  /** Zebra-stripe rows. */
   striped?: boolean
-  /** Highlight rows on hover. Values: true | false. */
+  /** Highlight rows on hover. */
   hoverable?: boolean
-  /** Add a row selection column. Values: true | false. */
+  /** Add a row selection column. */
   selectable?: boolean
+  /** Describes the table for screen readers. Provide one unless a heading already names it. */
   caption?: string
+  /** Fired with the row data and its index. */
   onRowClick?: (row: Record<string, ReactNode>, index: number) => void
 }
 

@@ -12,8 +12,9 @@ export interface EmptyStateProps {
   description?: string
   /** Optional primary action label. */
   actionLabel?: string
+  /** Fired when the action is activated. Only rendered when actionLabel is set. */
   onAction?: () => void
-  /** Overall scale. Values: Small | Medium. */
+  /** Overall scale. */
   size?: EmptyStateSize
 }
 

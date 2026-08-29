@@ -61,9 +61,9 @@ import { Pagination } from '@inspera/components'
 | `page` | `number` | `1` | Current page (1-based). |
 | `pageCount` | `number` | `10` | Total number of pages. |
 | `siblingCount` | `number` | `1` | Pages shown either side of current. |
-| `size` | `'Small' \| 'Medium'` | `'Medium'` | Control height. Values: Small \| Medium. |
-| `showEdges` | `boolean` | `true` | Show first / last controls. Values: true \| false. |
-| `onChange` | `(page: number) => void` | — |  |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Control height. |
+| `showEdges` | `boolean` | `true` | Show first / last controls. |
+| `onChange` | `(page: number) => void` | — | Fired with the requested page number, 1-based. |
 
 **Accessibility** — role `navigation`, keyboard operable. Wrap in nav with aria-label="Pagination"; Mark the current page with aria-current="page"; Disable and aria-disable prev/next at the bounds.
 

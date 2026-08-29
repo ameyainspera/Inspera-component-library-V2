@@ -3,15 +3,17 @@ import { type CSSProperties, useId, useRef, useState } from 'react'
 export type FileUploadState = 'Default' | 'Dragging' | 'Disabled' | 'Error'
 
 export interface FileUploadProps {
+  /** Field label describing what to upload. */
   label?: string
   /** Accepted MIME types / extensions. */
   accept?: string
-  /** Allow multiple files. Values: true | false. */
+  /** Allow multiple files. */
   multiple?: boolean
   /** Forces a visual state for documentation. Omit for real interactivity. */
   state?: FileUploadState
   /** Constraint hint text. */
   helpText?: string
+  /** Fired with the selected files, from both drop and browse. */
   onFiles?: (files: File[]) => void
 }
 

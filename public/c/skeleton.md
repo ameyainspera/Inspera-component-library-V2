@@ -55,11 +55,11 @@ import { Skeleton } from '@inspera/components'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `variant` | `'Text' \| 'Rect' \| 'Circle'` | `'Text'` | Placeholder shape. Values: Text \| Rect \| Circle. |
-| `width` | `string \| number` | — | Explicit width. Values: string \| number. |
-| `height` | `string \| number` | — | Explicit height. Values: string \| number. |
+| `variant` | `'Text' \| 'Rect' \| 'Circle'` | `'Text'` | Placeholder shape. |
+| `width` | `string \| number` | — | Explicit width. |
+| `height` | `string \| number` | — | Explicit height. |
 | `lines` | `number` | `1` | Number of text lines. Only applies to the Text variant. |
-| `radius` | `string \| number` | — |  |
+| `radius` | `string \| number` | — | Corner radius override. Match the shape being stood in for. |
 
 **Accessibility** — role `presentation`. Skeletons are decorative and aria-hidden; Announce the real content once loaded; Mirror the layout of the content being loaded.
 

@@ -61,10 +61,10 @@ import { FormField } from '@inspera/components'
 | --- | --- | --- | --- |
 | `label` | `string` | — | Field label text. |
 | `htmlFor` | `string` | — | id of the wrapped control for label association. |
-| `required` | `boolean` | `false` | Show a required asterisk. Values: true \| false. |
+| `required` | `boolean` | `false` | Show a required asterisk. |
 | `helpText` | `string` | — | Helper text shown below the control. |
 | `errorText` | `string` | — | Error message; replaces help text when present. |
-| `children` **(required)** | `ReactNode` | — |  |
+| `children` **(required)** | `ReactNode` | — | The control this field wraps. Exactly one. |
 
 **Accessibility** — role `group`, keyboard operable. Associate the label with the control via htmlFor/id; Link error and help text with aria-describedby on the control; Required fields should set aria-required on the control.
 

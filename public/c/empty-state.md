@@ -62,8 +62,8 @@ import { EmptyState } from '@inspera/components'
 | `title` | `string` | `'No results found'` | Primary message. |
 | `description` | `string` | `'Try adjusting your filters or search terms.'` | Supporting explanation. |
 | `actionLabel` | `string` | — | Optional primary action label. |
-| `onAction` | `() => void` | — |  |
-| `size` | `'Small' \| 'Medium'` | `'Medium'` | Overall scale. Values: Small \| Medium. |
+| `onAction` | `() => void` | — | Fired when the action is activated. Only rendered when actionLabel is set. |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Overall scale. |
 
 **Accessibility** — role `status`, keyboard operable. Announce dynamically-appearing empty states with role="status"; The action must be a real focusable button; The illustration/icon is decorative (aria-hidden).
 

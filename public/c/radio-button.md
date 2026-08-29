@@ -56,12 +56,12 @@ import { RadioButton } from '@inspera/components'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | `'Radio option'` |  |
-| `selected` | `boolean` | — | Selected state. Values: true \| false. |
-| `name` | `string` | `'radio'` |  |
+| `label` | `string` | `'Radio option'` | Text beside the control. Always provide one. |
+| `selected` | `boolean` | — | Selected state. |
+| `name` | `string` | `'radio'` | Shared form name. Every radio in a group must use the same value. |
 | `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Pressed' \| 'Disabled' \| 'Error'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
-| `withLabel` | `boolean` | `true` | Render the label. Values: true \| false. |
-| `onChange` | `(selected: boolean) => void` | — |  |
+| `withLabel` | `boolean` | `true` | Render the label. |
+| `onChange` | `(selected: boolean) => void` | — | Fired when this option becomes selected. |
 
 **Accessibility** — role `radio`, keyboard operable. Use role="radiogroup" for the group container; Use aria-checked to indicate selected state; Arrow keys navigate between options in the group.
 

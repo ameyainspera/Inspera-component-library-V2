@@ -4,15 +4,17 @@ export type ToggleState = 'Default' | 'Hover' | 'Focused' | 'Disabled'
 export type ToggleSize = 'Small' | 'Medium'
 
 export interface ToggleProps {
+  /** Text beside the switch describing the setting. */
   label?: string
-  /** On / off state. Values: true | false. */
+  /** On / off state. */
   checked?: boolean
   /** Forces a visual state for documentation. Omit for real interactivity. */
   state?: ToggleState
-  /** Track / thumb size. Values: Small | Medium. */
+  /** Track / thumb size. */
   size?: ToggleSize
-  /** Render the label. Values: true | false. */
+  /** Render the label. */
   withLabel?: boolean
+  /** Fired with the new on/off state. */
   onChange?: (checked: boolean) => void
 }
 

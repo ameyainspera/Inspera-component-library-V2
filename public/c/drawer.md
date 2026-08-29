@@ -61,14 +61,14 @@ import { Drawer } from '@inspera/components'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `open` | `boolean` | `false` | Visibility. Values: true \| false. |
-| `side` | `'Right' \| 'Left' \| 'Bottom'` | `'Right'` | Edge it slides from. Values: Right \| Left \| Bottom. |
-| `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Panel width / height. Values: Small \| Medium \| Large. |
+| `open` | `boolean` | `false` | Visibility. |
+| `side` | `'Right' \| 'Left' \| 'Bottom'` | `'Right'` | Edge it slides from. |
+| `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Panel width / height. |
 | `title` | `string` | `'Panel'` | Header title. |
-| `hasCloseButton` | `boolean` | `true` | Show the close affordance. Values: true \| false. |
-| `children` | `ReactNode` | — |  |
+| `hasCloseButton` | `boolean` | `true` | Show the close affordance. |
+| `children` | `ReactNode` | — | Panel contents. |
 | `embedded` | `boolean` | `false` | Render just the panel inline (no overlay/scrim) — used for documentation previews. |
-| `onClose` | `() => void` | — |  |
+| `onClose` | `() => void` | — | Fired on the close button, the scrim, and Escape. |
 
 **Accessibility** — role `dialog`, keyboard operable. Use role="dialog" with aria-modal="true"; Set aria-labelledby to the drawer title; Trap focus while open and restore it on close; Escape closes the drawer.
 

@@ -57,15 +57,15 @@ import { Select } from '@inspera/components'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | `'Country'` | Render the label. Values: true \| false. |
-| `placeholder` | `string` | `'Select an option'` |  |
-| `options` | `string[]` | `defaultOptions` |  |
-| `value` | `string` | — |  |
+| `label` | `string` | `'Country'` | Render the label. |
+| `placeholder` | `string` | `'Select an option'` | Shown when nothing is selected. Not a substitute for the label. |
+| `options` | `string[]` | `defaultOptions` | The selectable values, in the order they should appear. |
+| `value` | `string` | — | Selected value. Controlled — pair with onChange. |
 | `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Disabled' \| 'Error' \| 'Open'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
-| `widthMode` | `'Fixed' \| 'Content Adaptable'` | `'Fixed'` | Trigger sizing. Values: Fixed \| Content Adaptable. |
-| `showLabel` | `boolean` | `true` |  |
-| `search` | `boolean` | `false` | Filterable option list. Values: true \| false. |
-| `onChange` | `(value: string) => void` | — |  |
+| `widthMode` | `'Fixed' \| 'Content Adaptable'` | `'Fixed'` | Trigger sizing. |
+| `showLabel` | `boolean` | `true` | Render the visible label. Hiding it still requires an accessible name. |
+| `search` | `boolean` | `false` | Filterable option list. |
+| `onChange` | `(value: string) => void` | — | Fired with the selected value. |
 
 **Accessibility** — role `combobox`, keyboard operable. Use aria-expanded to indicate open state; Use aria-activedescendant for highlighted option; Support arrow key navigation through options.
 

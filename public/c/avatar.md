@@ -56,13 +56,13 @@ import { Avatar } from '@inspera/components'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Diameter 32 / 40 / 56. Values: Small \| Medium \| Large. |
-| `content` | `'Image' \| 'Initials' \| 'Icon'` | `'Initials'` | What fills the avatar. Values: Image \| Initials \| Icon. |
-| `status` | `'None' \| 'Online' \| 'Offline' \| 'Busy'` | `'None'` | Presence indicator dot. Values: None \| Online \| Offline \| Busy. |
-| `initials` | `string` | `'JC'` |  |
-| `imageSrc` | `string` | `'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=112&h=112&fit=crop&auto=format'` |  |
-| `alt` | `string` | `'User avatar'` |  |
-| `icon` | `string` | `'person'` |  |
+| `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Diameter 32 / 40 / 56. |
+| `content` | `'Image' \| 'Initials' \| 'Icon'` | `'Initials'` | What fills the avatar. |
+| `status` | `'None' \| 'Online' \| 'Offline' \| 'Busy'` | `'None'` | Presence indicator dot. |
+| `initials` | `string` | `'JC'` | One or two letters, used when content is Initials. Derive from the name rather than asking for them. |
+| `imageSrc` | `string` | `'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=112&h=112&fit=crop&auto=format'` | Image URL, used when content is Image. Falls back to initials if it fails to load. |
+| `alt` | `string` | `'User avatar'` | Alternative text for the image. Required whenever an image is shown. |
+| `icon` | `string` | `'person'` | Material Symbols name, used when content is Icon. |
 
 **Accessibility** — role `img`. Provide alt text for image avatars; Use aria-label for initials and icon variants.
 

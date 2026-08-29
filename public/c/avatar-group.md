@@ -58,7 +58,7 @@ import { AvatarGroup } from '@inspera/components'
 | --- | --- | --- | --- |
 | `avatars` | `AvatarGroupItem[]` | `defaultAvatars` | Avatars to display. |
 | `max` | `number` | `4` | Maximum shown before overflow. |
-| `size` | `AvatarSize` | `'Medium'` | Avatar diameter. Values: Small \| Medium \| Large. |
+| `size` | `AvatarSize` | `'Medium'` | Avatar diameter. |
 
 ```ts
 export interface AvatarGroupItem {

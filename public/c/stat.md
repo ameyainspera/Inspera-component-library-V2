@@ -59,11 +59,11 @@ import { Stat } from '@inspera/components'
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `label` **(required)** | `string` | `'Average score'` | Metric name. |
-| `value` **(required)** | `string \| number` | `'84%'` | Metric value. Values: string \| number. |
+| `value` **(required)** | `string \| number` | `'84%'` | Metric value. |
 | `delta` | `string` | `'+4.2%'` | Change indicator text. |
-| `deltaIntent` | `'up' \| 'down' \| 'neutral'` | `'up'` | Trend direction / color. Values: up \| down \| neutral. |
+| `deltaIntent` | `'up' \| 'down' \| 'neutral'` | `'up'` | Trend direction / color. |
 | `icon` | `string` | — | Optional leading icon. |
-| `helpText` | `string` | — |  |
+| `helpText` | `string` | — | Optional context below the value, such as the comparison period. |
 
 **Accessibility** — role `group`. Associate the value with its label for screen readers; Convey trend with text, not color alone; Use aria-label to summarize the metric and change.
 

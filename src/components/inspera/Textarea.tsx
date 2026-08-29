@@ -5,23 +5,29 @@ export type TextareaState =
 export type TextareaSize = 'Small' | 'Medium'
 
 export interface TextareaProps {
+  /** Field label. */
   label?: string
+  /** Hint shown when empty. Not a substitute for the label. */
   placeholder?: string
+  /** Current value. Controlled — pair with onChange. */
   value?: string
   /** Visible text rows. */
   rows?: number
-  /** Vertical padding density. Values: Small | Medium. */
+  /** Vertical padding density. */
   size?: TextareaSize
   /** Forces a visual state for documentation. Omit for real interactivity. */
   state?: TextareaState
-  /** Show the field label. Values: true | false. */
+  /** Show the field label. */
   showLabel?: boolean
+  /** Guidance shown below the field. Replaced by errorText when invalid. */
   helpText?: string
+  /** Validation message. Linked to the control via aria-describedby. */
   errorText?: string
   /** Maximum character length. */
   maxLength?: number
-  /** Show character counter. Values: true | false. */
+  /** Show character counter. */
   showCount?: boolean
+  /** Fired with the new value on every keystroke. */
   onChange?: (value: string) => void
 }
 

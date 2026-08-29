@@ -5,14 +5,15 @@ export type StatDeltaIntent = 'up' | 'down' | 'neutral'
 export interface StatProps {
   /** Metric name. */
   label: string
-  /** Metric value. Values: string | number. */
+  /** Metric value. */
   value: string | number
   /** Change indicator text. */
   delta?: string
-  /** Trend direction / color. Values: up | down | neutral. */
+  /** Trend direction / color. */
   deltaIntent?: StatDeltaIntent
   /** Optional leading icon. */
   icon?: string
+  /** Optional context below the value, such as the comparison period. */
   helpText?: string
 }
 

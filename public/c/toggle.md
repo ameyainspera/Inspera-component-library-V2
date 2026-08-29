@@ -56,12 +56,12 @@ import { Toggle } from '@inspera/components'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | `'Toggle setting'` |  |
-| `checked` | `boolean` | — | On / off state. Values: true \| false. |
+| `label` | `string` | `'Toggle setting'` | Text beside the switch describing the setting. |
+| `checked` | `boolean` | — | On / off state. |
 | `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Disabled'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
-| `size` | `'Small' \| 'Medium'` | `'Medium'` | Track / thumb size. Values: Small \| Medium. |
-| `withLabel` | `boolean` | `true` | Render the label. Values: true \| false. |
-| `onChange` | `(checked: boolean) => void` | — |  |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Track / thumb size. |
+| `withLabel` | `boolean` | `true` | Render the label. |
+| `onChange` | `(checked: boolean) => void` | — | Fired with the new on/off state. |
 
 **Accessibility** — role `switch`, keyboard operable. Use role="switch" for the toggle; Use aria-checked to reflect on/off state; Space key toggles the switch.
 

@@ -5,15 +5,17 @@ export type CheckboxState =
 export type CheckboxSize = 'Small' | 'Medium'
 
 export interface CheckboxProps {
+  /** Text beside the box. Always provide one. */
   label?: string
-  /** Checked state. Values: true | false. */
+  /** Checked state. */
   checked?: boolean
   /** Forces a visual state for documentation. Omit for real interactivity. */
   state?: CheckboxState
-  /** Render the label. Values: true | false. */
+  /** Render the label. */
   withLabel?: boolean
-  /** Indicator size. Values: Small | Medium. */
+  /** Indicator size. */
   size?: CheckboxSize
+  /** Fired with the new checked state. */
   onChange?: (checked: boolean) => void
 }
 

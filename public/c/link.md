@@ -58,17 +58,17 @@ import { Link } from '@inspera/components'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `children` | `ReactNode` | — |  |
-| `label` | `string` | `'Learn more'` |  |
-| `href` | `string` | `'#'` |  |
-| `intent` | `'Default' \| 'Muted'` | `'Default'` | Color emphasis. Values: Default \| Muted. |
-| `size` | `'Small' \| 'Medium'` | `'Medium'` | Text size. Values: Small \| Medium. |
-| `underline` | `'Always' \| 'Hover' \| 'None'` | `'Hover'` | Underline behavior. Values: Always \| Hover \| None. |
-| `external` | `boolean` | `false` | Open in a new tab with an icon. Values: true \| false. |
-| `disabled` | `boolean` | `false` | Non-interactive state. Values: true \| false. |
-| `leadingIcon` | `string` | — |  |
-| `trailingIcon` | `string` | — |  |
-| `onClick` | `(e: React.MouseEvent) => void` | — |  |
+| `children` | `ReactNode` | — | Link text. Takes precedence over label. |
+| `label` | `string` | `'Learn more'` | Link text, when not passing children. |
+| `href` | `string` | `'#'` | Destination URL. Always provide a real one. |
+| `intent` | `'Default' \| 'Muted'` | `'Default'` | Color emphasis. |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Text size. |
+| `underline` | `'Always' \| 'Hover' \| 'None'` | `'Hover'` | Underline behavior. |
+| `external` | `boolean` | `false` | Open in a new tab with an icon. |
+| `disabled` | `boolean` | `false` | Non-interactive state. |
+| `leadingIcon` | `string` | — | Material Symbols name shown before the text. |
+| `trailingIcon` | `string` | — | Material Symbols name shown after the text. |
+| `onClick` | `(e: React.MouseEvent) => void` | — | Fired on activation. Use for routing, not to replace href. |
 
 **Accessibility** — role `link`, keyboard operable. Use a real anchor with a valid href; External links set target="_blank" and rel="noreferrer"; Disabled links set aria-disabled and prevent navigation; Focus ring is visible on keyboard focus.
 

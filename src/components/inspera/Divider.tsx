@@ -4,11 +4,11 @@ export type DividerOrientation = 'Horizontal' | 'Vertical'
 export type DividerSpacing = 'Compact' | 'Default' | 'Spacious'
 
 export interface DividerProps {
-  /** Divider direction. Values: Horizontal | Vertical. */
+  /** Divider direction. */
   orientation?: DividerOrientation
   /** Optional centered label (horizontal only). */
   label?: string
-  /** Surrounding margin. Values: Compact | Default | Spacious. */
+  /** Surrounding margin. */
   spacing?: DividerSpacing
 }
 

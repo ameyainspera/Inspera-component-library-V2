@@ -58,10 +58,10 @@ import { List } from '@inspera/components'
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `items` | `ListItem[]` | `defaultItems` | List rows. |
-| `divided` | `boolean` | `true` | Show dividers between rows. Values: true \| false. |
-| `interactive` | `boolean` | `false` | Make rows clickable. Values: true \| false. |
-| `size` | `'Compact' \| 'Default'` | `'Default'` | Row density. Values: Compact \| Default. |
-| `onItemClick` | `(item: ListItem, index: number) => void` | — |  |
+| `divided` | `boolean` | `true` | Show dividers between rows. |
+| `interactive` | `boolean` | `false` | Make rows clickable. |
+| `size` | `'Compact' \| 'Default'` | `'Default'` | Row density. |
+| `onItemClick` | `(item: ListItem, index: number) => void` | — | Fired with the item and its index. Set interactive as well. |
 
 ```ts
 export interface ListItem {

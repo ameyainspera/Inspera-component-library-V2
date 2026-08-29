@@ -59,7 +59,7 @@ import { OtpInput } from '@inspera/components'
 | `length` | `number` | `6` | Number of digit boxes. |
 | `value` | `string` | — | Current code value. |
 | `state` | `'Default' \| 'Focused' \| 'Error' \| 'Disabled'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
-| `onChange` | `(value: string) => void` | — |  |
+| `onChange` | `(value: string) => void` | — | Fired with the full code as digits are entered or pasted. |
 
 **Accessibility** — role `textbox`, keyboard operable. Each box has an aria-label "Digit N"; aria-invalid reflects the error state; Backspace moves focus to the previous box; paste distributes digits.
 
