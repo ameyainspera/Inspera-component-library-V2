@@ -10,11 +10,24 @@ interface SidebarProps {
   onNavigate: (hash: string) => void
 }
 
-const TOP_LEVEL = [
-  // Counted, not guessed — the badge used to claim "3k+" against ~1.2k icons.
-  { hash: '#/icons', label: 'Icons', icon: 'interests', detail: 'Material Symbols icon set', badge: String(totalIconCount) },
-  { hash: '#/integrate', label: 'Integrate', icon: 'rocket_launch', detail: 'Use Inspera in any AI builder or codebase' },
-]
+/** Sits above everything: how to use the library, not part of it. */
+const INTEGRATE = {
+  hash: '#/integrate',
+  label: 'Integrate',
+  icon: 'rocket_launch',
+  detail: 'Use Inspera in any AI builder or codebase',
+}
+
+/** Iconography is a foundation, so Icons lives in that group. */
+// Counted, not guessed — the badge used to claim "3k+" against ~1.2k icons.
+const ICONS = {
+  hash: '#/icons',
+  label: 'Icons',
+  detail: 'Material Symbols set, with per-icon axes and SVG export',
+  badge: String(totalIconCount),
+}
+
+const TOP_LEVEL = [INTEGRATE, ICONS]
 
 export default function Sidebar({ route, onNavigate }: SidebarProps) {
   const [query, setQuery] = useState('')
@@ -101,6 +114,22 @@ export default function Sidebar({ route, onNavigate }: SidebarProps) {
   useEffect(() => {
     listRef.current?.querySelector('[data-active="true"]')?.scrollIntoView({ block: 'nearest' })
   }, [cursor])
+
+  // Headings were 11px in gray-500 with 20px above — too quiet to break the
+  // list up, so every group ran together as one scroll.
+  const groupHeading: React.CSSProperties = {
+    padding: '0 12px 10px',
+    fontSize: 11,
+    fontWeight: 700,
+    letterSpacing: 0.8,
+    textTransform: 'uppercase',
+    color: 'var(--gray-600)',
+  }
+  const groupWrap: React.CSSProperties = {
+    marginTop: 26,
+    paddingTop: 18,
+    borderTop: '1px solid var(--border)',
+  }
 
   const linkStyle = (active: boolean, disabled: boolean) => ({
     display: 'flex',
@@ -249,10 +278,30 @@ export default function Sidebar({ route, onNavigate }: SidebarProps) {
         </div>
       ) : (
         <>
-          <div style={{ marginBottom: 4 }}>
-            <div style={{ padding: '0 12px 8px', fontSize: 11, fontWeight: 700, letterSpacing: 0.6, textTransform: 'uppercase', color: 'var(--gray-500)' }}>
-              Foundations
-            </div>
+          {/* Integrate first: it answers "how do I use this", which is what a
+              newcomer needs before any token page. */}
+          <button
+            type="button"
+            onClick={() => onNavigate(INTEGRATE.hash)}
+            style={{
+              ...linkStyle(route === INTEGRATE.hash, false),
+              padding: '10px 12px',
+              fontWeight: 600,
+              border: `1px solid ${route === INTEGRATE.hash ? 'var(--primary)' : 'var(--border-strong)'}`,
+              background: route === INTEGRATE.hash ? 'var(--blue-100)' : 'var(--surface)',
+            }}
+          >
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+              <span className="material-symbols-outlined" style={{ fontSize: 18 }} aria-hidden>{INTEGRATE.icon}</span>
+              {INTEGRATE.label}
+            </span>
+            <span className="material-symbols-outlined" style={{ fontSize: 16, color: 'var(--muted-foreground)' }} aria-hidden>
+              chevron_right
+            </span>
+          </button>
+
+          <div style={groupWrap}>
+            <div style={groupHeading}>Foundations</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
               {FOUNDATION_SECTIONS.map((f) => {
                 const hash = `#/foundations/${f.slug}`
@@ -263,38 +312,28 @@ export default function Sidebar({ route, onNavigate }: SidebarProps) {
                   </button>
                 )
               })}
+              {/* Iconography is a foundation too. */}
+              <button
+                type="button"
+                onClick={() => onNavigate(ICONS.hash)}
+                style={linkStyle(route === ICONS.hash, false)}
+              >
+                <span>{ICONS.label}</span>
+                <span style={{
+                  fontSize: 10, fontWeight: 600, letterSpacing: 0.4,
+                  color: route === ICONS.hash ? 'var(--primary)' : 'var(--gray-500)',
+                  background: route === ICONS.hash ? 'var(--blue-100)' : 'var(--gray-100)',
+                  borderRadius: 'var(--radius-xs)', padding: '1px 5px',
+                }}>
+                  {ICONS.badge}
+                </span>
+              </button>
             </div>
           </div>
 
-          {TOP_LEVEL.map((p, i) => (
-            <button
-              key={p.hash}
-              type="button"
-              onClick={() => onNavigate(p.hash)}
-              style={{ ...linkStyle(route === p.hash, false), marginTop: i === 0 ? 0 : 4 }}
-            >
-              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
-                <span className="material-symbols-outlined" style={{ fontSize: 18 }} aria-hidden>{p.icon}</span>
-                {p.label}
-              </span>
-              {p.badge && (
-                <span style={{
-                  fontSize: 10, fontWeight: 600, letterSpacing: 0.4, textTransform: 'uppercase',
-                  color: route === p.hash ? 'var(--primary)' : 'var(--gray-400)',
-                  background: route === p.hash ? 'var(--blue-100)' : 'var(--gray-100)',
-                  borderRadius: 'var(--radius-xs)', padding: '1px 5px',
-                }}>
-                  {p.badge}
-                </span>
-              )}
-            </button>
-          ))}
-
           {navigation.map((group) => (
-            <div key={group.category} style={{ marginTop: 20 }}>
-              <div style={{ padding: '0 12px 8px', fontSize: 11, fontWeight: 700, letterSpacing: 0.6, textTransform: 'uppercase', color: 'var(--gray-500)' }}>
-                {group.label}
-              </div>
+            <div key={group.category} style={groupWrap}>
+              <div style={groupHeading}>{group.label}</div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                 {group.items.map((item) => {
                   const hash = `#/component/${item.slug}`
