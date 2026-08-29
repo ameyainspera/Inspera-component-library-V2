@@ -28,6 +28,13 @@ jobs:
       - name: Search quality
         run: pnpm audit:search
 
+      # The framework-free recipes are what AI tools actually paste when they
+      # cannot install the package, so they have to stay pixel-identical to the
+      # components they stand in for. Runs headless against the stylesheets
+      # alone — no dev server needed.
+      - name: Recipes match their components
+        run: pnpm audit:recipes
+
       - name: Build site
         run: pnpm build
 

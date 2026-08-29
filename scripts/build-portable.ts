@@ -32,6 +32,7 @@ import {
 } from '../src/data/guidance'
 import { extractComponentProps, type PropDoc } from './extract-props'
 import type { ComponentSpec } from '../src/data/types'
+import { recipes } from '../src/data/recipes'
 import {
   brandColors, semanticColors, brandAccents, palette,
   spacing, radius, shadows, typeScale,
@@ -232,6 +233,86 @@ function relatedTypesBlock(related: Record<string, string>): string {
   return `\n\`\`\`ts\n${entries.map(([, src]) => src).join('\n\n')}\n\`\`\`\n`
 }
 
+// ---------------------------------------------------------------------------
+// Visual contract — the component as plain HTML + CSS.
+//
+// The prop table only helps a tool that can import the package. Most AI
+// builders cannot (see distribution.ts — the scope is unpublished), so they
+// hand-roll the element and invent whatever the spec left unsaid: the radius,
+// the fill, the padding, the weight. Emitting the real CSS, with the tokens it
+// needs resolved to literals, removes the guessing entirely.
+// ---------------------------------------------------------------------------
+
+/** Every token declaration, parsed back out of the CSS we just generated. */
+function tokenMap(): Map<string, string> {
+  const map = new Map<string, string>()
+  for (const line of buildRootCss().split('\n')) {
+    const m = line.match(/^\s*--([\w-]+):\s*([^;]+);/)
+    if (m) map.set(m[1], m[2].trim())
+  }
+  return map
+}
+
+/**
+ * The exact token subset a recipe references, resolved transitively and
+ * ordered as tokens.css orders them — so the block stays readable and a
+ * consumer pastes seventeen lines instead of the whole 686-line file.
+ */
+function tokensUsedBy(css: string, locals: string): string[] {
+  const all = tokenMap()
+  const needed = new Set<string>()
+  const walk = (text: string) => {
+    for (const m of text.matchAll(/var\(--([\w-]+)/g)) {
+      const name = m[1]
+      // Locals are defined by the recipe itself, not by the design system.
+      if (name.startsWith(locals) || needed.has(name)) continue
+      const value = all.get(name)
+      if (value === undefined) continue
+      needed.add(name)
+      walk(value)
+    }
+  }
+  walk(css)
+  return [...all.keys()].filter((n) => needed.has(n))
+}
+
+function recipeBlock(slug: string): string {
+  const recipe = recipes[slug]
+  if (!recipe) return ''
+  const all = tokenMap()
+  const local = recipe.className.replace('inspera-', '') + '-'
+  const used = tokensUsedBy(recipe.css, local)
+  if (used.length === 0) {
+    throw new Error(`Recipe "${slug}" references no design tokens — check the class prefix.`)
+  }
+  const width = Math.max(...used.map((n) => n.length))
+  const decls = used.map((n) => `  --${n}:`.padEnd(width + 6) + ` ${all.get(n)};`).join('\n')
+  const notes = recipe.notes?.length
+    ? `\n${recipe.notes.map((n) => `- ${n}`).join('\n')}\n`
+    : ''
+
+  return `
+#### Without the package — exact HTML and CSS
+
+Use this whenever \`@inspera/components\` is not installed. It is the same
+component, and it is complete: do not substitute a radius, colour, spacing or
+font weight of your own, and do not restyle it with a UI kit's defaults.
+${notes}
+\`\`\`css
+/* Tokens this component needs. Paste once, at \`:root\`. */
+:root {
+${decls}
+}
+
+${recipe.css}
+\`\`\`
+
+\`\`\`html
+${recipe.html}
+\`\`\`
+`
+}
+
 function componentMarkdown(c: ComponentSpec, importPath: string): string {
   const exportName = exportNameFor(c)
   const { props, relatedTypes } = componentApi[exportName]
@@ -241,10 +322,14 @@ function componentMarkdown(c: ComponentSpec, importPath: string): string {
     ? `\n**Deprecated aliases** (do not use): ${c.deprecatedAliases.map((a) => `\`${a}\``).join(', ')}\n`
     : ''
 
+  const installed = componentsPackage.published
+    ? ''
+    : `\n> \`${importPath}\` is **not published yet**. If you cannot resolve that import, do\n> not swap in another UI library — build the markup from the HTML and CSS under\n> **Without the package** below, which is this component exactly.\n`
+
   return `### ${c.name}
 
 ${c.purpose} — category: \`${c.category}\`.
-
+${installed}
 \`\`\`tsx
 import { ${exportName} } from '${importPath}'
 
@@ -257,7 +342,7 @@ ${relatedTypesBlock(relatedTypes)}
 
 **Do:** ${c.usage.do.join('; ')}.
 **Don't:** ${c.usage.dont.join('; ')}.
-${aliases}`
+${aliases}${recipeBlock(c.slug)}`
 }
 
 // ---------------------------------------------------------------------------

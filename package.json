@@ -13,6 +13,7 @@
     "typecheck": "tsc --noEmit",
     "audit:layout": "tsx scripts/audit-gallery.ts",
     "audit:search": "tsx scripts/audit-search.ts",
+    "audit:recipes": "tsx scripts/audit-recipes.ts",
     "build:pkg": "cd packages/components && tsup",
     "format": "oxfmt"
   },

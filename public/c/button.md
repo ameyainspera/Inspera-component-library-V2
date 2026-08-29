@@ -44,6 +44,10 @@ variant with no error at all. Variant *values* are Capitalised
 
 Trigger an action. — category: `input-controls`.
 
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library — build the markup from the HTML and CSS under
+> **Without the package** below, which is this component exactly.
+
 ```tsx
 import { Button } from '@inspera/components'
 
@@ -71,6 +75,142 @@ import { Button } from '@inspera/components'
 **Don't:** Do not create separate component files per intent; Do not use deprecated alias names.
 
 **Deprecated aliases** (do not use): `Primary button`, `Secondary button`, `Outline button`, `Text button`, `Success button`, `Warning button`
+
+#### Without the package — exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. It is the same
+component, and it is complete: do not substitute a radius, colour, spacing or
+font weight of your own, and do not restyle it with a UI kit's defaults.
+
+- Corner radius is 4px (`--radius-sm`). Not 6, not 8, not `rounded-lg`.
+- Type is 16px/600 at every size — Small and Large change height, padding and gap only.
+- Primary is `--primary` #004080, a deep navy. It is not a mid blue and never a gradient.
+- Every solid intent carries the inset top-light button shadow; Outline and Text carry none.
+- Hover darkens the fill to 90% and pressed to 82%, both mixed toward black — no separate hover token.
+- Minimum width is 80px, so short labels still read as buttons.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --primary:               #004080;
+  --error:                 #D32F2F;
+  --warning:               #EF6C00;
+  --success:               #2E7D32;
+  --white:                 #ffffff;
+  --gray-100:              #F7F7F7;
+  --gray-700:              #595959;
+  --gray-900:              #272727;
+  --radius-sm:             4px;
+  --effect-button-shadow:  inset 0px -1px 0px rgba(0, 0, 0, 0.2), 0px 1px 0px rgba(0, 0, 0, 0.08);
+  --border-width-default:  1px;
+  --focus-ring-width:      2px;
+  --focus-ring-offset:     2px;
+  --focus-ring-color:      var(--primary);
+  --duration-fast:         100ms;
+  --easing-standard:       cubic-bezier(0.2, 0, 0, 1);
+  --font-sans:             'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-btn {
+  /* Fill, text and border come from the intent modifier below. */
+  --btn-bg: var(--primary);
+  --btn-fg: var(--white);
+  --btn-border: transparent;
+  --btn-shadow: var(--effect-button-shadow);
+  --btn-bg-hover: color-mix(in srgb, var(--btn-bg) 90%, black);
+  --btn-bg-active: color-mix(in srgb, var(--btn-bg) 82%, black);
+  --btn-shadow-hover: inset 0 -1px 0 rgba(0, 0, 0, 0.2), 0 2px 6px rgba(0, 64, 128, 0.24);
+  --btn-shadow-active: inset 0 1px 2px rgba(0, 0, 0, 0.24);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 40px;
+  min-width: 80px;
+  padding: 0 16px;
+  border-radius: var(--radius-sm);
+  border: var(--border-width-default) solid var(--btn-border);
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  box-shadow: var(--btn-shadow);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background var(--duration-fast) var(--easing-standard),
+    border-color var(--duration-fast) var(--easing-standard),
+    box-shadow var(--duration-fast) var(--easing-standard),
+    transform var(--duration-fast) var(--easing-standard);
+}
+
+/* Sizes change height, padding and gap only — never the 16px type. */
+.inspera-btn--small { height: 32px; padding: 0 12px; gap: 6px; }
+.inspera-btn--large { height: 48px; padding: 0 24px; gap: 10px; }
+
+/* Solid intents differ only in fill; hover and pressed derive from it. */
+.inspera-btn--primary     { --btn-bg: var(--primary); }
+.inspera-btn--success     { --btn-bg: var(--success); }
+.inspera-btn--warning     { --btn-bg: var(--warning); }
+.inspera-btn--destructive { --btn-bg: var(--error); }
+.inspera-btn--secondary {
+  --btn-bg: var(--gray-100);
+  --btn-fg: var(--gray-900);
+  --btn-border: var(--gray-700);
+}
+
+/* Outline and Text carry no fill and no shadow; they tint on interaction. */
+.inspera-btn--outline,
+.inspera-btn--text {
+  --btn-bg: transparent;
+  --btn-fg: var(--primary);
+  --btn-shadow: none;
+  --btn-shadow-hover: none;
+  --btn-shadow-active: none;
+  --btn-bg-hover: color-mix(in srgb, var(--primary) 8%, transparent);
+  --btn-bg-active: color-mix(in srgb, var(--primary) 12%, transparent);
+}
+.inspera-btn--outline { --btn-border: var(--primary); }
+
+.inspera-btn:hover:not(:disabled) {
+  background: var(--btn-bg-hover);
+  box-shadow: var(--btn-shadow-hover);
+}
+.inspera-btn:active:not(:disabled) {
+  background: var(--btn-bg-active);
+  box-shadow: var(--btn-shadow-active);
+  transform: translateY(1px);
+}
+.inspera-btn:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+.inspera-btn:disabled { opacity: 0.38; cursor: not-allowed; }
+
+.inspera-btn .material-symbols-outlined { font-size: 20px; }
+```
+
+```html
+<button type="button" class="inspera-btn inspera-btn--primary">Save</button>
+
+<button type="button" class="inspera-btn inspera-btn--secondary inspera-btn--small">Cancel</button>
+
+<button type="button" class="inspera-btn inspera-btn--destructive">Delete test</button>
+
+<!-- Icon + Text. The icon is Material Symbols Outlined, never another set. -->
+<button type="button" class="inspera-btn inspera-btn--primary">
+  <span class="material-symbols-outlined" aria-hidden="true">add</span>
+  <span>Add question</span>
+</button>
+
+<!-- Icon-only still needs an accessible name. -->
+<button type="button" class="inspera-btn inspera-btn--text" aria-label="More options">
+  <span class="material-symbols-outlined" aria-hidden="true">more_vert</span>
+</button>
+```
 
 
 ---

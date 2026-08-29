@@ -44,6 +44,10 @@ variant with no error at all. Variant *values* are Capitalised
 
 Show a set of users as overlapping avatars with an overflow count. — category: `data-display`.
 
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library — build the markup from the HTML and CSS under
+> **Without the package** below, which is this component exactly.
+
 ```tsx
 import { AvatarGroup } from '@inspera/components'
 

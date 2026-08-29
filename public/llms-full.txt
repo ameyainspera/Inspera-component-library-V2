@@ -578,6 +578,10 @@ Never put something the user must retain or act on later in a Snackbar.
 
 Trigger an action. — category: `input-controls`.
 
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library — build the markup from the HTML and CSS under
+> **Without the package** below, which is this component exactly.
+
 ```tsx
 import { Button } from '@inspera/components'
 
@@ -606,10 +610,150 @@ import { Button } from '@inspera/components'
 
 **Deprecated aliases** (do not use): `Primary button`, `Secondary button`, `Outline button`, `Text button`, `Success button`, `Warning button`
 
+#### Without the package — exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. It is the same
+component, and it is complete: do not substitute a radius, colour, spacing or
+font weight of your own, and do not restyle it with a UI kit's defaults.
+
+- Corner radius is 4px (`--radius-sm`). Not 6, not 8, not `rounded-lg`.
+- Type is 16px/600 at every size — Small and Large change height, padding and gap only.
+- Primary is `--primary` #004080, a deep navy. It is not a mid blue and never a gradient.
+- Every solid intent carries the inset top-light button shadow; Outline and Text carry none.
+- Hover darkens the fill to 90% and pressed to 82%, both mixed toward black — no separate hover token.
+- Minimum width is 80px, so short labels still read as buttons.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --primary:               #004080;
+  --error:                 #D32F2F;
+  --warning:               #EF6C00;
+  --success:               #2E7D32;
+  --white:                 #ffffff;
+  --gray-100:              #F7F7F7;
+  --gray-700:              #595959;
+  --gray-900:              #272727;
+  --radius-sm:             4px;
+  --effect-button-shadow:  inset 0px -1px 0px rgba(0, 0, 0, 0.2), 0px 1px 0px rgba(0, 0, 0, 0.08);
+  --border-width-default:  1px;
+  --focus-ring-width:      2px;
+  --focus-ring-offset:     2px;
+  --focus-ring-color:      var(--primary);
+  --duration-fast:         100ms;
+  --easing-standard:       cubic-bezier(0.2, 0, 0, 1);
+  --font-sans:             'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-btn {
+  /* Fill, text and border come from the intent modifier below. */
+  --btn-bg: var(--primary);
+  --btn-fg: var(--white);
+  --btn-border: transparent;
+  --btn-shadow: var(--effect-button-shadow);
+  --btn-bg-hover: color-mix(in srgb, var(--btn-bg) 90%, black);
+  --btn-bg-active: color-mix(in srgb, var(--btn-bg) 82%, black);
+  --btn-shadow-hover: inset 0 -1px 0 rgba(0, 0, 0, 0.2), 0 2px 6px rgba(0, 64, 128, 0.24);
+  --btn-shadow-active: inset 0 1px 2px rgba(0, 0, 0, 0.24);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 40px;
+  min-width: 80px;
+  padding: 0 16px;
+  border-radius: var(--radius-sm);
+  border: var(--border-width-default) solid var(--btn-border);
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  box-shadow: var(--btn-shadow);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background var(--duration-fast) var(--easing-standard),
+    border-color var(--duration-fast) var(--easing-standard),
+    box-shadow var(--duration-fast) var(--easing-standard),
+    transform var(--duration-fast) var(--easing-standard);
+}
+
+/* Sizes change height, padding and gap only — never the 16px type. */
+.inspera-btn--small { height: 32px; padding: 0 12px; gap: 6px; }
+.inspera-btn--large { height: 48px; padding: 0 24px; gap: 10px; }
+
+/* Solid intents differ only in fill; hover and pressed derive from it. */
+.inspera-btn--primary     { --btn-bg: var(--primary); }
+.inspera-btn--success     { --btn-bg: var(--success); }
+.inspera-btn--warning     { --btn-bg: var(--warning); }
+.inspera-btn--destructive { --btn-bg: var(--error); }
+.inspera-btn--secondary {
+  --btn-bg: var(--gray-100);
+  --btn-fg: var(--gray-900);
+  --btn-border: var(--gray-700);
+}
+
+/* Outline and Text carry no fill and no shadow; they tint on interaction. */
+.inspera-btn--outline,
+.inspera-btn--text {
+  --btn-bg: transparent;
+  --btn-fg: var(--primary);
+  --btn-shadow: none;
+  --btn-shadow-hover: none;
+  --btn-shadow-active: none;
+  --btn-bg-hover: color-mix(in srgb, var(--primary) 8%, transparent);
+  --btn-bg-active: color-mix(in srgb, var(--primary) 12%, transparent);
+}
+.inspera-btn--outline { --btn-border: var(--primary); }
+
+.inspera-btn:hover:not(:disabled) {
+  background: var(--btn-bg-hover);
+  box-shadow: var(--btn-shadow-hover);
+}
+.inspera-btn:active:not(:disabled) {
+  background: var(--btn-bg-active);
+  box-shadow: var(--btn-shadow-active);
+  transform: translateY(1px);
+}
+.inspera-btn:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+.inspera-btn:disabled { opacity: 0.38; cursor: not-allowed; }
+
+.inspera-btn .material-symbols-outlined { font-size: 20px; }
+```
+
+```html
+<button type="button" class="inspera-btn inspera-btn--primary">Save</button>
+
+<button type="button" class="inspera-btn inspera-btn--secondary inspera-btn--small">Cancel</button>
+
+<button type="button" class="inspera-btn inspera-btn--destructive">Delete test</button>
+
+<!-- Icon + Text. The icon is Material Symbols Outlined, never another set. -->
+<button type="button" class="inspera-btn inspera-btn--primary">
+  <span class="material-symbols-outlined" aria-hidden="true">add</span>
+  <span>Add question</span>
+</button>
+
+<!-- Icon-only still needs an accessible name. -->
+<button type="button" class="inspera-btn inspera-btn--text" aria-label="More options">
+  <span class="material-symbols-outlined" aria-hidden="true">more_vert</span>
+</button>
+```
+
 
 ### Text Input
 
 Collect single-line text input. — category: `input-controls`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library — build the markup from the HTML and CSS under
+> **Without the package** below, which is this component exactly.
 
 ```tsx
 import { TextInput } from '@inspera/components'
@@ -647,6 +791,10 @@ import { TextInput } from '@inspera/components'
 
 Allow multiple selection. — category: `input-controls`.
 
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library — build the markup from the HTML and CSS under
+> **Without the package** below, which is this component exactly.
+
 ```tsx
 import { Checkbox } from '@inspera/components'
 
@@ -678,6 +826,10 @@ import { Checkbox } from '@inspera/components'
 
 Allow single selection. — category: `input-controls`.
 
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library — build the markup from the HTML and CSS under
+> **Without the package** below, which is this component exactly.
+
 ```tsx
 import { RadioButton } from '@inspera/components'
 
@@ -708,6 +860,10 @@ import { RadioButton } from '@inspera/components'
 ### Select
 
 Select one option from a list. — category: `input-controls`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library — build the markup from the HTML and CSS under
+> **Without the package** below, which is this component exactly.
 
 ```tsx
 import { Select } from '@inspera/components'
@@ -744,6 +900,10 @@ import { Select } from '@inspera/components'
 
 Switch a setting on or off instantly. — category: `input-controls`.
 
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library — build the markup from the HTML and CSS under
+> **Without the package** below, which is this component exactly.
+
 ```tsx
 import { Toggle } from '@inspera/components'
 
@@ -774,6 +934,10 @@ import { Toggle } from '@inspera/components'
 ### Textarea
 
 Collect multi-line text input. — category: `input-controls`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library — build the markup from the HTML and CSS under
+> **Without the package** below, which is this component exactly.
 
 ```tsx
 import { Textarea } from '@inspera/components'
@@ -814,6 +978,10 @@ import { Textarea } from '@inspera/components'
 
 Standardize label, control, and help/error layout around any input. — category: `input-controls`.
 
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library — build the markup from the HTML and CSS under
+> **Without the package** below, which is this component exactly.
+
 ```tsx
 import { FormField } from '@inspera/components'
 
@@ -847,6 +1015,10 @@ import { FormField } from '@inspera/components'
 ### Slider
 
 Select a numeric value from a continuous range. — category: `input-controls`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library — build the markup from the HTML and CSS under
+> **Without the package** below, which is this component exactly.
 
 ```tsx
 import { Slider } from '@inspera/components'
@@ -884,6 +1056,10 @@ import { Slider } from '@inspera/components'
 
 Choose one option from a small set of mutually exclusive segments. — category: `input-controls`.
 
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library — build the markup from the HTML and CSS under
+> **Without the package** below, which is this component exactly.
+
 ```tsx
 import { SegmentedControl } from '@inspera/components'
 
@@ -914,6 +1090,10 @@ import { SegmentedControl } from '@inspera/components'
 ### Date Picker
 
 Select a calendar date from a popover. — category: `input-controls`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library — build the markup from the HTML and CSS under
+> **Without the package** below, which is this component exactly.
 
 ```tsx
 import { DatePicker } from '@inspera/components'
@@ -947,6 +1127,10 @@ import { DatePicker } from '@inspera/components'
 
 Upload files via drag-and-drop or browse. — category: `input-controls`.
 
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library — build the markup from the HTML and CSS under
+> **Without the package** below, which is this component exactly.
+
 ```tsx
 import { FileUpload } from '@inspera/components'
 
@@ -978,6 +1162,10 @@ import { FileUpload } from '@inspera/components'
 ### Radio Group
 
 Group mutually exclusive radio options. — category: `input-controls`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library — build the markup from the HTML and CSS under
+> **Without the package** below, which is this component exactly.
 
 ```tsx
 import { RadioGroup } from '@inspera/components'
@@ -1020,6 +1208,10 @@ export interface RadioOption {
 
 Group related multi-select checkboxes. — category: `input-controls`.
 
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library — build the markup from the HTML and CSS under
+> **Without the package** below, which is this component exactly.
+
 ```tsx
 import { CheckboxGroup } from '@inspera/components'
 
@@ -1059,6 +1251,10 @@ export interface CheckboxOption {
 
 Capture or display a star rating. — category: `input-controls`.
 
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library — build the markup from the HTML and CSS under
+> **Without the package** below, which is this component exactly.
+
 ```tsx
 import { Rating } from '@inspera/components'
 
@@ -1091,6 +1287,10 @@ import { Rating } from '@inspera/components'
 
 Enter a one-time verification code. — category: `input-controls`.
 
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library — build the markup from the HTML and CSS under
+> **Without the package** below, which is this component exactly.
+
 ```tsx
 import { OtpInput } from '@inspera/components'
 
@@ -1121,6 +1321,10 @@ import { OtpInput } from '@inspera/components'
 ### Card
 
 Group related content in a contained surface. — category: `data-display`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library — build the markup from the HTML and CSS under
+> **Without the package** below, which is this component exactly.
 
 ```tsx
 import { Card } from '@inspera/components'
@@ -1153,6 +1357,10 @@ import { Card } from '@inspera/components'
 
 Display a short status label or count. — category: `data-display`.
 
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library — build the markup from the HTML and CSS under
+> **Without the package** below, which is this component exactly.
+
 ```tsx
 import { Badge } from '@inspera/components'
 
@@ -1184,6 +1392,10 @@ import { Badge } from '@inspera/components'
 
 Represent a user or entity with an image or initials. — category: `data-display`.
 
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library — build the markup from the HTML and CSS under
+> **Without the package** below, which is this component exactly.
+
 ```tsx
 import { Avatar } from '@inspera/components'
 
@@ -1213,6 +1425,10 @@ import { Avatar } from '@inspera/components'
 ### Table
 
 Display structured data in rows and columns. — category: `data-display`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library — build the markup from the HTML and CSS under
+> **Without the package** below, which is this component exactly.
 
 ```tsx
 import { Table } from '@inspera/components'
@@ -1257,6 +1473,10 @@ export interface TableColumn {
 
 Show and hide sections of related content. — category: `data-display`.
 
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library — build the markup from the HTML and CSS under
+> **Without the package** below, which is this component exactly.
+
 ```tsx
 import { Accordion } from '@inspera/components'
 
@@ -1293,6 +1513,10 @@ export interface AccordionItem {
 
 Label, categorize, or filter with a removable chip. — category: `data-display`.
 
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library — build the markup from the HTML and CSS under
+> **Without the package** below, which is this component exactly.
+
 ```tsx
 import { Tag } from '@inspera/components'
 
@@ -1326,6 +1550,10 @@ import { Tag } from '@inspera/components'
 
 Separate content with a thin rule. — category: `data-display`.
 
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library — build the markup from the HTML and CSS under
+> **Without the package** below, which is this component exactly.
+
 ```tsx
 import { Divider } from '@inspera/components'
 
@@ -1352,6 +1580,10 @@ import { Divider } from '@inspera/components'
 ### Empty State
 
 Communicate the absence of content and offer a next step. — category: `data-display`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library — build the markup from the HTML and CSS under
+> **Without the package** below, which is this component exactly.
 
 ```tsx
 import { EmptyState } from '@inspera/components'
@@ -1385,6 +1617,10 @@ import { EmptyState } from '@inspera/components'
 ### Avatar Group
 
 Show a set of users as overlapping avatars with an overflow count. — category: `data-display`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library — build the markup from the HTML and CSS under
+> **Without the package** below, which is this component exactly.
 
 ```tsx
 import { AvatarGroup } from '@inspera/components'
@@ -1421,6 +1657,10 @@ export interface AvatarGroupItem {
 
 Highlight a key metric with an optional trend. — category: `data-display`.
 
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library — build the markup from the HTML and CSS under
+> **Without the package** below, which is this component exactly.
+
 ```tsx
 import { Stat } from '@inspera/components'
 
@@ -1453,6 +1693,10 @@ import { Stat } from '@inspera/components'
 ### List
 
 Present a vertical series of related items. — category: `data-display`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library — build the markup from the HTML and CSS under
+> **Without the package** below, which is this component exactly.
 
 ```tsx
 import { List } from '@inspera/components'
@@ -1496,6 +1740,10 @@ export interface ListItem {
 
 Display semantic inline feedback. — category: `feedback`.
 
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library — build the markup from the HTML and CSS under
+> **Without the package** below, which is this component exactly.
+
 ```tsx
 import { Alert } from '@inspera/components'
 
@@ -1528,6 +1776,10 @@ import { Alert } from '@inspera/components'
 ### Dialog
 
 Present content or actions that require user attention. — category: `feedback`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library — build the markup from the HTML and CSS under
+> **Without the package** below, which is this component exactly.
 
 ```tsx
 import { Dialog } from '@inspera/components'
@@ -1569,6 +1821,10 @@ import { Dialog } from '@inspera/components'
 
 Show brief, non-blocking feedback at the bottom of the screen. — category: `feedback`.
 
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library — build the markup from the HTML and CSS under
+> **Without the package** below, which is this component exactly.
+
 ```tsx
 import { Snackbar } from '@inspera/components'
 
@@ -1601,6 +1857,10 @@ import { Snackbar } from '@inspera/components'
 ### Tooltip
 
 Provide contextual help on hover or focus. — category: `feedback`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library — build the markup from the HTML and CSS under
+> **Without the package** below, which is this component exactly.
 
 ```tsx
 import { Tooltip } from '@inspera/components'
@@ -1636,6 +1896,10 @@ import { Tooltip } from '@inspera/components'
 
 Show completion of an ongoing task. — category: `feedback`.
 
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library — build the markup from the HTML and CSS under
+> **Without the package** below, which is this component exactly.
+
 ```tsx
 import { Progress } from '@inspera/components'
 
@@ -1670,6 +1934,10 @@ import { Progress } from '@inspera/components'
 
 Indicate an indeterminate loading state. — category: `feedback`.
 
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library — build the markup from the HTML and CSS under
+> **Without the package** below, which is this component exactly.
+
 ```tsx
 import { Spinner } from '@inspera/components'
 
@@ -1697,6 +1965,10 @@ import { Spinner } from '@inspera/components'
 ### Skeleton
 
 Show placeholder shapes while content loads. — category: `feedback`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library — build the markup from the HTML and CSS under
+> **Without the package** below, which is this component exactly.
 
 ```tsx
 import { Skeleton } from '@inspera/components'
@@ -1726,6 +1998,10 @@ import { Skeleton } from '@inspera/components'
 ### Popover
 
 Show interactive content anchored to a trigger. — category: `feedback`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library — build the markup from the HTML and CSS under
+> **Without the package** below, which is this component exactly.
 
 ```tsx
 import { Popover } from '@inspera/components'
@@ -1760,6 +2036,10 @@ import { Popover } from '@inspera/components'
 ### Drawer
 
 Slide a panel in from the edge of the screen. — category: `feedback`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library — build the markup from the HTML and CSS under
+> **Without the package** below, which is this component exactly.
 
 ```tsx
 import { Drawer } from '@inspera/components'
@@ -1801,6 +2081,10 @@ import { Drawer } from '@inspera/components'
 
 Organize content into switchable panels. — category: `navigation`.
 
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library — build the markup from the HTML and CSS under
+> **Without the package** below, which is this component exactly.
+
 ```tsx
 import { Tabs } from '@inspera/components'
 
@@ -1840,6 +2124,10 @@ export interface TabItem {
 
 Show the user's current location in a hierarchy. — category: `navigation`.
 
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library — build the markup from the HTML and CSS under
+> **Without the package** below, which is this component exactly.
+
 ```tsx
 import { Breadcrumb } from '@inspera/components'
 
@@ -1868,6 +2156,10 @@ import { Breadcrumb } from '@inspera/components'
 ### Pagination
 
 Navigate between pages of content. — category: `navigation`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library — build the markup from the HTML and CSS under
+> **Without the package** below, which is this component exactly.
 
 ```tsx
 import { Pagination } from '@inspera/components'
@@ -1901,6 +2193,10 @@ import { Pagination } from '@inspera/components'
 ### Menu
 
 Present a list of actions in a dropdown. — category: `navigation`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library — build the markup from the HTML and CSS under
+> **Without the package** below, which is this component exactly.
 
 ```tsx
 import { Menu } from '@inspera/components'
@@ -1945,6 +2241,10 @@ export interface MenuItem {
 
 Show progress through a sequence of steps. — category: `navigation`.
 
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library — build the markup from the HTML and CSS under
+> **Without the package** below, which is this component exactly.
+
 ```tsx
 import { Stepper } from '@inspera/components'
 
@@ -1980,6 +2280,10 @@ export interface Step {
 ### Link
 
 Navigate to another location or resource. — category: `navigation`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library — build the markup from the HTML and CSS under
+> **Without the package** below, which is this component exactly.
 
 ```tsx
 import { Link } from '@inspera/components'

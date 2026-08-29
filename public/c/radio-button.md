@@ -44,6 +44,10 @@ variant with no error at all. Variant *values* are Capitalised
 
 Allow single selection. — category: `input-controls`.
 
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library — build the markup from the HTML and CSS under
+> **Without the package** below, which is this component exactly.
+
 ```tsx
 import { RadioButton } from '@inspera/components'
 
