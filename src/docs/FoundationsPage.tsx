@@ -1,75 +1,86 @@
 import { useState, useCallback } from 'react'
 import {
   brandColors, semanticColors, brandAccents, palette,
-  spacing, radius, shadows, typeScale,
+  spacing, radius, shadows, typeScale, systemTokens,
 } from '../data/tokens'
 import { radiusUsage } from '../data/radius-usage.generated'
-import { Panel, SectionTitle } from './primitives'
+import { Panel, SectionTitle, CopyButton } from './primitives'
 
-function PaletteShade({ shade, hex, family }: { shade: string; hex: string; family: string }) {
-  const [copied, setCopied] = useState(false)
-  const [hovered, setHovered] = useState(false)
+/** #RRGGBB -> "rgb(r, g, b)". Designers read hex; developers often need rgb. */
+function toRgb(hex: string): string | null {
+  const m = /^#?([0-9a-f]{6})$/i.exec(hex.trim())
+  if (!m) return null
+  const n = parseInt(m[1], 16)
+  return `rgb(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255})`
+}
 
-  const handleClick = useCallback(() => {
-    try {
-      const ta = document.createElement('textarea')
-      ta.value = hex
-      ta.style.cssText = 'position:fixed;top:-9999px;left:-9999px;opacity:0'
-      document.body.appendChild(ta)
-      ta.select()
-      document.execCommand('copy')
-      document.body.removeChild(ta)
-      setCopied(true)
-      setTimeout(() => setCopied(false), 1200)
-    } catch {}
-  }, [hex])
+/** Dark enough that white text sits on it legibly. */
+function isDark(hex: string): boolean {
+  const m = /^#?([0-9a-f]{6})$/i.exec(hex.trim())
+  if (!m) return false
+  const n = parseInt(m[1], 16)
+  // Rec. 601 luma.
+  return 0.299 * ((n >> 16) & 255) + 0.587 * ((n >> 8) & 255) + 0.114 * (n & 255) < 140
+}
 
+/** The whole family end to end, so the progression reads at a glance. */
+function RampStrip({ shades }: { shades: Record<string, string> }) {
   return (
-    <div key={shade} style={{ flex: 1, cursor: 'pointer' }} onClick={handleClick} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
-      <div style={{
-        height: 40,
-        background: hex,
-        borderRadius: 'var(--radius-sm)',
-        border: hovered ? '2px solid rgba(0,0,0,0.25)' : '1px solid rgba(0,0,0,0.06)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        transition: 'border 0.1s',
-        position: 'relative',
-        overflow: 'hidden',
-      }}
-        title={`${family} ${shade} · ${hex}`}
-      >
-        {hovered && (
-          <span style={{
-            fontFamily: 'var(--font-mono)',
-            fontSize: 9,
-            fontWeight: 600,
-            color: parseInt(shade, 10) >= 500 ? 'rgba(255,255,255,0.92)' : 'rgba(0,0,0,0.75)',
-            letterSpacing: 0,
-            pointerEvents: 'none',
-            whiteSpace: 'nowrap',
-          }}>
-            {copied ? '✓ copied' : hex}
-          </span>
-        )}
-      </div>
-      <div style={{ fontSize: 10, textAlign: 'center', color: 'var(--muted-foreground)', marginTop: 4 }}>{shade}</div>
+    <div style={{ display: 'flex', height: 56, borderRadius: 'var(--radius-md)', overflow: 'hidden', border: '1px solid var(--border)' }}>
+      {Object.entries(shades).map(([shade, hex]) => (
+        <div key={shade} title={`${shade} · ${hex}`} style={{ flex: 1, background: hex }} />
+      ))}
     </div>
   )
 }
 
-function Swatch({ name, value, note }: { name: string; value: string; note?: string }) {
-  const dark = ['#004080', '#322060', '#D32F2F', '#EF6C00', '#0288D1', '#2E7D32', '#FA5101', '#89239A', '#00A788'].includes(value)
+/** One shade: swatch, name, hex, rgb, and a copy control. */
+function ShadeCard({ label, hex }: { label: string; hex: string }) {
+  const rgb = toRgb(hex)
   return (
-    <div style={{ border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', overflow: 'hidden' }}>
-      <div style={{ height: 64, background: value, display: 'flex', alignItems: 'flex-end', padding: 8 }}>
-        <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: dark ? '#fff' : 'rgba(0,0,0,0.7)' }}>{value}</span>
+    <div style={{ border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', overflow: 'hidden', background: 'var(--surface)' }}>
+      <div style={{ height: 64, background: hex, borderBottom: '1px solid var(--border)' }} />
+      <div style={{ padding: 10, display: 'flex', flexDirection: 'column', gap: 4 }}>
+        <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--gray-900)' }}>{label}</div>
+        <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--muted-foreground)' }}>{hex.toUpperCase()}</div>
+        {rgb && <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--muted-foreground)' }}>{rgb}</div>}
+        <div style={{ marginTop: 4 }}><CopyButton text={hex.toUpperCase()} label="Copy" /></div>
       </div>
-      <div style={{ padding: '8px 10px' }}>
-        <div style={{ fontSize: 13, fontWeight: 500 }}>{name}</div>
-        {note && <div style={{ fontSize: 12, color: 'var(--muted-foreground)' }}>{note}</div>}
+    </div>
+  )
+}
+
+/** A named role: swatch, token, resolved value, and the variable to reference. */
+function TokenRow({ name, value, cssVar, note }: { name: string; value: string; cssVar: string; note?: string }) {
+  const rgb = value.startsWith('#') ? toRgb(value) : null
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '10px 0', borderBottom: '1px solid var(--border)' }}>
+      <div
+        style={{
+          width: 44, height: 44, flexShrink: 0, borderRadius: 'var(--radius-sm)',
+          background: value, border: '1px solid var(--border)',
+        }}
+        aria-hidden
+      />
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--gray-900)' }}>{name}</div>
+        <div style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--muted-foreground)' }}>
+          {value}{rgb ? ` · ${rgb}` : ''}
+        </div>
+        <div style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--primary)' }}>{cssVar}</div>
+        {note && <div style={{ fontSize: 12, color: 'var(--gray-700)', marginTop: 2 }}>{note}</div>}
       </div>
+      <div style={{ flexShrink: 0 }}><CopyButton text={cssVar} label="Copy" /></div>
+    </div>
+  )
+}
+
+function TokenGroup({ title, description, children }: { title: string; description: string; children: React.ReactNode }) {
+  return (
+    <div style={{ marginBottom: 28 }}>
+      <h3 style={{ margin: '0 0 2px', fontSize: 16, fontWeight: 600, color: 'var(--gray-900)' }}>{title}</h3>
+      <p style={{ margin: '0 0 10px', fontSize: 13, color: 'var(--muted-foreground)' }}>{description}</p>
+      {children}
     </div>
   )
 }
@@ -89,28 +100,67 @@ export default function FoundationsPage() {
       </header>
 
       <Panel>
-        <SectionTitle sub="Primary brand & interactive color.">Brand & semantic color</SectionTitle>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: 12 }}>
-          {brandColors.map((c) => <Swatch key={c.name} {...c} />)}
-          {semanticColors.map((c) => <Swatch key={c.name} name={c.name} value={c.value} />)}
-          {brandAccents.map((c) => <Swatch key={c.name} name={`brand.${c.name}`} value={c.value} />)}
-        </div>
+        <SectionTitle sub="The reusable palette every component draws from. These carry no meaning on their own — they are the full range of shades each family offers.">
+          Foundation colour shades
+        </SectionTitle>
+
+        {[{ family: 'white', shades: { default: '#FFFFFF' } }, ...Object.entries(palette).map(([family, shades]) => ({ family, shades }))].map(({ family, shades }) => (
+          <div key={family} style={{ marginBottom: 28 }}>
+            <h3 style={{ margin: '0 0 10px', fontSize: 16, fontWeight: 600, textTransform: 'capitalize', color: 'var(--gray-900)' }}>
+              {family}
+            </h3>
+            {Object.keys(shades).length > 1 && (
+              <div style={{ marginBottom: 12 }}><RampStrip shades={shades} /></div>
+            )}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(132px, 1fr))', gap: 10 }}>
+              {Object.entries(shades).map(([shade, hex]) => (
+                <ShadeCard key={shade} label={shade} hex={hex} />
+              ))}
+            </div>
+          </div>
+        ))}
       </Panel>
 
       <Panel>
-        <SectionTitle sub="Reusable palette shades that components draw from.">Palette</SectionTitle>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-          {Object.entries(palette).map(([family, shades]) => (
-            <div key={family}>
-              <div style={{ fontSize: 13, fontWeight: 500, marginBottom: 6, textTransform: 'capitalize' }}>{family}</div>
-              <div style={{ display: 'flex', gap: 4 }}>
-                {Object.entries(shades).map(([shade, hex]) => (
-                  <PaletteShade key={shade} shade={shade} hex={hex} family={family} />
-                ))}
-              </div>
-            </div>
+        <SectionTitle sub="Purpose-driven tokens for brand, status feedback and interaction. Separate from the foundation shades — these carry meaning, so use them for that meaning and nothing else.">
+          Semantic &amp; brand tokens
+        </SectionTitle>
+
+        <TokenGroup title="Brand" description="Core brand colours for primary actions and emphasis.">
+          {brandColors.map((c) => (
+            <TokenRow key={c.name} name={c.name} value={c.value} cssVar={`var(--${c.name.replace('.main', '')})`} note={c.note} />
           ))}
-        </div>
+        </TokenGroup>
+
+        <TokenGroup title="Semantic" description="Status and feedback. Use each only for the meaning it carries.">
+          {semanticColors.map((c) => (
+            <TokenRow key={c.name} name={c.name} value={c.value} cssVar={`var(--${c.name})`} />
+          ))}
+        </TokenGroup>
+
+        <TokenGroup title="Brand accent" description="Used sparingly, only where product design calls for it.">
+          {brandAccents.map((c) => (
+            <TokenRow key={c.name} name={`accent.${c.name}`} value={c.value} cssVar={`var(--accent-${c.name})`} />
+          ))}
+        </TokenGroup>
+
+        {Object.entries(systemTokens).map(([group, tokens]) => (
+          <TokenGroup
+            key={group}
+            title={group}
+            description={
+              group === 'Status' ? 'Tinted surfaces behind status messages.'
+                : group === 'Controls' ? 'Borders and fills specific to form controls.'
+                : group === 'Surface' ? 'Backgrounds, separators and de-emphasised text.'
+                : group === 'Text' ? 'Foreground colours by emphasis.'
+                : 'Hover, focus and disabled treatments.'
+            }
+          >
+            {tokens.map((t) => (
+              <TokenRow key={t.name} name={t.name} value={t.value} cssVar={`var(--${t.name})`} note={t.note} />
+            ))}
+          </TokenGroup>
+        ))}
       </Panel>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 24 }}>
