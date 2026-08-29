@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { navigation } from '../data/navigation'
 import { components } from '../data/components'
 import { totalIconCount } from '../data/icons'
+import { FOUNDATION_SECTIONS } from './FoundationsPage'
 import { search, type Searchable } from './search'
 
 interface SidebarProps {
@@ -10,7 +11,6 @@ interface SidebarProps {
 }
 
 const TOP_LEVEL = [
-  { hash: '#/foundations', label: 'Foundations', icon: 'palette', detail: 'Colour, spacing, radius, elevation, type' },
   // Counted, not guessed — the badge used to claim "3k+" against ~1.2k icons.
   { hash: '#/icons', label: 'Icons', icon: 'interests', detail: 'Material Symbols icon set', badge: String(totalIconCount) },
   { hash: '#/integrate', label: 'Integrate', icon: 'rocket_launch', detail: 'Use Inspera in any AI builder or codebase' },
@@ -24,6 +24,14 @@ export default function Sidebar({ route, onNavigate }: SidebarProps) {
 
   // Everything reachable from the sidebar is searchable, not just components.
   const index = useMemo<Searchable[]>(() => {
+    const foundations: Searchable[] = FOUNDATION_SECTIONS.map((f) => ({
+      id: `#/foundations/${f.slug}`,
+      name: f.label,
+      detail: f.description,
+      group: 'Foundations',
+      terms: ['foundations', 'tokens', 'design tokens'],
+      href: `#/foundations/${f.slug}`,
+    }))
     const pages: Searchable[] = TOP_LEVEL.map((p) => ({
       id: p.hash,
       name: p.label,
@@ -42,7 +50,7 @@ export default function Sidebar({ route, onNavigate }: SidebarProps) {
       terms: [...(c.keywords ?? []), ...c.deprecatedAliases],
       href: `#/component/${c.slug}`,
     }))
-    return [...comps, ...pages]
+    return [...comps, ...foundations, ...pages]
   }, [])
 
   const hits = useMemo(() => search(query, index), [query, index])
@@ -241,6 +249,23 @@ export default function Sidebar({ route, onNavigate }: SidebarProps) {
         </div>
       ) : (
         <>
+          <div style={{ marginBottom: 4 }}>
+            <div style={{ padding: '0 12px 8px', fontSize: 11, fontWeight: 700, letterSpacing: 0.6, textTransform: 'uppercase', color: 'var(--gray-500)' }}>
+              Foundations
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              {FOUNDATION_SECTIONS.map((f) => {
+                const hash = `#/foundations/${f.slug}`
+                const active = route === hash || (f.slug === 'colors' && route === '#/foundations')
+                return (
+                  <button key={f.slug} type="button" onClick={() => onNavigate(hash)} style={linkStyle(active, false)}>
+                    <span>{f.label}</span>
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+
           {TOP_LEVEL.map((p, i) => (
             <button
               key={p.hash}

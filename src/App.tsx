@@ -25,6 +25,8 @@ export default function App() {
   }
 
   const componentMatch = hash.match(/^#\/component\/(.+)$/)
+  // #/foundations and #/foundations/<section>; the bare route shows colours.
+  const foundationsMatch = hash.match(/^#\/foundations(?:\/(.+))?$/)
   const isIcons = hash === '#/icons'
   const isIntegrate = hash === '#/integrate'
 
@@ -125,7 +127,7 @@ export default function App() {
               ? <IconsPage />
               : componentMatch
                 ? <ComponentPage key={componentMatch[1]} slug={componentMatch[1]} />
-                : <FoundationsPage />}
+                : <FoundationsPage section={foundationsMatch?.[1] ?? 'colors'} />}
         </main>
       </div>
     </div>
