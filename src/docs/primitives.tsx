@@ -1,4 +1,4 @@
-import { type CSSProperties, type ReactNode, useState } from 'react'
+import { type CSSProperties, type ReactNode, useEffect, useRef, useState } from 'react'
 
 // ---------------------------------------------------------------------------
 // Section heading used across doc panels.
@@ -72,8 +72,50 @@ export function CopyButton({ text, label = 'Copy' }: { text: string; label?: str
 
 // ---------------------------------------------------------------------------
 // Monospace code / spec block with an integrated copy affordance.
+//
+// Capped by default. A spec block runs to 200+ lines and nobody reads it in a
+// browser — they press Copy — so letting it set the page height just buries
+// every panel underneath it. The cap lands just past the rules, which is the
+// part worth skimming, and the rest scrolls. Copy always takes the whole
+// thing regardless of what is visible.
 // ---------------------------------------------------------------------------
-export function CodeBlock({ code, language, copyLabel }: { code: string; language?: string; copyLabel?: string }) {
+const CODE_MAX_HEIGHT = 440
+
+export function CodeBlock({
+  code, language, copyLabel, maxHeight = CODE_MAX_HEIGHT,
+}: {
+  code: string
+  language?: string
+  copyLabel?: string
+  /** Visible height before scrolling. Pass `0` to let the block run full length. */
+  maxHeight?: number
+}) {
+  const pre = useRef<HTMLPreElement>(null)
+  const [overflowing, setOverflowing] = useState(false)
+  const [atEnd, setAtEnd] = useState(false)
+
+  useEffect(() => {
+    const el = pre.current
+    if (!el) return
+    // Re-measure when the code changes: the playground rewrites its snippet on
+    // every control change, and a stale measurement leaves the fade stranded.
+    const measure = () => {
+      const scrollable = el.scrollHeight - el.clientHeight
+      setOverflowing(scrollable > 1)
+      setAtEnd(el.scrollTop >= scrollable - 1)
+    }
+    measure()
+    el.addEventListener('scroll', measure, { passive: true })
+    const ro = new ResizeObserver(measure)
+    ro.observe(el)
+    return () => {
+      el.removeEventListener('scroll', measure)
+      ro.disconnect()
+    }
+  }, [code, maxHeight])
+
+  const lines = code.split('\n').length
+
   return (
     <div
       style={{
@@ -94,14 +136,19 @@ export function CodeBlock({ code, language, copyLabel }: { code: string; languag
       >
         <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: 1, textTransform: 'uppercase', color: 'var(--gray-500)' }}>
           {language ?? 'code'}
+          {overflowing && ` · ${lines} lines`}
         </span>
         <CopyButton text={code} label={copyLabel ?? 'Copy'} />
       </div>
       <pre
+        ref={pre}
+        tabIndex={overflowing ? 0 : undefined}
         style={{
           margin: 0,
           padding: 16,
-          overflowX: 'auto',
+          // Both axes: a long spec line still scrolls sideways as before.
+          overflow: 'auto',
+          maxHeight: maxHeight || undefined,
           fontFamily: 'var(--font-mono)',
           fontSize: 13,
           lineHeight: 1.6,
@@ -110,6 +157,21 @@ export function CodeBlock({ code, language, copyLabel }: { code: string; languag
       >
         <code>{code}</code>
       </pre>
+      {/* Fades the cut edge so a capped block reads as "there is more" rather
+          than as a block that happens to end mid-sentence. */}
+      {overflowing && !atEnd && (
+        <div
+          aria-hidden
+          style={{
+            position: 'absolute',
+            insetInline: 0,
+            bottom: 0,
+            height: 44,
+            pointerEvents: 'none',
+            background: 'linear-gradient(to bottom, rgba(39,39,39,0), var(--gray-900))',
+          }}
+        />
+      )}
     </div>
   )
 }
