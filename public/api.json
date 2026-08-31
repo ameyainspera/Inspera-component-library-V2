@@ -1,7 +1,6 @@
 {
   "$schema": "https://inspera.design/schema/api.json",
   "version": "1.0.0",
-  "generatedAt": "2026-08-29",
   "description": "Inspera Design System component API, derived from the TypeScript interfaces. Prop names are camelCase and case-sensitive; variant values are Capitalised.",
   "components": {
     "Button": {

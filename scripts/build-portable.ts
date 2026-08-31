@@ -466,8 +466,17 @@ const VERSION = JSON.parse(
 const BASE_URL = (process.env.INSPERA_DS_BASE_URL ?? '').replace(/\/$/, '')
 const url = (path: string) => (BASE_URL ? `${BASE_URL}/${path}` : `./${path}`)
 
+/**
+ * Deliberately carries no build date.
+ *
+ * A `new Date()` stamp made every generated file differ from its committed
+ * copy the day after it was committed, so `verify:generated` — which
+ * regenerates and fails on any diff — would have failed every CI run from the
+ * next day onwards, on a diff that was only the date. The version is the part
+ * a consumer can act on; when a file was built is what git history is for.
+ */
 const provenance = () =>
-  `<!-- Inspera Design System v${VERSION} — generated ${new Date().toISOString().slice(0, 10)}. Do not edit. -->`
+  `<!-- Inspera Design System v${VERSION} — generated file, do not edit. -->`
 
 const num = (items: string[]) => items.map((r, i) => `${i + 1}. ${r}`).join('\n')
 
@@ -842,7 +851,7 @@ function buildApiJson() {
   return {
     $schema: 'https://inspera.design/schema/api.json',
     version: VERSION,
-    generatedAt: new Date().toISOString().slice(0, 10),
+
     description:
       'Inspera Design System component API, derived from the TypeScript interfaces. ' +
       'Prop names are camelCase and case-sensitive; variant values are Capitalised.',

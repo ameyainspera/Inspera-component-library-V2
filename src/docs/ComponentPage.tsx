@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react'
+import { type ReactNode, useEffect, useState } from 'react'
 import { components } from '../data/components'
 import { componentApi } from '../data/component-api.generated'
 import { componentDocs } from '../data/component-docs.generated'
+import { recipes } from '../data/recipes'
 import { registry, galleryLayout, GALLERY_MIN_WIDTH_DEFAULT } from './registry'
 import {
   Panel, SectionTitle, SegmentedControl, PreviewCanvas, CodeBlock,
@@ -38,6 +39,43 @@ Rules:
 
 Canonical spec:
 ${doc}`
+}
+
+/** Small tab used to switch the playground between its two copyable forms. */
+function Tab({ active, onClick, children }: { active: boolean; onClick: () => void; children: ReactNode }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={active}
+      style={{
+        height: 30,
+        padding: '0 12px',
+        borderRadius: 'var(--radius-sm)',
+        border: `1px solid ${active ? 'var(--primary)' : 'var(--border-strong)'}`,
+        background: active ? 'var(--primary)' : '#FFFFFF',
+        color: active ? '#FFFFFF' : 'var(--gray-700)',
+        fontFamily: 'var(--font-sans)',
+        fontSize: 13,
+        fontWeight: active ? 600 : 400,
+        cursor: 'pointer',
+      }}
+    >
+      {children}
+    </button>
+  )
+}
+
+/**
+ * The recipe's tokens and CSS as one pasteable block — the same content the
+ * spec doc carries, so a reader who takes it from here and a model that takes
+ * it from the spec get byte-identical CSS.
+ */
+function recipeCss(slug: string): string {
+  const recipe = recipes[slug]
+  const doc = componentDocs[slug] ?? ''
+  const fenced = doc.slice(doc.indexOf('#### Without the package')).match(/```css\n([\s\S]*?)```/)
+  return fenced ? fenced[1].trimEnd() : recipe.css
 }
 
 /** Names a copy block and says plainly when to reach for it. */
@@ -77,6 +115,8 @@ export default function ComponentPage({ slug }: { slug: string }) {
   const doc = componentDocs[slug] ?? ''
   const gallery = galleryLayout[slug] ?? {}
   const [values, setValues] = useState<Record<string, string>>(entry?.defaults ?? {})
+  const [form, setForm] = useState<'jsx' | 'css'>('jsx')
+  const recipe = recipes[slug]
 
   useEffect(() => {
     setValues(entry?.defaults ?? {})
@@ -115,7 +155,29 @@ export default function ComponentPage({ slug }: { slug: string }) {
           ))}
         </div>
         <div style={{ marginTop: 20 }}>
-          <CodeBlock code={entry.snippet(values)} language="tsx" copyLabel="Copy JSX" />
+          {recipe ? (
+            <>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10, flexWrap: 'wrap' }}>
+                <Tab active={form === 'jsx'} onClick={() => setForm('jsx')}>React</Tab>
+                <Tab active={form === 'css'} onClick={() => setForm('css')}>HTML + CSS</Tab>
+                <span style={{ fontSize: 12, color: 'var(--gray-600)' }}>
+                  {form === 'jsx'
+                    ? 'For the product codebase, once the package is available.'
+                    : 'For anywhere you cannot install the package — other stacks, AI builders, a plain HTML page.'}
+                </span>
+              </div>
+              {form === 'jsx' ? (
+                <CodeBlock code={entry.snippet(values)} language="tsx" copyLabel="Copy JSX" />
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                  <CodeBlock code={recipe.markup(values)} language="html" copyLabel="Copy HTML" maxHeight={0} />
+                  <CodeBlock code={recipeCss(slug)} language="css" copyLabel="Copy CSS" />
+                </div>
+              )}
+            </>
+          ) : (
+            <CodeBlock code={entry.snippet(values)} language="tsx" copyLabel="Copy JSX" />
+          )}
         </div>
       </Panel>
 

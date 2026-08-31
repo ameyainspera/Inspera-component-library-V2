@@ -21,8 +21,14 @@ export interface Recipe {
   className: string
   /** Self-contained CSS. Every `var(--…)` it uses is emitted alongside it. */
   css: string
-  /** Canonical markup, one line per realistic usage. */
+  /** Canonical markup, one line per realistic usage. Goes in the spec doc. */
   html: string
+  /**
+   * Live markup for the playground, driven by the same control values as the
+   * JSX snippet. Static example markup would go stale the moment someone moved
+   * a control — the exact defect the JSX snippets were just fixed for.
+   */
+  markup: (v: Record<string, string>) => string
   /** Facts a model gets wrong when left to guess. */
   notes?: string[]
 }
@@ -125,6 +131,22 @@ const button: Recipe = {
 <button type="button" class="inspera-btn inspera-btn--text" aria-label="More options">
   <span class="material-symbols-outlined" aria-hidden="true">more_vert</span>
 </button>`,
+  markup: (v) => {
+    // The intent class is always written out. Primary happens to be the base
+    // default, but relying on that teaches a class name that silently breaks
+    // if the default ever moves. Medium has no size class by design.
+    const size = v.size === 'Medium' ? '' : ` inspera-btn--${v.size.toLowerCase()}`
+    const cls = `inspera-btn inspera-btn--${v.intent.toLowerCase()}${size}`
+    const icon = (name: string) =>
+      `  <span class="material-symbols-outlined" aria-hidden="true">${name}</span>\n`
+    const label = '  <span>Button</span>\n'
+    const body =
+      v.content === 'Icon + Text' ? `\n${icon('add')}${label}`
+        : v.content === 'Text + Icon' ? `\n${label}${icon('add')}`
+        : v.content === 'Text + Disclosure' ? `\n${label}${icon('expand_more')}`
+        : 'Button'
+    return `<button type="button" class="${cls}">${body}</button>`
+  },
   notes: [
     'Corner radius is 4px (`--radius-sm`). Not 6, not 8, not `rounded-lg`.',
     'Type is 16px/600 at every size — Small and Large change height, padding and gap only.',

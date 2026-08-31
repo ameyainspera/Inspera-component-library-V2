@@ -16,6 +16,7 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import { createElement } from 'react'
 import Button, { type ButtonIntent, type ButtonSize } from '../src/components/inspera/Button'
 import { recipes } from '../src/data/recipes'
+import { registry } from '../src/docs/registry'
 
 // Hermetic on purpose: the comparison needs the two stylesheets and nothing
 // else, so this runs in CI without a dev server, a build, or a network.
@@ -54,6 +55,42 @@ const cases = intents.flatMap((intent) =>
     recipeClass: ['inspera-btn', modifier[intent], modifier[size]].filter(Boolean).join(' '),
   })),
 )
+
+// ---------------------------------------------------------------------------
+// Cheap check first, before paying for a browser: every class the live markup
+// emits must actually exist in the CSS shipped beside it. A modifier that the
+// stylesheet does not define is invisible — the button renders, it just
+// renders wrong, which is the whole failure mode this file exists to stop.
+// ---------------------------------------------------------------------------
+const classProblems: string[] = []
+for (const [slug, recipe] of Object.entries(recipes)) {
+  const entry = registry[slug]
+  if (!entry) {
+    classProblems.push(`${slug} · recipe has no playground entry to drive it`)
+    continue
+  }
+  const seen = new Set<string>()
+  for (const [key, def] of Object.entries(entry.controls)) {
+    for (const option of def.options) {
+      const markup = recipe.markup({ ...entry.defaults, [key]: option })
+      for (const m of markup.matchAll(/class="([^"]+)"/g)) {
+        for (const cls of m[1].split(/\s+/)) {
+          if (cls.startsWith('inspera-') && !seen.has(cls)) {
+            seen.add(cls)
+            if (!recipe.css.includes(`.${cls}`)) {
+              classProblems.push(`${slug} · markup uses .${cls}, which the recipe CSS never defines`)
+            }
+          }
+        }
+      }
+    }
+  }
+}
+if (classProblems.length > 0) {
+  console.error(`\n✗ ${classProblems.length} recipe markup problem(s):\n`)
+  for (const p of classProblems) console.error('  ' + p)
+  process.exit(1)
+}
 
 const browser = await chromium.launch({ channel: 'chrome' })
 const page = await browser.newPage({ viewport: { width: 1200, height: 800 } })
@@ -116,4 +153,7 @@ if (problems.length > 0) {
   console.error('\nFix src/data/recipes.ts (or the component) so they agree.\n')
   process.exit(1)
 }
-console.log(`✓ recipe matches the component across ${cases.length} intent × size combinations`)
+console.log(
+  `✓ recipe matches the component across ${cases.length} intent × size combinations, ` +
+    'and every class its markup emits is defined',
+)
