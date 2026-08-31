@@ -37,3 +37,63 @@ export const componentsPackage: PackageStatus = {
 /** The install line, only when it would actually work. */
 export const installCommand = (p: PackageStatus): string | null =>
   p.published ? `npm i ${p.name}` : null
+
+/**
+ * What each published artifact should be called once it lands on someone's
+ * disk, and how it is meant to be used.
+ *
+ * The served names follow conventions — `llms.txt` and `llms-full.txt` are the
+ * llms.txt spec, `tokens.w3c.json` names its format — which is right for a
+ * fetching agent and useless to a person. A file called `llms-full.txt` in a
+ * Downloads folder three weeks later says nothing about what it is or which
+ * design system it belongs to. The `download` attribute renames on save, so
+ * this costs no extra generated file.
+ *
+ * The extension matters too: Claude Projects, ChatGPT and Cursor all treat
+ * `.md` as a document and `.txt` as an unknown blob.
+ */
+export interface Artifact {
+  /** Path under the site root, as generated. */
+  file: string
+  /** Filename offered to the browser on download. */
+  saveAs: string
+  /** What it is. */
+  note: string
+  /** Rough context cost, to steer paste vs upload. */
+  size?: string
+}
+
+export const artifacts: Artifact[] = [
+  {
+    file: 'llms-full.txt',
+    saveAs: 'inspera-design-system.md',
+    note: 'The complete guide — foundations, and every component with its HTML and CSS.',
+    size: '~67k tokens · upload as a context file, too large to paste',
+  },
+  {
+    file: 'llms.txt',
+    saveAs: 'inspera-design-system-index.md',
+    note: 'Short index linking a spec per component.',
+    size: '~5k tokens · paste this into a one-off chat',
+  },
+  {
+    file: 'foundations.md',
+    saveAs: 'inspera-foundations.md',
+    note: 'Colour, typography, spacing, radius, depth on their own.',
+    size: '~4k tokens',
+  },
+  {
+    file: 'guidance.md',
+    saveAs: 'inspera-guidance.md',
+    note: 'Composition patterns, form/table rules, the done checklist.',
+    size: '~2k tokens',
+  },
+  { file: 'api.json', saveAs: 'inspera-api.json', note: 'Prop API, derived from the TypeScript types.' },
+  { file: 'tokens.css', saveAs: 'inspera-tokens.css', note: 'Token custom properties + icon/keyframe runtime.' },
+  { file: 'inspera.theme.css', saveAs: 'inspera.theme.css', note: 'Tailwind v4 @theme block.' },
+  { file: 'tokens.w3c.json', saveAs: 'inspera-tokens.w3c.json', note: 'W3C Design Tokens format.' },
+  { file: 'aliases.json', saveAs: 'inspera-aliases.json', note: 'Deprecated name → canonical component.' },
+]
+
+/** The one file to hand someone who asks for "the spec". */
+export const fullSpec = artifacts[0]

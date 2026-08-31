@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { componentList } from './data/components'
+import { fullSpec } from './data/distribution'
 import Sidebar from './docs/Sidebar'
 import FoundationsPage from './docs/FoundationsPage'
 import ComponentPage from './docs/ComponentPage'
@@ -70,21 +71,44 @@ export default function App() {
               names and links a file per component — useful to an agent that
               fetches, but it reads as a bare list of names to a person who
               clicks it expecting the spec. */}
-          <a
-            href="/llms-full.txt"
-            target="_blank"
-            rel="noreferrer"
-            style={{
-              display: 'inline-flex', alignItems: 'center', gap: 6, height: 32, padding: '0 12px',
-              borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-strong)',
-              background: 'var(--surface)', color: 'var(--gray-800)', textDecoration: 'none',
-              fontSize: 13, fontWeight: 500,
-            }}
-            title={`Complete AI build guide — foundations + all ${componentList.length} components`}
-          >
-            <span className="material-symbols-outlined" style={{ fontSize: 18 }} aria-hidden>description</span>
-            AI spec
-          </a>
+          {/* View and download are different intents, so they stay separate
+              buttons. Opening it in a tab is how you check something; the
+              download is how you get it into another tool's context, and a
+              single control cannot do both without one of them being a
+              surprise. Joined into one group so they still read as a pair. */}
+          <div style={{ display: 'inline-flex' }}>
+            <a
+              href={`/${fullSpec.file}`}
+              target="_blank"
+              rel="noreferrer"
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: 6, height: 32, padding: '0 12px',
+                borderRadius: 'var(--radius-sm) 0 0 var(--radius-sm)',
+                border: '1px solid var(--border-strong)', borderRight: 'none',
+                background: 'var(--surface)', color: 'var(--gray-800)', textDecoration: 'none',
+                fontSize: 13, fontWeight: 500,
+              }}
+              title={`Open the complete AI build guide — foundations + all ${componentList.length} components`}
+            >
+              <span className="material-symbols-outlined" style={{ fontSize: 18 }} aria-hidden>description</span>
+              AI spec
+            </a>
+            <a
+              href={`/${fullSpec.file}`}
+              download={fullSpec.saveAs}
+              style={{
+                display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                width: 32, height: 32,
+                borderRadius: '0 var(--radius-sm) var(--radius-sm) 0',
+                border: '1px solid var(--border-strong)',
+                background: 'var(--surface)', color: 'var(--gray-800)', textDecoration: 'none',
+              }}
+              title={`Download as ${fullSpec.saveAs} — ${fullSpec.size}`}
+              aria-label={`Download the AI spec as ${fullSpec.saveAs}`}
+            >
+              <span className="material-symbols-outlined" style={{ fontSize: 18 }} aria-hidden>download</span>
+            </a>
+          </div>
           <a
             href="/llms.txt"
             target="_blank"

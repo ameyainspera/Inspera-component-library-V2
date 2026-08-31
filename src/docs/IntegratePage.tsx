@@ -1,6 +1,6 @@
 import { type ReactNode, useState } from 'react'
 import { componentList } from '../data/components'
-import { componentsPackage } from '../data/distribution'
+import { componentsPackage, artifacts, type Artifact } from '../data/distribution'
 import { Panel, SectionTitle, CodeBlock, CopyButton, SegmentedControl } from './primitives'
 
 // ---------------------------------------------------------------------------
@@ -146,19 +146,8 @@ const TOOL_SETUPS: ToolSetup[] = [
   },
 ]
 
-const ARTIFACTS = [
-  { file: 'llms-full.txt', note: `The complete guide — foundations + all ${COUNT} components.` },
-  { file: 'llms.txt', note: 'Short index linking a spec per component. Paste this into a chat.' },
-  { file: 'foundations.md', note: 'Colour, typography, spacing, radius, depth on their own.' },
-  { file: 'guidance.md', note: 'Composition patterns, form/table rules, the done checklist.' },
-  { file: 'api.json', note: 'Prop API, derived from the TypeScript types.' },
-  { file: 'tokens.css', note: 'Token custom properties + icon/keyframe runtime.' },
-  { file: 'inspera.theme.css', note: 'Tailwind v4 @theme block.' },
-  { file: 'tokens.w3c.json', note: 'W3C Design Tokens format.' },
-  { file: 'aliases.json', note: 'Deprecated name → canonical component.' },
-]
 
-function ArtifactLink({ file, note }: { file: string; note: string }) {
+function ArtifactLink({ file, saveAs, note, size }: Artifact) {
   return (
     <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, padding: '7px 0', borderBottom: '1px solid var(--border)' }}>
       <a
@@ -169,7 +158,25 @@ function ArtifactLink({ file, note }: { file: string; note: string }) {
       >
         {file}
       </a>
-      <span style={{ fontSize: 13, color: 'var(--muted-foreground)' }}>{note}</span>
+      <span style={{ fontSize: 13, color: 'var(--muted-foreground)', flex: 1, minWidth: 0 }}>
+        {note}
+        {size && <span style={{ display: 'block', fontSize: 12, color: 'var(--gray-500)' }}>{size}</span>}
+      </span>
+      {/* Every row was view-only, so getting one of these into another tool's
+          context meant Save-As and living with the served name. */}
+      <a
+        href={`/${file}`}
+        download={saveAs}
+        title={`Download as ${saveAs}`}
+        aria-label={`Download ${file} as ${saveAs}`}
+        style={{
+          display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+          width: 28, height: 28, flexShrink: 0, alignSelf: 'center',
+          borderRadius: 'var(--radius-sm)', color: 'var(--gray-600)', textDecoration: 'none',
+        }}
+      >
+        <span className="material-symbols-outlined" style={{ fontSize: 18 }} aria-hidden>download</span>
+      </a>
     </div>
   )
 }
@@ -272,7 +279,7 @@ function ToolSetupCard() {
         <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 4, color: 'var(--gray-900)' }}>
           Everything the library publishes
         </div>
-        {ARTIFACTS.map((a) => <ArtifactLink key={a.file} {...a} />)}
+        {artifacts.map((a) => <ArtifactLink key={a.file} {...a} />)}
       </div>
     </ContextCard>
   )
