@@ -55,6 +55,7 @@ import { Link } from '@inspera/components'
   href="/docs"
   label="Learn more"
   intent="Default"
+  size="Medium"
   underline="Hover"
   external={false}
 />
@@ -80,6 +81,88 @@ import { Link } from '@inspera/components'
 **Don't:** Do not use links to trigger actions — use Button; Do not use "click here" as link text.
 
 **Deprecated aliases** (do not use): `Hyperlink`, `Text link`, `Anchor`
+
+#### Without the package — exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. It is the same
+component, and it is complete: do not substitute a radius, colour, spacing or
+font weight of your own, and do not restyle it with a UI kit's defaults.
+
+- The default is underline **on hover only** — not always, and not never.
+- Colour is `--primary` at 16px/500 (14px when small), with `text-underline-offset: 2px` so the rule clears the descenders.
+- An external link gets `target="_blank"`, `rel="noreferrer"`, and the `open_in_new` icon. All three, not one.
+- A disabled link carries no `href` and sets `aria-disabled="true"`. Do not leave the href and swallow the click.
+- The focus ring is `--primary-focus-ring` at 2px with a 2px offset — different from the solid `--primary` ring buttons use.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --primary:             #004080;
+  --gray-600:            #7A7A7A;
+  --primary-focus-ring:  rgba(0, 64, 128, 0.3);
+  --action-disabled:     rgba(0, 0, 0, 0.38);
+  --radius-xs:           2px;
+  --duration-fast:       100ms;
+  --easing-standard:     cubic-bezier(0.2, 0, 0, 1);
+  --font-sans:           'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--primary);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 500;
+  text-decoration: none;
+  text-underline-offset: 2px;
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  transition: color var(--duration-fast) var(--easing-standard);
+}
+
+.inspera-link--small { font-size: 14px; }
+
+.inspera-link--muted { color: var(--gray-600); }
+
+/* Underline behaviour. Hover is the default; the other two are explicit. */
+.inspera-link:hover { text-decoration: underline; }
+.inspera-link--underline-always { text-decoration: underline; }
+.inspera-link--underline-none:hover { text-decoration: none; }
+
+.inspera-link:focus-visible {
+  outline: 2px solid var(--primary-focus-ring);
+  outline-offset: 2px;
+}
+
+/* Disabled: no href, announced with aria-disabled. A link with no href is not
+   focusable, which is the behaviour you want. */
+.inspera-link--disabled {
+  color: var(--action-disabled);
+  cursor: not-allowed;
+  text-decoration: none;
+}
+.inspera-link--disabled:hover { text-decoration: none; }
+
+.inspera-link .material-symbols-outlined { font-size: 18px; }
+.inspera-link--small .material-symbols-outlined { font-size: 16px; }
+```
+
+```html
+<a class="inspera-link" href="/docs">Learn more</a>
+
+<!-- External links open in a new tab and say so with an icon. -->
+<a class="inspera-link" href="https://inspera.com" target="_blank" rel="noreferrer">
+  Documentation
+  <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span>
+</a>
+
+<a class="inspera-link inspera-link--muted inspera-link--small" href="/skip">Skip for now</a>
+
+<!-- Disabled: no href at all. -->
+<a class="inspera-link inspera-link--disabled" aria-disabled="true">Unavailable</a>
+```
 
 
 ---

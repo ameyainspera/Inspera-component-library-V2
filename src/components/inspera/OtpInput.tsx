@@ -7,7 +7,12 @@ export interface OtpInputProps {
   length?: number
   /** Current code value. */
   value?: string
-  /** Forces a visual state for documentation. Omit for real interactivity. */
+  /**
+   * Freezes a visual state so documentation can show it without a pointer.
+   * `Focused` is presentation-only — leave it unset in application code, where
+   * CSS drives it from the real pointer and keyboard. `Error` and `Disabled`
+   * are real application state and belong in your code.
+   */
   state?: OtpInputState
   /** Fired with the full code as digits are entered or pasted. */
   onChange?: (value: string) => void
@@ -79,11 +84,15 @@ export default function OtpInput({
   return (
     <div style={{ display: 'inline-flex', gap: 8 }}>
       {chars.map((ch, i) => {
+        // Border and ring live in CSS (.inspera-field in runtime.css) so a box
+        // reacts to a real pointer and a real Tab. An inline `border` here
+        // would outrank the class and silently defeat both.
         const box: CSSProperties = {
           width: 44,
           height: 48,
           textAlign: 'center',
-          border: `1px solid ${isError ? 'var(--error)' : isFocused && i === 0 ? 'var(--primary)' : 'var(--border-control)'}`,
+          borderWidth: 'var(--border-width-default)',
+          borderStyle: 'solid',
           borderRadius: 'var(--radius-md)',
           background: disabled ? 'var(--surface-disabled)' : 'var(--white)',
           fontFamily: 'var(--font-mono)',
@@ -97,6 +106,13 @@ export default function OtpInput({
             key={i}
             ref={(el) => { refs.current[i] = el }}
             id={`${id}-${i}`}
+            className="inspera-interactive inspera-field"
+            // Only the first box carries the forced ring: the state exists to
+            // show what a focused box looks like, and every box lit at once
+            // reads as an error, not as focus.
+            data-force-state={isFocused && i === 0 ? 'Focused' : undefined}
+            data-invalid={isError || undefined}
+            data-disabled={disabled || undefined}
             type="text"
             inputMode="numeric"
             autoComplete={i === 0 ? 'one-time-code' : 'off'}

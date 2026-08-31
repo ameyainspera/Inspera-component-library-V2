@@ -1,4 +1,3 @@
-import { useState, useCallback } from 'react'
 import {
   brandColors, semanticColors, brandAccents, palette,
   spacing, radius, shadows, typeScale, systemTokens,
@@ -13,15 +12,6 @@ function toRgb(hex: string): string | null {
   if (!m) return null
   const n = parseInt(m[1], 16)
   return `rgb(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255})`
-}
-
-/** Dark enough that white text sits on it legibly. */
-function isDark(hex: string): boolean {
-  const m = /^#?([0-9a-f]{6})$/i.exec(hex.trim())
-  if (!m) return false
-  const n = parseInt(m[1], 16)
-  // Rec. 601 luma.
-  return 0.299 * ((n >> 16) & 255) + 0.587 * ((n >> 8) & 255) + 0.114 * (n & 255) < 140
 }
 
 /** The whole family end to end, so the progression reads at a glance. */

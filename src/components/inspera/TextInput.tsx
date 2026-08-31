@@ -1,4 +1,4 @@
-import { type CSSProperties, useId, useState } from 'react'
+import { type CSSProperties, useEffect, useId, useState } from 'react'
 
 export type TextInputState =
   | 'Default' | 'Hover' | 'Focused' | 'Disabled' | 'Error' | 'Filled' | 'ReadOnly'
@@ -11,7 +11,13 @@ export interface TextInputProps {
   placeholder?: string
   /** Current value. Controlled — pair with onChange. */
   value?: string
-  /** Forces a visual state for documentation. Omit for real interactivity. */
+  /**
+   * Freezes a visual state so documentation can show it without a pointer.
+   * `Hover`, `Focused` and `Filled` are presentation-only — leave them unset in
+   * application code, where CSS drives them from the real pointer and keyboard.
+   * `Error`, `Disabled` and `ReadOnly` are real application state and belong in
+   * your code.
+   */
   state?: TextInputState
   /** Control height. */
   size?: TextInputSize
@@ -43,14 +49,20 @@ export default function TextInput({
   onChange,
 }: TextInputProps) {
   const id = useId()
-  const [focused, setFocused] = useState(false)
   const [internal, setInternal] = useState(state === 'Filled' ? 'Jane Cooper' : '')
   const current = value ?? internal
+
+  // `state="Filled"` has to be an effect, not just a useState initializer: the
+  // docs playground swaps the prop on a live instance rather than remounting
+  // it, and an initializer only ever runs once — so the control showed an
+  // empty field. Only seeds the sample text; typing still wins afterwards.
+  useEffect(() => {
+    if (state === 'Filled') setInternal('Jane Cooper')
+  }, [state])
 
   const disabled = state === 'Disabled'
   const readOnly = state === 'ReadOnly'
   const isError = state === 'Error'
-  const isFocused = focused || state === 'Focused'
 
 
   const height = size === 'Small' ? 32 : 40
@@ -71,7 +83,7 @@ export default function TextInput({
   const iconStyle: CSSProperties = { fontSize: 20, color: 'var(--action-active)' }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 6, width: '100%' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 6, width: '100%', fontFamily: 'var(--font-sans)' }}>
       {showLabel && (
         <label htmlFor={id} style={{ fontSize: 16, fontWeight: 500, color: 'var(--text-primary)' }}>
           {label}
@@ -94,8 +106,6 @@ export default function TextInput({
           readOnly={readOnly}
           aria-invalid={isError || undefined}
           aria-describedby={errorText ? `${id}-err` : helpText ? `${id}-help` : undefined}
-          onFocus={() => setFocused(true)}
-          onBlur={() => setFocused(false)}
           onChange={(e) => {
             setInternal(e.target.value)
             onChange?.(e.target.value)

@@ -13,7 +13,12 @@ export interface SelectProps {
   options?: string[]
   /** Selected value. Controlled — pair with onChange. */
   value?: string
-  /** Forces a visual state for documentation. Omit for real interactivity. */
+  /**
+   * Freezes a visual state so documentation can show it without a pointer.
+   * `Hover`, `Focused` and `Open` are presentation-only — leave them unset in
+   * application code, where CSS and the component's own state drive them.
+   * `Error` and `Disabled` are real application state and belong in your code.
+   */
   state?: SelectState
   /** Trigger sizing. */
   widthMode?: SelectWidthMode
@@ -47,7 +52,12 @@ export default function Select({
 
   const disabled = state === 'Disabled'
   const isError = state === 'Error'
-  const forcedFocus = state === 'Focused' || state === 'Open'
+  // `state="Open"` has to be an effect, not just a useState initializer: the
+  // docs playground swaps the prop on a live instance rather than remounting
+  // it, and an initializer only ever runs once — so the control moved nothing.
+  useEffect(() => {
+    setOpen(state === 'Open')
+  }, [state])
 
   useEffect(() => {
     if (!open) return
@@ -61,10 +71,6 @@ export default function Select({
   const filtered = search && query
     ? options.filter((o) => o.toLowerCase().includes(query.toLowerCase()))
     : options
-
-  let border = isError ? 'var(--error)' : 'var(--border-control)'
-  if (open || forcedFocus) border = 'var(--primary)'
-  else if (state === 'Hover') border = 'var(--border-control-strong)'
 
   const choose = (opt: string) => {
     setSelected(opt)
@@ -81,6 +87,9 @@ export default function Select({
     else if (e.key === 'Escape') setOpen(false)
   }
 
+  // Border and ring live in CSS (.inspera-field in runtime.css) so the trigger
+  // reacts to a real pointer and a real Tab. An inline `border` here would
+  // outrank the class and silently defeat both.
   const trigger: CSSProperties = {
     height: 40,
     width: widthMode === 'Fixed' ? 220 : 'auto',
@@ -91,25 +100,30 @@ export default function Select({
     gap: 8,
     padding: '0 12px',
     borderRadius: 'var(--radius-md)',
-    border: `1px solid ${border}`,
+    borderWidth: 'var(--border-width-default)',
+    borderStyle: 'solid',
     background: disabled ? 'var(--surface-disabled)' : 'var(--white)',
     color: selected ? 'var(--text-primary)' : 'var(--muted-foreground)',
     fontFamily: 'var(--font-sans)',
     fontSize: 16,
     cursor: disabled ? 'not-allowed' : 'pointer',
     opacity: disabled ? 0.6 : 1,
-    boxShadow: open || forcedFocus ? '0 0 0 3px var(--primary-focus-ring)' : 'none',
-    transition: 'border-color 120ms ease, box-shadow 120ms ease',
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 6, width: widthMode === 'Fixed' ? 220 : 'auto' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 6, width: widthMode === 'Fixed' ? 220 : 'auto', fontFamily: 'var(--font-sans)' }}>
       {showLabel && (
         <label htmlFor={id} style={{ fontSize: 16, fontWeight: 500 }}>{label}</label>
       )}
       <div ref={ref} style={{ position: 'relative' }}>
         <div
           id={id}
+          className="inspera-interactive inspera-field"
+          // An open list keeps the focus ring even though the search input
+          // inside it holds focus, which is why Open is a forced state here.
+          data-force-state={open ? 'Open' : state !== 'Default' ? state : undefined}
+          data-invalid={isError || undefined}
+          data-disabled={disabled || undefined}
           role="combobox"
           aria-expanded={open}
           aria-controls={`${id}-list`}

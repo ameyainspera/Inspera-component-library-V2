@@ -29,6 +29,7 @@ const srOnly: CSSProperties = {
   clip: 'rect(0 0 0 0)',
   whiteSpace: 'nowrap',
   border: 0,
+  fontFamily: 'var(--font-sans)',
 }
 
 export default function Spinner({ size = 'Medium', intent = 'Primary', label = 'Loading' }: SpinnerProps) {

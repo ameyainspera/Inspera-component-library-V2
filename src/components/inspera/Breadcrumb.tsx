@@ -26,7 +26,7 @@ export default function Breadcrumb({
   const sep: CSSProperties = { color: 'var(--gray-400)', display: 'inline-flex', alignItems: 'center' }
 
   return (
-    <nav aria-label="Breadcrumb">
+    <nav aria-label="Breadcrumb" style={{ fontFamily: 'var(--font-sans)' }}>
       <ol style={{ display: 'flex', alignItems: 'center', gap: 8, listStyle: 'none', margin: 0, padding: 0, flexWrap: 'wrap' }}>
         {items.map((item, i) => {
           const last = i === items.length - 1

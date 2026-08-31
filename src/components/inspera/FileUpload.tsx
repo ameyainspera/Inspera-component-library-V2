@@ -52,6 +52,7 @@ export default function FileUpload({
     cursor: disabled ? 'not-allowed' : 'pointer',
     opacity: disabled ? 0.6 : 1,
     textAlign: 'center',
+    fontFamily: 'var(--font-sans)',
     transition: 'all 120ms ease',
   }
 

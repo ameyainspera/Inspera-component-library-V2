@@ -72,6 +72,96 @@ import { Breadcrumb } from '@inspera/components'
 
 **Deprecated aliases** (do not use): `Breadcrumbs`, `Path navigation`
 
+#### Without the package — exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. It is the same
+component, and it is complete: do not substitute a radius, colour, spacing or
+font weight of your own, and do not restyle it with a UI kit's defaults.
+
+- It is a `<nav aria-label="Breadcrumb">` wrapping an `<ol>` — order is the meaning, so not a `<div>` of spans.
+- The last crumb is the current page: `aria-current="page"`, `--text-primary` at 500 weight, and not a control.
+- Separators live in their own `<li>` marked `aria-hidden="true"`. Left announced, a screen reader reads "chevron right" between every crumb.
+- Crumbs are 16px (14px small) in `--primary`, underlined on hover only. The chevron runs 2px larger than the text.
+- With real URLs use `<a href>` rather than `<button>`, keeping the same class — a breadcrumb should be openable in a new tab.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --primary:       #004080;
+  --gray-400:      #BCBCBC;
+  --text-primary:  rgba(0, 0, 0, 0.87);
+  --font-sans:     'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-breadcrumb {
+  font-family: var(--font-sans);
+}
+
+.inspera-breadcrumb__list {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex-wrap: wrap;
+}
+
+/* A crumb. Rendered as <button> in the React component because navigation runs
+   through a router callback; with real URLs, use <a href> and the same class. */
+.inspera-breadcrumb__crumb {
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--primary);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  text-decoration: none;
+  cursor: pointer;
+}
+.inspera-breadcrumb__crumb:hover { text-decoration: underline; }
+
+.inspera-breadcrumb--small .inspera-breadcrumb__crumb { font-size: 14px; }
+
+/* The last crumb is the current page: darker, heavier, and not interactive. */
+.inspera-breadcrumb__current {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+.inspera-breadcrumb--small .inspera-breadcrumb__current { font-size: 14px; }
+
+/* The separator sizes its own glyph rather than setting a size on the <li>,
+   so the chevron can run 2px larger than the text while the slash matches it. */
+.inspera-breadcrumb__separator {
+  color: var(--gray-400);
+  display: inline-flex;
+  align-items: center;
+}
+
+.inspera-breadcrumb__separator .material-symbols-outlined { font-size: 18px; }
+.inspera-breadcrumb--small .inspera-breadcrumb__separator .material-symbols-outlined { font-size: 16px; }
+
+.inspera-breadcrumb__slash { font-size: 16px; }
+.inspera-breadcrumb--small .inspera-breadcrumb__slash { font-size: 14px; }
+```
+
+```html
+<nav class="inspera-breadcrumb" aria-label="Breadcrumb">
+  <ol class="inspera-breadcrumb__list">
+    <li><a class="inspera-breadcrumb__crumb" href="/">Home</a></li>
+    <li class="inspera-breadcrumb__separator" aria-hidden="true">
+      <span class="material-symbols-outlined">chevron_right</span>
+    </li>
+    <li><a class="inspera-breadcrumb__crumb" href="/assessments">Assessments</a></li>
+    <li class="inspera-breadcrumb__separator" aria-hidden="true">
+      <span class="material-symbols-outlined">chevron_right</span>
+    </li>
+    <li><span class="inspera-breadcrumb__current" aria-current="page">Algebra Quiz</span></li>
+  </ol>
+</nav>
+```
+
 
 ---
 

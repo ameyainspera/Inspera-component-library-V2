@@ -9,7 +9,10 @@
 import { chromium } from 'playwright-core'
 import { navigation } from '../src/data/navigation'
 
-const BASE = process.env.BASE_URL ?? 'http://localhost:5321'
+// Default matches `pnpm dev` (vite.config.ts reads the same PORT). This used
+// to hardcode 5321, so the README's documented `pnpm dev` + `pnpm audit:layout`
+// pairing failed to connect out of the box.
+const BASE = process.env.BASE_URL ?? `http://localhost:${process.env.PORT ?? 8443}`
 const slugs = navigation.flatMap((g) => g.items.map((i) => i.slug))
 
 // Use the system Chrome: the cached Playwright build predates this version.

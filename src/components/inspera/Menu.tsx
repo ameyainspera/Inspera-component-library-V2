@@ -110,7 +110,7 @@ export default function Menu({
   }
 
   return (
-    <div ref={ref} style={{ position: 'relative', display: 'inline-block' }}>
+    <div ref={ref} style={{ position: 'relative', display: 'inline-block', fontFamily: 'var(--font-sans)' }}>
       <button
         type="button"
         aria-haspopup="menu"

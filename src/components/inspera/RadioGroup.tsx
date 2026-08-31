@@ -52,7 +52,7 @@ export default function RadioGroup({
   const itemState: RadioState = disabled ? 'Disabled' : isError ? 'Error' : 'Default'
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 4, fontFamily: 'var(--font-sans)' }}>
       {label && (
         <span id={`${groupId}-label`} style={{ fontSize: 16, fontWeight: 500, color: 'var(--text-primary)' }}>{label}</span>
       )}

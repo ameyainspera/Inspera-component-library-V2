@@ -78,6 +78,144 @@ export interface AvatarGroupItem {
 
 **Deprecated aliases** (do not use): `Avatar stack`, `Facepile`
 
+#### Without the package — exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. It is the same
+component, and it is complete: do not substitute a radius, colour, spacing or
+font weight of your own, and do not restyle it with a UI kit's defaults.
+
+- Overlap is 30% of the diameter as a negative left margin — 10 / 12 / 17px for small / medium / large — and the first item has none.
+- The separating ring is a `box-shadow`, not a border: a border would grow each avatar and break the spacing.
+- The overflow chip is `+N` on `--gray-200` at 34% of the diameter, sized identically to an avatar.
+- The group carries `role="group"` and a count in its label; the chip carries "N more". Overlapping avatars are meaningless to a screen reader without both.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --error:           #D32F2F;
+  --success:         #2E7D32;
+  --white:           #ffffff;
+  --gray-200:        #EDEDED;
+  --gray-500:        #949494;
+  --gray-600:        #7A7A7A;
+  --gray-700:        #595959;
+  --gray-900:        #272727;
+  --avatar-surface:  #E0E0E0;
+  --radius-pill:     9999px;
+  --font-sans:       'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* The wrapper exists so the status dot can be positioned against the
+   avatar without being clipped by its overflow: hidden. */
+.inspera-avatar {
+  position: relative;
+  display: inline-flex;
+}
+
+.inspera-avatar__surface {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-pill);
+  background: var(--avatar-surface);
+  color: var(--gray-900);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  /* Initials are 40% of the diameter, so they scale with the avatar. */
+  font-size: 16px;
+}
+
+.inspera-avatar--small .inspera-avatar__surface  { width: 32px; height: 32px; font-size: 12.8px; }
+.inspera-avatar--large .inspera-avatar__surface  { width: 56px; height: 56px; font-size: 22.4px; }
+
+.inspera-avatar__surface img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* The icon variant is 55% of the diameter, larger than the initials. */
+.inspera-avatar__surface .material-symbols-outlined {
+  font-size: 22px;
+  color: var(--gray-600);
+}
+.inspera-avatar--small .inspera-avatar__surface .material-symbols-outlined { font-size: 17.6px; }
+.inspera-avatar--large .inspera-avatar__surface .material-symbols-outlined { font-size: 30.8px; }
+
+/* The dot is 28% of the diameter, with a 2px white ring so it stays legible
+   against a photo. */
+.inspera-avatar__status {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 11.2px;
+  height: 11.2px;
+  border-radius: 9999px;
+  border: 2px solid var(--white);
+}
+.inspera-avatar--small .inspera-avatar__status { width: 8.96px; height: 8.96px; }
+.inspera-avatar--large .inspera-avatar__status { width: 15.68px; height: 15.68px; }
+
+.inspera-avatar__status--online  { background: var(--success); }
+.inspera-avatar__status--offline { background: var(--gray-500); }
+.inspera-avatar__status--busy    { background: var(--error); }
+
+.inspera-avatar-group {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-sans);
+}
+
+/* Each avatar sits in a ring and pulls left over the one before it. The ring
+   is a box-shadow, not a border, so it does not change the avatar's size. */
+.inspera-avatar-group__item {
+  display: inline-flex;
+  border-radius: 9999px;
+  box-shadow: 0 0 0 2px var(--white);
+  margin-left: -12px;
+}
+.inspera-avatar-group--small .inspera-avatar-group__item { margin-left: -10px; }
+.inspera-avatar-group--large .inspera-avatar-group__item { margin-left: -17px; }
+
+/* Last, so it outranks the size modifiers above: nothing overlaps the first. */
+.inspera-avatar-group__item:first-child { margin-left: 0; }
+
+/* The overflow chip is the same circle, filled and labelled +N. */
+.inspera-avatar-group__more {
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: var(--gray-200);
+  color: var(--gray-700);
+  font-size: 13.6px;
+  font-weight: 500;
+}
+.inspera-avatar-group--small .inspera-avatar-group__more { width: 32px; height: 32px; font-size: 10.88px; }
+.inspera-avatar-group--large .inspera-avatar-group__more { width: 56px; height: 56px; font-size: 19.04px; }
+```
+
+```html
+<div class="inspera-avatar-group" role="group" aria-label="6 participants">
+  <span class="inspera-avatar-group__item">
+    <span class="inspera-avatar">
+      <span class="inspera-avatar__surface" role="img" aria-label="Ada Lovelace (AL)"><span>AL</span></span>
+    </span>
+  </span>
+  <span class="inspera-avatar-group__item">
+    <span class="inspera-avatar">
+      <span class="inspera-avatar__surface" role="img" aria-label="Grace Hopper (GH)"><span>GH</span></span>
+    </span>
+  </span>
+  <span class="inspera-avatar-group__item inspera-avatar-group__more" aria-label="4 more">+4</span>
+</div>
+```
+
 
 ---
 

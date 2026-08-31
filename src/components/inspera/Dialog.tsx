@@ -1,4 +1,5 @@
-import { type CSSProperties, type ReactNode, useEffect } from 'react'
+import { type CSSProperties, type ReactNode, useEffect, useId } from 'react'
+import { useModalBehavior } from './useModalBehavior'
 
 export type DialogSize = 'Small' | 'Medium' | 'Large'
 
@@ -42,6 +43,11 @@ export default function Dialog({
   onClose,
   onConfirm,
 }: DialogProps) {
+  // useId, not a constant: the States gallery renders six dialogs on one page,
+  // and a hardcoded id gave every one of them the same `dialog-title`.
+  const titleId = useId()
+  const panel = useModalBehavior(!embedded && open)
+
   useEffect(() => {
     if (embedded || !open) return
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose?.() }
@@ -51,7 +57,7 @@ export default function Dialog({
 
   if (!open) return null
 
-  const panel: CSSProperties = {
+  const panelStyle: CSSProperties = {
     width: widthMap[size],
     maxWidth: '100%',
     display: 'flex',
@@ -60,17 +66,18 @@ export default function Dialog({
     background: 'var(--white)',
     color: 'var(--text-primary)',
     boxShadow: 'var(--shadow-500)',
+    fontFamily: 'var(--font-sans)',
   }
 
   const content = (
-    <div style={panel} role="dialog" aria-modal={!embedded} aria-labelledby="dialog-title">
+    <div ref={panel} tabIndex={-1} style={panelStyle} role="dialog" aria-modal={!embedded} aria-labelledby={titleId}>
       {/* Header */}
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         padding: '12px 24px', borderBottom: '1px solid var(--border)',
         gap: 12, minHeight: 64,
       }}>
-        <h2 id="dialog-title" style={{
+        <h2 id={titleId} style={{
           margin: 0, fontSize: 22.78, fontWeight: 500, lineHeight: 1.12,
           color: 'var(--gray-900)', letterSpacing: -0.2,
         }}>

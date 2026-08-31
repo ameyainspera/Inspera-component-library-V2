@@ -76,6 +76,100 @@ import { Snackbar } from '@inspera/components'
 
 **Deprecated aliases** (do not use): `Toast`, `Notification bar`
 
+#### Without the package — exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. It is the same
+component, and it is complete: do not substitute a radius, colour, spacing or
+font weight of your own, and do not restyle it with a UI kit's defaults.
+
+- The bar is always `--gray-900` with white text. The intent tints the icon and the action label only — a green snackbar is wrong.
+- Fixed 48px height, `--radius-md`, `--shadow-300`, and asymmetric padding (16px leading, 8px trailing) because the close button carries its own.
+- Accents are the 400 shade of each family, which reads on the dark bar; the 600 shades do not.
+- Always `role="status"` with `aria-live="polite"` — a snackbar must never interrupt, which is also why nothing the user has to act on later belongs here.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --white:       #ffffff;
+  --gray-900:    #272727;
+  --blue-400:    #7ABDFF;
+  --green-400:   #8DECC5;
+  --red-400:     #F58484;
+  --orange-400:  #FED27C;
+  --radius-md:   8px;
+  --shadow-300:  0px 8px 16px rgba(39, 39, 39, 0.08), 0px 6px 8px rgba(39, 39, 39, 0.12);
+  --font-sans:   'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-snackbar {
+  /* The accent tints the icon and the action, not the bar. */
+  --snackbar-accent: var(--white);
+
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 300px;
+  max-width: 480px;
+  height: 48px;
+  padding: 0 8px 0 16px;
+  border-radius: var(--radius-md);
+  background: var(--gray-900);
+  color: var(--white);
+  box-shadow: var(--shadow-300);
+  font-family: var(--font-sans);
+}
+
+.inspera-snackbar--neutral { --snackbar-accent: var(--white); }
+.inspera-snackbar--info    { --snackbar-accent: var(--blue-400); }
+.inspera-snackbar--success { --snackbar-accent: var(--green-400); }
+.inspera-snackbar--warning { --snackbar-accent: var(--orange-400); }
+.inspera-snackbar--error   { --snackbar-accent: var(--red-400); }
+
+.inspera-snackbar__icon {
+  flex-shrink: 0;
+  font-size: 20px;
+  color: var(--snackbar-accent);
+  font-variation-settings: 'FILL' 1;
+}
+
+.inspera-snackbar__message {
+  flex: 1;
+  font-size: 16px;
+}
+
+.inspera-snackbar__action {
+  padding: 0 8px;
+  border: none;
+  background: none;
+  color: var(--snackbar-accent);
+  font-weight: 600;
+  font-size: 16px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.inspera-snackbar__close {
+  padding: 4px;
+  border: none;
+  background: none;
+  color: rgba(255, 255, 255, 0.7);
+  display: inline-flex;
+  cursor: pointer;
+}
+.inspera-snackbar__close .material-symbols-outlined { font-size: 20px; }
+```
+
+```html
+<div class="inspera-snackbar inspera-snackbar--success" role="status" aria-live="polite">
+  <span class="material-symbols-outlined inspera-snackbar__icon" aria-hidden="true">check_circle</span>
+  <span class="inspera-snackbar__message">Assessment saved.</span>
+  <button type="button" class="inspera-snackbar__action">Undo</button>
+  <button type="button" class="inspera-snackbar__close" aria-label="Dismiss">
+    <span class="material-symbols-outlined" aria-hidden="true">close</span>
+  </button>
+</div>
+```
+
 
 ---
 

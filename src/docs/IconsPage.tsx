@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, useEffect } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import { iconsByCategory, allIcons, ICON_CATEGORIES, totalIconCount } from '../data/icons'
 import IconDetailPanel from './IconDetailPanel'
 import type { IconCategory } from '../data/icons'
@@ -15,24 +15,6 @@ const styleClass: Record<IconStyle, string> = {
   sharp: 'material-symbols-sharp',
 }
 
-function CopyToast({ name }: { name: string }) {
-  return (
-    <div
-      style={{
-        position: 'fixed', bottom: 24, left: '50%', transform: 'translateX(-50%)',
-        background: 'var(--gray-900)', color: '#fff', borderRadius: 'var(--radius-sm)',
-        padding: '10px 16px', fontSize: 13, fontWeight: 500, zIndex: 9999,
-        display: 'flex', alignItems: 'center', gap: 8, pointerEvents: 'none',
-        boxShadow: 'var(--shadow-300)', whiteSpace: 'nowrap',
-        animation: 'toast-in 0.15s ease',
-      }}
-    >
-      <span className="material-symbols-outlined" style={{ fontSize: 16 }}>check_circle</span>
-      Copied <code style={{ fontFamily: 'var(--font-mono)', fontSize: 12, opacity: 0.8 }}>{name}</code>
-    </div>
-  )
-}
-
 interface IconCardProps {
   name: string
   iconClass: string
@@ -40,10 +22,10 @@ interface IconCardProps {
   weight: Weight
   grade: number
   opsz: number
-  onCopy: (name: string) => void
+  onSelect: (name: string) => void
 }
 
-function IconCard({ name, iconClass, fill, weight, grade, opsz, onCopy }: IconCardProps) {
+function IconCard({ name, iconClass, fill, weight, grade, opsz, onSelect }: IconCardProps) {
   const [hovered, setHovered] = useState(false)
 
   const varSettings = `'FILL' ${fill}, 'wght' ${weight}, 'GRAD' ${grade}, 'opsz' ${opsz}`
@@ -52,7 +34,7 @@ function IconCard({ name, iconClass, fill, weight, grade, opsz, onCopy }: IconCa
     <button
       type="button"
       title={name}
-      onClick={() => onCopy(name)}
+      onClick={() => onSelect(name)}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
@@ -92,30 +74,7 @@ export default function IconsPage() {
   const [search, setSearch] = useState('')
   const [category, setCategory] = useState<IconCategory>('All')
   const [selected, setSelected] = useState<string | null>(null)
-  const [toast, setToast] = useState<string | null>(null)
-  const [toastKey, setToastKey] = useState(0)
-
   const selectIcon = useCallback((name: string) => setSelected(name), [])
-
-  const copyIcon = useCallback((name: string) => {
-    try {
-      const ta = document.createElement('textarea')
-      ta.value = name
-      ta.style.cssText = 'position:fixed;top:-9999px;left:-9999px;opacity:0'
-      document.body.appendChild(ta)
-      ta.select()
-      document.execCommand('copy')
-      document.body.removeChild(ta)
-    } catch {}
-    setToast(name)
-    setToastKey((k) => k + 1)
-  }, [])
-
-  useEffect(() => {
-    if (!toast) return
-    const t = setTimeout(() => setToast(null), 2000)
-    return () => clearTimeout(t)
-  }, [toast, toastKey])
 
   const selectedCategory = useMemo(() => {
     if (!selected) return ''
@@ -134,10 +93,6 @@ export default function IconsPage() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
-      <style>{`
-        @keyframes toast-in { from { opacity: 0; transform: translateX(-50%) translateY(8px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
-      `}</style>
-
       {/* ── Static header ── */}
       <div style={{ flexShrink: 0, padding: '32px 40px 20px' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
@@ -361,7 +316,7 @@ export default function IconsPage() {
               weight={weight}
               grade={grade}
               opsz={opsz}
-              onCopy={selectIcon}
+              onSelect={selectIcon}
             />
           ))}
         </div>
@@ -444,8 +399,6 @@ export default function IconsPage() {
         />
       )}
       </div>{/* end content + panel row */}
-
-      {toast && <CopyToast key={toastKey} name={toast} />}
     </div>
   )
 }

@@ -49,6 +49,9 @@ export default function Snackbar({
     background: 'var(--gray-900)',
     color: 'var(--white)',
     boxShadow: 'var(--shadow-300)',
+    // Every other component roots its own family. Without it a Snackbar
+    // dropped into a page with no global font rule renders in Times.
+    fontFamily: 'var(--font-sans)',
   }
   return (
     <div style={style} role="status" aria-live="polite">

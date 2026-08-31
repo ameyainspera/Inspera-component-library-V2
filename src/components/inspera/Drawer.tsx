@@ -1,4 +1,5 @@
 import { type CSSProperties, type ReactNode, useEffect, useId } from 'react'
+import { useModalBehavior } from './useModalBehavior'
 
 export type DrawerSide = 'Right' | 'Left' | 'Bottom'
 export type DrawerSize = 'Small' | 'Medium' | 'Large'
@@ -35,6 +36,7 @@ export default function Drawer({
   onClose,
 }: DrawerProps) {
   const id = useId()
+  const panel = useModalBehavior(!embedded && open)
 
   useEffect(() => {
     if (embedded || !open) return
@@ -48,12 +50,13 @@ export default function Drawer({
   const isBottom = side === 'Bottom'
   const extent = sizeMap[size]
 
-  const panel: CSSProperties = {
+  const panelStyle: CSSProperties = {
     display: 'flex',
     flexDirection: 'column',
     background: 'var(--surface)',
     color: 'var(--text-primary)',
     boxShadow: 'var(--shadow-500)',
+    fontFamily: 'var(--font-sans)',
     ...(embedded
       ? {
           width: isBottom ? '100%' : extent,
@@ -76,7 +79,7 @@ export default function Drawer({
   }
 
   const content = (
-    <div style={panel} role="dialog" aria-modal={!embedded} aria-labelledby={id}>
+    <div ref={panel} tabIndex={-1} style={panelStyle} role="dialog" aria-modal={!embedded} aria-labelledby={id}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, padding: '16px 20px', borderBottom: '1px solid var(--border)', flexShrink: 0 }}>
         <h2 id={id} style={{ margin: 0, fontSize: 18, fontWeight: 500 }}>{title}</h2>
         {hasCloseButton && (

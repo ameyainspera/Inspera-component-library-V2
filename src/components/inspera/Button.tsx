@@ -119,7 +119,11 @@ export default function Button({
       aria-label={content === 'Icon + Text' || content === 'Text' ? undefined : label}
     >
       {content === 'Icon + Text' && iconEl}
-      <span>{label}</span>
+      {/* The label only needs its own element when it sits beside an icon.
+          A text-only button wrapped its label in a span that carried nothing,
+          which made the rendered DOM differ from the HTML the spec publishes
+          for the same button — for no visual gain. */}
+      {content === 'Text' ? label : <span>{label}</span>}
       {(content === 'Text + Icon' || content === 'Text + Disclosure') && iconEl}
     </button>
   )

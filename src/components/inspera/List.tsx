@@ -1,4 +1,4 @@
-import { type CSSProperties, type ReactNode, useState } from 'react'
+import { type CSSProperties, type ReactNode } from 'react'
 import Icon from './Icon'
 
 export type ListSize = 'Compact' | 'Default'
@@ -36,7 +36,6 @@ export default function List({
   size = 'Default',
   onItemClick,
 }: ListProps) {
-  const [hovered, setHovered] = useState<number | null>(null)
   const padY = size === 'Compact' ? 8 : 12
 
   const iconSize = size === 'Compact' ? 18 : 20
@@ -70,19 +69,24 @@ export default function List({
     </>
   )
 
-  const rowStyle = (i: number, isHover: boolean): CSSProperties => ({
+  // Every border side is set as a longhand on purpose. This used to declare
+  // `borderBottom` and then `border: 'none'` for the interactive case, and the
+  // later shorthand reset the divider — so `divided` silently did nothing the
+  // moment a list became clickable. Hover is CSS (.inspera-row in runtime.css),
+  // which is also why no background is set here.
+  const rowStyle = (i: number): CSSProperties => ({
     display: 'flex',
     alignItems: 'center',
     gap: 12,
     width: '100%',
     padding: `${padY}px 16px`,
+    borderTop: 'none',
+    borderRight: 'none',
+    borderLeft: 'none',
     borderBottom: divided && i < items.length - 1 ? '1px solid var(--border)' : 'none',
-    background: interactive && isHover ? 'var(--action-hover, var(--gray-100))' : 'transparent',
-    border: interactive ? 'none' : undefined,
     borderRadius: interactive ? 'var(--radius-sm)' : undefined,
     font: 'inherit',
     cursor: interactive ? 'pointer' : 'default',
-    transition: 'background 120ms ease',
   })
 
   return (
@@ -105,15 +109,14 @@ export default function List({
           {interactive ? (
             <button
               type="button"
+              className="inspera-interactive inspera-row"
               onClick={() => onItemClick?.(item, i)}
-              onMouseEnter={() => setHovered(i)}
-              onMouseLeave={() => setHovered(null)}
-              style={rowStyle(i, hovered === i)}
+              style={rowStyle(i)}
             >
               {rowContent(item)}
             </button>
           ) : (
-            <div style={rowStyle(i, false)}>{rowContent(item)}</div>
+            <div style={rowStyle(i)}>{rowContent(item)}</div>
           )}
         </li>
       ))}

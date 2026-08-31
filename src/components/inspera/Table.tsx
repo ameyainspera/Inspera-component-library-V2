@@ -53,7 +53,6 @@ export default function Table({
   onRowClick,
 }: TableProps) {
   const [selected, setSelected] = useState<Set<number>>(new Set())
-  const [hovered, setHovered] = useState<number | null>(null)
   const rowH = size === 'Compact' ? 40 : 52
 
   const toggle = (i: number) => {
@@ -115,20 +114,21 @@ export default function Table({
       <tbody>
         {rows.map((row, i) => {
           const isStriped = striped && i % 2 === 1
-          const isHover = hoverable && hovered === i
-          const bg = isHover ? 'var(--gray-100)' : isStriped ? 'var(--gray-100)' : 'var(--white)'
+          // Hover is CSS (.inspera-row in runtime.css). The stripe is passed as
+          // the row's resting fill rather than set inline, because an inline
+          // background would outrank the hover rule and striped rows would stop
+          // responding to the pointer.
           return (
             <tr
               key={i}
+              className={hoverable ? 'inspera-interactive inspera-row' : undefined}
               onClick={onRowClick ? () => onRowClick(row, i) : undefined}
-              onMouseEnter={() => setHovered(i)}
-              onMouseLeave={() => setHovered(null)}
               style={{
+                '--inspera-row-bg': isStriped ? 'var(--gray-100)' : 'var(--white)',
                 height: rowH,
-                background: bg,
+                ...(hoverable ? null : { background: isStriped ? 'var(--gray-100)' : 'var(--white)' }),
                 cursor: onRowClick ? 'pointer' : 'default',
-                transition: 'background 120ms ease',
-              }}
+              } as CSSProperties}
             >
               {selectable && (
                 <td style={{ ...cellBase, textAlign: 'center' }}>

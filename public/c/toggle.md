@@ -53,7 +53,8 @@ import { Toggle } from '@inspera/components'
 
 <Toggle
   label="Enable notifications"
-  checked={false}
+  checked={enabled}
+  onChange={setEnabled}
   size="Medium"
 />
 ```
@@ -62,7 +63,7 @@ import { Toggle } from '@inspera/components'
 | --- | --- | --- | --- |
 | `label` | `string` | `'Toggle setting'` | Text beside the switch describing the setting. |
 | `checked` | `boolean` | — | On / off state. |
-| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Disabled'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
+| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Disabled'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Hover` and `Focused` are presentation-only — leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Disabled` is real application state and belongs in your code. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Track / thumb size. |
 | `withLabel` | `boolean` | `true` | Render the label. |
 | `onChange` | `(checked: boolean) => void` | — | Fired with the new on/off state. |
@@ -73,6 +74,105 @@ import { Toggle } from '@inspera/components'
 **Don't:** Do not use for form submissions — use Checkbox instead; Do not use without a visible label.
 
 **Deprecated aliases** (do not use): `Switch`, `Toggle switch`
+
+#### Without the package — exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. It is the same
+component, and it is complete: do not substitute a radius, colour, spacing or
+font weight of your own, and do not restyle it with a UI kit's defaults.
+
+- The input carries `role="switch"`. Without it the control announces as a checkbox, which promises a form value rather than an immediate change.
+- Track 44×24 (36×20 small), thumb 20px (16px), 2px padding. Thumb travel is track − thumb − 2×padding: 20px, or 16px when small.
+- The track fill is `--border-control` off and `--primary` on. It does not tint on hover — only the thumb shadow deepens.
+- The focus ring goes on the track, since the real input is 0×0.
+- A toggle applies immediately. If the change needs a Save button, use a Checkbox instead.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --primary:            #004080;
+  --white:              #ffffff;
+  --text-primary:       rgba(0, 0, 0, 0.87);
+  --border-control:     #C4C4C4;
+  --radius-pill:        9999px;
+  --focus-ring-width:   2px;
+  --focus-ring-offset:  2px;
+  --focus-ring-color:   var(--primary);
+  --font-sans:          'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 16px;
+}
+
+.inspera-toggle__input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.inspera-toggle__track {
+  width: 44px;
+  height: 24px;
+  border-radius: var(--radius-pill);
+  background: var(--border-control);
+  padding: 2px;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  transition: background 140ms ease;
+}
+
+.inspera-toggle--small .inspera-toggle__track { width: 36px; height: 20px; }
+
+.inspera-toggle__thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 9999px;
+  background: var(--white);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  transform: translateX(0);
+  transition: transform 160ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 120ms ease;
+}
+
+.inspera-toggle--small .inspera-toggle__thumb { width: 16px; height: 16px; }
+
+.inspera-toggle__input:checked + .inspera-toggle__track { background: var(--primary); }
+
+/* Travel is track − thumb − (2 × padding). */
+.inspera-toggle__input:checked + .inspera-toggle__track .inspera-toggle__thumb {
+  transform: translateX(20px);
+}
+.inspera-toggle--small .inspera-toggle__input:checked + .inspera-toggle__track .inspera-toggle__thumb {
+  transform: translateX(16px);
+}
+
+.inspera-toggle:hover .inspera-toggle__thumb { box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3); }
+
+.inspera-toggle__input:focus-visible + .inspera-toggle__track {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.inspera-toggle--disabled { cursor: not-allowed; opacity: 0.38; }
+```
+
+```html
+<label class="inspera-toggle" for="notify">
+  <input class="inspera-toggle__input" id="notify" type="checkbox" role="switch" />
+  <span class="inspera-toggle__track" aria-hidden="true">
+    <span class="inspera-toggle__thumb"></span>
+  </span>
+  <span>Enable notifications</span>
+</label>
+```
 
 
 ---

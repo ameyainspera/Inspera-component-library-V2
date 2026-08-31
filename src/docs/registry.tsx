@@ -176,17 +176,21 @@ export const registry: Record<string, RegistryEntry> = {
   checkbox: {
     controls: {
       state: { label: 'State', options: ['Default', 'Hover', 'Focused', 'Pressed', 'Disabled', 'Error'] },
-      checked: { label: 'Checked', options: ['false', 'true'] },
       size: { label: 'Size', options: ['Small', 'Medium'] },
+      indeterminate: { label: 'Indeterminate', options: ['false', 'true'] },
       withLabel: { label: 'With Label', options: ['true', 'false'] },
     },
-    defaults: { state: 'Default', checked: 'false', size: 'Medium', withLabel: 'true' },
+    defaults: { state: 'Default', size: 'Medium', indeterminate: 'false', withLabel: 'true' },
+    // No `checked` control on purpose. Supplying it made the box fully
+    // controlled, so clicking the preview did nothing at all — while the panel
+    // above it promised a live component. The gallery already shows both
+    // states; the playground's job is to be the one you can actually use.
     render: (v) => (
       <Checkbox
         label="Send me product updates"
         state={v.state as never}
-        checked={b(v.checked)}
         size={v.size as never}
+        indeterminate={b(v.indeterminate)}
         withLabel={b(v.withLabel)}
       />
     ),
@@ -196,24 +200,23 @@ export const registry: Record<string, RegistryEntry> = {
       { label: 'Hover', node: <Checkbox label="Option" state="Hover" /> },
       { label: 'Focused', node: <Checkbox label="Option" state="Focused" checked /> },
       { label: 'Error', node: <Checkbox label="Option" state="Error" /> },
+      { label: 'Indeterminate', node: <Checkbox label="Option" indeterminate /> },
       { label: 'Disabled', node: <Checkbox label="Option" state="Disabled" checked /> },
     ],
     snippet: (v) =>
-      `<Checkbox\n  label="Send me product updates"\n  checked={${v.checked}}\n  size="${v.size}"${flag('withLabel', b(v.withLabel), true)}\n/>`,
+      `<Checkbox\n  label="Send me product updates"\n  checked={checked}\n  onChange={setChecked}\n  size="${v.size}"${flag('indeterminate', b(v.indeterminate), false)}${flag('withLabel', b(v.withLabel), true)}\n/>`,
   },
 
   'radio-button': {
     controls: {
       state: { label: 'State', options: ['Default', 'Hover', 'Focused', 'Pressed', 'Disabled', 'Error'] },
-      selected: { label: 'Selected', options: ['false', 'true'] },
       withLabel: { label: 'With Label', options: ['true', 'false'] },
     },
-    defaults: { state: 'Default', selected: 'false', withLabel: 'true' },
+    defaults: { state: 'Default', withLabel: 'true' },
     render: (v) => (
       <RadioButton
         label="Standard delivery"
         state={v.state as never}
-        selected={b(v.selected)}
         withLabel={b(v.withLabel)}
       />
     ),
@@ -226,7 +229,7 @@ export const registry: Record<string, RegistryEntry> = {
       { label: 'Disabled', node: <RadioButton label="Option" state="Disabled" selected /> },
     ],
     snippet: (v) =>
-      `<RadioButton\n  label="Standard delivery"\n  name="delivery"\n  selected={${v.selected}}${flag('withLabel', b(v.withLabel), true)}\n/>`,
+      `<RadioButton\n  label="Standard delivery"\n  name="delivery"\n  selected={value === 'standard'}\n  onChange={() => setValue('standard')}${flag('withLabel', b(v.withLabel), true)}\n/>`,
   },
 
   select: {
@@ -256,16 +259,14 @@ export const registry: Record<string, RegistryEntry> = {
   toggle: {
     controls: {
       state: { label: 'State', options: ['Default', 'Hover', 'Focused', 'Disabled'] },
-      checked: { label: 'Checked', options: ['false', 'true'] },
       size: { label: 'Size', options: ['Small', 'Medium'] },
       withLabel: { label: 'With Label', options: ['true', 'false'] },
     },
-    defaults: { state: 'Default', checked: 'false', size: 'Medium', withLabel: 'true' },
+    defaults: { state: 'Default', size: 'Medium', withLabel: 'true' },
     render: (v) => (
       <Toggle
         label="Enable notifications"
         state={v.state as never}
-        checked={b(v.checked)}
         size={v.size as never}
         withLabel={b(v.withLabel)}
       />
@@ -277,7 +278,7 @@ export const registry: Record<string, RegistryEntry> = {
       { label: 'Disabled (on)', node: <Toggle label="Setting" state="Disabled" checked /> },
     ],
     snippet: (v) =>
-      `<Toggle\n  label="Enable notifications"\n  checked={${v.checked}}\n  size="${v.size}"${flag('withLabel', b(v.withLabel), true)}\n/>`,
+      `<Toggle\n  label="Enable notifications"\n  checked={enabled}\n  onChange={setEnabled}\n  size="${v.size}"${flag('withLabel', b(v.withLabel), true)}\n/>`,
   },
 
   card: {
@@ -368,9 +369,11 @@ export const registry: Record<string, RegistryEntry> = {
       hasActions: { label: 'Actions', options: ['true', 'false'] },
     },
     defaults: { size: 'Medium', hasCloseButton: 'true', hasActions: 'true' },
+    // The real overlay, not an inline panel: the snippet beside this teaches
+    // `open` / `onClose`, so the preview has to be the thing that opens and
+    // closes. The States gallery below keeps `embedded` to show the panel.
     render: (v) => (
-      <Dialog
-        embedded
+      <DialogDemo
         size={v.size as DialogSize}
         hasCloseButton={b(v.hasCloseButton)}
         hasActions={b(v.hasActions)}
@@ -527,7 +530,7 @@ export const registry: Record<string, RegistryEntry> = {
     },
     defaults: { state: 'Default', showValue: 'true' },
     render: (v) => (
-      <Slider label="Volume" value={40} min={0} max={100} state={v.state as never} showValue={b(v.showValue)} />
+      <Slider label="Volume" min={0} max={100} state={v.state as never} showValue={b(v.showValue)} />
     ),
     gallery: [
       { label: 'Default', node: <Slider label="Volume" value={40} showLabel={false} /> },
@@ -535,7 +538,7 @@ export const registry: Record<string, RegistryEntry> = {
       { label: 'Disabled', node: <Slider label="Volume" value={25} state="Disabled" showLabel={false} /> },
     ],
     snippet: (v) =>
-      `<Slider\n  label="Volume"\n  min={0}\n  max={100}\n  value={40}\n  showValue={${v.showValue}}\n/>`,
+      `<Slider\n  label="Volume"\n  min={0}\n  max={100}\n  value={volume}\n  onChange={setVolume}\n  showValue={${v.showValue}}\n/>`,
   },
 
   'segmented-control': {
@@ -545,14 +548,14 @@ export const registry: Record<string, RegistryEntry> = {
     },
     defaults: { size: 'Medium', fullWidth: 'false' },
     render: (v) => (
-      <SegmentedControl items={['Day', 'Week', 'Month']} value={1} size={v.size as never} fullWidth={b(v.fullWidth)} />
+      <SegmentedControl items={['Day', 'Week', 'Month']} size={v.size as never} fullWidth={b(v.fullWidth)} />
     ),
     gallery: [
       { label: 'Three', node: <SegmentedControl items={['Day', 'Week', 'Month']} value={0} /> },
       { label: 'Two', node: <SegmentedControl items={['List', 'Grid']} value={1} /> },
     ],
     snippet: (v) =>
-      `<SegmentedControl\n  items={['Day', 'Week', 'Month']}\n  value={1}\n  size="${v.size}"\n  fullWidth={${v.fullWidth}}\n/>`,
+      `<SegmentedControl\n  items={['Day', 'Week', 'Month']}\n  value={range}\n  onChange={setRange}\n  size="${v.size}"\n  fullWidth={${v.fullWidth}}\n/>`,
   },
 
   'date-picker': {
@@ -654,7 +657,7 @@ export const registry: Record<string, RegistryEntry> = {
     },
     defaults: { size: 'Medium', readOnly: 'false', showValue: 'false' },
     render: (v) => (
-      <Rating value={3} max={5} size={v.size as never} readOnly={b(v.readOnly)} showValue={b(v.showValue)} />
+      <Rating max={5} size={v.size as never} readOnly={b(v.readOnly)} showValue={b(v.showValue)} />
     ),
     gallery: [
       { label: '0 of 5', node: <Rating value={0} /> },
@@ -662,7 +665,7 @@ export const registry: Record<string, RegistryEntry> = {
       { label: '5 of 5', node: <Rating value={5} showValue /> },
     ],
     snippet: (v) =>
-      `<Rating\n  value={3}\n  max={5}\n  size="${v.size}"\n  readOnly={${v.readOnly}}${flag('showValue', b(v.showValue), false)}\n/>`,
+      `<Rating\n  value={score}\n  onChange={setScore}\n  max={5}\n  size="${v.size}"\n  readOnly={${v.readOnly}}${flag('showValue', b(v.showValue), false)}\n/>`,
   },
 
   'otp-input': {
@@ -687,13 +690,15 @@ export const registry: Record<string, RegistryEntry> = {
     controls: {
       size: { label: 'Size', options: ['Default', 'Compact'] },
       striped: { label: 'Striped', options: ['false', 'true'] },
+      selectable: { label: 'Selectable', options: ['false', 'true'] },
       hoverable: { label: 'Hoverable', options: ['true', 'false'] },
     },
-    defaults: { size: 'Default', striped: 'false', hoverable: 'true' },
+    defaults: { size: 'Default', striped: 'false', selectable: 'false', hoverable: 'true' },
     render: (v) => (
       <Table
         size={v.size as never}
         striped={b(v.striped)}
+        selectable={b(v.selectable)}
         hoverable={b(v.hoverable)}
         columns={[
           { key: 'name', header: 'Assessment' },
@@ -710,9 +715,10 @@ export const registry: Record<string, RegistryEntry> = {
     gallery: [
       { label: 'Default', node: <Table columns={[{ key: 'a', header: 'Name' }, { key: 'b', header: 'Score', align: 'right' }]} rows={[{ a: 'Ada', b: 92 }, { a: 'Linus', b: 88 }]} /> },
       { label: 'Striped', node: <Table striped columns={[{ key: 'a', header: 'Name' }, { key: 'b', header: 'Score', align: 'right' }]} rows={[{ a: 'Ada', b: 92 }, { a: 'Linus', b: 88 }]} /> },
+      { label: 'Selectable', node: <Table selectable columns={[{ key: 'a', header: 'Name' }, { key: 'b', header: 'Score', align: 'right' }]} rows={[{ a: 'Ada', b: 92 }, { a: 'Linus', b: 88 }]} /> },
     ],
     snippet: (v) =>
-      `<Table\n  size="${v.size}"\n  striped={${v.striped}}${flag('hoverable', b(v.hoverable), true)}\n  columns={[{ key: 'name', header: 'Assessment' }]}\n  rows={[{ name: 'Algebra Quiz' }]}\n/>`,
+      `<Table\n  size="${v.size}"\n  striped={${v.striped}}${flag('selectable', b(v.selectable), false)}${flag('hoverable', b(v.hoverable), true)}\n  columns={[{ key: 'name', header: 'Assessment' }]}\n  rows={[{ name: 'Algebra Quiz' }]}\n/>`,
   },
 
   accordion: {
@@ -914,7 +920,7 @@ export const registry: Record<string, RegistryEntry> = {
       { label: 'Circular', node: <Progress variant="Circular" value={72} showValue /> },
     ],
     snippet: (v) =>
-      `<Progress\n  variant="${v.variant}"\n  value={60}\n  intent="${v.intent}"\n  size="${v.size}"\n  indeterminate={${v.indeterminate}}\n  showValue={${v.showValue}}\n/>`,
+      `<Progress\n  variant="${v.variant}"\n  value={60}\n  intent="${v.intent}"\n  size="${v.size}"\n  label="Uploading attachments"\n  indeterminate={${v.indeterminate}}\n  showValue={${v.showValue}}\n/>`,
   },
 
   spinner: {
@@ -1042,7 +1048,7 @@ export const registry: Record<string, RegistryEntry> = {
           { label: 'Edit', icon: 'edit' },
           { label: 'Duplicate', icon: 'content_copy' },
           { label: 'Share', icon: 'share' },
-          { label: 'x', divider: true },
+          { label: '', divider: true },
           { label: 'Delete', icon: 'delete', danger: true },
         ]}
       />
@@ -1055,7 +1061,7 @@ export const registry: Record<string, RegistryEntry> = {
           items={[
             { label: 'Edit', icon: 'edit' },
             { label: 'Duplicate', icon: 'content_copy' },
-            { label: 'x', divider: true },
+            { label: '', divider: true },
             { label: 'Delete', icon: 'delete', danger: true },
           ]}
         />
@@ -1086,16 +1092,20 @@ export const registry: Record<string, RegistryEntry> = {
   link: {
     controls: {
       intent: { label: 'Intent', options: ['Default', 'Muted'] },
+      size: { label: 'Size', options: ['Medium', 'Small'] },
       underline: { label: 'Underline', options: ['Hover', 'Always', 'None'] },
+      leadingIcon: { label: 'Leading Icon', options: ['false', 'true'] },
       external: { label: 'External', options: ['false', 'true'] },
       disabled: { label: 'Disabled', options: ['false', 'true'] },
     },
-    defaults: { intent: 'Default', underline: 'Hover', external: 'false', disabled: 'false' },
+    defaults: { intent: 'Default', size: 'Medium', underline: 'Hover', leadingIcon: 'false', external: 'false', disabled: 'false' },
     render: (v) => (
       <Link
         label="Learn more"
         intent={v.intent as never}
+        size={v.size as never}
         underline={v.underline as never}
+        leadingIcon={b(v.leadingIcon) ? 'open_in_browser' : undefined}
         external={b(v.external)}
         disabled={b(v.disabled)}
       />
@@ -1106,7 +1116,7 @@ export const registry: Record<string, RegistryEntry> = {
       { label: 'Muted', node: <Link label="Skip for now" intent="Muted" /> },
     ],
     snippet: (v) =>
-      `<Link\n  href="/docs"\n  label="Learn more"\n  intent="${v.intent}"\n  underline="${v.underline}"\n  external={${v.external}}${flag('disabled', b(v.disabled), false)}\n/>`,
+      `<Link\n  href="/docs"\n  label="Learn more"\n  intent="${v.intent}"\n  size="${v.size}"\n  underline="${v.underline}"${b(v.leadingIcon) ? '\n  leadingIcon="open_in_browser"' : ''}\n  external={${v.external}}${flag('disabled', b(v.disabled), false)}\n/>`,
   },
 }
 

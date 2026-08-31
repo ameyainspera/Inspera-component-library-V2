@@ -4,7 +4,7 @@ This repo is both the **interactive reference site** for the Inspera Design Syst
 
 ## Source of truth
 
-- `src/components/inspera/*` — the 15 real, token-styled React components
+- `src/components/inspera/*` — the 42 real, token-styled React components
 - `src/data/tokens.ts` — canonical token values
 - `src/data/components.ts` — the semantic spec (purpose, a11y, usage, aliases)
 - the `*Props` TypeScript interfaces in `src/components/inspera/*` — the prop APIs
@@ -16,7 +16,7 @@ Everything below is generated or packaged from these — nothing is maintained t
 | Output | For | Enforcement | Command |
 | --- | --- | --- | --- |
 | **npm package** `@inspera/components` | Hand-written React, once published | Strong — real importable components, but **not published yet** | `pnpm build:pkg` (`packages/components/`) |
-| **Portable spec** `public/inspera-llms.txt` + `public/tokens.w3c.json` | Any LLM tool (Claude, ChatGPT, paste/link) | Advisory — the model follows it | `pnpm generate` |
+| **Portable spec** `public/llms.txt` + `public/c/<slug>.md` + `public/tokens.w3c.json` | Any LLM tool (Claude, ChatGPT, paste/link) | Advisory — the model follows it | `pnpm generate` |
 | **Figma Make kit** `kit/` | Figma Make specifically | Strongest, but Make-only | `pnpm generate` + publish in Figma (`kit/README.md`) |
 
 ## Regenerate everything

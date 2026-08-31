@@ -76,6 +76,108 @@ import { Tag } from '@inspera/components'
 
 **Deprecated aliases** (do not use): `Chip`, `Pill`, `Label`
 
+#### Without the package — exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. It is the same
+component, and it is complete: do not substitute a radius, colour, spacing or
+font weight of your own, and do not restyle it with a UI kit's defaults.
+
+- Identical geometry to Badge: 24px tall (20px small), full pill radius, 12px/500 type.
+- The remove control is a `<button>` with `aria-label="Remove <label>"` — never a bare icon span, and never just "close".
+- The leading icon is filled (`FILL 1`); the close icon is not.
+- A tag with no `onClick` is a `<span>` and takes `cursor: default`. Only a clickable tag becomes a `<button>`.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --error:            #D32F2F;
+  --warning:          #EF6C00;
+  --info:             #0288D1;
+  --success:          #2E7D32;
+  --gray-900:         #272727;
+  --info-surface:     #E1F5FE;
+  --success-surface:  #E8F5E9;
+  --warning-surface:  #FFF3E0;
+  --error-surface:    #FFEBEE;
+  --surface-neutral:  #F0F0F0;
+  --radius-pill:      9999px;
+  --font-sans:        'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-tag {
+  --tag-bg: var(--surface-neutral);
+  --tag-fg: var(--gray-900);
+
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 24px;
+  padding: 0 8px;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: var(--tag-bg);
+  color: var(--tag-fg);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: default;
+}
+
+.inspera-tag--small { height: 20px; padding: 0 6px; }
+
+/* Neutral is written out even though it matches the base, so the class name
+   stays correct if the default ever moves. */
+.inspera-tag--neutral { --tag-bg: var(--surface-neutral); --tag-fg: var(--gray-900); }
+.inspera-tag--info    { --tag-bg: var(--info-surface);    --tag-fg: var(--info); }
+.inspera-tag--success { --tag-bg: var(--success-surface); --tag-fg: var(--success); }
+.inspera-tag--warning { --tag-bg: var(--warning-surface); --tag-fg: var(--warning); }
+.inspera-tag--error   { --tag-bg: var(--error-surface);   --tag-fg: var(--error); }
+
+.inspera-tag .material-symbols-outlined {
+  font-size: 16px;
+  font-variation-settings: 'FILL' 1;
+}
+.inspera-tag--small .material-symbols-outlined { font-size: 14px; }
+
+/* The remove control. Square, inherits the tag's colour, and keeps its own
+   accessible name — "Remove <label>", not a bare "close". */
+.inspera-tag__remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  margin-left: 2px;
+  margin-right: -2px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+.inspera-tag--small .inspera-tag__remove { width: 16px; height: 16px; }
+
+.inspera-tag__remove .material-symbols-outlined {
+  font-variation-settings: 'FILL' 0;
+}
+```
+
+```html
+<span class="inspera-tag inspera-tag--neutral">Mathematics</span>
+
+<!-- With a leading icon and a remove control. -->
+<span class="inspera-tag inspera-tag--info">
+  <span class="material-symbols-outlined" aria-hidden="true">label</span>
+  Algebra
+  <button type="button" class="inspera-tag__remove" aria-label="Remove Algebra">
+    <span class="material-symbols-outlined" aria-hidden="true">close</span>
+  </button>
+</span>
+```
+
 
 ---
 

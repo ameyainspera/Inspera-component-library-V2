@@ -38,7 +38,9 @@ the tree clean).
 src/components/inspera/   The real components. The product builds against these.
 src/data/                 Component semantics, tokens, icons, navigation.
 src/docs/                 The reference site (Foundations, per-component pages, Icons, Integrate).
-src/index.css             Token custom properties + font wiring.
+src/tokens.css            Token custom properties (generated from src/data/tokens.ts).
+src/runtime.css           Icon helpers, keyframes, and every interaction-state rule.
+src/index.css             Font wiring and the global CSS entrypoint.
 
 scripts/build-portable.ts The single generator. One source in, every artifact out.
 public/                   Generated AI-facing artifacts (spec, tokens, registry).
@@ -55,10 +57,21 @@ consume. See [DISTRIBUTION.md](DISTRIBUTION.md).
 ## Contributing
 
 - Never hand-edit a generated file; change the source and run `pnpm generate`.
-- Components must accept `className`, `style`, a `ref`, and spread rest props.
-- Style with tokens (`var(--…)`); raw hex is rejected by lint.
+- Style with tokens (`var(--…)`). A handful of one-off `rgba()` shadows remain
+  in the components; do not add more.
+- Interaction state belongs in `src/runtime.css`, never in an inline style. An
+  inline `background` or `border` outranks any class selector, so setting one
+  on the element silently defeats its own `:hover` and `:focus-visible` rules —
+  see the comments in that file for the shape each component opts into.
 - Every component must satisfy the accessibility contract declared for it in
-  `src/data/components.ts`.
+  `src/data/components.ts`. If you change the contract, change the component.
+
+### Known gaps
+
+- Components do not yet accept `className`, `style`, a `ref`, or rest props —
+  only `Icon` does. Until they do, a consumer cannot add so much as a margin to
+  a `Button` from the outside.
+- There is no linter. The token rule above is a convention, not an enforced one.
 
 ## The AI integration surface
 
@@ -90,5 +103,5 @@ pnpm audit:layout     # in another
 
 Drives every component page in a real browser and fails if any Playground or
 State-gallery preview overflows its cell. Components size to their container,
-so the gallery grid owns the width budget — see `galleryMinWidth` in
+so the gallery grid owns the width budget — see `galleryLayout` in
 `src/docs/registry.tsx`. Add a component, add its entry there.

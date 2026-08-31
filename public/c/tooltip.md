@@ -77,6 +77,151 @@ import { Tooltip } from '@inspera/components'
 
 **Deprecated aliases** (do not use): `Tooltips`, `Walkthrough`, `a11y tooltips`
 
+#### Without the package — exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. It is the same
+component, and it is complete: do not substitute a radius, colour, spacing or
+font weight of your own, and do not restyle it with a UI kit's defaults.
+
+- The trigger points at the bubble with `aria-describedby`, and the bubble is `role="tooltip"`. A custom trigger needs that attribute too — the tooltip is not announced without it.
+- Show on `:hover` **and** `:focus-within`. A hint only a mouse can reach is unreachable for anyone navigating by keyboard.
+- The bubble takes `pointer-events: none` so it can never sit between the pointer and what it describes.
+- Dark is `--gray-900` with white text and no border; Light is white with a 1px `--border-strong`, and the arrow has to pick up that border on its two trigger-facing edges.
+- Default type is 12px; the accessibility type is 14px with more padding, for hints that carry real instruction.
+- Escape must dismiss it (WCAG 1.4.13), and nothing essential may live only here — a tooltip is supplementary by definition.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --white:          #ffffff;
+  --gray-300:       #D9D9D9;
+  --gray-900:       #272727;
+  --action-active:  rgba(0, 0, 0, 0.56);
+  --text-primary:   rgba(0, 0, 0, 0.87);
+  --border-strong:  var(--gray-300);
+  --radius-sm:      4px;
+  --radius-pill:    9999px;
+  --shadow-100:     0px 4px 4px rgba(39, 39, 39, 0.08), 0px 2px 4px rgba(39, 39, 39, 0.12);
+  --z-tooltip:      800;
+  --font-sans:      'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-tooltip {
+  position: relative;
+  display: inline-flex;
+}
+
+.inspera-tooltip__bubble {
+  position: absolute;
+  max-width: 240px;
+  width: max-content;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--gray-900);
+  color: var(--white);
+  border: none;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 1.4;
+  box-shadow: var(--shadow-100);
+  z-index: var(--z-tooltip, 30);
+  /* Never a pointer target: hovering the hint must not keep it open, and it
+     must never sit between the pointer and the thing it describes. */
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 140ms ease;
+}
+
+/* Shown on hover and on keyboard focus. Focus is not optional — a hint only
+   available to a mouse is unreachable for half the people who need it. */
+.inspera-tooltip:hover .inspera-tooltip__bubble,
+.inspera-tooltip:focus-within .inspera-tooltip__bubble { opacity: 1; }
+
+/* The accessibility type is larger, for hints that carry real instruction. */
+.inspera-tooltip__bubble--accessibility { padding: 10px 12px; font-size: 14px; }
+
+.inspera-tooltip__bubble--light {
+  background: var(--white);
+  color: var(--text-primary);
+  border: 1px solid var(--border-strong);
+}
+
+.inspera-tooltip__bubble--top    { bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); }
+.inspera-tooltip__bubble--bottom { top: calc(100% + 8px); left: 50%; transform: translateX(-50%); }
+.inspera-tooltip__bubble--left   { right: calc(100% + 8px); top: 50%; transform: translateY(-50%); }
+.inspera-tooltip__bubble--right  { left: calc(100% + 8px); top: 50%; transform: translateY(-50%); }
+
+.inspera-tooltip__arrow {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: var(--gray-900);
+  transform: rotate(45deg);
+  z-index: 31;
+}
+
+.inspera-tooltip__bubble--light .inspera-tooltip__arrow { background: var(--white); }
+
+.inspera-tooltip__bubble--top .inspera-tooltip__arrow {
+  bottom: -4px; left: 50%; margin-left: -4px;
+  border-right: 1px solid transparent; border-bottom: 1px solid transparent;
+}
+.inspera-tooltip__bubble--bottom .inspera-tooltip__arrow {
+  top: -4px; left: 50%; margin-left: -4px;
+  border-left: 1px solid transparent; border-top: 1px solid transparent;
+}
+.inspera-tooltip__bubble--left .inspera-tooltip__arrow {
+  right: -4px; top: 50%; margin-top: -4px;
+  border-right: 1px solid transparent; border-top: 1px solid transparent;
+}
+.inspera-tooltip__bubble--right .inspera-tooltip__arrow {
+  left: -4px; top: 50%; margin-top: -4px;
+  border-left: 1px solid transparent; border-bottom: 1px solid transparent;
+}
+
+.inspera-tooltip__bubble--light.inspera-tooltip__bubble--top .inspera-tooltip__arrow {
+  border-right-color: var(--border-strong); border-bottom-color: var(--border-strong);
+}
+.inspera-tooltip__bubble--light.inspera-tooltip__bubble--bottom .inspera-tooltip__arrow {
+  border-left-color: var(--border-strong); border-top-color: var(--border-strong);
+}
+.inspera-tooltip__bubble--light.inspera-tooltip__bubble--left .inspera-tooltip__arrow {
+  border-right-color: var(--border-strong); border-top-color: var(--border-strong);
+}
+.inspera-tooltip__bubble--light.inspera-tooltip__bubble--right .inspera-tooltip__arrow {
+  border-left-color: var(--border-strong); border-bottom-color: var(--border-strong);
+}
+
+.inspera-tooltip__default-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border-strong);
+  background: var(--white);
+  font-family: var(--font-sans);
+  cursor: help;
+}
+.inspera-tooltip__default-trigger .material-symbols-outlined {
+  font-size: 20px;
+  color: var(--action-active);
+}
+```
+
+```html
+<span class="inspera-tooltip">
+  <button type="button" class="inspera-tooltip__default-trigger" aria-describedby="tip-1">
+    <span class="material-symbols-outlined" aria-hidden="true">help</span>
+  </button>
+  <span class="inspera-tooltip__bubble inspera-tooltip__bubble--top" id="tip-1" role="tooltip">
+    Supplementary help text
+    <span class="inspera-tooltip__arrow" aria-hidden="true"></span>
+  </span>
+</span>
+```
+
 
 ---
 

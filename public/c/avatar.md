@@ -73,6 +73,109 @@ import { Avatar } from '@inspera/components'
 **Do:** Use for user profiles and participant lists; Provide meaningful alt text; Use consistent sizing within a context.
 **Don't:** Do not stretch or distort avatar images; Do not use random colors — use a deterministic palette.
 
+#### Without the package — exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. It is the same
+component, and it is complete: do not substitute a radius, colour, spacing or
+font weight of your own, and do not restyle it with a UI kit's defaults.
+
+- Diameters are 32 / 40 / 56. Initials are 40% of that, the icon 55%, the status dot 28% — never a fixed size.
+- The surface uses `--avatar-surface`, not a random grey, and `--radius-pill`.
+- The status dot needs its 2px `--white` ring, or it disappears against a photo.
+- The accessible name lives on the surface (`role="img"`); the initials themselves are decorative text.
+- The wrapper is separate from the surface because the surface clips its image with `overflow: hidden`, which would cut the dot in half.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --error:        #D32F2F;
+  --success:      #2E7D32;
+  --white:        #ffffff;
+  --gray-500:     #949494;
+  --gray-600:     #7A7A7A;
+  --gray-900:     #272727;
+  --radius-pill:  9999px;
+  --font-sans:    'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* The wrapper exists so the status dot can be positioned against the
+   avatar without being clipped by its overflow: hidden. */
+.inspera-avatar {
+  position: relative;
+  display: inline-flex;
+}
+
+.inspera-avatar__surface {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-pill);
+  background: var(--avatar-surface);
+  color: var(--gray-900);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  /* Initials are 40% of the diameter, so they scale with the avatar. */
+  font-size: 16px;
+}
+
+.inspera-avatar--small .inspera-avatar__surface  { width: 32px; height: 32px; font-size: 12.8px; }
+.inspera-avatar--large .inspera-avatar__surface  { width: 56px; height: 56px; font-size: 22.4px; }
+
+.inspera-avatar__surface img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* The icon variant is 55% of the diameter, larger than the initials. */
+.inspera-avatar__surface .material-symbols-outlined {
+  font-size: 22px;
+  color: var(--gray-600);
+}
+.inspera-avatar--small .inspera-avatar__surface .material-symbols-outlined { font-size: 17.6px; }
+.inspera-avatar--large .inspera-avatar__surface .material-symbols-outlined { font-size: 30.8px; }
+
+/* The dot is 28% of the diameter, with a 2px white ring so it stays legible
+   against a photo. */
+.inspera-avatar__status {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 11.2px;
+  height: 11.2px;
+  border-radius: 9999px;
+  border: 2px solid var(--white);
+}
+.inspera-avatar--small .inspera-avatar__status { width: 8.96px; height: 8.96px; }
+.inspera-avatar--large .inspera-avatar__status { width: 15.68px; height: 15.68px; }
+
+.inspera-avatar__status--online  { background: var(--success); }
+.inspera-avatar__status--offline { background: var(--gray-500); }
+.inspera-avatar__status--busy    { background: var(--error); }
+```
+
+```html
+<!-- Initials. The accessible name carries them, since the text is decorative. -->
+<span class="inspera-avatar">
+  <span class="inspera-avatar__surface" role="img" aria-label="Jane Cooper (JC)">
+    <span>JC</span>
+  </span>
+</span>
+
+<!-- Photo, with a status dot. -->
+<span class="inspera-avatar">
+  <span class="inspera-avatar__surface" role="img" aria-label="Jane Cooper">
+    <img src="/avatar.jpg" alt="Jane Cooper" />
+  </span>
+  <span class="inspera-avatar__status inspera-avatar__status--online" aria-label="Online"></span>
+</span>
+```
+
 
 ---
 

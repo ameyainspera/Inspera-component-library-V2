@@ -65,7 +65,7 @@ import { Select } from '@inspera/components'
 | `placeholder` | `string` | `'Select an option'` | Shown when nothing is selected. Not a substitute for the label. |
 | `options` | `string[]` | `defaultOptions` | The selectable values, in the order they should appear. |
 | `value` | `string` | — | Selected value. Controlled — pair with onChange. |
-| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Disabled' \| 'Error' \| 'Open'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
+| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Disabled' \| 'Error' \| 'Open'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Open` are presentation-only — leave them unset in application code, where CSS and the component's own state drive them. `Error` and `Disabled` are real application state and belong in your code. |
 | `widthMode` | `'Fixed' \| 'Content Adaptable'` | `'Fixed'` | Trigger sizing. |
 | `showLabel` | `boolean` | `true` | Render the visible label. Hiding it still requires an accessible name. |
 | `search` | `boolean` | `false` | Filterable option list. |
@@ -77,6 +77,163 @@ import { Select } from '@inspera/components'
 **Don't:** Do not use for fewer than 3 options — use Radio Button instead; Do not nest selects inside other selects.
 
 **Deprecated aliases** (do not use): `Select / Fixed width`, `Select / Content adaptable`, `Dropdown`, `Dropdown with Label`
+
+#### Without the package — exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. It is the same
+component, and it is complete: do not substitute a radius, colour, spacing or
+font weight of your own, and do not restyle it with a UI kit's defaults.
+
+- The trigger is a `role="combobox"` element with `tabindex="0"`, `aria-expanded`, `aria-haspopup="listbox"` and `aria-controls` pointing at the list. None of that comes free — this is not a native `<select>`.
+- The list is `role="listbox"` with `role="option"` children carrying `aria-selected`; it is positioned against the trigger, not appended to the body.
+- Keep the keyboard cursor and the selected value as two different states. The highlighted option (`--active`, `--blue-100`) is where the arrows are; `aria-selected` is what has been chosen.
+- The chevron rotates 180° while open, driven off `aria-expanded` so the attribute and the visual cannot disagree.
+- Keyboard: Down opens and moves, Up moves back, Enter commits, Escape closes.
+- Fixed width is 220px; Content Adaptable drops to `auto` with a 120px floor.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --primary:                #004080;
+  --white:                  #ffffff;
+  --gray-300:               #D9D9D9;
+  --gray-600:               #7A7A7A;
+  --blue-100:               #F0F7FF;
+  --blue-300:               #B3D9FF;
+  --text-primary:           rgba(0, 0, 0, 0.87);
+  --border-control:         #C4C4C4;
+  --border-control-strong:  #8C8C8C;
+  --border-strong:          var(--gray-300);
+  --muted-foreground:       var(--gray-600);
+  --radius-sm:              4px;
+  --radius-md:              8px;
+  --shadow-200:             0px 8px 8px rgba(39, 39, 39, 0.08), 0px 4px 6px rgba(39, 39, 39, 0.12);
+  --effect-state-focus:     0px 0px 0px 3px var(--blue-300);
+  --border-width-default:   1px;
+  --duration-fast:          100ms;
+  --easing-standard:        cubic-bezier(0.2, 0, 0, 1);
+  --z-dropdown:             300;
+  --font-sans:              'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-select {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 220px;
+  font-family: var(--font-sans);
+}
+
+/* Content-adaptable: the trigger grows with the longest value instead of
+   holding a fixed 220px. */
+.inspera-select--auto { width: auto; }
+
+.inspera-select__label {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.inspera-select__anchor { position: relative; }
+
+.inspera-select__trigger {
+  height: 40px;
+  width: 220px;
+  min-width: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0 12px;
+  border-radius: var(--radius-md);
+  border: var(--border-width-default) solid var(--border-control);
+  background: var(--white);
+  /* Muted while showing the placeholder; --text-primary once a value is set. */
+  color: var(--muted-foreground);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  cursor: pointer;
+  transition:
+    border-color var(--duration-fast) var(--easing-standard),
+    box-shadow var(--duration-fast) var(--easing-standard);
+}
+
+.inspera-select--auto .inspera-select__trigger { width: auto; }
+
+.inspera-select__trigger--filled { color: var(--text-primary); }
+
+.inspera-select__trigger:hover { border-color: var(--border-control-strong); }
+
+.inspera-select__trigger:focus-visible,
+.inspera-select__trigger[aria-expanded='true'] {
+  border-color: var(--primary);
+  box-shadow: var(--effect-state-focus);
+  outline: none;
+}
+
+.inspera-select__trigger .material-symbols-outlined {
+  font-size: 20px;
+  transition: transform 140ms ease;
+}
+.inspera-select__trigger[aria-expanded='true'] .material-symbols-outlined { transform: rotate(180deg); }
+
+/* The list is anchored to the trigger, not appended to the body. */
+.inspera-select__list {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  margin: 0;
+  padding: 4px;
+  list-style: none;
+  background: var(--white);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-200);
+  z-index: var(--z-dropdown, 20);
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.inspera-select__option {
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 16px;
+  cursor: pointer;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Two different things: --active is the keyboard cursor, [aria-selected] is
+   the committed value. Collapsing them loses the arrow-key position. */
+.inspera-select__option--active { background: var(--blue-100); }
+.inspera-select__option[aria-selected='true'] { color: var(--primary); font-weight: 500; }
+
+.inspera-select__empty {
+  padding: 8px 12px;
+  color: var(--muted-foreground);
+  font-size: 14px;
+}
+```
+
+```html
+<div class="inspera-select">
+  <label class="inspera-select__label" for="country">Country</label>
+  <div class="inspera-select__anchor">
+    <div class="inspera-select__trigger" id="country" role="combobox" tabindex="0"
+         aria-expanded="false" aria-haspopup="listbox" aria-controls="country-list">
+      <span>Select an option</span>
+      <span class="material-symbols-outlined" aria-hidden="true">expand_more</span>
+    </div>
+    <!-- Rendered only while open. -->
+    <ul class="inspera-select__list" id="country-list" role="listbox">
+      <li class="inspera-select__option inspera-select__option--active" role="option" aria-selected="false">Norway</li>
+      <li class="inspera-select__option" role="option" aria-selected="false">Sweden</li>
+    </ul>
+  </div>
+</div>
+```
 
 
 ---

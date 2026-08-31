@@ -45,6 +45,7 @@ export default function Card({
     cursor: interactive ? 'pointer' : 'default',
     transition: 'box-shadow 140ms ease, transform 140ms ease',
     textAlign: 'left',
+    fontFamily: 'var(--font-sans)',
   }
 
   const content = children ?? (

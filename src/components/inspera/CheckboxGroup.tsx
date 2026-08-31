@@ -57,7 +57,7 @@ export default function CheckboxGroup({
       role="group"
       aria-labelledby={label ? `${groupId}-label` : undefined}
       aria-label={label ? undefined : 'Checkbox group'}
-      style={{ display: 'flex', flexDirection: 'column', gap: 4 }}
+      style={{ display: 'flex', flexDirection: 'column', gap: 4, fontFamily: 'var(--font-sans)' }}
     >
       {label && (
         <span id={`${groupId}-label`} style={{ fontSize: 16, fontWeight: 500, color: 'var(--text-primary)' }}>{label}</span>

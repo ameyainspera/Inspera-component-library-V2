@@ -70,6 +70,94 @@ import { Divider } from '@inspera/components'
 
 **Deprecated aliases** (do not use): `Separator`, `Rule`, `HR`
 
+#### Without the package — exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. It is the same
+component, and it is complete: do not substitute a radius, colour, spacing or
+font weight of your own, and do not restyle it with a UI kit's defaults.
+
+- The rule is 1px of `--border` as a background, not a border. A bare `<hr>` keeps the browser default and renders as a grey groove.
+- Spacing is margin on the divider itself: 16px default, 8px compact, 24px spacious — on the block axis horizontally, the inline axis vertically.
+- A labelled divider is a flex row of rule / label / rule, with the label at 13px `--muted-foreground`. It is not text laid over a line.
+- Always carry `role="separator"` and `aria-orientation`; a labelled one also needs `aria-label`.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --gray-200:          #EDEDED;
+  --gray-600:          #7A7A7A;
+  --border:            var(--gray-200);
+  --muted-foreground:  var(--gray-600);
+  --font-sans:         'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* Horizontal, unlabelled. The border reset matters: a bare <hr> keeps the
+   browser's inset border and renders as a two-tone groove. */
+.inspera-divider {
+  border: none;
+  height: 1px;
+  width: 100%;
+  background: var(--border);
+  margin: 16px 0;
+}
+
+.inspera-divider--compact  { margin: 8px 0; }
+.inspera-divider--spacious { margin: 24px 0; }
+
+/* Vertical: a 1px column that stretches to its flex parent. */
+.inspera-divider--vertical {
+  display: inline-block;
+  width: 1px;
+  height: auto;
+  align-self: stretch;
+  min-height: 1em;
+  background: var(--border);
+  margin: 0 16px;
+}
+.inspera-divider--vertical.inspera-divider--compact  { margin: 0 8px; }
+.inspera-divider--vertical.inspera-divider--spacious { margin: 0 24px; }
+
+/* Labelled: a flex row whose rules grow to fill either side of the text. */
+.inspera-divider--labelled {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  height: auto;
+  background: none;
+  margin: 16px 0;
+  font-family: var(--font-sans);
+}
+.inspera-divider--labelled.inspera-divider--compact  { margin: 8px 0; }
+.inspera-divider--labelled.inspera-divider--spacious { margin: 24px 0; }
+
+.inspera-divider__rule {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.inspera-divider__label {
+  font-size: 13px;
+  color: var(--muted-foreground);
+  white-space: nowrap;
+}
+```
+
+```html
+<hr class="inspera-divider" role="separator" aria-orientation="horizontal" />
+
+<!-- Vertical, inside a flex row. -->
+<span class="inspera-divider inspera-divider--vertical" role="separator" aria-orientation="vertical"></span>
+
+<!-- Labelled: the label names the separator for assistive tech too. -->
+<div class="inspera-divider inspera-divider--labelled" role="separator" aria-orientation="horizontal" aria-label="OR">
+  <span class="inspera-divider__rule"></span>
+  <span class="inspera-divider__label">OR</span>
+  <span class="inspera-divider__rule"></span>
+</div>
+```
+
 
 ---
 

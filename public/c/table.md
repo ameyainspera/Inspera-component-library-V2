@@ -86,6 +86,180 @@ export interface TableColumn {
 
 **Deprecated aliases** (do not use): `Data table`, `Grid`, `Datagrid`
 
+#### Without the package — exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. It is the same
+component, and it is complete: do not substitute a radius, colour, spacing or
+font weight of your own, and do not restyle it with a UI kit's defaults.
+
+- Use a real `<table>` with `<thead>`, `<tbody>` and `scope="col"` on every header. A grid of divs loses row and column association completely.
+- Row height is 52px (40px compact) and the header sits on `--gray-100`. Cells are 14px with 16px horizontal padding.
+- Right-align numeric columns only, so digits line up. Never right-align text.
+- The stripe is passed as the row’s resting fill (`--inspera-row-bg`) rather than a plain background, so the hover rule can still win on striped rows.
+- Selection checkboxes need a per-row `aria-label` ("Select row 3") and `accent-color: var(--primary)`.
+- Give the table a `<caption>` unless a heading immediately above already names it.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --primary:           #004080;
+  --error:             #D32F2F;
+  --warning:           #EF6C00;
+  --info:              #0288D1;
+  --success:           #2E7D32;
+  --white:             #ffffff;
+  --gray-100:          #F7F7F7;
+  --gray-200:          #EDEDED;
+  --gray-600:          #7A7A7A;
+  --gray-700:          #595959;
+  --gray-900:          #272727;
+  --action-hover:      rgba(0, 0, 0, 0.04);
+  --text-primary:      rgba(0, 0, 0, 0.87);
+  --info-surface:      #E1F5FE;
+  --success-surface:   #E8F5E9;
+  --warning-surface:   #FFF3E0;
+  --error-surface:     #FFEBEE;
+  --surface-neutral:   #F0F0F0;
+  --border:            var(--gray-200);
+  --muted-foreground:  var(--gray-600);
+  --radius-md:         8px;
+  --radius-pill:       9999px;
+  --duration-fast:     100ms;
+  --easing-standard:   cubic-bezier(0.2, 0, 0, 1);
+  --font-sans:         'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-badge {
+  /* Fill and text come from the intent modifier below. */
+  --badge-bg: var(--surface-neutral);
+  --badge-fg: var(--gray-900);
+
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 24px;
+  padding: 0 8px;
+  border-radius: var(--radius-pill);
+  background: var(--badge-bg);
+  color: var(--badge-fg);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* Small changes height and padding only — never the 12px type. */
+.inspera-badge--small { height: 20px; padding: 0 6px; }
+
+/* Neutral is written out even though it matches the base, so the class name
+   stays correct if the default ever moves. */
+.inspera-badge--neutral { --badge-bg: var(--surface-neutral); --badge-fg: var(--gray-900); }
+.inspera-badge--info    { --badge-bg: var(--info-surface);    --badge-fg: var(--info); }
+.inspera-badge--success { --badge-bg: var(--success-surface); --badge-fg: var(--success); }
+.inspera-badge--warning { --badge-bg: var(--warning-surface); --badge-fg: var(--warning); }
+.inspera-badge--error   { --badge-bg: var(--error-surface);   --badge-fg: var(--error); }
+
+/* The icon is filled, not outlined, at 16px (14px in a small badge). */
+.inspera-badge .material-symbols-outlined {
+  font-size: 16px;
+  font-variation-settings: 'FILL' 1;
+}
+.inspera-badge--small .material-symbols-outlined { font-size: 14px; }
+
+.inspera-table {
+  border-collapse: collapse;
+  width: 100%;
+  font-family: var(--font-sans);
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.inspera-table caption {
+  caption-side: top;
+  text-align: left;
+  padding: 0 0 8px;
+  font-size: 13px;
+  color: var(--muted-foreground);
+}
+
+.inspera-table th,
+.inspera-table td {
+  padding: 0 16px;
+  font-size: 14px;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+  text-align: left;
+}
+
+.inspera-table th {
+  font-weight: 600;
+  color: var(--gray-700);
+}
+
+.inspera-table thead tr {
+  background: var(--gray-100);
+  height: 52px;
+}
+
+.inspera-table tbody tr {
+  height: 52px;
+  cursor: default;
+  /* The stripe is the row's resting fill, passed as a variable. Setting it as
+     a plain background would outrank the hover rule below. */
+  background: var(--inspera-row-bg, var(--white));
+  transition: background var(--duration-fast) var(--easing-standard);
+}
+
+.inspera-table--compact thead tr,
+.inspera-table--compact tbody tr { height: 40px; }
+
+.inspera-table--striped tbody tr:nth-child(even) { --inspera-row-bg: var(--gray-100); }
+
+.inspera-table--hoverable tbody tr:hover { background: var(--action-hover); }
+
+/* Numbers right-align so the digits line up; text never does. Scoped through
+   the table so it outranks the "th, td" rule above, which is more specific
+   than a bare class on its own. */
+.inspera-table th.inspera-table__cell--right,
+.inspera-table td.inspera-table__cell--right { text-align: right; }
+
+.inspera-table th.inspera-table__select,
+.inspera-table td.inspera-table__select {
+  width: 44px;
+  text-align: center;
+}
+.inspera-table__select input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--primary);
+  cursor: pointer;
+}
+```
+
+```html
+<table class="inspera-table inspera-table--hoverable">
+  <caption>Candidate results, March 2026</caption>
+  <thead>
+    <tr>
+      <th scope="col">Assessment</th>
+      <th scope="col" class="inspera-table__cell--right">Items</th>
+      <th scope="col">Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Algebra Quiz</td>
+      <td class="inspera-table__cell--right">24</td>
+      <td><span class="inspera-badge inspera-badge--success" role="status">Live</span></td>
+    </tr>
+  </tbody>
+</table>
+```
+
 
 ---
 

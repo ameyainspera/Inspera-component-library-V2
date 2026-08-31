@@ -202,7 +202,7 @@ export const components: Record<string, ComponentSpec> = {
     accessibility: {
       role: 'alert',
       keyboard: true,
-      ariaNotes: ['Use role="alert" for important messages', 'Use aria-live="polite" for non-critical alerts', 'Close button must have aria-label="Close alert"'],
+      ariaNotes: ['Error and Warning announce as role="alert"; Info and Success as a polite role="status" — never both on one element, since role="alert" already implies assertive', 'Close button must have aria-label="Close alert"'],
     },
     usage: {
       do: ['Use for contextual inline messages', 'Match intent to message severity', 'Keep alert text concise'],

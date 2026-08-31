@@ -74,6 +74,86 @@ import { Badge } from '@inspera/components'
 
 **Deprecated aliases** (do not use): `Status Badge`, `Tag`, `Chip`
 
+#### Without the package — exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. It is the same
+component, and it is complete: do not substitute a radius, colour, spacing or
+font weight of your own, and do not restyle it with a UI kit's defaults.
+
+- Height is 24px (20px small) and the radius is a full pill — not `rounded-md`.
+- Type is 12px/500 at both sizes; Small changes height and padding only.
+- Neutral is `--surface-neutral` with `--gray-900` text, not a grey chip with white text.
+- Every intent pairs a `*-surface` tint with the matching solid as the text colour.
+- The icon is Material Symbols Outlined with `FILL 1`, at 16px (14px small).
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --error:            #D32F2F;
+  --warning:          #EF6C00;
+  --info:             #0288D1;
+  --success:          #2E7D32;
+  --gray-900:         #272727;
+  --info-surface:     #E1F5FE;
+  --success-surface:  #E8F5E9;
+  --warning-surface:  #FFF3E0;
+  --error-surface:    #FFEBEE;
+  --surface-neutral:  #F0F0F0;
+  --radius-pill:      9999px;
+  --font-sans:        'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-badge {
+  /* Fill and text come from the intent modifier below. */
+  --badge-bg: var(--surface-neutral);
+  --badge-fg: var(--gray-900);
+
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 24px;
+  padding: 0 8px;
+  border-radius: var(--radius-pill);
+  background: var(--badge-bg);
+  color: var(--badge-fg);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* Small changes height and padding only — never the 12px type. */
+.inspera-badge--small { height: 20px; padding: 0 6px; }
+
+/* Neutral is written out even though it matches the base, so the class name
+   stays correct if the default ever moves. */
+.inspera-badge--neutral { --badge-bg: var(--surface-neutral); --badge-fg: var(--gray-900); }
+.inspera-badge--info    { --badge-bg: var(--info-surface);    --badge-fg: var(--info); }
+.inspera-badge--success { --badge-bg: var(--success-surface); --badge-fg: var(--success); }
+.inspera-badge--warning { --badge-bg: var(--warning-surface); --badge-fg: var(--warning); }
+.inspera-badge--error   { --badge-bg: var(--error-surface);   --badge-fg: var(--error); }
+
+/* The icon is filled, not outlined, at 16px (14px in a small badge). */
+.inspera-badge .material-symbols-outlined {
+  font-size: 16px;
+  font-variation-settings: 'FILL' 1;
+}
+.inspera-badge--small .material-symbols-outlined { font-size: 14px; }
+```
+
+```html
+<span class="inspera-badge inspera-badge--success" role="status">Live</span>
+
+<span class="inspera-badge inspera-badge--neutral inspera-badge--small" role="status">Draft</span>
+
+<!-- With an icon. Material Symbols Outlined, filled — never another set. -->
+<span class="inspera-badge inspera-badge--error" role="status">
+  <span class="material-symbols-outlined" aria-hidden="true">error</span>
+  Failed
+</span>
+```
+
 
 ---
 

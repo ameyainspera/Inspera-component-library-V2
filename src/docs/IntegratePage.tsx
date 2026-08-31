@@ -147,7 +147,7 @@ const TOOL_SETUPS: ToolSetup[] = [
 ]
 
 const ARTIFACTS = [
-  { file: 'llms-full.txt', note: 'The complete guide — foundations + all 42 components.' },
+  { file: 'llms-full.txt', note: `The complete guide — foundations + all ${COUNT} components.` },
   { file: 'llms.txt', note: 'Short index linking a spec per component. Paste this into a chat.' },
   { file: 'foundations.md', note: 'Colour, typography, spacing, radius, depth on their own.' },
   { file: 'guidance.md', note: 'Composition patterns, form/table rules, the done checklist.' },

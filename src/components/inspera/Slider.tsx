@@ -13,7 +13,12 @@ export interface SliderProps {
   value?: number
   /** Increment granularity. */
   step?: number
-  /** Forces a visual state for documentation. Omit for real interactivity. */
+  /**
+   * Freezes a visual state so documentation can show it without a pointer.
+   * `Focused` is presentation-only — leave it unset in application code, where
+   * CSS drives it from the real pointer and keyboard. `Disabled` is real
+   * application state and belongs in your code.
+   */
   state?: SliderState
   /** Show the current value. */
   showValue?: boolean
@@ -38,11 +43,17 @@ export default function Slider({
   const [internal, setInternal] = useState(Math.round((min + max) / 2))
   const current = value ?? internal
   const disabled = state === 'Disabled'
-  const isFocused = state === 'Focused'
 
   const pct = max === min ? 0 : ((current - min) / (max - min)) * 100
 
-  const thumb: CSSProperties = {
+  // The real control is a visually hidden range input, so the ring has to be
+  // drawn on the thumb standing in for it — .inspera-control in runtime.css
+  // does that from :focus-visible, which is why Tab used to show nothing here.
+  const thumb: CSSProperties & Record<string, string | number> = {
+    '--inspera-indicator-border': 'var(--primary)',
+    '--inspera-indicator-bg': 'var(--white)',
+    '--inspera-indicator-border-hover': 'var(--primary)',
+    '--inspera-indicator-bg-hover': 'var(--white)',
     position: 'absolute',
     top: '50%',
     left: `${pct}%`,
@@ -50,14 +61,14 @@ export default function Slider({
     width: 20,
     height: 20,
     borderRadius: '9999px',
-    background: 'var(--white)',
-    border: '2px solid var(--primary)',
-    boxShadow: isFocused ? '0 0 0 3px var(--primary-focus-ring)' : '0 1px 2px rgba(0,0,0,0.2)',
+    borderWidth: 2,
+    borderStyle: 'solid',
+    boxShadow: '0 1px 2px rgba(0,0,0,0.2)',
     pointerEvents: 'none',
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%', opacity: disabled ? 0.5 : 1 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%', opacity: disabled ? 0.5 : 1, fontFamily: 'var(--font-sans)' }}>
       {(showLabel || showValue) && (
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           {showLabel && (
@@ -68,10 +79,15 @@ export default function Slider({
           )}
         </div>
       )}
-      <div style={{ position: 'relative', height: 20, display: 'flex', alignItems: 'center' }}>
+      <div
+        className="inspera-control"
+        data-force-state={state === 'Focused' ? 'Focused' : undefined}
+        data-disabled={disabled || undefined}
+        style={{ position: 'relative', height: 20, display: 'flex', alignItems: 'center' }}
+      >
         <div style={{ position: 'absolute', left: 0, right: 0, height: 4, borderRadius: 'var(--radius-pill)', background: 'var(--gray-300)' }} />
         <div style={{ position: 'absolute', left: 0, width: `${pct}%`, height: 4, borderRadius: 'var(--radius-pill)', background: 'var(--primary)' }} />
-        <span style={thumb} aria-hidden />
+        <span className="inspera-control-indicator" style={thumb} aria-hidden />
         <input
           id={id}
           type="range"

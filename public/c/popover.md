@@ -77,6 +77,138 @@ import { Popover } from '@inspera/components'
 
 **Deprecated aliases** (do not use): `Flyout`, `Overlay panel`
 
+#### Without the package — exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. It is the same
+component, and it is complete: do not substitute a radius, colour, spacing or
+font weight of your own, and do not restyle it with a UI kit's defaults.
+
+- A popover holds interactive content, so it is `role="dialog"` (not `tooltip`), it is reachable by keyboard, and it does not disappear on mouseout.
+- The panel is `--radius-md` on `--surface` with a 1px `--border` and `--shadow-300`, 16px padding, capped at 280px with `width: max-content`.
+- Placement sets the offset and the centring transform together; the 10px gap leaves room for the arrow without it touching the trigger.
+- The arrow is a 10px square rotated 45° that borrows exactly two of the panel’s borders — the two facing the trigger.
+- Close on Escape and on an outside click, and return focus to the trigger.
+- For plain text with no controls, use a Tooltip. For anything that must be acted on, this.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --white:             #ffffff;
+  --gray-200:          #EDEDED;
+  --gray-300:          #D9D9D9;
+  --gray-600:          #7A7A7A;
+  --text-primary:      rgba(0, 0, 0, 0.87);
+  --surface:           var(--white);
+  --border:            var(--gray-200);
+  --border-strong:     var(--gray-300);
+  --muted-foreground:  var(--gray-600);
+  --radius-sm:         4px;
+  --radius-md:         8px;
+  --shadow-300:        0px 8px 16px rgba(39, 39, 39, 0.08), 0px 6px 8px rgba(39, 39, 39, 0.12);
+  --z-popover:         400;
+  --font-sans:         'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-popover {
+  position: relative;
+  display: inline-flex;
+}
+
+.inspera-popover__trigger { display: inline-flex; }
+
+.inspera-popover__panel {
+  position: absolute;
+  z-index: var(--z-popover, 40);
+  max-width: 280px;
+  width: max-content;
+  padding: 16px;
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-300);
+  text-align: left;
+  font-family: var(--font-sans);
+}
+
+/* Placement sets the offset and the centring transform together — a 10px gap
+   leaves room for the arrow without it touching the trigger. */
+.inspera-popover__panel--bottom { top: calc(100% + 10px); left: 50%; transform: translateX(-50%); }
+.inspera-popover__panel--top    { bottom: calc(100% + 10px); left: 50%; transform: translateX(-50%); }
+.inspera-popover__panel--left   { right: calc(100% + 10px); top: 50%; transform: translateY(-50%); }
+.inspera-popover__panel--right  { left: calc(100% + 10px); top: 50%; transform: translateY(-50%); }
+
+/* The arrow is a rotated square that borrows two of the panel's borders. */
+.inspera-popover__arrow {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: var(--surface);
+  transform: rotate(45deg);
+}
+
+.inspera-popover__panel--bottom .inspera-popover__arrow {
+  top: -5px; left: 50%; margin-left: -5px;
+  border-left: 1px solid var(--border);
+  border-top: 1px solid var(--border);
+}
+.inspera-popover__panel--top .inspera-popover__arrow {
+  bottom: -5px; left: 50%; margin-left: -5px;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.inspera-popover__panel--left .inspera-popover__arrow {
+  right: -5px; top: 50%; margin-top: -5px;
+  border-right: 1px solid var(--border);
+  border-top: 1px solid var(--border);
+}
+.inspera-popover__panel--right .inspera-popover__arrow {
+  left: -5px; top: 50%; margin-top: -5px;
+  border-left: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.inspera-popover__title {
+  margin: 0 0 8px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.inspera-popover__body {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--muted-foreground);
+}
+
+.inspera-popover__default-trigger {
+  height: 40px;
+  padding: 0 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-strong);
+  background: var(--white);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+}
+```
+
+```html
+<span class="inspera-popover">
+  <span class="inspera-popover__trigger" aria-expanded="true"
+        aria-haspopup="dialog" aria-controls="filters-popover">
+    <button type="button" class="inspera-popover__default-trigger">Filters</button>
+  </span>
+  <div class="inspera-popover__panel inspera-popover__panel--bottom" id="filters-popover"
+       role="dialog" aria-labelledby="filters-title">
+    <span class="inspera-popover__arrow" aria-hidden="true"></span>
+    <h3 class="inspera-popover__title" id="filters-title">Filter results</h3>
+    <div class="inspera-popover__body">Popovers can hold interactive content.</div>
+  </div>
+</span>
+```
+
 
 ---
 

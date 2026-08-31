@@ -83,6 +83,141 @@ export interface ListItem {
 
 **Deprecated aliases** (do not use): `List view`, `Item list`
 
+#### Without the package — exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. It is the same
+component, and it is complete: do not substitute a radius, colour, spacing or
+font weight of your own, and do not restyle it with a UI kit's defaults.
+
+- Set the four border longhands, never the `border` shorthand. A shorthand on the row wipes the bottom border that draws the divider — the exact bug this component shipped with.
+- Interactive rows are `<button>` inside the `<li>`, so focus and Enter/Space work without a keydown handler.
+- Row padding is 12px (8px compact) vertical, 16px horizontal; primary text 14px/500, secondary 13px `--muted-foreground`.
+- The divider is on every row but the last, drawn by `li:not(:last-child)` rather than by counting in script.
+- Leading and trailing icons are 20px (18px compact) and always `aria-hidden` — the row’s text is the label.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --primary:           #004080;
+  --white:             #ffffff;
+  --gray-200:          #EDEDED;
+  --gray-600:          #7A7A7A;
+  --action-hover:      rgba(0, 0, 0, 0.04);
+  --text-primary:      rgba(0, 0, 0, 0.87);
+  --border:            var(--gray-200);
+  --muted-foreground:  var(--gray-600);
+  --radius-sm:         4px;
+  --radius-md:         8px;
+  --focus-ring-width:  2px;
+  --focus-ring-color:  var(--primary);
+  --duration-fast:     100ms;
+  --easing-standard:   cubic-bezier(0.2, 0, 0, 1);
+  --font-sans:         'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  font-family: var(--font-sans);
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.inspera-list__row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 16px;
+  /* Longhands, not the "border" shorthand: a shorthand here wipes the divider
+     that the row below sets on its bottom edge. */
+  border-top: none;
+  border-right: none;
+  border-left: none;
+  border-bottom: none;
+  font: inherit;
+  cursor: default;
+  background: transparent;
+}
+
+.inspera-list--compact .inspera-list__row { padding: 8px 16px; }
+
+.inspera-list--divided li:not(:last-child) > .inspera-list__row {
+  border-bottom: 1px solid var(--border);
+}
+
+/* Interactive rows are real buttons, so they focus and activate for free. */
+.inspera-list__row--interactive {
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background var(--duration-fast) var(--easing-standard);
+}
+.inspera-list__row--interactive:hover { background: var(--action-hover); }
+.inspera-list__row--interactive:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: -2px;
+}
+
+.inspera-list__slot {
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+.inspera-list__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+}
+
+.inspera-list__primary {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.inspera-list__secondary {
+  font-size: 13px;
+  color: var(--muted-foreground);
+}
+```
+
+```html
+<ul class="inspera-list inspera-list--divided" role="list">
+  <li>
+    <div class="inspera-list__row">
+      <span class="inspera-list__slot">
+        <span class="material-symbols-outlined" aria-hidden="true">settings</span>
+      </span>
+      <span class="inspera-list__text">
+        <span class="inspera-list__primary">General settings</span>
+        <span class="inspera-list__secondary">Language, timezone, theme</span>
+      </span>
+    </div>
+  </li>
+</ul>
+
+<!-- Interactive rows are <button>, not a div with onclick. -->
+<ul class="inspera-list inspera-list--divided" role="list">
+  <li>
+    <button type="button" class="inspera-list__row inspera-list__row--interactive">
+      <span class="inspera-list__text">
+        <span class="inspera-list__primary">Notifications</span>
+      </span>
+      <span class="inspera-list__slot">
+        <span class="material-symbols-outlined" aria-hidden="true">chevron_right</span>
+      </span>
+    </button>
+  </li>
+</ul>
+```
+
 
 ---
 

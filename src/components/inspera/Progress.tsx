@@ -17,6 +17,8 @@ export interface ProgressProps {
   intent?: ProgressIntent
   /** Render the percentage. */
   showValue?: boolean
+  /** Accessible name. Say what is progressing, not just "Progress". */
+  label?: string
 }
 
 const intentMap: Record<ProgressIntent, string> = {
@@ -36,6 +38,7 @@ export default function Progress({
   size = 'Medium',
   intent = 'Primary',
   showValue = false,
+  label = 'Progress',
 }: ProgressProps) {
   const id = useId()
   const clamped = Math.max(0, Math.min(100, value))
@@ -46,7 +49,7 @@ export default function Progress({
     'aria-valuemin': 0,
     'aria-valuemax': 100,
     ...(indeterminate ? {} : { 'aria-valuenow': clamped }),
-    'aria-label': 'Progress',
+    'aria-label': label,
   }
 
   if (variant === 'Circular') {
@@ -57,7 +60,7 @@ export default function Progress({
     const dashOffset = circumference * (1 - clamped / 100)
 
     return (
-      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontFamily: 'var(--font-sans)' }}>
         <span
           {...ariaProps}
           style={{
@@ -101,7 +104,7 @@ export default function Progress({
   }
 
   return (
-    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, width: '100%' }}>
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, width: '100%', fontFamily: 'var(--font-sans)' }}>
       <span {...ariaProps} aria-describedby={showValue ? id : undefined} style={track}>
         {indeterminate ? (
           <span

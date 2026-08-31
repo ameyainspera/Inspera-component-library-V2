@@ -82,6 +82,157 @@ export interface CheckboxOption {
 
 **Deprecated aliases** (do not use): `Checkbox list`, `Multi-select group`
 
+#### Without the package — exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. It is the same
+component, and it is complete: do not substitute a radius, colour, spacing or
+font weight of your own, and do not restyle it with a UI kit's defaults.
+
+- Checkboxes take `role="group"`, not `radiogroup`, and they do **not** share a `name` — each carries its own value.
+- The group label is a `<span>` with an id, linked by `aria-labelledby`.
+- Same spacing as Radio Group: no gap vertically (rows carry their own padding), 24px horizontally.
+- A "select all" control on top of a group is the natural place for the indeterminate checkbox state.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --primary:                #004080;
+  --error:                  #D32F2F;
+  --white:                  #ffffff;
+  --text-primary:           rgba(0, 0, 0, 0.87);
+  --border-control-strong:  #8C8C8C;
+  --radius-xs:              2px;
+  --focus-ring-width:       2px;
+  --focus-ring-offset:      2px;
+  --focus-ring-color:       var(--primary);
+  --font-sans:              'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  cursor: pointer;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 16px;
+}
+
+/* Hidden, but still in the DOM, still focusable, still submitted with the
+   form. "display: none" or "visibility: hidden" would break all three. */
+.inspera-checkbox__input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.inspera-checkbox__box {
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-xs);
+  border: 2px solid var(--border-control-strong);
+  background: var(--white);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--white);
+  flex-shrink: 0;
+  transition: all 120ms ease;
+}
+
+.inspera-checkbox--small .inspera-checkbox__box { width: 16px; height: 16px; }
+
+/* The tick is a Material Symbol at the box size minus 4. */
+.inspera-checkbox__box .material-symbols-outlined {
+  font-size: 16px;
+  font-variation-settings: 'wght' 600;
+}
+.inspera-checkbox--small .inspera-checkbox__box .material-symbols-outlined { font-size: 12px; }
+
+.inspera-checkbox__input:checked + .inspera-checkbox__box,
+.inspera-checkbox__input:indeterminate + .inspera-checkbox__box,
+/* "indeterminate" is a DOM property with no HTML attribute, so static markup
+   cannot trigger :indeterminate. The modifier lets server-rendered markup show
+   the state; script that sets el.indeterminate gets the pseudo-class. */
+.inspera-checkbox--mixed .inspera-checkbox__box {
+  border-color: var(--primary);
+  background: var(--primary);
+}
+
+.inspera-checkbox:hover .inspera-checkbox__box { border-color: var(--primary); background: rgba(0, 64, 128, 0.04); }
+.inspera-checkbox:hover .inspera-checkbox__input:checked + .inspera-checkbox__box,
+.inspera-checkbox:hover .inspera-checkbox__input:indeterminate + .inspera-checkbox__box,
+.inspera-checkbox--mixed:hover .inspera-checkbox__box {
+  border-color: var(--primary);
+  background: var(--primary);
+}
+
+/* The ring goes on the drawn box: the real input is 0×0, so a ring on it is
+   invisible. This is the single most-missed detail in a custom checkbox. */
+.inspera-checkbox__input:focus-visible + .inspera-checkbox__box {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.inspera-checkbox:active .inspera-checkbox__box { transform: scale(0.92); }
+
+.inspera-checkbox--error .inspera-checkbox__box { border-color: var(--error); }
+.inspera-checkbox--error:hover .inspera-checkbox__box { border-color: var(--error); }
+
+.inspera-checkbox--disabled {
+  cursor: not-allowed;
+  opacity: 0.38;
+}
+.inspera-checkbox--disabled:hover .inspera-checkbox__box {
+  border-color: var(--border-control-strong);
+  background: var(--white);
+}
+
+.inspera-checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-family: var(--font-sans);
+}
+
+.inspera-checkbox-group__label {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.inspera-checkbox-group__options {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.inspera-checkbox-group--horizontal .inspera-checkbox-group__options {
+  flex-direction: row;
+  gap: 24px;
+}
+```
+
+```html
+<div class="inspera-checkbox-group">
+  <span class="inspera-checkbox-group__label" id="notify-label">Notifications</span>
+  <div class="inspera-checkbox-group__options" role="group" aria-labelledby="notify-label">
+    <label class="inspera-checkbox" for="n-email">
+      <input class="inspera-checkbox__input" id="n-email" type="checkbox" />
+      <span class="inspera-checkbox__box" aria-hidden="true"></span>
+      <span>Email</span>
+    </label>
+    <label class="inspera-checkbox" for="n-sms">
+      <input class="inspera-checkbox__input" id="n-sms" type="checkbox" />
+      <span class="inspera-checkbox__box" aria-hidden="true"></span>
+      <span>SMS</span>
+    </label>
+  </div>
+</div>
+```
+
 
 ---
 

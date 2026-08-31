@@ -59,10 +59,17 @@ export default function Alert({
     borderBottomWidth: 1,
     borderLeftWidth: background ? 1 : 4,
     color: 'var(--text-primary)',
+    fontFamily: 'var(--font-sans)',
   }
 
+  // role="alert" already implies aria-live="assertive", so pairing it with
+  // "polite" asked the screen reader for two different things at once. The spec
+  // says important messages get role="alert" and non-critical ones a polite
+  // live region, so the severity decides which — rather than both at once.
+  const urgent = intent === 'Error' || intent === 'Warning'
+
   return (
-    <div style={style} role="alert" aria-live="polite">
+    <div style={style} {...(urgent ? { role: 'alert' } : { role: 'status', 'aria-live': 'polite' as const })}>
       <span className="material-symbols-outlined" style={{ fontSize: 20, color: c.fg, flexShrink: 0, marginTop: 1, fontVariationSettings: "'FILL' 1" }} aria-hidden>
         {c.icon}
       </span>

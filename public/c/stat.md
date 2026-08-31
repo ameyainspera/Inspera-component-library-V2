@@ -76,6 +76,102 @@ import { Stat } from '@inspera/components'
 
 **Deprecated aliases** (do not use): `Metric`, `KPI`, `Stat card`
 
+#### Without the package — exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. It is the same
+component, and it is complete: do not substitute a radius, colour, spacing or
+font weight of your own, and do not restyle it with a UI kit's defaults.
+
+- The label is 12px/600 uppercase with 0.04em tracking in `--muted-foreground` — not body text.
+- The value is 28px/600 at line-height 1.1. It is the only large type in the tile.
+- The tile uses `--radius-lg` and a 1px `--border`, with no shadow.
+- Trend colour is `--success` up, `--error` down, `--muted-foreground` flat, and always ships with the matching arrow so the direction is not colour-only.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --error:             #D32F2F;
+  --success:           #2E7D32;
+  --white:             #ffffff;
+  --gray-200:          #EDEDED;
+  --gray-600:          #7A7A7A;
+  --text-primary:      rgba(0, 0, 0, 0.87);
+  --border:            var(--gray-200);
+  --muted-foreground:  var(--gray-600);
+  --radius-lg:         12px;
+  --font-sans:         'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 200px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--white);
+  font-family: var(--font-sans);
+  color: var(--text-primary);
+}
+
+/* Label row: the metric name, with an optional icon pushed to the far end. */
+.inspera-stat__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.inspera-stat__label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+
+.inspera-stat__head .material-symbols-outlined {
+  font-size: 20px;
+  color: var(--muted-foreground);
+}
+
+.inspera-stat__value {
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+/* The delta carries the trend colour; the arrow is not decorative repetition,
+   it is the direction for anyone who cannot rely on the colour alone. */
+.inspera-stat__delta {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  font-weight: 500;
+}
+.inspera-stat__delta .material-symbols-outlined { font-size: 18px; }
+
+.inspera-stat__delta--up      { color: var(--success); }
+.inspera-stat__delta--down    { color: var(--error); }
+.inspera-stat__delta--neutral { color: var(--muted-foreground); }
+```
+
+```html
+<div class="inspera-stat">
+  <div class="inspera-stat__head">
+    <span class="inspera-stat__label">Active candidates</span>
+    <span class="material-symbols-outlined" aria-hidden="true">group</span>
+  </div>
+  <span class="inspera-stat__value">12,480</span>
+  <span class="inspera-stat__delta inspera-stat__delta--up">
+    <span class="material-symbols-outlined" aria-hidden="true">trending_up</span>
+    +8.2% vs last week
+  </span>
+</div>
+```
+
 
 ---
 

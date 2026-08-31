@@ -55,7 +55,8 @@ import { Slider } from '@inspera/components'
   label="Volume"
   min={0}
   max={100}
-  value={40}
+  value={volume}
+  onChange={setVolume}
   showValue={true}
 />
 ```
@@ -67,7 +68,7 @@ import { Slider } from '@inspera/components'
 | `max` | `number` | `100` | Maximum value. |
 | `value` | `number` | — | Current value. Controlled — pair with onChange. |
 | `step` | `number` | `1` | Increment granularity. |
-| `state` | `'Default' \| 'Focused' \| 'Disabled'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
+| `state` | `'Default' \| 'Focused' \| 'Disabled'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Focused` is presentation-only — leave it unset in application code, where CSS drives it from the real pointer and keyboard. `Disabled` is real application state and belongs in your code. |
 | `showValue` | `boolean` | `true` | Show the current value. |
 | `showLabel` | `boolean` | `true` | Show the field label. |
 | `onChange` | `(value: number) => void` | — | Fired as the value changes, by drag or arrow key. |
@@ -78,6 +79,139 @@ import { Slider } from '@inspera/components'
 **Don't:** Do not use for exact numeric entry — use Text Input instead; Do not use without min/max bounds.
 
 **Deprecated aliases** (do not use): `Range`, `Range slider`
+
+#### Without the package — exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. It is the same
+component, and it is complete: do not substitute a radius, colour, spacing or
+font weight of your own, and do not restyle it with a UI kit's defaults.
+
+- Keep a real `<input type="range">`, made invisible with `opacity: 0` over the drawn track. Arrows, Home/End, Page Up/Down and touch drag all come free; a div rebuild loses every one of them.
+- The thumb takes `pointer-events: none` so the input underneath receives the drag.
+- Track is 4px `--gray-300`, fill is `--primary`, thumb is 20px white with a 2px `--primary` border.
+- Position the thumb with `left: <pct>%` and `transform: translate(-50%, -50%)`, so it centres on the value rather than hanging off the end.
+- The focus ring goes on the drawn thumb, since the real input is invisible.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --primary:            #004080;
+  --white:              #ffffff;
+  --gray-300:           #D9D9D9;
+  --gray-600:           #7A7A7A;
+  --text-primary:       rgba(0, 0, 0, 0.87);
+  --muted-foreground:   var(--gray-600);
+  --radius-pill:        9999px;
+  --focus-ring-width:   2px;
+  --focus-ring-offset:  2px;
+  --focus-ring-color:   var(--primary);
+  --font-sans:          'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono:          'Noto Sans Mono', ui-monospace, SFMono-Regular, monospace;
+}
+
+.inspera-slider {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  font-family: var(--font-sans);
+}
+
+.inspera-slider__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.inspera-slider__label {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.inspera-slider__value {
+  font-size: 14px;
+  color: var(--muted-foreground);
+  font-family: var(--font-mono);
+}
+
+.inspera-slider__control {
+  position: relative;
+  height: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.inspera-slider__track {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 4px;
+  border-radius: var(--radius-pill);
+  background: var(--gray-300);
+}
+
+.inspera-slider__fill {
+  position: absolute;
+  left: 0;
+  height: 4px;
+  border-radius: var(--radius-pill);
+  background: var(--primary);
+}
+
+/* Drawn, and deliberately not hit-testable — the real input above it takes
+   every pointer event, so drag, click-to-seek and touch all still work. */
+.inspera-slider__thumb {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 20px;
+  height: 20px;
+  border-radius: 9999px;
+  background: var(--white);
+  border: 2px solid var(--primary);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  pointer-events: none;
+}
+
+/* The native input, invisible but fully functional: arrows, Home/End, Page
+   Up/Down and touch drag all come free. Rebuilding this with a div loses them. */
+.inspera-slider__input {
+  position: absolute;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 20px;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.inspera-slider__input:focus-visible + .inspera-slider__thumb,
+.inspera-slider__control:has(:focus-visible) .inspera-slider__thumb {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.inspera-slider--disabled { opacity: 0.5; }
+.inspera-slider--disabled .inspera-slider__input { cursor: not-allowed; }
+```
+
+```html
+<div class="inspera-slider">
+  <div class="inspera-slider__head">
+    <label class="inspera-slider__label" for="volume">Volume</label>
+    <span class="inspera-slider__value">50</span>
+  </div>
+  <div class="inspera-slider__control">
+    <div class="inspera-slider__track"></div>
+    <div class="inspera-slider__fill" style="width: 50%"></div>
+    <span class="inspera-slider__thumb" style="left: 50%"></span>
+    <input class="inspera-slider__input" id="volume" type="range"
+           min="0" max="100" value="50" aria-label="Volume" />
+  </div>
+</div>
+```
 
 
 ---

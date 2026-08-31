@@ -75,6 +75,120 @@ import { FileUpload } from '@inspera/components'
 
 **Deprecated aliases** (do not use): `Dropzone`, `File dropzone`, `Uploader`
 
+#### Without the package — exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. It is the same
+component, and it is complete: do not substitute a radius, colour, spacing or
+font weight of your own, and do not restyle it with a UI kit's defaults.
+
+- The zone carries `role="button"`, `tabindex="0"` and an Enter/Space handler that clicks the hidden input. Drag and drop alone is not an accessible way to upload.
+- Keep the native `<input type="file">` in the DOM, visually hidden — the zone triggers it with `.click()`.
+- Border is 2px dashed `--gray-400`; a 1px dash reads as a table rule at this size.
+- The drag state and hover share one look: `--primary` border on a `--blue-100` wash. Handle `dragover`, `dragleave` and `drop`, and `preventDefault` on dragover or the browser opens the file instead.
+- Always state the constraint ("PNG, JPG or PDF up to 10MB") — a bare drop zone gives no way to know what will be rejected.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --primary:            #004080;
+  --error:              #D32F2F;
+  --white:              #ffffff;
+  --gray-400:           #BCBCBC;
+  --gray-600:           #7A7A7A;
+  --blue-100:           #F0F7FF;
+  --text-primary:       rgba(0, 0, 0, 0.87);
+  --surface:            var(--white);
+  --muted-foreground:   var(--gray-600);
+  --radius-md:          8px;
+  --focus-ring-width:   2px;
+  --focus-ring-offset:  2px;
+  --focus-ring-color:   var(--primary);
+  --font-sans:          'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 32px 24px;
+  /* Dashed, and 2px — a 1px dashed border reads as a table rule at this size. */
+  border: 2px dashed var(--gray-400);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  cursor: pointer;
+  text-align: center;
+  font-family: var(--font-sans);
+  transition: all 120ms ease;
+}
+
+/* Both the real drag state and the pointer share one look. */
+.inspera-upload:hover,
+.inspera-upload--dragging {
+  border-color: var(--primary);
+  background: var(--blue-100);
+}
+
+.inspera-upload:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.inspera-upload__icon {
+  font-size: 40px;
+  color: var(--primary);
+}
+
+.inspera-upload__prompt {
+  font-size: 16px;
+  color: var(--text-primary);
+}
+
+.inspera-upload__browse {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.inspera-upload__help {
+  font-size: 12px;
+  color: var(--muted-foreground);
+}
+
+/* The native input stays in the DOM so the zone can click() it. */
+.inspera-upload__input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.inspera-upload--error {
+  border-color: var(--error);
+}
+.inspera-upload--error .inspera-upload__icon,
+.inspera-upload--error .inspera-upload__help { color: var(--error); }
+
+.inspera-upload--disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+```
+
+```html
+<!-- role="button" + tabindex + a key handler, because a div is not focusable
+     and Enter/Space do not activate it on their own. -->
+<div class="inspera-upload" role="button" tabindex="0" aria-label="Attachments">
+  <span class="material-symbols-outlined inspera-upload__icon" aria-hidden="true">upload_file</span>
+  <div class="inspera-upload__prompt">
+    Drag &amp; drop or <span class="inspera-upload__browse">browse</span>
+  </div>
+  <span class="inspera-upload__help">PNG, JPG or PDF up to 10MB</span>
+  <input class="inspera-upload__input" type="file" accept="image/*,.pdf" multiple />
+</div>
+```
+
 
 ---
 

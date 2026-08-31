@@ -651,6 +651,14 @@
   box-shadow: var(--effect-state-focus);
 }
 
+/* A field draws its ring as a box-shadow, so on the ones that are themselves
+   focusable — Select's trigger, the date picker's button, an OTP box — the
+   generic .inspera-interactive outline would sit outside it and ring twice.
+   The box-shadow replaces the outline rather than removing it. */
+.inspera-field:focus-visible {
+  outline: none;
+}
+
 /* Invalid wins over hover and focus — the error must stay legible. */
 .inspera-field[data-invalid='true'],
 .inspera-field[data-invalid='true']:hover,
@@ -659,20 +667,60 @@
   box-shadow: var(--effect-state-error);
 }
 
-/* --- Selection controls: checkbox, radio, toggle ------------------------- */
+/* --- Selection controls: checkbox, radio, toggle -------------------------
+   The indicator's resting colours live here rather than inline, for the same
+   reason Button's do: an inline `background` or `border-color` outranks any
+   class selector, so the hover rule below could never win. Each component
+   supplies its own values through the --inspera-indicator-* properties, which
+   keeps the per-variant logic in TypeScript and the behaviour here. */
+
+.inspera-control-indicator {
+  border-color: var(--inspera-indicator-border);
+  background: var(--inspera-indicator-bg);
+}
 
 .inspera-control:hover:not([data-disabled='true']) .inspera-control-indicator,
 .inspera-control[data-force-state='Hover'] .inspera-control-indicator {
-  border-color: var(--border-control-strong);
+  border-color: var(--inspera-indicator-border-hover);
+  background: var(--inspera-indicator-bg-hover);
 }
 
+/* The real control is a visually hidden input, so the ring has to be drawn on
+   the indicator standing in for it. Without this, keyboard focus on a
+   checkbox, radio or toggle was invisible — the only thing the browser had to
+   ring was a 0×0 element. */
 .inspera-control:has(:focus-visible) .inspera-control-indicator,
 .inspera-control[data-force-state='Focused'] .inspera-control-indicator {
   outline: var(--focus-ring-width) solid var(--focus-ring-color);
   outline-offset: var(--focus-ring-offset);
 }
 
-/* --- Rows and items that respond to the pointer ------------------------- */
+/* A box or a dot dips under the pointer; a toggle track does not, so it opts
+   out with .inspera-control-track. */
+.inspera-control:active:not([data-disabled='true']) .inspera-control-indicator:not(.inspera-control-track),
+.inspera-control[data-force-state='Pressed'] .inspera-control-indicator:not(.inspera-control-track) {
+  transform: scale(0.92);
+}
+
+/* Toggle's thumb lifts under the pointer; the track carries the ring. The
+   resting shadow lives here so the hover rule can outrank it. */
+.inspera-control-thumb {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.inspera-control:hover:not([data-disabled='true']) .inspera-control-thumb,
+.inspera-control[data-force-state='Hover'] .inspera-control-thumb {
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* --- Rows and items that respond to the pointer -------------------------
+   The resting fill lives here too. A row is often a <button>, whose UA
+   background would otherwise show through, and setting `transparent` inline to
+   cover that would outrank the hover rule below — the same trap as Button. */
+
+.inspera-row {
+  background: var(--inspera-row-bg, transparent);
+}
 
 .inspera-row:hover:not([data-disabled='true']),
 .inspera-row[data-force-state='Hover'] {

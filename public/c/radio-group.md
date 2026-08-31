@@ -84,6 +84,133 @@ export interface RadioOption {
 
 **Deprecated aliases** (do not use): `Radio list`, `Option group`
 
+#### Without the package — exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. It is the same
+component, and it is complete: do not substitute a radius, colour, spacing or
+font weight of your own, and do not restyle it with a UI kit's defaults.
+
+- The group label is a `<span>` with an id, linked by `aria-labelledby` on the `role="radiogroup"` element. A bare `<label>` cannot name a group.
+- Every option shares one `name`, and no other question on the page may reuse it.
+- Vertical options have no gap — each row carries its own 8px vertical padding. Horizontal adds a 24px gap.
+- Group-level state (error, disabled) is applied to each option, not drawn once on the wrapper.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --primary:                #004080;
+  --error:                  #D32F2F;
+  --white:                  #ffffff;
+  --text-primary:           rgba(0, 0, 0, 0.87);
+  --border-control-strong:  #8C8C8C;
+  --radius-pill:            9999px;
+  --focus-ring-width:       2px;
+  --focus-ring-offset:      2px;
+  --focus-ring-color:       var(--primary);
+  --font-sans:              'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-radio {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  cursor: pointer;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 16px;
+}
+
+.inspera-radio__input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.inspera-radio__circle {
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-pill);
+  border: 2px solid var(--border-control-strong);
+  background: var(--white);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 120ms ease;
+}
+
+/* The dot is a child element, not a background — it has to stay centred as the
+   circle scales on press. */
+.inspera-radio__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+  background: var(--primary);
+}
+
+.inspera-radio__input:checked + .inspera-radio__circle { border-color: var(--primary); }
+
+.inspera-radio:hover .inspera-radio__circle { border-color: var(--primary); background: rgba(0, 64, 128, 0.04); }
+
+.inspera-radio__input:focus-visible + .inspera-radio__circle {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.inspera-radio:active .inspera-radio__circle { transform: scale(0.92); }
+
+.inspera-radio--error .inspera-radio__circle { border-color: var(--error); }
+.inspera-radio--error:hover .inspera-radio__circle { border-color: var(--error); }
+
+.inspera-radio--disabled { cursor: not-allowed; opacity: 0.38; }
+
+.inspera-radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-family: var(--font-sans);
+}
+
+.inspera-radio-group__label {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.inspera-radio-group__options {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* Horizontal needs real separation; the vertical stack relies on each row's
+   own 8px padding instead. */
+.inspera-radio-group--horizontal .inspera-radio-group__options {
+  flex-direction: row;
+  gap: 24px;
+}
+```
+
+```html
+<div class="inspera-radio-group">
+  <span class="inspera-radio-group__label" id="delivery-label">Delivery speed</span>
+  <div class="inspera-radio-group__options" role="radiogroup" aria-labelledby="delivery-label">
+    <label class="inspera-radio" for="d-standard">
+      <input class="inspera-radio__input" id="d-standard" type="radio" name="delivery" />
+      <span class="inspera-radio__circle" aria-hidden="true"></span>
+      <span>Standard</span>
+    </label>
+    <label class="inspera-radio" for="d-express">
+      <input class="inspera-radio__input" id="d-express" type="radio" name="delivery" />
+      <span class="inspera-radio__circle" aria-hidden="true"></span>
+      <span>Express</span>
+    </label>
+  </div>
+</div>
+```
+
 
 ---
 

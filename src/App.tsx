@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { componentList } from './data/components'
 import Sidebar from './docs/Sidebar'
 import FoundationsPage from './docs/FoundationsPage'
 import ComponentPage from './docs/ComponentPage'
@@ -79,7 +80,7 @@ export default function App() {
               background: 'var(--surface)', color: 'var(--gray-800)', textDecoration: 'none',
               fontSize: 13, fontWeight: 500,
             }}
-            title="Complete AI build guide — foundations + all 42 components"
+            title={`Complete AI build guide — foundations + all ${componentList.length} components`}
           >
             <span className="material-symbols-outlined" style={{ fontSize: 18 }} aria-hidden>description</span>
             AI spec

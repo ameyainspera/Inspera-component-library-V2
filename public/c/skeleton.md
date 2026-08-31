@@ -72,6 +72,86 @@ import { Skeleton } from '@inspera/components'
 
 **Deprecated aliases** (do not use): `Placeholder`, `Shimmer`, `Ghost`
 
+#### Without the package — exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. It is the same
+component, and it is complete: do not substitute a radius, colour, spacing or
+font weight of your own, and do not restyle it with a UI kit's defaults.
+
+- The shimmer is a 400%-wide linear gradient panned by `background-position`, 1.4s ease infinite. It is not an opacity pulse.
+- Text lines are 12px tall with `--radius-sm` and an 8px gap; the last of several is 60% wide so the block reads as a paragraph.
+- Rect uses `--radius-md`, Circle uses `--radius-pill`. Match the radius to whatever the placeholder stands in for.
+- Always `aria-hidden` — a skeleton is decoration, and announcing it interrupts the user with nothing.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --gray-100:     #F7F7F7;
+  --gray-200:     #EDEDED;
+  --radius-sm:    4px;
+  --radius-md:    8px;
+  --radius-pill:  9999px;
+}
+
+.inspera-skeleton {
+  /* The shimmer: an oversized gradient panned across the element. A pulsing
+     opacity is a different effect and reads as a flash, not a load. */
+  background-image: linear-gradient(90deg, var(--gray-200) 25%, var(--gray-100) 37%, var(--gray-200) 63%);
+  background-size: 400% 100%;
+  animation: inspera-shimmer 1.4s ease infinite;
+}
+
+.inspera-skeleton--text {
+  display: block;
+  width: 100%;
+  height: 12px;
+  border-radius: var(--radius-sm);
+}
+
+.inspera-skeleton--rect {
+  display: block;
+  width: 100%;
+  height: 120px;
+  border-radius: var(--radius-md);
+}
+
+.inspera-skeleton--circle {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-pill);
+}
+
+/* A stack of lines, with the last one short so it reads as a paragraph. */
+.inspera-skeleton-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  background: none;
+  animation: none;
+}
+.inspera-skeleton-lines > .inspera-skeleton--text:last-child:not(:only-child) { width: 60%; }
+
+@keyframes inspera-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+```
+
+```html
+<!-- Three text lines. The wrapper is not itself a shimmering block. -->
+<span class="inspera-skeleton-lines" role="presentation" aria-hidden="true">
+  <span class="inspera-skeleton inspera-skeleton--text"></span>
+  <span class="inspera-skeleton inspera-skeleton--text"></span>
+  <span class="inspera-skeleton inspera-skeleton--text"></span>
+</span>
+
+<span class="inspera-skeleton inspera-skeleton--circle" role="presentation" aria-hidden="true"></span>
+
+<span class="inspera-skeleton inspera-skeleton--rect" role="presentation" aria-hidden="true"></span>
+```
+
 
 ---
 

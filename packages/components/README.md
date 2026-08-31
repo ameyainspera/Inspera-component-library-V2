@@ -54,7 +54,7 @@ The tokens reference **Inter**, **Noto Sans Mono**, and **Material Symbols Outli
 
 15 canonical components across four categories: **input-controls** (Button, TextInput, Checkbox, RadioButton, Select, Toggle), **data-display** (Card, Badge, Avatar), **feedback** (Alert, Dialog, Snackbar, Tooltip), **navigation** (Tabs, Breadcrumb).
 
-Full per-component API, states, and accessibility notes live in the reference site and in the portable spec (`public/inspera-llms.txt`).
+Full per-component API, states, and accessibility notes live in the reference site and in the portable spec (`public/llms.txt`, with one file per component under `public/c/`).
 
 ## Build
 

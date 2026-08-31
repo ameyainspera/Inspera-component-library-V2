@@ -54,7 +54,8 @@ import { RadioButton } from '@inspera/components'
 <RadioButton
   label="Standard delivery"
   name="delivery"
-  selected={false}
+  selected={value === 'standard'}
+  onChange={() => setValue('standard')}
 />
 ```
 
@@ -62,8 +63,8 @@ import { RadioButton } from '@inspera/components'
 | --- | --- | --- | --- |
 | `label` | `string` | `'Radio option'` | Text beside the control. Always provide one. |
 | `selected` | `boolean` | — | Selected state. |
-| `name` | `string` | `'radio'` | Shared form name. Every radio in a group must use the same value. |
-| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Pressed' \| 'Disabled' \| 'Error'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
+| `name` | `string` | — | Shared form name. Every radio in a group must use the same value. Left unset, each radio gets its own generated name and stands alone — this used to default to the literal `"radio"`, which silently put every unrelated RadioButton on a page into one mutually exclusive group. |
+| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Pressed' \| 'Disabled' \| 'Error'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Pressed` are presentation-only — leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Error` and `Disabled` are real application state and belong in your code. |
 | `withLabel` | `boolean` | `true` | Render the label. |
 | `onChange` | `(selected: boolean) => void` | — | Fired when this option becomes selected. |
 
@@ -73,6 +74,107 @@ import { RadioButton } from '@inspera/components'
 **Don't:** Do not use for multi-select — use Checkbox instead; Do not use a single radio button alone.
 
 **Deprecated aliases** (do not use): `Radiobutton`, `Radiobuttons`, `Radio Button New-BonW`, `Radio Button New-BonY`, `Radio Button New-WonB`, `Radio Button New-YonB`
+
+#### Without the package — exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. It is the same
+component, and it is complete: do not substitute a radius, colour, spacing or
+font weight of your own, and do not restyle it with a UI kit's defaults.
+
+- Identical structure to Checkbox: a visually hidden native `<input type="radio">` plus a drawn circle, with the ring on the circle.
+- The circle is 20px with a 2px border and `--radius-pill`; the selected dot is a 10px child element, not a background, so it stays centred while the circle scales on press.
+- Grouping is the `name` attribute. Every radio in one question shares it, and unrelated questions must not — two groups sharing a name become one.
+- For a set of options prefer the Radio Group component, which owns the name and the group label for you.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --primary:                #004080;
+  --error:                  #D32F2F;
+  --white:                  #ffffff;
+  --text-primary:           rgba(0, 0, 0, 0.87);
+  --border-control-strong:  #8C8C8C;
+  --radius-pill:            9999px;
+  --focus-ring-width:       2px;
+  --focus-ring-offset:      2px;
+  --focus-ring-color:       var(--primary);
+  --font-sans:              'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-radio {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  cursor: pointer;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 16px;
+}
+
+.inspera-radio__input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.inspera-radio__circle {
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-pill);
+  border: 2px solid var(--border-control-strong);
+  background: var(--white);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 120ms ease;
+}
+
+/* The dot is a child element, not a background — it has to stay centred as the
+   circle scales on press. */
+.inspera-radio__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+  background: var(--primary);
+}
+
+.inspera-radio__input:checked + .inspera-radio__circle { border-color: var(--primary); }
+
+.inspera-radio:hover .inspera-radio__circle { border-color: var(--primary); background: rgba(0, 64, 128, 0.04); }
+
+.inspera-radio__input:focus-visible + .inspera-radio__circle {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.inspera-radio:active .inspera-radio__circle { transform: scale(0.92); }
+
+.inspera-radio--error .inspera-radio__circle { border-color: var(--error); }
+.inspera-radio--error:hover .inspera-radio__circle { border-color: var(--error); }
+
+.inspera-radio--disabled { cursor: not-allowed; opacity: 0.38; }
+```
+
+```html
+<!-- Every radio in one group shares a name. Radios with no name, or with
+     a shared generic name across unrelated questions, will fight each other. -->
+<label class="inspera-radio" for="standard">
+  <input class="inspera-radio__input" id="standard" type="radio" name="delivery" />
+  <span class="inspera-radio__circle" aria-hidden="true">
+    <span class="inspera-radio__dot"></span>
+  </span>
+  <span>Standard delivery</span>
+</label>
+
+<label class="inspera-radio" for="express">
+  <input class="inspera-radio__input" id="express" type="radio" name="delivery" />
+  <span class="inspera-radio__circle" aria-hidden="true"></span>
+  <span>Express delivery</span>
+</label>
+```
 
 
 ---

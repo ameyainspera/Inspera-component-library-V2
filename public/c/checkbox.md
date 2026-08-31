@@ -53,7 +53,8 @@ import { Checkbox } from '@inspera/components'
 
 <Checkbox
   label="Send me product updates"
-  checked={false}
+  checked={checked}
+  onChange={setChecked}
   size="Medium"
 />
 ```
@@ -62,7 +63,8 @@ import { Checkbox } from '@inspera/components'
 | --- | --- | --- | --- |
 | `label` | `string` | `'Checkbox label'` | Text beside the box. Always provide one. |
 | `checked` | `boolean` | — | Checked state. |
-| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Pressed' \| 'Disabled' \| 'Error'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
+| `indeterminate` | `boolean` | `false` | Partially-selected state, for a parent whose children are mixed. Wins over `checked` visually and announces as `aria-checked="mixed"`. |
+| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Pressed' \| 'Disabled' \| 'Error'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Pressed` are presentation-only — leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Error` and `Disabled` are real application state and belong in your code. |
 | `withLabel` | `boolean` | `true` | Render the label. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Indicator size. |
 | `onChange` | `(checked: boolean) => void` | — | Fired with the new checked state. |
@@ -73,6 +75,136 @@ import { Checkbox } from '@inspera/components'
 **Don't:** Do not use for mutually exclusive options — use Radio Button instead; Do not use without a label.
 
 **Deprecated aliases** (do not use): `Checkbox/Unchecked`, `Checkbox/Checked`, `Checkbox with label`, `Checkbox (fill width)`, `Checkbox (Cards)`
+
+#### Without the package — exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. It is the same
+component, and it is complete: do not substitute a radius, colour, spacing or
+font weight of your own, and do not restyle it with a UI kit's defaults.
+
+- Keep the native `<input type="checkbox">` in the DOM, visually hidden with `position: absolute; opacity: 0; width: 0; height: 0`. `display: none` removes it from the tab order and from form submission.
+- Draw the focus ring on the box via `:focus-visible + .box`. A ring on a 0×0 input is invisible — this is the detail custom checkboxes miss most often.
+- The box is 20px (16px small) with a 2px border and `--radius-xs`. Unchecked is `--border-control-strong`; checked fills with `--primary`.
+- Indeterminate is a DOM property (`el.indeterminate = true`), not an HTML attribute, and it announces as `aria-checked="mixed"`. Its glyph is `remove`, not a tick. Static markup that cannot run script uses the `inspera-checkbox--mixed` class instead.
+- The whole row is the `<label>`, so the text is part of the hit target.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --primary:                #004080;
+  --error:                  #D32F2F;
+  --white:                  #ffffff;
+  --text-primary:           rgba(0, 0, 0, 0.87);
+  --border-control-strong:  #8C8C8C;
+  --radius-xs:              2px;
+  --focus-ring-width:       2px;
+  --focus-ring-offset:      2px;
+  --focus-ring-color:       var(--primary);
+  --font-sans:              'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  cursor: pointer;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 16px;
+}
+
+/* Hidden, but still in the DOM, still focusable, still submitted with the
+   form. "display: none" or "visibility: hidden" would break all three. */
+.inspera-checkbox__input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.inspera-checkbox__box {
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-xs);
+  border: 2px solid var(--border-control-strong);
+  background: var(--white);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--white);
+  flex-shrink: 0;
+  transition: all 120ms ease;
+}
+
+.inspera-checkbox--small .inspera-checkbox__box { width: 16px; height: 16px; }
+
+/* The tick is a Material Symbol at the box size minus 4. */
+.inspera-checkbox__box .material-symbols-outlined {
+  font-size: 16px;
+  font-variation-settings: 'wght' 600;
+}
+.inspera-checkbox--small .inspera-checkbox__box .material-symbols-outlined { font-size: 12px; }
+
+.inspera-checkbox__input:checked + .inspera-checkbox__box,
+.inspera-checkbox__input:indeterminate + .inspera-checkbox__box,
+/* "indeterminate" is a DOM property with no HTML attribute, so static markup
+   cannot trigger :indeterminate. The modifier lets server-rendered markup show
+   the state; script that sets el.indeterminate gets the pseudo-class. */
+.inspera-checkbox--mixed .inspera-checkbox__box {
+  border-color: var(--primary);
+  background: var(--primary);
+}
+
+.inspera-checkbox:hover .inspera-checkbox__box { border-color: var(--primary); background: rgba(0, 64, 128, 0.04); }
+.inspera-checkbox:hover .inspera-checkbox__input:checked + .inspera-checkbox__box,
+.inspera-checkbox:hover .inspera-checkbox__input:indeterminate + .inspera-checkbox__box,
+.inspera-checkbox--mixed:hover .inspera-checkbox__box {
+  border-color: var(--primary);
+  background: var(--primary);
+}
+
+/* The ring goes on the drawn box: the real input is 0×0, so a ring on it is
+   invisible. This is the single most-missed detail in a custom checkbox. */
+.inspera-checkbox__input:focus-visible + .inspera-checkbox__box {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.inspera-checkbox:active .inspera-checkbox__box { transform: scale(0.92); }
+
+.inspera-checkbox--error .inspera-checkbox__box { border-color: var(--error); }
+.inspera-checkbox--error:hover .inspera-checkbox__box { border-color: var(--error); }
+
+.inspera-checkbox--disabled {
+  cursor: not-allowed;
+  opacity: 0.38;
+}
+.inspera-checkbox--disabled:hover .inspera-checkbox__box {
+  border-color: var(--border-control-strong);
+  background: var(--white);
+}
+```
+
+```html
+<label class="inspera-checkbox" for="updates">
+  <input class="inspera-checkbox__input" id="updates" type="checkbox" />
+  <span class="inspera-checkbox__box" aria-hidden="true">
+    <span class="material-symbols-outlined">check</span>
+  </span>
+  <span>Send me product updates</span>
+</label>
+
+<!-- Indeterminate is a DOM property, not an attribute. Set it in script:
+     document.getElementById('all').indeterminate = true -->
+<label class="inspera-checkbox" for="all">
+  <input class="inspera-checkbox__input" id="all" type="checkbox" aria-checked="mixed" />
+  <span class="inspera-checkbox__box" aria-hidden="true">
+    <span class="material-symbols-outlined">remove</span>
+  </span>
+  <span>Select all</span>
+</label>
+```
 
 
 ---

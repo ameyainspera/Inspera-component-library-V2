@@ -80,7 +80,7 @@ export default function Popover({
   const triggerNode = trigger ?? (
     <button
       type="button"
-      style={{ height: 40, padding: '0 16px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-strong)', background: 'var(--white)', color: 'var(--text-primary)', fontWeight: 600, fontSize: 16, cursor: 'pointer' }}
+      style={{ height: 40, padding: '0 16px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-strong)', background: 'var(--white)', color: 'var(--text-primary)', fontFamily: 'var(--font-sans)', fontWeight: 600, fontSize: 16, cursor: 'pointer' }}
     >
       Open
     </button>
@@ -99,6 +99,7 @@ export default function Popover({
     border: '1px solid var(--border)',
     boxShadow: 'var(--shadow-300)',
     textAlign: 'left',
+    fontFamily: 'var(--font-sans)',
   }
 
   return (

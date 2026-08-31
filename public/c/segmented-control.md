@@ -53,7 +53,8 @@ import { SegmentedControl } from '@inspera/components'
 
 <SegmentedControl
   items={['Day', 'Week', 'Month']}
-  value={1}
+  value={range}
+  onChange={setRange}
   size="Medium"
   fullWidth={false}
 />
@@ -73,6 +74,80 @@ import { SegmentedControl } from '@inspera/components'
 **Don't:** Do not use for more than 4 options — use Tabs or Select; Do not use for multi-select.
 
 **Deprecated aliases** (do not use): `Segment control`, `Toggle group`, `Button group`
+
+#### Without the package — exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. It is the same
+component, and it is complete: do not substitute a radius, colour, spacing or
+font weight of your own, and do not restyle it with a UI kit's defaults.
+
+- The track is `--gray-100` with 4px padding and `--radius-md`; segments are `--radius-sm` inside it.
+- The selected segment becomes a white `--surface` card with `--shadow-100` and `--primary` text at 600 weight. Colour alone is not enough at 14px.
+- Segment height is 40px (32px small) and the type stays 14px at both.
+- Use `role="radiogroup"` with `role="radio"` children and a roving tabindex: the selected item is the only tab stop, and arrows move between them.
+- For more than about four options, or for anything not mutually exclusive, use Tabs or a Select instead.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --primary:           #004080;
+  --white:             #ffffff;
+  --gray-100:          #F7F7F7;
+  --gray-600:          #7A7A7A;
+  --surface:           var(--white);
+  --muted-foreground:  var(--gray-600);
+  --radius-sm:         4px;
+  --radius-md:         8px;
+  --shadow-100:        0px 4px 4px rgba(39, 39, 39, 0.08), 0px 2px 4px rgba(39, 39, 39, 0.12);
+  --font-sans:         'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-segmented {
+  display: inline-flex;
+  gap: 2px;
+  padding: 4px;
+  background: var(--gray-100);
+  border-radius: var(--radius-md);
+}
+
+.inspera-segmented--full { width: 100%; }
+
+.inspera-segmented__item {
+  height: 40px;
+  padding: 0 16px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  box-shadow: none;
+  color: var(--muted-foreground);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 120ms ease;
+}
+
+.inspera-segmented--small .inspera-segmented__item { height: 32px; }
+.inspera-segmented--full .inspera-segmented__item { flex: 1; }
+
+/* Selected: a raised white card on the tinted track. Colour alone is not
+   enough separation at 14px. */
+.inspera-segmented__item[aria-checked='true'] {
+  background: var(--surface);
+  box-shadow: var(--shadow-100);
+  color: var(--primary);
+  font-weight: 600;
+}
+```
+
+```html
+<!-- Roving tabindex: the group is one tab stop and the arrows move inside it. -->
+<div class="inspera-segmented" role="radiogroup" aria-label="Date range">
+  <button type="button" class="inspera-segmented__item" role="radio" aria-checked="true" tabindex="0">Day</button>
+  <button type="button" class="inspera-segmented__item" role="radio" aria-checked="false" tabindex="-1">Week</button>
+  <button type="button" class="inspera-segmented__item" role="radio" aria-checked="false" tabindex="-1">Month</button>
+</div>
+```
 
 
 ---

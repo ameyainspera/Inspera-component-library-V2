@@ -5,7 +5,8 @@ export const radiusUsage: Record<string, string[]> = {
   "none": [],
   "xs": [
     "Checkbox",
-    "Link"
+    "Link",
+    "Rating"
   ],
   "sm": [
     "Button",

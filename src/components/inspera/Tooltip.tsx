@@ -1,4 +1,4 @@
-import { type CSSProperties, type ReactNode, useId, useState } from 'react'
+import { type CSSProperties, type ReactElement, type ReactNode, cloneElement, isValidElement, useEffect, useId, useState } from 'react'
 
 export type TooltipPlacement = 'Top' | 'Bottom' | 'Left' | 'Right'
 export type TooltipTheme = 'Light' | 'Dark'
@@ -62,7 +62,17 @@ export default function Tooltip({
 }: TooltipProps) {
   const id = useId()
   const [hovered, setHovered] = useState(false)
-  const visible = forceVisible || hovered
+  const [dismissed, setDismissed] = useState(false)
+  const visible = forceVisible || (hovered && !dismissed)
+
+  // The spec promises Escape dismisses the tooltip; nothing implemented it.
+  // WCAG 1.4.13 requires it for content that appears on hover or focus.
+  useEffect(() => {
+    if (!hovered) { setDismissed(false); return }
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setDismissed(true) }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [hovered])
 
   const dark = theme === 'Dark'
   const bubble: CSSProperties = {
@@ -75,6 +85,7 @@ export default function Tooltip({
     background: dark ? 'var(--gray-900)' : 'var(--white)',
     color: dark ? 'var(--white)' : 'var(--text-primary)',
     border: dark ? 'none' : '1px solid var(--border-strong)',
+    fontFamily: 'var(--font-sans)',
     fontSize: type === 'Accessibility' ? 14 : 12,
     lineHeight: 1.4,
     boxShadow: 'var(--shadow-100)',
@@ -84,11 +95,18 @@ export default function Tooltip({
     transition: 'opacity 140ms ease',
   }
 
-  const trigger = children ?? (
+  // A custom trigger has to carry the describedby too, or the tooltip it owns
+  // is never announced — the spec's "link trigger and tooltip" held only for
+  // the built-in trigger below.
+  const trigger = children
+    ? isValidElement(children)
+      ? cloneElement(children as ReactElement<{ 'aria-describedby'?: string }>, { 'aria-describedby': id })
+      : children
+    : (
     <button
       type="button"
       aria-describedby={id}
-      style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 40, height: 40, borderRadius: 'var(--radius-pill)', border: '1px solid var(--border-strong)', background: '#fff', cursor: 'help' }}
+      style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 40, height: 40, borderRadius: 'var(--radius-pill)', border: '1px solid var(--border-strong)', background: 'var(--white)', fontFamily: 'var(--font-sans)', cursor: 'help' }}
     >
       <span className="material-symbols-outlined" style={{ fontSize: 20, color: 'var(--action-active)' }} aria-hidden>help</span>
     </button>

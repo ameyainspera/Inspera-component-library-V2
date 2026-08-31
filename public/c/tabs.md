@@ -82,6 +82,117 @@ export interface TabItem {
 
 **Deprecated aliases** (do not use): `Tab bar`, `Tab navigation`
 
+#### Without the package — exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. It is the same
+component, and it is complete: do not substitute a radius, colour, spacing or
+font weight of your own, and do not restyle it with a UI kit's defaults.
+
+- Underline tabs are 48px tall (40px small) on a 1px `--border-strong` rail, with `margin-bottom: -1px` so the selected 2px `--primary` underline covers the rail.
+- The resting bottom border is a transparent 2px, not none — otherwise selecting a tab shifts the whole row by two pixels.
+- Contained tabs drop the rail entirely and become a pill group on `--gray-100`, with the selected tab a white `--shadow-100` card.
+- `role="tablist"` / `role="tab"` / `role="tabpanel"`, each tab pointing at its panel with `aria-controls` and each panel back with `aria-labelledby`.
+- Roving tabindex: only the selected tab is a tab stop; Left/Right move between them.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --primary:        #004080;
+  --white:          #ffffff;
+  --gray-100:       #F7F7F7;
+  --gray-300:       #D9D9D9;
+  --gray-700:       #595959;
+  --border-strong:  var(--gray-300);
+  --radius-sm:      4px;
+  --radius-md:      8px;
+  --shadow-100:     0px 4px 4px rgba(39, 39, 39, 0.08), 0px 2px 4px rgba(39, 39, 39, 0.12);
+  --font-sans:      'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-tabs {
+  display: flex;
+  gap: 0;
+  padding: 0;
+  border-bottom: 1px solid var(--border-strong);
+  background: transparent;
+  border-radius: 0;
+  width: auto;
+}
+
+.inspera-tabs--full { width: 100%; }
+
+/* Contained: a pill group on a tinted track, with no rail underneath. */
+.inspera-tabs--contained {
+  gap: 4px;
+  padding: 4px;
+  border-bottom: none;
+  background: var(--gray-100);
+  border-radius: var(--radius-md);
+}
+
+.inspera-tabs__tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 48px;
+  padding: 0 16px;
+  flex: none;
+  border-top: none;
+  border-right: none;
+  border-left: none;
+  /* A transparent 2px rail at rest, so selecting a tab does not shift the row. */
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--gray-700);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-bottom: -1px;
+  transition: color 120ms ease, border-color 120ms ease;
+}
+
+.inspera-tabs--small .inspera-tabs__tab { height: 40px; }
+.inspera-tabs--full .inspera-tabs__tab { flex: 1; }
+
+.inspera-tabs__tab[aria-selected='true'] {
+  border-bottom-color: var(--primary);
+  color: var(--primary);
+}
+
+/* Contained tabs sit inside the track: no rail, a raised white card instead. */
+.inspera-tabs--contained .inspera-tabs__tab {
+  height: 40px;
+  border-bottom: none;
+  border-radius: var(--radius-sm);
+  margin-bottom: 0;
+}
+.inspera-tabs--contained.inspera-tabs--small .inspera-tabs__tab { height: 32px; }
+
+.inspera-tabs--contained .inspera-tabs__tab[aria-selected='true'] {
+  background: var(--white);
+  box-shadow: var(--shadow-100);
+  color: var(--primary);
+}
+
+.inspera-tabs__tab .material-symbols-outlined { font-size: 20px; }
+```
+
+```html
+<div class="inspera-tabs" role="tablist" aria-label="Section tabs">
+  <button type="button" class="inspera-tabs__tab" role="tab" aria-selected="true"
+          id="tab-overview" aria-controls="panel-overview" tabindex="0">Overview</button>
+  <button type="button" class="inspera-tabs__tab" role="tab" aria-selected="false"
+          id="tab-questions" aria-controls="panel-questions" tabindex="-1">Questions</button>
+</div>
+
+<div id="panel-overview" role="tabpanel" aria-labelledby="tab-overview" tabindex="0">…</div>
+<div id="panel-questions" role="tabpanel" aria-labelledby="tab-questions" tabindex="0" hidden>…</div>
+```
+
 
 ---
 

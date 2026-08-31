@@ -56,6 +56,7 @@ import { Progress } from '@inspera/components'
   value={60}
   intent="Primary"
   size="Medium"
+  label="Uploading attachments"
   indeterminate={false}
   showValue={false}
 />
@@ -69,6 +70,7 @@ import { Progress } from '@inspera/components'
 | `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Bar height / ring diameter. |
 | `intent` | `'Primary' \| 'Success' \| 'Warning' \| 'Error'` | `'Primary'` | Fill color. |
 | `showValue` | `boolean` | `false` | Render the percentage. |
+| `label` | `string` | `'Progress'` | Accessible name. Say what is progressing, not just "Progress". |
 
 **Accessibility** — role `progressbar`. Use role="progressbar" with aria-valuenow / min / max; Omit aria-valuenow when indeterminate; Provide an accessible label for the task.
 
@@ -76,6 +78,124 @@ import { Progress } from '@inspera/components'
 **Don't:** Do not use for very short operations; Do not fake progress values.
 
 **Deprecated aliases** (do not use): `Progress bar`, `Loading bar`, `Meter`
+
+#### Without the package — exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. It is the same
+component, and it is complete: do not substitute a radius, colour, spacing or
+font weight of your own, and do not restyle it with a UI kit's defaults.
+
+- The bar heights are 4 / 8 / 12 and the ring diameters 24 / 40 / 56, with stroke widths 3 / 4 / 5.
+- `role="progressbar"` with `aria-valuemin`, `aria-valuemax` and an `aria-label` is mandatory. A styled div announces nothing.
+- When indeterminate, omit `aria-valuenow` entirely. Sending 0 tells the user it is stuck at zero.
+- The indeterminate bar is a 40% sliver swept by keyframes across a clipped track — not a full-width bar that fades.
+- The ring is rotated -90deg so the arc starts at twelve o'clock, and the arc length is set by `stroke-dashoffset`.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --primary:       #004080;
+  --error:         #D32F2F;
+  --warning:       #EF6C00;
+  --success:       #2E7D32;
+  --gray-200:      #EDEDED;
+  --text-primary:  rgba(0, 0, 0, 0.87);
+  --radius-pill:   9999px;
+  --font-sans:     'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-progress {
+  --progress-fill: var(--primary);
+
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  font-family: var(--font-sans);
+}
+
+.inspera-progress--circular { width: auto; }
+
+.inspera-progress--success { --progress-fill: var(--success); }
+.inspera-progress--warning { --progress-fill: var(--warning); }
+.inspera-progress--error   { --progress-fill: var(--error); }
+
+/* Linear: a rounded track that clips the fill. */
+.inspera-progress__track {
+  position: relative;
+  flex: 1;
+  height: 8px;
+  border-radius: var(--radius-pill);
+  background: var(--gray-200);
+  overflow: hidden;
+}
+.inspera-progress--small .inspera-progress__track { height: 4px; }
+.inspera-progress--large .inspera-progress__track { height: 12px; }
+
+.inspera-progress__fill {
+  display: block;
+  height: 100%;
+  border-radius: var(--radius-pill);
+  background: var(--progress-fill);
+  transition: width 240ms ease;
+}
+
+/* Indeterminate: a 40% sliver that sweeps the track. Width is animated, so the
+   fill is absolutely positioned rather than sized by a value. */
+.inspera-progress__fill--indeterminate {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 40%;
+  transition: none;
+  animation: inspera-indeterminate 1.4s ease infinite;
+}
+
+.inspera-progress__value {
+  font-size: 14px;
+  color: var(--text-primary);
+  min-width: 36px;
+  text-align: right;
+}
+
+/* Circular: the ring spins as a whole when indeterminate. */
+.inspera-progress__ring {
+  display: inline-flex;
+  width: 40px;
+  height: 40px;
+}
+.inspera-progress__ring--indeterminate { animation: inspera-spin 0.9s linear infinite; }
+.inspera-progress__ring > svg { transform: rotate(-90deg); }
+
+@keyframes inspera-indeterminate {
+  0%   { left: -40%; width: 40%; }
+  50%  { width: 55%; }
+  100% { left: 100%; width: 40%; }
+}
+
+@keyframes inspera-spin {
+  to { transform: rotate(360deg); }
+}
+```
+
+```html
+<!-- Linear, 60%. The ARIA is the component: a styled div announces nothing. -->
+<span class="inspera-progress">
+  <span class="inspera-progress__track" role="progressbar"
+        aria-valuemin="0" aria-valuemax="100" aria-valuenow="60" aria-label="Uploading attachments">
+    <span class="inspera-progress__fill" style="width: 60%" aria-hidden="true"></span>
+  </span>
+  <span class="inspera-progress__value">60%</span>
+</span>
+
+<!-- Indeterminate: drop aria-valuenow entirely, do not send 0. -->
+<span class="inspera-progress">
+  <span class="inspera-progress__track" role="progressbar"
+        aria-valuemin="0" aria-valuemax="100" aria-label="Loading">
+    <span class="inspera-progress__fill inspera-progress__fill--indeterminate" aria-hidden="true"></span>
+  </span>
+</span>
+```
 
 
 ---

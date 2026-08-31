@@ -74,6 +74,98 @@ import { Card } from '@inspera/components'
 **Do:** Use to group related content; Maintain consistent padding within a view; Use raised elevation for primary content cards.
 **Don't:** Do not nest cards inside other cards; Do not use cards for layout-only purposes without content.
 
+#### Without the package — exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. It is the same
+component, and it is complete: do not substitute a radius, colour, spacing or
+font weight of your own, and do not restyle it with a UI kit's defaults.
+
+- Radius is `--radius-lg`. Padding is 12 / 16 / 24 for Compact / Default / Spacious.
+- Flat has neither border nor shadow, Raised adds `--shadow-200`, Outlined adds a 1px `--border-strong`. Never both a shadow and a strong border.
+- The transparent 1px border at rest is deliberate: without it, Outlined would be 2px wider than Flat.
+- An interactive card is a `<button>`. A `<div>` with a click handler is not keyboard operable and will fail review.
+- Title 16px/500, body 16px/1.4 in `--gray-700` — the body is not smaller than the title.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --primary:            #004080;
+  --white:              #ffffff;
+  --gray-300:           #D9D9D9;
+  --gray-700:           #595959;
+  --text-primary:       rgba(0, 0, 0, 0.87);
+  --border-strong:      var(--gray-300);
+  --radius-lg:          12px;
+  --shadow-200:         0px 8px 8px rgba(39, 39, 39, 0.08), 0px 4px 6px rgba(39, 39, 39, 0.12);
+  --shadow-300:         0px 8px 16px rgba(39, 39, 39, 0.08), 0px 6px 8px rgba(39, 39, 39, 0.12);
+  --focus-ring-width:   2px;
+  --focus-ring-offset:  2px;
+  --focus-ring-color:   var(--primary);
+  --font-sans:          'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  padding: 16px;
+  border-radius: var(--radius-lg);
+  background: var(--white);
+  color: var(--text-primary);
+  /* Stated, not inherited. An interactive card is a <button>, and a button
+     falls back to the UA font rather than the page's. */
+  font-family: var(--font-sans);
+  /* A transparent border at rest, so switching to Outlined does not resize the
+     card. Dropping it and adding a border only on the modifier shifts layout. */
+  border: 1px solid transparent;
+  box-shadow: none;
+  text-align: left;
+  cursor: default;
+}
+
+.inspera-card--compact  { padding: 12px; }
+.inspera-card--spacious { padding: 24px; }
+
+.inspera-card--raised   { box-shadow: var(--shadow-200); }
+.inspera-card--outlined { border-color: var(--border-strong); }
+
+/* Interactive cards are <button>, so they are focusable and operable by
+   keyboard for free. A div with onclick is not. */
+.inspera-card--interactive { cursor: pointer; }
+.inspera-card--interactive:hover { box-shadow: var(--shadow-300); }
+.inspera-card--interactive:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.inspera-card__title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.inspera-card__body {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.4;
+  color: var(--gray-700);
+}
+```
+
+```html
+<article class="inspera-card inspera-card--raised">
+  <h3 class="inspera-card__title">Algebra Quiz</h3>
+  <p class="inspera-card__body">24 questions · 45 minutes.</p>
+</article>
+
+<!-- Interactive: a real button, never a div with a click handler. -->
+<button type="button" class="inspera-card inspera-card--outlined inspera-card--interactive">
+  <h3 class="inspera-card__title">History Midterm</h3>
+  <p class="inspera-card__body">Open the assessment.</p>
+</button>
+```
+
 
 ---
 

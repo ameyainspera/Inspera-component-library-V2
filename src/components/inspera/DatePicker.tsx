@@ -9,7 +9,12 @@ export interface DatePickerProps {
   value?: string
   /** Trigger placeholder. */
   placeholder?: string
-  /** Forces a visual state for documentation. Omit for real interactivity. */
+  /**
+   * Freezes a visual state so documentation can show it without a pointer.
+   * `Focused` is presentation-only — leave it unset in application code, where
+   * CSS drives it from the real pointer and keyboard. `Error` and `Disabled`
+   * are real application state and belong in your code.
+   */
   state?: DatePickerState
   /** Show the field label. */
   showLabel?: boolean
@@ -43,7 +48,13 @@ export default function DatePicker({
 
   const disabled = state === 'Disabled'
   const isError = state === 'Error'
-  const isFocused = state === 'Focused'
+
+  // `defaultOpen` has to be an effect, not just a useState initializer: the
+  // docs playground swaps the prop on a live instance rather than remounting
+  // it, and an initializer only ever runs once — so the control moved nothing.
+  useEffect(() => {
+    setOpen(defaultOpen)
+  }, [defaultOpen])
 
   const today = new Date()
   const initial = current ? new Date(current) : today
@@ -66,10 +77,9 @@ export default function DatePicker({
     }
   }, [open])
 
-  let border = 'var(--border-control)'
-  if (isError) border = 'var(--error)'
-  else if (isFocused) border = 'var(--primary)'
-
+  // Border and ring live in CSS (.inspera-field in runtime.css) so the trigger
+  // reacts to a real pointer and a real Tab. An inline `border` here would
+  // outrank the class and silently defeat both.
   const field: CSSProperties = {
     height: 40,
     display: 'flex',
@@ -77,9 +87,9 @@ export default function DatePicker({
     gap: 8,
     padding: '0 12px',
     borderRadius: 'var(--radius-md)',
-    border: `1px solid ${border}`,
+    borderWidth: 'var(--border-width-default)',
+    borderStyle: 'solid',
     background: disabled ? 'var(--surface-disabled)' : 'var(--white)',
-    boxShadow: isFocused ? '0 0 0 3px var(--primary-focus-ring)' : isError ? '0 0 0 3px rgba(249,184,184,0.6)' : 'none',
     cursor: disabled ? 'not-allowed' : 'pointer',
     opacity: disabled ? 0.6 : 1,
   }
@@ -108,13 +118,17 @@ export default function DatePicker({
   }
 
   return (
-    <div ref={rootRef} style={{ display: 'flex', flexDirection: 'column', gap: 6, width: '100%', position: 'relative' }}>
+    <div ref={rootRef} style={{ display: 'flex', flexDirection: 'column', gap: 6, width: '100%', position: 'relative', fontFamily: 'var(--font-sans)' }}>
       {showLabel && (
         <label htmlFor={id} style={{ fontSize: 16, fontWeight: 500, color: 'var(--text-primary)' }}>{label}</label>
       )}
       <button
         id={id}
         type="button"
+        className="inspera-interactive inspera-field"
+        data-force-state={open ? 'Open' : state !== 'Default' ? state : undefined}
+        data-invalid={isError || undefined}
+        data-disabled={disabled || undefined}
         disabled={disabled}
         aria-haspopup="dialog"
         aria-expanded={open}

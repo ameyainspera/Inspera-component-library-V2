@@ -83,6 +83,153 @@ import { Dialog } from '@inspera/components'
 
 **Deprecated aliases** (do not use): `Modal`, `Popup`
 
+#### Without the package — exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. It is the same
+component, and it is complete: do not substitute a radius, colour, spacing or
+font weight of your own, and do not restyle it with a UI kit's defaults.
+
+- Widths are exactly 400 / 480 / 560 with `max-width: 100%`, `--radius-lg` and `--shadow-500`.
+- Wrap the panel in the scrim. `rgba(39,39,39,0.48)`, fixed, full-viewport, at `--z-modal`. Without it the page behind stays clickable and this is a floating card, not a modal.
+- `role="dialog"` with `aria-modal="true"` and `aria-labelledby` pointing at the title id. Generate a unique id — a hardcoded one collides the moment two dialogs exist on a page.
+- Behaviour the markup cannot express, and that you must add: move focus into the panel on open, trap Tab inside it, return focus to the trigger on close, close on Escape and on a scrim click, and lock body scroll while open.
+- The title is 22.78px/500 — an exact export from Figma, not a rounded 24.
+- Name the confirming action for what it does ("Delete"), never "OK".
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --primary:       #004080;
+  --white:         #ffffff;
+  --gray-200:      #EDEDED;
+  --gray-900:      #272727;
+  --text-primary:  rgba(0, 0, 0, 0.87);
+  --border:        var(--gray-200);
+  --radius-sm:     4px;
+  --radius-lg:     12px;
+  --radius-pill:   9999px;
+  --shadow-500:    0px 10px 32px rgba(39, 39, 39, 0.1), 0px 6px 14px rgba(39, 39, 39, 0.12);
+  --z-modal:       600;
+  --font-sans:     'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* The scrim. Fixed, full-viewport, and it closes the dialog when clicked. */
+.inspera-dialog-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(39, 39, 39, 0.48);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: var(--z-modal, 1000);
+}
+
+.inspera-dialog {
+  width: 480px;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius-lg);
+  background: var(--white);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-500);
+  font-family: var(--font-sans);
+}
+
+.inspera-dialog--small { width: 400px; }
+.inspera-dialog--large { width: 560px; }
+
+.inspera-dialog__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 24px;
+  border-bottom: 1px solid var(--border);
+  min-height: 64px;
+}
+
+.inspera-dialog__title {
+  margin: 0;
+  font-size: 22.78px;
+  font-weight: 500;
+  line-height: 1.12;
+  color: var(--gray-900);
+  letter-spacing: -0.2px;
+}
+
+.inspera-dialog__close {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  color: var(--gray-900);
+  display: inline-flex;
+  border-radius: var(--radius-pill);
+  line-height: 0;
+}
+.inspera-dialog__close .material-symbols-outlined { font-size: 24px; }
+
+.inspera-dialog__body {
+  padding: 32px;
+  font-size: 16px;
+  line-height: 20px;
+  color: var(--gray-900);
+}
+
+.inspera-dialog__footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 24px;
+  border-top: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.inspera-dialog__action {
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  border: none;
+  background: transparent;
+  color: var(--primary);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 20px;
+  cursor: pointer;
+}
+
+.inspera-dialog__action--confirm {
+  background: var(--primary);
+  color: var(--white);
+  box-shadow: 0px 1px 0px 0px rgba(0, 0, 0, 0.08), inset 0px -1px 0px 0px rgba(0, 0, 0, 0.2);
+}
+```
+
+```html
+<!-- The scrim is required. Without it the page behind stays clickable and
+     the "modal" is a floating card. -->
+<div class="inspera-dialog-overlay">
+  <div class="inspera-dialog" role="dialog" aria-modal="true"
+       aria-labelledby="dlg-title" tabindex="-1">
+    <div class="inspera-dialog__header">
+      <h2 class="inspera-dialog__title" id="dlg-title">Delete assessment?</h2>
+      <button type="button" class="inspera-dialog__close" aria-label="Close dialog">
+        <span class="material-symbols-outlined" aria-hidden="true">close</span>
+      </button>
+    </div>
+    <div class="inspera-dialog__body">This cannot be undone.</div>
+    <div class="inspera-dialog__footer">
+      <button type="button" class="inspera-dialog__action">Cancel</button>
+      <button type="button" class="inspera-dialog__action inspera-dialog__action--confirm">Delete</button>
+    </div>
+  </div>
+</div>
+```
+
 
 ---
 

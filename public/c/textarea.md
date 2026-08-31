@@ -68,7 +68,7 @@ import { Textarea } from '@inspera/components'
 | `value` | `string` | — | Current value. Controlled — pair with onChange. |
 | `rows` | `number` | `4` | Visible text rows. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Vertical padding density. |
-| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Filled' \| 'Error' \| 'Disabled' \| 'ReadOnly'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
+| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Filled' \| 'Error' \| 'Disabled' \| 'ReadOnly'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Filled` are presentation-only — leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Error`, `Disabled` and `ReadOnly` are real application state and belong in your code. |
 | `showLabel` | `boolean` | `true` | Show the field label. |
 | `helpText` | `string` | — | Guidance shown below the field. Replaced by errorText when invalid. |
 | `errorText` | `string` | — | Validation message. Linked to the control via aria-describedby. |
@@ -82,6 +82,125 @@ import { Textarea } from '@inspera/components'
 **Don't:** Do not use for single-line input — use Text Input instead; Do not disable resize without reason.
 
 **Deprecated aliases** (do not use): `Text area`, `Multiline input`, `Comment box`
+
+#### Without the package — exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. It is the same
+component, and it is complete: do not substitute a radius, colour, spacing or
+font weight of your own, and do not restyle it with a UI kit's defaults.
+
+- Same field treatment as Text Input, but the wrapper is a column so the counter sits inside the border, under the text.
+- Vertical padding is 8px (6px small); horizontal stays 12px at both sizes.
+- `resize: vertical` only. Free resize lets the user drag the field out of the layout.
+- The counter is presentational — pair `maxlength` on the control with it, and do not rely on the counter to enforce the limit.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --primary:                #004080;
+  --error:                  #D32F2F;
+  --white:                  #ffffff;
+  --gray-600:               #7A7A7A;
+  --blue-300:               #B3D9FF;
+  --red-300:                #F9B8B8;
+  --text-primary:           rgba(0, 0, 0, 0.87);
+  --border-control:         #C4C4C4;
+  --border-control-strong:  #8C8C8C;
+  --surface-disabled:       #F5F5F5;
+  --muted-foreground:       var(--gray-600);
+  --radius-md:              8px;
+  --effect-state-focus:     0px 0px 0px 3px var(--blue-300);
+  --effect-state-error:     0px 0px 0px 3px var(--red-300);
+  --border-width-default:   1px;
+  --duration-fast:          100ms;
+  --easing-standard:        cubic-bezier(0.2, 0, 0, 1);
+  --font-sans:              'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-textarea {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  font-family: var(--font-sans);
+}
+
+.inspera-textarea__label {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+/* Column, not row: the counter sits under the text, inside the border. */
+.inspera-textarea__field {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 12px;
+  border-radius: var(--radius-md);
+  border: var(--border-width-default) solid var(--border-control);
+  background: var(--white);
+  transition:
+    border-color var(--duration-fast) var(--easing-standard),
+    box-shadow var(--duration-fast) var(--easing-standard);
+}
+
+.inspera-textarea--small .inspera-textarea__field { padding: 6px 12px; }
+
+.inspera-textarea__field:hover { border-color: var(--border-control-strong); }
+
+.inspera-textarea__field:focus-within {
+  border-color: var(--primary);
+  box-shadow: var(--effect-state-focus);
+}
+
+.inspera-textarea__control {
+  width: 100%;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  /* Vertical only. Free resize lets the user drag it out of the layout. */
+  resize: vertical;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  color: var(--text-primary);
+}
+
+.inspera-textarea__count {
+  align-self: flex-end;
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--muted-foreground);
+}
+
+.inspera-textarea__help  { font-size: 12px; color: var(--muted-foreground); }
+.inspera-textarea__error { font-size: 12px; color: var(--error); }
+
+.inspera-textarea__field[data-invalid='true'],
+.inspera-textarea__field[data-invalid='true']:hover,
+.inspera-textarea__field[data-invalid='true']:focus-within {
+  border-color: var(--error);
+  box-shadow: var(--effect-state-error);
+}
+
+.inspera-textarea__field[data-disabled='true'] {
+  background: var(--surface-disabled);
+  opacity: 0.6;
+}
+```
+
+```html
+<div class="inspera-textarea">
+  <label class="inspera-textarea__label" for="feedback">Feedback</label>
+  <div class="inspera-textarea__field">
+    <textarea class="inspera-textarea__control" id="feedback" rows="4"
+              maxlength="280" placeholder="Share your thoughts…"
+              aria-describedby="feedback-help"></textarea>
+    <span class="inspera-textarea__count">0/280</span>
+  </div>
+  <span class="inspera-textarea__help" id="feedback-help">Keep it constructive.</span>
+</div>
+```
 
 
 ---

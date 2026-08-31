@@ -80,6 +80,195 @@ export interface Step {
 
 **Deprecated aliases** (do not use): `Wizard`, `Progress steps`, `Step indicator`
 
+#### Without the package — exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. It is the same
+component, and it is complete: do not substitute a radius, colour, spacing or
+font weight of your own, and do not restyle it with a UI kit's defaults.
+
+- It is an `<ol>`: the order is the meaning. The current step carries `aria-current="step"`.
+- Steps take `flex: 1 1 auto`, never `flex: 1`. A zero basis gives every step the same total width, so a long label ends up with a stub connector while a short one gets a long run.
+- Keep steps top-aligned. Centring makes the connector sit against the full step height and render down at label level instead of through the circles.
+- The connector is offset by half the circle (`margin-top: 15px`, or 11px small) so it passes through the centres.
+- Completed and current share the `--primary` fill; only the current one gets the 4px `--primary-focus-ring` halo. Completed shows a tick, upcoming shows its number.
+- Indicators are 32px (24px small) and the connector is 2px, filled `--primary` behind completed steps and `--border` ahead of them.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --primary:             #004080;
+  --white:               #ffffff;
+  --gray-200:            #EDEDED;
+  --gray-300:            #D9D9D9;
+  --gray-600:            #7A7A7A;
+  --primary-focus-ring:  rgba(0, 64, 128, 0.3);
+  --text-primary:        rgba(0, 0, 0, 0.87);
+  --border:              var(--gray-200);
+  --border-strong:       var(--gray-300);
+  --muted-foreground:    var(--gray-600);
+  --radius-pill:         9999px;
+  --font-sans:           'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-stepper {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 0;
+  width: 100%;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-sans);
+}
+
+.inspera-stepper--vertical {
+  flex-direction: column;
+  align-items: stretch;
+  width: auto;
+}
+
+/* The step lays out body-then-connector along the stepper's own axis, so a
+   horizontal stepper puts them in a row and a vertical one stacks them. Note
+   this is the opposite of the body inside it, which stacks the circle over the
+   label horizontally and sits them side by side vertically. */
+.inspera-stepper__step {
+  display: flex;
+  flex-direction: row;
+  /* Always top-aligned. Centring makes the horizontal connector sit against the
+     full step height and render down at label level instead of through the
+     circles. */
+  align-items: flex-start;
+  /* "1 1 auto", not "1": a zero basis gives every step the same total width, so
+     a long label leaves a stub of a connector while a short one gets a long
+     run. Growing from the content width shares the free space evenly. */
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.inspera-stepper__step:last-child { flex: none; }
+.inspera-stepper--vertical .inspera-stepper__step { flex-direction: column; flex: none; }
+
+.inspera-stepper__body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.inspera-stepper--vertical .inspera-stepper__body {
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.inspera-stepper__indicator {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  border-radius: var(--radius-pill);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 600;
+  background: transparent;
+  color: var(--gray-600);
+  border: 2px solid var(--border-strong);
+  box-shadow: none;
+  transition: background 140ms ease, box-shadow 140ms ease;
+}
+
+.inspera-stepper--small .inspera-stepper__indicator { width: 24px; height: 24px; }
+
+/* Done and current share the fill; only the current one gets the halo. */
+.inspera-stepper__indicator--done,
+.inspera-stepper__indicator--active {
+  background: var(--primary);
+  color: var(--white);
+  border: none;
+}
+
+.inspera-stepper__indicator--active { box-shadow: 0 0 0 4px var(--primary-focus-ring); }
+
+.inspera-stepper__indicator .material-symbols-outlined { font-size: 18px; }
+
+.inspera-stepper__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: center;
+}
+.inspera-stepper--vertical .inspera-stepper__text { text-align: left; }
+
+.inspera-stepper__label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--gray-600);
+}
+.inspera-stepper--small .inspera-stepper__label { font-size: 13px; }
+
+.inspera-stepper__step--done .inspera-stepper__label,
+.inspera-stepper__step--active .inspera-stepper__label {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.inspera-stepper__description {
+  font-size: 12px;
+  color: var(--muted-foreground);
+}
+
+/* The connector is nudged by half the circle so it runs through the centres
+   rather than under the labels. */
+.inspera-stepper__connector {
+  height: 2px;
+  flex: 1;
+  margin: 0 8px;
+  margin-top: 15px;
+  background: var(--border);
+}
+
+.inspera-stepper--small .inspera-stepper__connector { margin-top: 11px; }
+
+.inspera-stepper__connector--done { background: var(--primary); }
+
+.inspera-stepper--vertical .inspera-stepper__connector {
+  width: 2px;
+  height: auto;
+  flex: 1;
+  min-height: 20px;
+  margin: 4px 0;
+  margin-left: 15px;
+}
+.inspera-stepper--vertical.inspera-stepper--small .inspera-stepper__connector { margin-left: 11px; }
+```
+
+```html
+<ol class="inspera-stepper" role="list">
+  <li class="inspera-stepper__step inspera-stepper__step--done">
+    <div class="inspera-stepper__body">
+      <span class="inspera-stepper__indicator inspera-stepper__indicator--done" aria-hidden="true">
+        <span class="material-symbols-outlined">check</span>
+      </span>
+      <span class="inspera-stepper__text">
+        <span class="inspera-stepper__label">Details</span>
+        <span class="inspera-stepper__description">Assessment info</span>
+      </span>
+    </div>
+    <span class="inspera-stepper__connector inspera-stepper__connector--done" aria-hidden="true"></span>
+  </li>
+  <li class="inspera-stepper__step inspera-stepper__step--active" aria-current="step">
+    <div class="inspera-stepper__body">
+      <span class="inspera-stepper__indicator inspera-stepper__indicator--active" aria-hidden="true">2</span>
+      <span class="inspera-stepper__text">
+        <span class="inspera-stepper__label">Questions</span>
+      </span>
+    </div>
+  </li>
+</ol>
+```
+
 
 ---
 

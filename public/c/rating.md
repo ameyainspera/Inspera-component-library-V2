@@ -52,7 +52,8 @@ Capture or display a star rating. — category: `input-controls`.
 import { Rating } from '@inspera/components'
 
 <Rating
-  value={3}
+  value={score}
+  onChange={setScore}
   max={5}
   size="Medium"
   readOnly={false}
@@ -61,7 +62,7 @@ import { Rating } from '@inspera/components'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `value` | `number` | `0` | Current rating. |
+| `value` | `number` | — | Current rating. Controlled — pair with onChange. Omit it and the component tracks its own, the same contract Checkbox and Toggle use. |
 | `max` | `number` | `5` | Number of stars. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Star size. |
 | `readOnly` | `boolean` | `false` | Display-only mode. |
@@ -74,6 +75,94 @@ import { Rating } from '@inspera/components'
 **Don't:** Do not use for precise numeric input; Do not omit accessible labels on stars.
 
 **Deprecated aliases** (do not use): `Star rating`, `Stars`
+
+#### Without the package — exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. It is the same
+component, and it is complete: do not substitute a radius, colour, spacing or
+font weight of your own, and do not restyle it with a UI kit's defaults.
+
+- One glyph — `star` — with the variable font’s FILL axis at 0 or 1. Swapping to a different outline glyph changes the shape and makes the row jump on hover.
+- Filled stars are `--warning` #EF6C00; empty ones `--gray-400`. Stars are 28px (20px small) with a 2px gap.
+- `role="radiogroup"` with `role="radio"` stars, a roving tabindex, and arrow keys that both move focus and set the value.
+- Every star needs its own label ("3 stars"), or the control announces as five unlabelled radios.
+- Hovering previews the rating up to the pointer; leaving restores the committed value.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --primary:            #004080;
+  --warning:            #EF6C00;
+  --gray-400:           #BCBCBC;
+  --gray-600:           #7A7A7A;
+  --muted-foreground:   var(--gray-600);
+  --radius-xs:          2px;
+  --focus-ring-width:   2px;
+  --focus-ring-offset:  2px;
+  --focus-ring-color:   var(--primary);
+  --font-mono:          'Noto Sans Mono', ui-monospace, SFMono-Regular, monospace;
+}
+
+.inspera-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.inspera-rating__stars {
+  display: inline-flex;
+  gap: 2px;
+}
+
+.inspera-rating__star {
+  font-size: 28px;
+  line-height: 1;
+  color: var(--gray-400);
+  /* Same glyph, different fill axis. Swapping to a "star_outline" glyph shifts
+     the shape and makes the row jump as you hover across it. */
+  font-variation-settings: 'FILL' 0;
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+}
+
+.inspera-rating--small .inspera-rating__star { font-size: 20px; }
+
+.inspera-rating__star--filled {
+  color: var(--warning);
+  font-variation-settings: 'FILL' 1;
+}
+
+.inspera-rating__star:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.inspera-rating--readonly .inspera-rating__star { cursor: default; }
+
+.inspera-rating__value {
+  font-size: 14px;
+  color: var(--muted-foreground);
+  font-family: var(--font-mono);
+}
+```
+
+```html
+<!-- Roving tabindex again: one tab stop, arrows move and set the value. -->
+<div class="inspera-rating" role="radiogroup" aria-label="Rating">
+  <div class="inspera-rating__stars">
+    <span class="material-symbols-outlined inspera-rating__star inspera-rating__star--filled"
+          role="radio" aria-checked="false" aria-label="1 star" tabindex="-1">star</span>
+    <span class="material-symbols-outlined inspera-rating__star inspera-rating__star--filled"
+          role="radio" aria-checked="false" aria-label="2 stars" tabindex="-1">star</span>
+    <span class="material-symbols-outlined inspera-rating__star inspera-rating__star--filled"
+          role="radio" aria-checked="true" aria-label="3 stars" tabindex="0">star</span>
+    <span class="material-symbols-outlined inspera-rating__star"
+          role="radio" aria-checked="false" aria-label="4 stars" tabindex="-1">star</span>
+    <span class="material-symbols-outlined inspera-rating__star"
+          role="radio" aria-checked="false" aria-label="5 stars" tabindex="-1">star</span>
+  </div>
+</div>
+```
 
 
 ---
