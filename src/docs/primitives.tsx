@@ -82,13 +82,20 @@ export function CopyButton({ text, label = 'Copy' }: { text: string; label?: str
 const CODE_MAX_HEIGHT = 440
 
 export function CodeBlock({
-  code, language, copyLabel, maxHeight = CODE_MAX_HEIGHT,
+  code, language, copyLabel, maxHeight = CODE_MAX_HEIGHT, headerLeft,
 }: {
   code: string
   language?: string
   copyLabel?: string
   /** Visible height before scrolling. Pass `0` to let the block run full length. */
   maxHeight?: number
+  /**
+   * Replaces the language label in the block's own header bar. Controls that
+   * decide *what code is shown* belong inside the panel they act on — put them
+   * outside and they read as more component variants, which is what the
+   * playground's controls directly above already look like.
+   */
+  headerLeft?: ReactNode
 }) {
   const pre = useRef<HTMLPreElement>(null)
   const [overflowing, setOverflowing] = useState(false)
@@ -134,10 +141,21 @@ export function CodeBlock({
           borderBottom: '1px solid rgba(255,255,255,0.08)',
         }}
       >
-        <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: 1, textTransform: 'uppercase', color: 'var(--gray-500)' }}>
-          {language ?? 'code'}
-          {overflowing && ` · ${lines} lines`}
-        </span>
+        {headerLeft ? (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
+            {headerLeft}
+            {overflowing && (
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: 1, textTransform: 'uppercase', color: 'var(--gray-500)' }}>
+                {lines} lines
+              </span>
+            )}
+          </div>
+        ) : (
+          <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: 1, textTransform: 'uppercase', color: 'var(--gray-500)' }}>
+            {language ?? 'code'}
+            {overflowing && ` · ${lines} lines`}
+          </span>
+        )}
         <CopyButton text={code} label={copyLabel ?? 'Copy'} />
       </div>
       <pre
@@ -172,6 +190,65 @@ export function CodeBlock({
           }}
         />
       )}
+    </div>
+  )
+}
+
+/**
+ * Switches which code a panel is showing. Lives inside the dark header bar so
+ * it cannot be mistaken for the playground's variant controls: those change
+ * the component, this changes the view of it, and identical styling made the
+ * two read as one row of switches.
+ */
+export function CodeTabs({
+  value, onChange, options,
+}: {
+  value: string
+  onChange: (v: string) => void
+  options: { id: string; label: string }[]
+}) {
+  return (
+    <div
+      // Not role="tablist": these sit *inside* the panel they switch, so the
+      // tabs pattern would promise a tab/tabpanel relationship the DOM does
+      // not have. Toggle buttons describe what this actually is.
+      aria-label="Code format"
+      style={{
+        display: 'inline-flex',
+        gap: 2,
+        padding: 2,
+        background: 'rgba(255,255,255,0.08)',
+        borderRadius: 'var(--radius-sm)',
+      }}
+    >
+      {options.map((o) => {
+        const active = o.id === value
+        return (
+          <button
+            key={o.id}
+            type="button"
+            aria-pressed={active}
+            onClick={() => onChange(o.id)}
+            style={{
+              height: 22,
+              padding: '0 10px',
+              border: 'none',
+              borderRadius: 3,
+              background: active ? '#FFFFFF' : 'transparent',
+              color: active ? 'var(--gray-900)' : 'var(--gray-400)',
+              fontFamily: 'var(--font-mono)',
+              fontSize: 11,
+              fontWeight: 600,
+              letterSpacing: 0.6,
+              textTransform: 'uppercase',
+              cursor: 'pointer',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {o.label}
+          </button>
+        )
+      })}
     </div>
   )
 }

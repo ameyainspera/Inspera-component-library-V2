@@ -5,7 +5,7 @@ import { componentDocs } from '../data/component-docs.generated'
 import { recipes } from '../data/recipes'
 import { registry, galleryLayout, GALLERY_MIN_WIDTH_DEFAULT } from './registry'
 import {
-  Panel, SectionTitle, SegmentedControl, PreviewCanvas, CodeBlock,
+  Panel, SectionTitle, SegmentedControl, PreviewCanvas, CodeBlock, CodeTabs,
 } from './primitives'
 
 /**
@@ -41,30 +41,10 @@ Canonical spec:
 ${doc}`
 }
 
-/** Small tab used to switch the playground between its two copyable forms. */
-function Tab({ active, onClick, children }: { active: boolean; onClick: () => void; children: ReactNode }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-pressed={active}
-      style={{
-        height: 30,
-        padding: '0 12px',
-        borderRadius: 'var(--radius-sm)',
-        border: `1px solid ${active ? 'var(--primary)' : 'var(--border-strong)'}`,
-        background: active ? 'var(--primary)' : '#FFFFFF',
-        color: active ? '#FFFFFF' : 'var(--gray-700)',
-        fontFamily: 'var(--font-sans)',
-        fontSize: 13,
-        fontWeight: active ? 600 : 400,
-        cursor: 'pointer',
-      }}
-    >
-      {children}
-    </button>
-  )
-}
+const CODE_FORMS = [
+  { id: 'jsx', label: 'React' },
+  { id: 'css', label: 'HTML + CSS' },
+]
 
 /**
  * The recipe's tokens and CSS as one pasteable block — the same content the
@@ -157,20 +137,27 @@ export default function ComponentPage({ slug }: { slug: string }) {
         <div style={{ marginTop: 20 }}>
           {recipe ? (
             <>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10, flexWrap: 'wrap' }}>
-                <Tab active={form === 'jsx'} onClick={() => setForm('jsx')}>React</Tab>
-                <Tab active={form === 'css'} onClick={() => setForm('css')}>HTML + CSS</Tab>
-                <span style={{ fontSize: 12, color: 'var(--gray-600)' }}>
-                  {form === 'jsx'
-                    ? 'For the product codebase, once the package is available.'
-                    : 'For anywhere you cannot install the package — other stacks, AI builders, a plain HTML page.'}
-                </span>
-              </div>
+              <p style={{ margin: '0 0 8px', fontSize: 13, color: 'var(--muted-foreground)' }}>
+                {form === 'jsx'
+                  ? 'For the product codebase, once the package is available.'
+                  : 'For anywhere you cannot install the package — another stack, an AI builder, a plain HTML page.'}
+              </p>
               {form === 'jsx' ? (
-                <CodeBlock code={entry.snippet(values)} language="tsx" copyLabel="Copy JSX" />
+                <CodeBlock
+                  code={entry.snippet(values)}
+                  language="tsx"
+                  copyLabel="Copy JSX"
+                  headerLeft={<CodeTabs value={form} onChange={(v) => setForm(v as 'jsx' | 'css')} options={CODE_FORMS} />}
+                />
               ) : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                  <CodeBlock code={recipe.markup(values)} language="html" copyLabel="Copy HTML" maxHeight={0} />
+                  <CodeBlock
+                    code={recipe.markup(values)}
+                    language="html"
+                    copyLabel="Copy HTML"
+                    maxHeight={0}
+                    headerLeft={<CodeTabs value={form} onChange={(v) => setForm(v as 'jsx' | 'css')} options={CODE_FORMS} />}
+                  />
                   <CodeBlock code={recipeCss(slug)} language="css" copyLabel="Copy CSS" />
                 </div>
               )}
