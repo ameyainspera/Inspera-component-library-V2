@@ -30,7 +30,7 @@ import { registry } from '../src/docs/registry'
 import { componentsPackage } from '../src/data/distribution'
 import {
   contract, precedence, whenUnsure, patterns,
-  formRules, tableRules, feedbackHierarchy, checklist,
+  formRules, tableRules, feedbackHierarchy, checklist, workedScreen,
 } from '../src/data/guidance'
 import { extractComponentProps, type PropDoc } from './extract-props'
 import type { ComponentSpec } from '../src/data/types'
@@ -289,30 +289,55 @@ function tokenMap(): Map<string, string> {
  * The exact token subset a recipe references, resolved transitively and
  * ordered as tokens.css orders them - so the block stays readable and a
  * consumer pastes seventeen lines instead of the whole 686-line file.
+ *
+ * Order matters here. This used to ask "does the name start with the recipe's
+ * class prefix?" first, and treat anything that did as a recipe-private
+ * property. `--avatar-surface` is a real design token, so Avatar's block
+ * silently omitted it and a pasted Avatar rendered with no fill. Asking the
+ * token map first means a documented token can never be shadowed by a class
+ * name; only names the design system does not define can be local.
  */
-function tokensUsedBy(css: string, locals: string): string[] {
+function tokensUsedBy(slug: string, css: string, declared: Set<string>): string[] {
   const all = tokenMap()
   const needed = new Set<string>()
   const walk = (text: string) => {
     for (const m of text.matchAll(/var\(--([\w-]+)/g)) {
       const name = m[1]
-      // Locals are defined by the recipe itself, not by the design system.
-      if (name.startsWith(locals) || needed.has(name)) continue
+      if (needed.has(name)) continue
       const value = all.get(name)
-      if (value === undefined) continue
-      needed.add(name)
-      walk(value)
+      if (value !== undefined) {
+        needed.add(name)
+        walk(value)
+        continue
+      }
+      // Not a design token. It must then be something the recipe sets itself,
+      // or the CSS references a property nothing will ever define - which
+      // renders as an unstyled element rather than an error, so fail here.
+      if (!declared.has(name)) {
+        throw new Error(
+          `Recipe "${slug}" uses var(--${name}), which is neither a design token nor set ` +
+            'anywhere in its own CSS. A custom property nothing defines renders as nothing. ' +
+            'Add it to src/data/tokens.ts, set it in the recipe, or fix the name.',
+        )
+      }
     }
   }
   walk(css)
   return [...all.keys()].filter((n) => needed.has(n))
 }
 
-function recipeBlock(slug: string): string {
+/**
+ * `standalone` decides whether the fonts and icon class ride along.
+ *
+ * The full guide states them once under Setup, so repeating them under all 42
+ * components would add a thousand lines of the same thing to a document
+ * already large enough to matter. A per-component file, or the block copied
+ * out of the docs site, has no Setup next to it and does need them.
+ */
+function recipeBlock(slug: string, standalone: boolean): string {
   const recipe = recipes[slug]
   if (!recipe) return ''
   const all = tokenMap()
-  const local = recipe.className.replace('inspera-', '') + '-'
   // A recipe that builds on another ships that one's CSS too. Without this the
   // published block styles the wrapper and leaves the button inside it bare -
   // exactly the half-finished output the recipes exist to prevent.
@@ -325,7 +350,13 @@ function recipeBlock(slug: string): string {
   // Scan the markup too, not just the stylesheet. Spinner puts its colours in
   // SVG `stroke` attributes, so a CSS-only scan emitted an empty token block
   // for it - and a consumer pasting the HTML got an uncoloured ring.
-  const used = tokensUsedBy(`${css}\n${recipe.html}`, local)
+  // What the recipe sets for itself, read from its own declarations rather than
+  // guessed from its class name. A list inferred from a prefix goes stale and,
+  // worse, swallows real tokens that happen to share it.
+  const declared = new Set(
+    [...css.matchAll(/--([\w-]+)\s*:/gm)].map((m) => m[1]),
+  )
+  const used = tokensUsedBy(slug, `${css}\n${recipe.html}`, declared)
   if (used.length === 0) {
     throw new Error(`Recipe "${slug}" references no design tokens - check the class prefix.`)
   }
@@ -336,7 +367,7 @@ function recipeBlock(slug: string): string {
     : ''
 
   return `
-#### Without the package - exact HTML and CSS
+${standalone ? `${buildSetupCompact()}\n` : ''}#### Without the package - exact HTML and CSS
 
 Use this whenever \`@inspera/components\` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
@@ -357,7 +388,7 @@ ${recipe.html}
 `
 }
 
-function componentMarkdown(c: ComponentSpec, importPath: string): string {
+function componentMarkdown(c: ComponentSpec, importPath: string, standalone = true): string {
   const exportName = exportNameFor(c)
   const { props, relatedTypes } = componentApi[exportName]
   const entry = registry[c.slug]
@@ -386,7 +417,7 @@ ${relatedTypesBlock(relatedTypes)}
 
 **Do:** ${c.usage.do.join('; ')}.
 **Don't:** ${c.usage.dont.join('; ')}.
-${aliases}${recipeBlock(c.slug)}`
+${aliases}${recipeBlock(c.slug, standalone)}`
 }
 
 // ---------------------------------------------------------------------------
@@ -398,7 +429,7 @@ function buildLlmsTxt(): string {
 
   const sections = Object.entries(byCategory)
     .map(([cat, list]) =>
-      `## Components - ${cat}\n\n${list.map((c) => componentMarkdown(c, '@inspera/components')).join('\n\n')}`)
+      `## Components - ${cat}\n\n${list.map((c) => componentMarkdown(c, '@inspera/components', false)).join('\n\n')}`)
     .join('\n\n')
 
   return `# Inspera Design System - complete AI build guide
@@ -407,14 +438,17 @@ function buildLlmsTxt(): string {
 > document: the foundations, then all ${componentList.length} components with
 > their real prop APIs.
 >
-> This is the full text. For a smaller starting point that links a spec per
-> component, use llms.txt.
+> This is the full text, sized for an uploaded context file. A tool that
+> re-sends its context on every message should use llms.txt instead, which
+> links a spec per component.
 
 ${packageBlock()}
 
 ## Rules
 
 ${RULES}
+
+${buildSetup()}
 
 ${buildFoundations({ compact: false })}
 
@@ -539,6 +573,113 @@ ${num(precedence)}
 
 ${whenUnsure.map((r) => `- ${r}`).join('\n')}`
 
+/**
+ * Everything a consumer needs before a single component will look right.
+ *
+ * The document named Inter and Material Symbols in its rules and its
+ * done-checklist, and then gave no way to load either. A recipe only ever sets
+ * `font-size` on `.material-symbols-outlined`; the rule that makes that class a
+ * font lives in src/runtime.css, which is not part of the download. So a
+ * designer who pasted the spec into an AI tool got correct colours, correct
+ * radii, correct spacing - and every icon rendered as its own name, the word
+ * "add" sitting inside the button.
+ *
+ * The icon rule is lifted out of runtime.css rather than retyped, so the rule
+ * that ships and the rule that is documented cannot drift apart.
+ */
+function iconRuleFromRuntime(): string {
+  const runtime = readFileSync(join(root, 'src/runtime.css'), 'utf8')
+  const start = runtime.indexOf('.material-symbols-outlined,')
+  const end = runtime.indexOf("\n\n", runtime.indexOf(".material-symbols-sharp    {"))
+  if (start === -1 || end === -1) {
+    throw new Error(
+      'Could not find the Material Symbols block in src/runtime.css. buildSetup() ' +
+        'copies it verbatim so the documented rule matches the shipped one - fix the ' +
+        'markers here if that file was restructured.',
+    )
+  }
+  return runtime.slice(start, end).trim()
+}
+
+/**
+ * The webfont imports. Weights come from the type scale, so the request never
+ * omits one the spec goes on to use.
+ *
+ * Google's stylesheet for Material Symbols ships the `.material-symbols-outlined`
+ * class itself, not only the @font-face, so this import is the load-bearing
+ * half. The rule copied out of runtime.css is still worth publishing: it pins
+ * the variation axes and covers a consumer who self-hosts the font instead.
+ */
+function fontImports(): string {
+  const families = [
+    `Inter:wght@${fontWeights.join(';')}`,
+    'Noto+Sans+Mono:wght@400;500',
+    'Noto+Serif:wght@400;600',
+  ].join('&family=')
+  return (
+    `@import url('https://fonts.googleapis.com/css2?family=${families}&display=swap');\n` +
+    "@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');"
+  )
+}
+
+/**
+ * Fonts and the icon class, without the token block.
+ *
+ * Per-component files and the docs site's HTML + CSS tab already carry the
+ * token subset that component needs, but neither carried the fonts - so
+ * copying one component in isolation produced correct colours and an icon that
+ * rendered as the word "add".
+ */
+function buildSetupCompact(): string {
+  return `#### One-time setup
+
+Paste this once, at the root of the project. Without it the component inherits
+the host tool's fonts and any icon renders as its own name instead of a glyph.
+
+\`\`\`css
+${fontImports()}
+
+${iconRuleFromRuntime()}
+\`\`\`
+`
+}
+
+function buildSetup(): string {
+  const iconRule = iconRuleFromRuntime()
+
+  return `## Setup
+
+Paste these three blocks once, at the root of the project, before using any
+component below. Without them the components inherit the host tool's fonts and
+every icon renders as its own name.
+
+**1. Fonts.** ${fonts.map((f) => `\`${f.value.split(',')[0]}\` (${f.note.toLowerCase()})`).join(', ')}.
+
+\`\`\`css
+${fontImports()}
+\`\`\`
+
+**2. The icon class.** Every component that shows an icon writes
+\`<span class="material-symbols-outlined">icon_name</span>\`. That class needs
+this rule, or the span shows the literal text instead of the glyph. Icon names
+are lowercase with underscores (\`arrow_forward\`, \`more_vert\`); the full set is
+at fonts.google.com/icons, Outlined style only.
+
+\`\`\`css
+${iconRule}
+\`\`\`
+
+**3. The tokens.** Every value in this document resolves through one of these.
+Component sections below repeat the subset each one needs, so pasting this block
+makes those repeats redundant - either is fine, this one covers everything
+including the spacing and type scales that the component blocks do not carry.
+
+\`\`\`css
+${buildRootCss()}
+\`\`\`
+`
+}
+
 /** Composition, form, table and feedback guidance - how to build a screen. */
 function buildGuidance(): string {
   const patternBlocks = patterns
@@ -571,6 +712,22 @@ ${tableRules.map((r) => `- ${r}`).join('\n')}
 ${feedbackHierarchy.map((f) => `| ${f.scope} | ${f.use} |`).join('\n')}
 
 Never put something the user must retain or act on later in a Snackbar.
+
+## A complete screen
+
+${workedScreen.summary}
+
+${workedScreen.notes.map((n) => `- ${n}`).join('\n')}
+
+\`\`\`tsx
+${workedScreen.tsx}
+\`\`\`
+
+Same screen without the package:
+
+\`\`\`html
+${workedScreen.html}
+\`\`\`
 
 ## Before you call it done
 
@@ -656,9 +813,10 @@ function buildFoundations({ compact }: { compact: boolean }): string {
 
   return `## Foundations
 
-Every value below is a CSS custom property. Import the stylesheet once at the
-app root and reference tokens as \`var(--primary)\`, \`var(--space-4)\`,
-\`var(--radius-md)\`. Never hardcode a colour that is not in this list.
+Every value below is a CSS custom property, declared in the \`:root\` block under
+Setup. Paste that block once, then reference tokens as \`var(--primary)\`,
+\`var(--space-4)\`, \`var(--radius-md)\`. Never hardcode a colour that is not in
+this list.
 
 ### Colour - brand & semantic
 

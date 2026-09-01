@@ -113,9 +113,38 @@ for (const [slug, recipe] of Object.entries(recipes)) {
     }
   }
 }
+// Every custom property a published block reads must be defined in that same
+// block, or set by the recipe itself. A `var(--x)` nothing defines renders as
+// nothing at all rather than erroring: Avatar shipped for a while reading
+// `--avatar-surface` that its own :root omitted, so a pasted Avatar had no
+// fill. Checked against the generated file, which is what people actually
+// paste, rather than against the source it came from.
+const spec = readFileSync(join(root, 'public/llms-full.txt'), 'utf8')
+if (!spec.includes('## Setup')) {
+  problems.push('llms-full.txt | no Setup section, so fonts and tokens never get defined')
+}
+for (const section of spec.split(/^### /m).slice(1)) {
+  const name = section.split('\n')[0].trim()
+  // Only blocks that promise to be self-contained. A component's block is
+  // headed "Without the package" and carries its own :root, because the docs
+  // site offers exactly that block on its own - no Setup alongside it. So the
+  // subset has to be complete on its own terms. Illustrative snippets in
+  // Foundations are not making that promise and are not held to it.
+  if (!section.includes('#### Without the package')) continue
+  const fences = [...section.matchAll(/```css\n([\s\S]*?)```/g)].map((m) => m[1])
+  if (fences.length === 0) continue
+  const css = fences.join('\n')
+  const defined = new Set([...css.matchAll(/(--[\w-]+)\s*:/g)].map((m) => m[1]))
+  for (const m of css.matchAll(/var\((--[\w-]+)/g)) {
+    if (!defined.has(m[1])) {
+      problems.push(`${name} | published CSS reads ${m[1]}, which nothing in that block defines`)
+    }
+  }
+}
+
 if (problems.length > 0) {
-  console.error(`\n✗ ${problems.length} recipe markup problem(s):\n`)
-  for (const p of problems) console.error('  ' + p)
+  console.error(`\n✗ ${problems.length} recipe problem(s):\n`)
+  for (const p of [...new Set(problems)]) console.error('  ' + p)
   process.exit(1)
 }
 

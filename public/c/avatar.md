@@ -73,6 +73,38 @@ import { Avatar } from '@inspera/components'
 **Do:** Use for user profiles and participant lists; Provide meaningful alt text; Use consistent sizing within a context.
 **Don't:** Do not stretch or distort avatar images; Do not use random colors - use a deterministic palette.
 
+#### One-time setup
+
+Paste this once, at the root of the project. Without it the component inherits
+the host tool's fonts and any icon renders as its own name instead of a glyph.
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+.material-symbols-outlined,
+.material-symbols-rounded,
+.material-symbols-sharp {
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  user-select: none;
+}
+
+.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
+.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
+.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
+```
+
 #### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
@@ -88,14 +120,15 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 ```css
 /* Tokens this component needs. Paste once, at `:root`. */
 :root {
-  --error:        #D32F2F;
-  --success:      #2E7D32;
-  --white:        #ffffff;
-  --gray-500:     #949494;
-  --gray-600:     #7A7A7A;
-  --gray-900:     #272727;
-  --radius-pill:  9999px;
-  --font-sans:    'Inter', system-ui, -apple-system, sans-serif;
+  --error:           #D32F2F;
+  --success:         #2E7D32;
+  --white:           #ffffff;
+  --gray-500:        #949494;
+  --gray-600:        #7A7A7A;
+  --gray-900:        #272727;
+  --avatar-surface:  #E0E0E0;
+  --radius-pill:     9999px;
+  --font-sans:       'Inter', system-ui, -apple-system, sans-serif;
 }
 
 /* The wrapper exists so the status dot can be positioned against the

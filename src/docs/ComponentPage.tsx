@@ -54,8 +54,14 @@ const CODE_FORMS = [
 function recipeCss(slug: string): string {
   const recipe = recipes[slug]
   const doc = componentDocs[slug] ?? ''
-  const fenced = doc.slice(doc.indexOf('#### Without the package')).match(/```css\n([\s\S]*?)```/)
-  return fenced ? fenced[1].trimEnd() : recipe.css
+  const from = doc.indexOf('#### One-time setup')
+  if (from === -1) return recipe.css
+  // Both fences: the fonts and icon class first, then this component's tokens
+  // and rules. Copying only the second produced correct colours with every
+  // icon rendered as its own name, because the class that makes Material
+  // Symbols a font was never part of what got copied.
+  const fences = [...doc.slice(from).matchAll(/```css\n([\s\S]*?)```/g)].map((m) => m[1].trimEnd())
+  return fences.length > 0 ? fences.join('\n\n') : recipe.css
 }
 
 /** Names a copy block and says plainly when to reach for it. */

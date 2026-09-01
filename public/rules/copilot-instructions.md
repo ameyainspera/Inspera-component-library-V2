@@ -52,9 +52,10 @@ They live in this repo's `public/` directory (set INSPERA_DS_BASE_URL and regene
 
 ## Foundations
 
-Every value below is a CSS custom property. Import the stylesheet once at the
-app root and reference tokens as `var(--primary)`, `var(--space-4)`,
-`var(--radius-md)`. Never hardcode a colour that is not in this list.
+Every value below is a CSS custom property, declared in the `:root` block under
+Setup. Paste that block once, then reference tokens as `var(--primary)`,
+`var(--space-4)`, `var(--radius-md)`. Never hardcode a colour that is not in
+this list.
 
 ### Colour - brand & semantic
 
@@ -425,6 +426,120 @@ Build from: `EmptyState`, `Button`.
 | Nothing to show | EmptyState |
 
 Never put something the user must retain or act on later in a Snackbar.
+
+## A complete screen
+
+A page header, a filter bar, a table with status badges, and pagination. Built from Breadcrumb, Button, Select, DatePicker, Tag, Table, Badge and Pagination - no new components.
+
+- The page owns exactly one Primary button. Everything else is Secondary, Outline or Text.
+- Active filters appear as removable Tags, so the current state is readable as text and not only as colour.
+- Status is a Badge with a word in it. A bare coloured dot is not a status.
+- The numeric column is right-aligned; the header stays short.
+- Spacing is the scale: 24px page padding, 16px between regions, 8px inside a control cluster.
+
+```tsx
+import {
+  Breadcrumb, Button, Select, DatePicker, Tag, Table, Badge, Pagination,
+} from '@inspera/components'
+
+export function AssessmentList() {
+  return (
+    <div style={{ padding: 'var(--space-6)', display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
+      <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Assessments' }]} />
+
+      <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 'var(--space-4)' }}>
+        <h1 className="inspera-h1" style={{ margin: 0 }}>Assessments</h1>
+        <Button label="New assessment" intent="Primary" content="Icon + Text" icon="add" />
+      </header>
+
+      <div style={{ display: 'flex', alignItems: 'flex-end', gap: 'var(--space-2)', flexWrap: 'wrap' }}>
+        <Select label="Status" options={['All', 'Live', 'Draft', 'Scheduled']} value="All" />
+        <DatePicker label="Created after" value="2026-01-01" />
+        <Button label="Reset" intent="Text" />
+      </div>
+
+      <div style={{ display: 'flex', gap: 'var(--space-2)', flexWrap: 'wrap' }}>
+        <Tag label="Status: Live" removable />
+        <Tag label="Created after 1 Jan" removable />
+      </div>
+
+      <Table
+        columns={[
+          { key: 'name', header: 'Assessment' },
+          { key: 'items', header: 'Items', align: 'right' },
+          { key: 'status', header: 'Status' },
+        ]}
+        rows={[
+          { name: 'Algebra Quiz', items: 24, status: <Badge label="Live" intent="Success" /> },
+          { name: 'History Midterm', items: 40, status: <Badge label="Draft" intent="Neutral" /> },
+          { name: 'Biology Final', items: 60, status: <Badge label="Scheduled" intent="Info" /> },
+        ]}
+      />
+
+      <Pagination page={1} totalPages={8} />
+    </div>
+  )
+}
+```
+
+Same screen without the package:
+
+```html
+<!-- Requires the one-time setup block and the tokens from Setup. -->
+<div class="page">
+  <nav class="inspera-breadcrumb" aria-label="Breadcrumb">
+    <ol>
+      <li><a class="inspera-breadcrumb__link" href="/">Home</a></li>
+      <li aria-current="page">Assessments</li>
+    </ol>
+  </nav>
+
+  <header class="page__header">
+    <h1 class="inspera-h1">Assessments</h1>
+    <button type="button" class="inspera-btn inspera-btn--primary">
+      <span class="material-symbols-outlined" aria-hidden="true">add</span>
+      <span>New assessment</span>
+    </button>
+  </header>
+
+  <div class="page__filters">
+    <!-- Select and DatePicker markup: see their own sections. -->
+    <button type="button" class="inspera-btn inspera-btn--text">Reset</button>
+  </div>
+
+  <div class="page__tags">
+    <span class="inspera-tag">Status: Live
+      <button type="button" class="inspera-tag__remove" aria-label="Remove status filter">
+        <span class="material-symbols-outlined" aria-hidden="true">close</span>
+      </button>
+    </span>
+  </div>
+
+  <table class="inspera-table">
+    <thead>
+      <tr>
+        <th scope="col">Assessment</th>
+        <th scope="col" class="inspera-table__num">Items</th>
+        <th scope="col">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Algebra Quiz</td>
+        <td class="inspera-table__num">24</td>
+        <td><span class="inspera-badge inspera-badge--success">Live</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<style>
+  .page          { padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-4); }
+  .page__header  { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); }
+  .page__filters { display: flex; align-items: flex-end; gap: var(--space-2); flex-wrap: wrap; }
+  .page__tags    { display: flex; gap: var(--space-2); flex-wrap: wrap; }
+</style>
+```
 
 ## Before you call it done
 

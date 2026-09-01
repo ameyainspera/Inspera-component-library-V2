@@ -6,9 +6,10 @@ setup). Reference them as `var(--primary)`, `var(--radius-md)`,
 
 ## Foundations
 
-Every value below is a CSS custom property. Import the stylesheet once at the
-app root and reference tokens as `var(--primary)`, `var(--space-4)`,
-`var(--radius-md)`. Never hardcode a colour that is not in this list.
+Every value below is a CSS custom property, declared in the `:root` block under
+Setup. Paste that block once, then reference tokens as `var(--primary)`,
+`var(--space-4)`, `var(--radius-md)`. Never hardcode a colour that is not in
+this list.
 
 ### Colour - brand & semantic
 

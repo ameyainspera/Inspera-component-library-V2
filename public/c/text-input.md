@@ -79,6 +79,38 @@ import { TextInput } from '@inspera/components'
 
 **Deprecated aliases** (do not use): `Text inputs`, `Content`, `Content (small)`
 
+#### One-time setup
+
+Paste this once, at the root of the project. Without it the component inherits
+the host tool's fonts and any icon renders as its own name instead of a glyph.
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+.material-symbols-outlined,
+.material-symbols-rounded,
+.material-symbols-sharp {
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  user-select: none;
+}
+
+.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
+.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
+.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
+```
+
 #### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same

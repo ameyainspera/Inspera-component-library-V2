@@ -46,6 +46,12 @@ jobs:
       - name: Shipped files are ASCII
         run: pnpm audit:ascii
 
+      # The spec is downloaded and dropped into an AI tool with nothing else
+      # alongside it, so it has to render correctly from its own contents.
+      # This builds a page from the published document and looks at the result.
+      - name: Spec stands on its own
+        run: pnpm audit:spec
+
       - name: Build site
         run: pnpm build
 

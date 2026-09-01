@@ -4,8 +4,9 @@
 > document: the foundations, then all 42 components with
 > their real prop APIs.
 >
-> This is the full text. For a smaller starting point that links a spec per
-> component, use llms.txt.
+> This is the full text, sized for an uploaded context file. A tool that
+> re-sends its context on every message should use llms.txt instead, which
+> links a spec per component.
 
 > **`@inspera/components` is NOT published.** The package builds from this repo, but the @inspera scope is unclaimed, so `npm i @inspera/components` currently fails with a 404.
 > Do not tell anyone to install it, and do not assume it resolves.
@@ -57,11 +58,382 @@ variant with no error at all. Variant *values* are Capitalised
 - Do not infer a brand colour or visual style from framework defaults.
 - Mark a genuinely missing primitive `DESIGN_SYSTEM_GAP` rather than presenting it as canonical.
 
+## Setup
+
+Paste these three blocks once, at the root of the project, before using any
+component below. Without them the components inherit the host tool's fonts and
+every icon renders as its own name.
+
+**1. Fonts.** `'Inter'` (all ui text), `'Noto Sans Mono'` (code, identifiers, token values), `'Noto Serif'` (long-form or editorial content).
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+```
+
+**2. The icon class.** Every component that shows an icon writes
+`<span class="material-symbols-outlined">icon_name</span>`. That class needs
+this rule, or the span shows the literal text instead of the glyph. Icon names
+are lowercase with underscores (`arrow_forward`, `more_vert`); the full set is
+at fonts.google.com/icons, Outlined style only.
+
+```css
+.material-symbols-outlined,
+.material-symbols-rounded,
+.material-symbols-sharp {
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  user-select: none;
+}
+
+.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
+.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
+.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
+```
+
+**3. The tokens.** Every value in this document resolves through one of these.
+Component sections below repeat the subset each one needs, so pasting this block
+makes those repeats redundant - either is fine, this one covers everything
+including the spacing and type scales that the component blocks do not carry.
+
+```css
+:root {
+  /* Brand */
+  --primary: #004080; /* Primary brand / interactive */
+  --secondary: #322060; /* Secondary brand, used sparingly */
+
+  /* Semantic */
+  --error: #D32F2F;
+  --warning: #EF6C00;
+  --info: #0288D1;
+  --success: #2E7D32;
+
+  /* Brand accents */
+  --accent-zest: #FA5101;
+  --accent-berry: #89239A;
+  --accent-algae: #00A788;
+
+  /* Base */
+  --white: #ffffff;
+
+  /* Palette - gray */
+  --gray-100: #F7F7F7;
+  --gray-200: #EDEDED;
+  --gray-300: #D9D9D9;
+  --gray-400: #BCBCBC;
+  --gray-500: #949494;
+  --gray-600: #7A7A7A;
+  --gray-700: #595959;
+  --gray-800: #404040;
+  --gray-900: #272727;
+
+  /* Palette - blue */
+  --blue-100: #F0F7FF;
+  --blue-200: #DBEDFF;
+  --blue-300: #B3D9FF;
+  --blue-400: #7ABDFF;
+  --blue-500: #3399FF;
+  --blue-600: #007AF5;
+  --blue-700: #0059B3;
+  --blue-800: #004080;
+  --blue-900: #002E5C;
+
+  /* Palette - green */
+  --green-100: #F2FDF8;
+  --green-200: #E0FAEF;
+  --green-300: #BDF4DD;
+  --green-400: #8DECC5;
+  --green-500: #50E2A5;
+  --green-600: #1BA76D;
+  --green-700: #147B50;
+  --green-800: #106542;
+  --green-900: #0D4F33;
+
+  /* Palette - red */
+  --red-100: #FEF1F1;
+  --red-200: #FCDEDE;
+  --red-300: #F9B8B8;
+  --red-400: #F58484;
+  --red-500: #F04242;
+  --red-600: #E21212;
+  --red-700: #A50D0D;
+  --red-800: #760A0A;
+  --red-900: #550707;
+
+  /* Palette - yellow */
+  --yellow-100: #FFFCF0;
+  --yellow-200: #FFF8DC;
+  --yellow-300: #FEF0B3;
+  --yellow-400: #FEE67C;
+  --yellow-500: #FDD835;
+  --yellow-600: #F2C602;
+  --yellow-700: #B19102;
+  --yellow-800: #7E6701;
+  --yellow-900: #5B4A01;
+
+  /* Palette - orange */
+  --orange-100: #FFFAF0;
+  --orange-200: #FFF3DC;
+  --orange-300: #FEE5B3;
+  --orange-400: #FED27C;
+  --orange-500: #FDBA35;
+  --orange-600: #F2A202;
+  --orange-700: #D99102;
+  --orange-800: #7E5501;
+  --orange-900: #5B3D01;
+
+  /* Palette - purple */
+  --purple-100: #F6F4FB;
+  --purple-200: #E9E4F6;
+  --purple-300: #D0C6EC;
+  --purple-400: #9F88D7;
+  --purple-500: #8366CC;
+  --purple-600: #603DB8;
+  --purple-700: #462D86;
+  --purple-800: #322060;
+  --purple-900: #241745;
+
+  /* Palette - pink */
+  --pink-100: #FEF1F5;
+  --pink-200: #FCDFE8;
+  --pink-300: #F8B9CE;
+  --pink-400: #F386AB;
+  --pink-500: #ED457D;
+  --pink-600: #DF1659;
+  --pink-700: #A21041;
+  --pink-800: #740B2E;
+  --pink-900: #540821;
+
+  /* Interaction */
+  --primary-hover-overlay: rgba(0, 64, 128, 0.04); /* Primary tint on hover */
+  --primary-focus-ring: rgba(0, 64, 128, 0.3); /* Focus ring on primary controls */
+  --action-active: rgba(0, 0, 0, 0.56); /* Icon / control glyph */
+  --action-hover: rgba(0, 0, 0, 0.04); /* Neutral hover wash */
+  --action-focus: rgba(0, 0, 0, 0.12); /* Neutral focus wash */
+  --action-disabled: rgba(0, 0, 0, 0.38); /* Disabled foreground */
+
+  /* Text */
+  --text-primary: rgba(0, 0, 0, 0.87); /* Body and heading text */
+  --text-secondary: var(--gray-600); /* Supporting and helper text */
+  --text-disabled: var(--action-disabled); /* Disabled text */
+  --text-on-primary: #ffffff; /* Text on a primary-filled surface */
+
+  /* Status */
+  --info-surface: #E1F5FE;  /* Info Alert/Badge/Tag fill. Pending Figma verification */
+  --success-surface: #E8F5E9; /* Success fill. Pending Figma verification */
+  --warning-surface: #FFF3E0; /* Warning fill. Pending Figma verification */
+  --error-surface: #FFEBEE; /* Error fill. Pending Figma verification */
+
+  /* Controls */
+  --border-control: #C4C4C4;      /* Resting border on inputs, select, toggle track. Pending Figma verification */
+  --border-control-strong: #8C8C8C; /* Hover border; checkbox and radio resting border. Pending Figma verification */
+  --text-placeholder: #8C8C8C;    /* Placeholder text. Pending Figma verification */
+  --surface-disabled: #F5F5F5;    /* Disabled control fill. Pending Figma verification */
+  --surface-readonly: var(--gray-100); /* Read-only control fill */
+  --surface-neutral: #F0F0F0;     /* Neutral Badge/Tag fill. Pending Figma verification */
+  --avatar-surface: #E0E0E0;      /* Avatar fallback fill. Pending Figma verification */
+
+  /* Surface */
+  --background: var(--gray-100); /* App canvas */
+  --surface: var(--white);     /* Raised surface (cards, panels, inputs) */
+  --surface-sunken: var(--gray-100); /* Recessed surface (wells, read-only fields) */
+  --border: var(--gray-200);   /* Hairline separator */
+  --border-strong: var(--gray-300); /* Control outline */
+  --border-interactive: var(--gray-500); /* Control outline on hover */
+  --muted-foreground: var(--gray-600); /* De-emphasised label text */
+
+  /* Spacing */
+  --space-0: 0px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* Radius */
+  --radius-none: 0px;
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-pill: 9999px;
+
+  /* Elevation */
+  --shadow-100: 0px 4px 4px rgba(39, 39, 39, 0.08), 0px 2px 4px rgba(39, 39, 39, 0.12);
+  --shadow-200: 0px 8px 8px rgba(39, 39, 39, 0.08), 0px 4px 6px rgba(39, 39, 39, 0.12);
+  --shadow-300: 0px 8px 16px rgba(39, 39, 39, 0.08), 0px 6px 8px rgba(39, 39, 39, 0.12);
+  --shadow-400: 0px 8px 24px rgba(39, 39, 39, 0.08), 0px 6px 12px rgba(39, 39, 39, 0.12);
+  --shadow-500: 0px 10px 32px rgba(39, 39, 39, 0.1), 0px 6px 14px rgba(39, 39, 39, 0.12);
+  --shadow-600: 0px 12px 42px rgba(39, 39, 39, 0.12), 0px 8px 18px rgba(39, 39, 39, 0.12);
+
+  /* Effects */
+  --effect-state-focus: 0px 0px 0px 3px var(--blue-300); /* Standard input focus ring */
+  --effect-state-focus-standalone: 0px 0px 0px 3px var(--blue-600); /* High-contrast standalone focus */
+  --effect-state-error: 0px 0px 0px 3px var(--red-300); /* Error ring */
+  --effect-state-hover-light: 0px 0px 0px 3px var(--gray-500); /* Hover outline */
+  --effect-state-focus-on-dark: 0px 0px 0px 3px var(--green-300); /* Focus ring on a dark container */
+  --effect-button-shadow: inset 0px -1px 0px rgba(0, 0, 0, 0.2), 0px 1px 0px rgba(0, 0, 0, 0.08); /* Standard button elevation highlight */
+  --effect-link-underline-dark: inset 0px -1px 0px var(--gray-700); /* Link underline on light ground */
+  --effect-link-underline-blue: inset 0px -1px 0px var(--blue-800); /* Primary link underline */
+  --effect-link-underline-light: inset 0px -1px 0px var(--white); /* Link underline on dark ground */
+  --effect-invert-hack: inset 1000px 0px 0px var(--white); /* Overrides the browser autofill background on inputs */
+
+  /* Border width */
+  --border-width-default: 1px;
+  --border-width-strong: 2px;
+
+  /* Focus ring */
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
+  --focus-ring-color: var(--primary);
+
+  /* Motion - duration */
+  --duration-instant: 0ms;   /* No transition */
+  --duration-fast: 100ms;    /* Hover and focus */
+  --duration-normal: 200ms;  /* Menus, popovers */
+  --duration-slow: 300ms;    /* Dialogs, drawers */
+
+  /* Motion - easing */
+  --easing-standard: cubic-bezier(0.2, 0, 0, 1); /* Default */
+  --easing-enter: cubic-bezier(0, 0, 0.2, 1); /* Entering the screen */
+  --easing-exit: cubic-bezier(0.4, 0, 1, 1); /* Leaving the screen */
+
+  /* Layering */
+  --z-base: 0;
+  --z-sticky: 100;     /* Sticky headers and toolbars */
+  --z-dropdown: 300;   /* Select and Menu panels */
+  --z-popover: 400;
+  --z-overlay: 500;    /* Dialog and Drawer scrim */
+  --z-modal: 600;      /* Dialog and Drawer surface */
+  --z-toast: 700;      /* Snackbar */
+  --z-tooltip: 800;
+
+  /* Breakpoints */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1440px;
+
+  /* Typography - family */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif; /* All UI text */
+  --font-mono: 'Noto Sans Mono', ui-monospace, SFMono-Regular, monospace; /* Code, identifiers, token values */
+  --font-serif: 'Noto Serif', Georgia, serif; /* Long-form or editorial content */
+
+  /* Typography - scale */
+  --default-16-regular-size: 16px;
+  --default-16-regular-weight: 400;
+  --default-16-regular-line-height: 1.25;
+  --default-16-medium-size: 16px;
+  --default-16-medium-weight: 500;
+  --default-16-medium-line-height: 1.25;
+  --link-16-size: 16px;
+  --link-16-weight: 500;
+  --link-16-line-height: 1.25;
+  --regular-14-size: 14px;
+  --regular-14-weight: 400;
+  --regular-14-line-height: 1.4;
+  --regular-18-size: 18px;
+  --regular-18-weight: 400;
+  --regular-18-line-height: 1.4;
+  --regular-20-size: 20px;
+  --regular-20-weight: 400;
+  --regular-20-line-height: 1.4;
+  --regular-22-size: 22px;
+  --regular-22-weight: 400;
+  --regular-22-line-height: 1.4;
+  --regular-26-size: 26px;
+  --regular-26-weight: 400;
+  --regular-26-line-height: 1.4;
+  --medium-14-size: 14px;
+  --medium-14-weight: 500;
+  --medium-14-line-height: 1.4;
+  --medium-18-size: 18px;
+  --medium-18-weight: 500;
+  --medium-18-line-height: 1.4;
+  --medium-20-size: 20px;
+  --medium-20-weight: 500;
+  --medium-20-line-height: 1.4;
+  --medium-22-size: 22px;
+  --medium-22-weight: 500;
+  --medium-22-line-height: 1.4;
+  --medium-26-size: 26px;
+  --medium-26-weight: 500;
+  --medium-26-line-height: 1.4;
+  --h1-size: 28.83px;
+  --h1-weight: 600;
+  --h1-line-height: 1.12;
+  --h2-size: 22.78px;
+  --h2-weight: 500;
+  --h2-line-height: 1.12;
+  --h3-size: 20.25px;
+  --h3-weight: 500;
+  --h3-line-height: 1.12;
+  --h4-size: 18px;
+  --h4-weight: 500;
+  --h4-line-height: 1.12;
+  --h5-size: 16px;
+  --h5-weight: 500;
+  --h5-line-height: 1.12;
+  --h6-size: 12px;
+  --h6-weight: 500;
+  --h6-line-height: 1.12;
+  --h6-tracking: 1.6px;
+  --semibold-16-size: 16px;
+  --semibold-16-weight: 600;
+  --semibold-16-line-height: 1.25;
+  --allcaps-12-size: 12px;
+  --allcaps-12-weight: 600;
+  --allcaps-12-line-height: 1.12;
+  --allcaps-12-tracking: 1.6px;
+  --paragraph-default-size: 16px;
+  --paragraph-default-weight: 400;
+  --paragraph-default-line-height: 1.5;
+  --paragraph-content-size: 16px;
+  --paragraph-content-weight: 400;
+  --paragraph-content-line-height: 1.5;
+  --paragraph-captions-size: 12px;
+  --paragraph-captions-weight: 400;
+  --paragraph-captions-line-height: 1.2;
+  --paragraph-heading-size: 20.25px;
+  --paragraph-heading-weight: 500;
+  --paragraph-heading-line-height: 1.12;
+  --mono-16-size: 16px;
+  --mono-16-weight: 400;
+  --mono-16-line-height: 1.5;
+  --serif-16-size: 16px;
+  --serif-16-weight: 400;
+  --serif-16-line-height: 1.5;
+  --documentation-size: 14px;
+  --documentation-weight: 300;
+  --documentation-line-height: 1.4;
+}
+
+```
+
+
 ## Foundations
 
-Every value below is a CSS custom property. Import the stylesheet once at the
-app root and reference tokens as `var(--primary)`, `var(--space-4)`,
-`var(--radius-md)`. Never hardcode a colour that is not in this list.
+Every value below is a CSS custom property, declared in the `:root` block under
+Setup. Paste that block once, then reference tokens as `var(--primary)`,
+`var(--space-4)`, `var(--radius-md)`. Never hardcode a colour that is not in
+this list.
 
 ### Colour - brand & semantic
 
@@ -535,6 +907,120 @@ Build from: `EmptyState`, `Button`.
 | Nothing to show | EmptyState |
 
 Never put something the user must retain or act on later in a Snackbar.
+
+## A complete screen
+
+A page header, a filter bar, a table with status badges, and pagination. Built from Breadcrumb, Button, Select, DatePicker, Tag, Table, Badge and Pagination - no new components.
+
+- The page owns exactly one Primary button. Everything else is Secondary, Outline or Text.
+- Active filters appear as removable Tags, so the current state is readable as text and not only as colour.
+- Status is a Badge with a word in it. A bare coloured dot is not a status.
+- The numeric column is right-aligned; the header stays short.
+- Spacing is the scale: 24px page padding, 16px between regions, 8px inside a control cluster.
+
+```tsx
+import {
+  Breadcrumb, Button, Select, DatePicker, Tag, Table, Badge, Pagination,
+} from '@inspera/components'
+
+export function AssessmentList() {
+  return (
+    <div style={{ padding: 'var(--space-6)', display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
+      <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Assessments' }]} />
+
+      <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 'var(--space-4)' }}>
+        <h1 className="inspera-h1" style={{ margin: 0 }}>Assessments</h1>
+        <Button label="New assessment" intent="Primary" content="Icon + Text" icon="add" />
+      </header>
+
+      <div style={{ display: 'flex', alignItems: 'flex-end', gap: 'var(--space-2)', flexWrap: 'wrap' }}>
+        <Select label="Status" options={['All', 'Live', 'Draft', 'Scheduled']} value="All" />
+        <DatePicker label="Created after" value="2026-01-01" />
+        <Button label="Reset" intent="Text" />
+      </div>
+
+      <div style={{ display: 'flex', gap: 'var(--space-2)', flexWrap: 'wrap' }}>
+        <Tag label="Status: Live" removable />
+        <Tag label="Created after 1 Jan" removable />
+      </div>
+
+      <Table
+        columns={[
+          { key: 'name', header: 'Assessment' },
+          { key: 'items', header: 'Items', align: 'right' },
+          { key: 'status', header: 'Status' },
+        ]}
+        rows={[
+          { name: 'Algebra Quiz', items: 24, status: <Badge label="Live" intent="Success" /> },
+          { name: 'History Midterm', items: 40, status: <Badge label="Draft" intent="Neutral" /> },
+          { name: 'Biology Final', items: 60, status: <Badge label="Scheduled" intent="Info" /> },
+        ]}
+      />
+
+      <Pagination page={1} totalPages={8} />
+    </div>
+  )
+}
+```
+
+Same screen without the package:
+
+```html
+<!-- Requires the one-time setup block and the tokens from Setup. -->
+<div class="page">
+  <nav class="inspera-breadcrumb" aria-label="Breadcrumb">
+    <ol>
+      <li><a class="inspera-breadcrumb__link" href="/">Home</a></li>
+      <li aria-current="page">Assessments</li>
+    </ol>
+  </nav>
+
+  <header class="page__header">
+    <h1 class="inspera-h1">Assessments</h1>
+    <button type="button" class="inspera-btn inspera-btn--primary">
+      <span class="material-symbols-outlined" aria-hidden="true">add</span>
+      <span>New assessment</span>
+    </button>
+  </header>
+
+  <div class="page__filters">
+    <!-- Select and DatePicker markup: see their own sections. -->
+    <button type="button" class="inspera-btn inspera-btn--text">Reset</button>
+  </div>
+
+  <div class="page__tags">
+    <span class="inspera-tag">Status: Live
+      <button type="button" class="inspera-tag__remove" aria-label="Remove status filter">
+        <span class="material-symbols-outlined" aria-hidden="true">close</span>
+      </button>
+    </span>
+  </div>
+
+  <table class="inspera-table">
+    <thead>
+      <tr>
+        <th scope="col">Assessment</th>
+        <th scope="col" class="inspera-table__num">Items</th>
+        <th scope="col">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Algebra Quiz</td>
+        <td class="inspera-table__num">24</td>
+        <td><span class="inspera-badge inspera-badge--success">Live</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<style>
+  .page          { padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-4); }
+  .page__header  { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); }
+  .page__filters { display: flex; align-items: flex-end; gap: var(--space-2); flex-wrap: wrap; }
+  .page__tags    { display: flex; gap: var(--space-2); flex-wrap: wrap; }
+</style>
+```
 
 ## Before you call it done
 
@@ -3504,14 +3990,15 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 ```css
 /* Tokens this component needs. Paste once, at `:root`. */
 :root {
-  --error:        #D32F2F;
-  --success:      #2E7D32;
-  --white:        #ffffff;
-  --gray-500:     #949494;
-  --gray-600:     #7A7A7A;
-  --gray-900:     #272727;
-  --radius-pill:  9999px;
-  --font-sans:    'Inter', system-ui, -apple-system, sans-serif;
+  --error:           #D32F2F;
+  --success:         #2E7D32;
+  --white:           #ffffff;
+  --gray-500:        #949494;
+  --gray-600:        #7A7A7A;
+  --gray-900:        #272727;
+  --avatar-surface:  #E0E0E0;
+  --radius-pill:     9999px;
+  --font-sans:       'Inter', system-ui, -apple-system, sans-serif;
 }
 
 /* The wrapper exists so the status dot can be positioned against the

@@ -41,6 +41,38 @@ import { Button } from '@inspera/kit'
 
 **Deprecated aliases** (do not use): `Primary button`, `Secondary button`, `Outline button`, `Text button`, `Success button`, `Warning button`
 
+#### One-time setup
+
+Paste this once, at the root of the project. Without it the component inherits
+the host tool's fonts and any icon renders as its own name instead of a glyph.
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+.material-symbols-outlined,
+.material-symbols-rounded,
+.material-symbols-sharp {
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  user-select: none;
+}
+
+.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
+.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
+.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
+```
+
 #### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
@@ -216,6 +248,38 @@ import { TextInput } from '@inspera/kit'
 **Don't:** Do not use placeholder as the only label; Do not disable inputs without explanation.
 
 **Deprecated aliases** (do not use): `Text inputs`, `Content`, `Content (small)`
+
+#### One-time setup
+
+Paste this once, at the root of the project. Without it the component inherits
+the host tool's fonts and any icon renders as its own name instead of a glyph.
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+.material-symbols-outlined,
+.material-symbols-rounded,
+.material-symbols-sharp {
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  user-select: none;
+}
+
+.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
+.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
+.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
+```
 
 #### Without the package - exact HTML and CSS
 
@@ -400,6 +464,38 @@ import { Checkbox } from '@inspera/kit'
 
 **Deprecated aliases** (do not use): `Checkbox/Unchecked`, `Checkbox/Checked`, `Checkbox with label`, `Checkbox (fill width)`, `Checkbox (Cards)`
 
+#### One-time setup
+
+Paste this once, at the root of the project. Without it the component inherits
+the host tool's fonts and any icon renders as its own name instead of a glyph.
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+.material-symbols-outlined,
+.material-symbols-rounded,
+.material-symbols-sharp {
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  user-select: none;
+}
+
+.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
+.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
+.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
+```
+
 #### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
@@ -566,6 +662,38 @@ import { RadioButton } from '@inspera/kit'
 
 **Deprecated aliases** (do not use): `Radiobutton`, `Radiobuttons`, `Radio Button New-BonW`, `Radio Button New-BonY`, `Radio Button New-WonB`, `Radio Button New-YonB`
 
+#### One-time setup
+
+Paste this once, at the root of the project. Without it the component inherits
+the host tool's fonts and any icon renders as its own name instead of a glyph.
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+.material-symbols-outlined,
+.material-symbols-rounded,
+.material-symbols-sharp {
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  user-select: none;
+}
+
+.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
+.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
+.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
+```
+
 #### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
@@ -705,6 +833,38 @@ import { Select } from '@inspera/kit'
 **Don't:** Do not use for fewer than 3 options - use Radio Button instead; Do not nest selects inside other selects.
 
 **Deprecated aliases** (do not use): `Select / Fixed width`, `Select / Content adaptable`, `Dropdown`, `Dropdown with Label`
+
+#### One-time setup
+
+Paste this once, at the root of the project. Without it the component inherits
+the host tool's fonts and any icon renders as its own name instead of a glyph.
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+.material-symbols-outlined,
+.material-symbols-rounded,
+.material-symbols-sharp {
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  user-select: none;
+}
+
+.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
+.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
+.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
+```
 
 #### Without the package - exact HTML and CSS
 
@@ -899,6 +1059,38 @@ import { Toggle } from '@inspera/kit'
 
 **Deprecated aliases** (do not use): `Switch`, `Toggle switch`
 
+#### One-time setup
+
+Paste this once, at the root of the project. Without it the component inherits
+the host tool's fonts and any icon renders as its own name instead of a glyph.
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+.material-symbols-outlined,
+.material-symbols-rounded,
+.material-symbols-sharp {
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  user-select: none;
+}
+
+.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
+.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
+.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
+```
+
 #### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
@@ -1041,6 +1233,38 @@ import { Textarea } from '@inspera/kit'
 **Don't:** Do not use for single-line input - use Text Input instead; Do not disable resize without reason.
 
 **Deprecated aliases** (do not use): `Text area`, `Multiline input`, `Comment box`
+
+#### One-time setup
+
+Paste this once, at the root of the project. Without it the component inherits
+the host tool's fonts and any icon renders as its own name instead of a glyph.
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+.material-symbols-outlined,
+.material-symbols-rounded,
+.material-symbols-sharp {
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  user-select: none;
+}
+
+.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
+.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
+.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
+```
 
 #### Without the package - exact HTML and CSS
 
@@ -1198,6 +1422,38 @@ import { FormField } from '@inspera/kit'
 **Don't:** Do not wrap multiple unrelated controls; Do not omit the label for accessibility.
 
 **Deprecated aliases** (do not use): `Field wrapper`, `Input group`
+
+#### One-time setup
+
+Paste this once, at the root of the project. Without it the component inherits
+the host tool's fonts and any icon renders as its own name instead of a glyph.
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+.material-symbols-outlined,
+.material-symbols-rounded,
+.material-symbols-sharp {
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  user-select: none;
+}
+
+.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
+.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
+.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
+```
 
 #### Without the package - exact HTML and CSS
 
@@ -1403,6 +1659,38 @@ import { Slider } from '@inspera/kit'
 
 **Deprecated aliases** (do not use): `Range`, `Range slider`
 
+#### One-time setup
+
+Paste this once, at the root of the project. Without it the component inherits
+the host tool's fonts and any icon renders as its own name instead of a glyph.
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+.material-symbols-outlined,
+.material-symbols-rounded,
+.material-symbols-sharp {
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  user-select: none;
+}
+
+.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
+.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
+.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
+```
+
 #### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
@@ -1572,6 +1860,38 @@ import { SegmentedControl } from '@inspera/kit'
 
 **Deprecated aliases** (do not use): `Segment control`, `Toggle group`, `Button group`
 
+#### One-time setup
+
+Paste this once, at the root of the project. Without it the component inherits
+the host tool's fonts and any icon renders as its own name instead of a glyph.
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+.material-symbols-outlined,
+.material-symbols-rounded,
+.material-symbols-sharp {
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  user-select: none;
+}
+
+.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
+.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
+.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
+```
+
 #### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
@@ -1681,6 +2001,38 @@ import { DatePicker } from '@inspera/kit'
 **Don't:** Do not use for free-form date typing without validation; Do not trap keyboard focus without an escape.
 
 **Deprecated aliases** (do not use): `Calendar input`, `Date field`
+
+#### One-time setup
+
+Paste this once, at the root of the project. Without it the component inherits
+the host tool's fonts and any icon renders as its own name instead of a glyph.
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+.material-symbols-outlined,
+.material-symbols-rounded,
+.material-symbols-sharp {
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  user-select: none;
+}
+
+.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
+.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
+.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
+```
 
 #### Without the package - exact HTML and CSS
 
@@ -1918,6 +2270,38 @@ import { FileUpload } from '@inspera/kit'
 
 **Deprecated aliases** (do not use): `Dropzone`, `File dropzone`, `Uploader`
 
+#### One-time setup
+
+Paste this once, at the root of the project. Without it the component inherits
+the host tool's fonts and any icon renders as its own name instead of a glyph.
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+.material-symbols-outlined,
+.material-symbols-rounded,
+.material-symbols-sharp {
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  user-select: none;
+}
+
+.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
+.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
+.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
+```
+
 #### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
@@ -2076,6 +2460,38 @@ export interface RadioOption {
 **Don't:** Do not use for multi-select - use Checkbox Group; Do not use a single radio alone.
 
 **Deprecated aliases** (do not use): `Radio list`, `Option group`
+
+#### One-time setup
+
+Paste this once, at the root of the project. Without it the component inherits
+the host tool's fonts and any icon renders as its own name instead of a glyph.
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+.material-symbols-outlined,
+.material-symbols-rounded,
+.material-symbols-sharp {
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  user-select: none;
+}
+
+.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
+.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
+.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
+```
 
 #### Without the package - exact HTML and CSS
 
@@ -2246,6 +2662,38 @@ export interface CheckboxOption {
 **Don't:** Do not use for mutually exclusive options - use Radio Group; Do not omit the group label.
 
 **Deprecated aliases** (do not use): `Checkbox list`, `Multi-select group`
+
+#### One-time setup
+
+Paste this once, at the root of the project. Without it the component inherits
+the host tool's fonts and any icon renders as its own name instead of a glyph.
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+.material-symbols-outlined,
+.material-symbols-rounded,
+.material-symbols-sharp {
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  user-select: none;
+}
+
+.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
+.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
+.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
+```
 
 #### Without the package - exact HTML and CSS
 
@@ -2435,6 +2883,38 @@ import { Rating } from '@inspera/kit'
 
 **Deprecated aliases** (do not use): `Star rating`, `Stars`
 
+#### One-time setup
+
+Paste this once, at the root of the project. Without it the component inherits
+the host tool's fonts and any icon renders as its own name instead of a glyph.
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+.material-symbols-outlined,
+.material-symbols-rounded,
+.material-symbols-sharp {
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  user-select: none;
+}
+
+.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
+.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
+.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
+```
+
 #### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
@@ -2555,6 +3035,38 @@ import { OtpInput } from '@inspera/kit'
 **Don't:** Do not require manual box-by-box focus; Do not allow non-numeric characters.
 
 **Deprecated aliases** (do not use): `PIN input`, `Verification code`, `Code input`
+
+#### One-time setup
+
+Paste this once, at the root of the project. Without it the component inherits
+the host tool's fonts and any icon renders as its own name instead of a glyph.
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+.material-symbols-outlined,
+.material-symbols-rounded,
+.material-symbols-sharp {
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  user-select: none;
+}
+
+.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
+.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
+.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
+```
 
 #### Without the package - exact HTML and CSS
 
@@ -2678,6 +3190,38 @@ import { Card } from '@inspera/kit'
 
 **Do:** Use to group related content; Maintain consistent padding within a view; Use raised elevation for primary content cards.
 **Don't:** Do not nest cards inside other cards; Do not use cards for layout-only purposes without content.
+
+#### One-time setup
+
+Paste this once, at the root of the project. Without it the component inherits
+the host tool's fonts and any icon renders as its own name instead of a glyph.
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+.material-symbols-outlined,
+.material-symbols-rounded,
+.material-symbols-sharp {
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  user-select: none;
+}
+
+.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
+.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
+.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
+```
 
 #### Without the package - exact HTML and CSS
 
@@ -2806,6 +3350,38 @@ import { Badge } from '@inspera/kit'
 
 **Deprecated aliases** (do not use): `Status Badge`, `Tag`, `Chip`
 
+#### One-time setup
+
+Paste this once, at the root of the project. Without it the component inherits
+the host tool's fonts and any icon renders as its own name instead of a glyph.
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+.material-symbols-outlined,
+.material-symbols-rounded,
+.material-symbols-sharp {
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  user-select: none;
+}
+
+.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
+.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
+.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
+```
+
 #### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
@@ -2920,6 +3496,38 @@ import { Avatar } from '@inspera/kit'
 **Do:** Use for user profiles and participant lists; Provide meaningful alt text; Use consistent sizing within a context.
 **Don't:** Do not stretch or distort avatar images; Do not use random colors - use a deterministic palette.
 
+#### One-time setup
+
+Paste this once, at the root of the project. Without it the component inherits
+the host tool's fonts and any icon renders as its own name instead of a glyph.
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+.material-symbols-outlined,
+.material-symbols-rounded,
+.material-symbols-sharp {
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  user-select: none;
+}
+
+.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
+.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
+.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
+```
+
 #### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
@@ -2935,14 +3543,15 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 ```css
 /* Tokens this component needs. Paste once, at `:root`. */
 :root {
-  --error:        #D32F2F;
-  --success:      #2E7D32;
-  --white:        #ffffff;
-  --gray-500:     #949494;
-  --gray-600:     #7A7A7A;
-  --gray-900:     #272727;
-  --radius-pill:  9999px;
-  --font-sans:    'Inter', system-ui, -apple-system, sans-serif;
+  --error:           #D32F2F;
+  --success:         #2E7D32;
+  --white:           #ffffff;
+  --gray-500:        #949494;
+  --gray-600:        #7A7A7A;
+  --gray-900:        #272727;
+  --avatar-surface:  #E0E0E0;
+  --radius-pill:     9999px;
+  --font-sans:       'Inter', system-ui, -apple-system, sans-serif;
 }
 
 /* The wrapper exists so the status dot can be positioned against the
@@ -3069,6 +3678,38 @@ export interface TableColumn {
 **Don't:** Do not use tables for page layout; Do not overload rows with unrelated actions.
 
 **Deprecated aliases** (do not use): `Data table`, `Grid`, `Datagrid`
+
+#### One-time setup
+
+Paste this once, at the root of the project. Without it the component inherits
+the host tool's fonts and any icon renders as its own name instead of a glyph.
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+.material-symbols-outlined,
+.material-symbols-rounded,
+.material-symbols-sharp {
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  user-select: none;
+}
+
+.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
+.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
+.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
+```
 
 #### Without the package - exact HTML and CSS
 
@@ -3284,6 +3925,38 @@ export interface AccordionItem {
 
 **Deprecated aliases** (do not use): `Disclosure`, `Collapse`, `Expander`
 
+#### One-time setup
+
+Paste this once, at the root of the project. Without it the component inherits
+the host tool's fonts and any icon renders as its own name instead of a glyph.
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+.material-symbols-outlined,
+.material-symbols-rounded,
+.material-symbols-sharp {
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  user-select: none;
+}
+
+.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
+.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
+.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
+```
+
 #### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
@@ -3440,6 +4113,38 @@ import { Tag } from '@inspera/kit'
 
 **Deprecated aliases** (do not use): `Chip`, `Pill`, `Label`
 
+#### One-time setup
+
+Paste this once, at the root of the project. Without it the component inherits
+the host tool's fonts and any icon renders as its own name instead of a glyph.
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+.material-symbols-outlined,
+.material-symbols-rounded,
+.material-symbols-sharp {
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  user-select: none;
+}
+
+.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
+.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
+.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
+```
+
 #### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
@@ -3573,6 +4278,38 @@ import { Divider } from '@inspera/kit'
 
 **Deprecated aliases** (do not use): `Separator`, `Rule`, `HR`
 
+#### One-time setup
+
+Paste this once, at the root of the project. Without it the component inherits
+the host tool's fonts and any icon renders as its own name instead of a glyph.
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+.material-symbols-outlined,
+.material-symbols-rounded,
+.material-symbols-sharp {
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  user-select: none;
+}
+
+.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
+.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
+.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
+```
+
 #### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
@@ -3697,6 +4434,38 @@ import { EmptyState } from '@inspera/kit'
 **Don't:** Do not leave empty areas blank with no guidance; Do not use for transient loading - use Skeleton.
 
 **Deprecated aliases** (do not use): `Blank slate`, `Zero state`, `No data`
+
+#### One-time setup
+
+Paste this once, at the root of the project. Without it the component inherits
+the host tool's fonts and any icon renders as its own name instead of a glyph.
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+.material-symbols-outlined,
+.material-symbols-rounded,
+.material-symbols-sharp {
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  user-select: none;
+}
+
+.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
+.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
+.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
+```
 
 #### Without the package - exact HTML and CSS
 
@@ -3918,6 +4687,38 @@ export interface AvatarGroupItem {
 
 **Deprecated aliases** (do not use): `Avatar stack`, `Facepile`
 
+#### One-time setup
+
+Paste this once, at the root of the project. Without it the component inherits
+the host tool's fonts and any icon renders as its own name instead of a glyph.
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+.material-symbols-outlined,
+.material-symbols-rounded,
+.material-symbols-sharp {
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  user-select: none;
+}
+
+.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
+.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
+.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
+```
+
 #### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
@@ -4093,6 +4894,38 @@ import { Stat } from '@inspera/kit'
 
 **Deprecated aliases** (do not use): `Metric`, `KPI`, `Stat card`
 
+#### One-time setup
+
+Paste this once, at the root of the project. Without it the component inherits
+the host tool's fonts and any icon renders as its own name instead of a glyph.
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+.material-symbols-outlined,
+.material-symbols-rounded,
+.material-symbols-sharp {
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  user-select: none;
+}
+
+.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
+.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
+.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
+```
+
 #### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
@@ -4232,6 +5065,38 @@ export interface ListItem {
 **Don't:** Do not use for comparable tabular data - use Table; Do not make only part of a row clickable.
 
 **Deprecated aliases** (do not use): `List view`, `Item list`
+
+#### One-time setup
+
+Paste this once, at the root of the project. Without it the component inherits
+the host tool's fonts and any icon renders as its own name instead of a glyph.
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+.material-symbols-outlined,
+.material-symbols-rounded,
+.material-symbols-sharp {
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  user-select: none;
+}
+
+.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
+.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
+.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
+```
 
 #### Without the package - exact HTML and CSS
 
@@ -4407,6 +5272,38 @@ import { Alert } from '@inspera/kit'
 **Do:** Use for contextual inline messages; Match intent to message severity; Keep alert text concise.
 **Don't:** Do not stack more than 2 alerts in the same area; Do not use alerts for permanent content.
 
+#### One-time setup
+
+Paste this once, at the root of the project. Without it the component inherits
+the host tool's fonts and any icon renders as its own name instead of a glyph.
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+.material-symbols-outlined,
+.material-symbols-rounded,
+.material-symbols-sharp {
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  user-select: none;
+}
+
+.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
+.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
+.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
+```
+
 #### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
@@ -4581,6 +5478,38 @@ import { Dialog } from '@inspera/kit'
 **Don't:** Do not open dialogs from other dialogs; Do not use for non-blocking information - use Alert instead.
 
 **Deprecated aliases** (do not use): `Modal`, `Popup`
+
+#### One-time setup
+
+Paste this once, at the root of the project. Without it the component inherits
+the host tool's fonts and any icon renders as its own name instead of a glyph.
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+.material-symbols-outlined,
+.material-symbols-rounded,
+.material-symbols-sharp {
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  user-select: none;
+}
+
+.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
+.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
+.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
+```
 
 #### Without the package - exact HTML and CSS
 
@@ -4766,6 +5695,38 @@ import { Snackbar } from '@inspera/kit'
 
 **Deprecated aliases** (do not use): `Toast`, `Notification bar`
 
+#### One-time setup
+
+Paste this once, at the root of the project. Without it the component inherits
+the host tool's fonts and any icon renders as its own name instead of a glyph.
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+.material-symbols-outlined,
+.material-symbols-rounded,
+.material-symbols-sharp {
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  user-select: none;
+}
+
+.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
+.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
+.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
+```
+
 #### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
@@ -4897,6 +5858,38 @@ import { Tooltip } from '@inspera/kit'
 **Don't:** Do not put critical information only in tooltips; Do not use for interactive content - use Popover instead.
 
 **Deprecated aliases** (do not use): `Tooltips`, `Walkthrough`, `a11y tooltips`
+
+#### One-time setup
+
+Paste this once, at the root of the project. Without it the component inherits
+the host tool's fonts and any icon renders as its own name instead of a glyph.
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+.material-symbols-outlined,
+.material-symbols-rounded,
+.material-symbols-sharp {
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  user-select: none;
+}
+
+.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
+.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
+.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
+```
 
 #### Without the package - exact HTML and CSS
 
@@ -5083,6 +6076,38 @@ import { Progress } from '@inspera/kit'
 
 **Deprecated aliases** (do not use): `Progress bar`, `Loading bar`, `Meter`
 
+#### One-time setup
+
+Paste this once, at the root of the project. Without it the component inherits
+the host tool's fonts and any icon renders as its own name instead of a glyph.
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+.material-symbols-outlined,
+.material-symbols-rounded,
+.material-symbols-sharp {
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  user-select: none;
+}
+
+.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
+.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
+.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
+```
+
 #### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
@@ -5233,6 +6258,38 @@ import { Spinner } from '@inspera/kit'
 
 **Deprecated aliases** (do not use): `Loader`, `Loading indicator`, `Activity indicator`
 
+#### One-time setup
+
+Paste this once, at the root of the project. Without it the component inherits
+the host tool's fonts and any icon renders as its own name instead of a glyph.
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+.material-symbols-outlined,
+.material-symbols-rounded,
+.material-symbols-sharp {
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  user-select: none;
+}
+
+.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
+.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
+.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
+```
+
 #### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
@@ -5330,6 +6387,38 @@ import { Skeleton } from '@inspera/kit'
 **Don't:** Do not animate skeletons indefinitely; Do not use for user-triggered actions - use Spinner.
 
 **Deprecated aliases** (do not use): `Placeholder`, `Shimmer`, `Ghost`
+
+#### One-time setup
+
+Paste this once, at the root of the project. Without it the component inherits
+the host tool's fonts and any icon renders as its own name instead of a glyph.
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+.material-symbols-outlined,
+.material-symbols-rounded,
+.material-symbols-sharp {
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  user-select: none;
+}
+
+.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
+.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
+.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
+```
 
 #### Without the package - exact HTML and CSS
 
@@ -5448,6 +6537,38 @@ import { Popover } from '@inspera/kit'
 **Don't:** Do not use for simple hover hints - use Tooltip; Do not stack popovers.
 
 **Deprecated aliases** (do not use): `Flyout`, `Overlay panel`
+
+#### One-time setup
+
+Paste this once, at the root of the project. Without it the component inherits
+the host tool's fonts and any icon renders as its own name instead of a glyph.
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+.material-symbols-outlined,
+.material-symbols-rounded,
+.material-symbols-sharp {
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  user-select: none;
+}
+
+.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
+.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
+.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
+```
 
 #### Without the package - exact HTML and CSS
 
@@ -5623,6 +6744,38 @@ import { Drawer } from '@inspera/kit'
 
 **Deprecated aliases** (do not use): `Sheet`, `Side panel`, `Off-canvas`
 
+#### One-time setup
+
+Paste this once, at the root of the project. Without it the component inherits
+the host tool's fonts and any icon renders as its own name instead of a glyph.
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+.material-symbols-outlined,
+.material-symbols-rounded,
+.material-symbols-sharp {
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  user-select: none;
+}
+
+.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
+.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
+.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
+```
+
 #### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
@@ -5785,6 +6938,38 @@ export interface TabItem {
 
 **Deprecated aliases** (do not use): `Tab bar`, `Tab navigation`
 
+#### One-time setup
+
+Paste this once, at the root of the project. Without it the component inherits
+the host tool's fonts and any icon renders as its own name instead of a glyph.
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+.material-symbols-outlined,
+.material-symbols-rounded,
+.material-symbols-sharp {
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  user-select: none;
+}
+
+.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
+.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
+.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
+```
+
 #### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
@@ -5929,6 +7114,38 @@ import { Breadcrumb } from '@inspera/kit'
 
 **Deprecated aliases** (do not use): `Breadcrumbs`, `Path navigation`
 
+#### One-time setup
+
+Paste this once, at the root of the project. Without it the component inherits
+the host tool's fonts and any icon renders as its own name instead of a glyph.
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+.material-symbols-outlined,
+.material-symbols-rounded,
+.material-symbols-sharp {
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  user-select: none;
+}
+
+.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
+.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
+.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
+```
+
 #### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
@@ -6055,6 +7272,38 @@ import { Pagination } from '@inspera/kit'
 **Don't:** Do not use for a handful of items; Do not hide the current page indicator.
 
 **Deprecated aliases** (do not use): `Pager`, `Page navigation`
+
+#### One-time setup
+
+Paste this once, at the root of the project. Without it the component inherits
+the host tool's fonts and any icon renders as its own name instead of a glyph.
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+.material-symbols-outlined,
+.material-symbols-rounded,
+.material-symbols-sharp {
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  user-select: none;
+}
+
+.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
+.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
+.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
+```
 
 #### Without the package - exact HTML and CSS
 
@@ -6205,6 +7454,38 @@ export interface MenuItem {
 **Don't:** Do not use for selecting a value - use Select; Do not nest menus more than one level.
 
 **Deprecated aliases** (do not use): `Dropdown menu`, `Action menu`, `Context menu`, `Overflow menu`
+
+#### One-time setup
+
+Paste this once, at the root of the project. Without it the component inherits
+the host tool's fonts and any icon renders as its own name instead of a glyph.
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+.material-symbols-outlined,
+.material-symbols-rounded,
+.material-symbols-sharp {
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  user-select: none;
+}
+
+.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
+.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
+.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
+```
 
 #### Without the package - exact HTML and CSS
 
@@ -6391,6 +7672,38 @@ export interface Step {
 **Don't:** Do not use for non-sequential navigation - use Tabs; Do not exceed a handful of steps.
 
 **Deprecated aliases** (do not use): `Wizard`, `Progress steps`, `Step indicator`
+
+#### One-time setup
+
+Paste this once, at the root of the project. Without it the component inherits
+the host tool's fonts and any icon renders as its own name instead of a glyph.
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+.material-symbols-outlined,
+.material-symbols-rounded,
+.material-symbols-sharp {
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  user-select: none;
+}
+
+.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
+.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
+.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
+```
 
 #### Without the package - exact HTML and CSS
 
@@ -6623,6 +7936,38 @@ import { Link } from '@inspera/kit'
 **Don't:** Do not use links to trigger actions - use Button; Do not use "click here" as link text.
 
 **Deprecated aliases** (do not use): `Hyperlink`, `Text link`, `Anchor`
+
+#### One-time setup
+
+Paste this once, at the root of the project. Without it the component inherits
+the host tool's fonts and any icon renders as its own name instead of a glyph.
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+.material-symbols-outlined,
+.material-symbols-rounded,
+.material-symbols-sharp {
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  user-select: none;
+}
+
+.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
+.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
+.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
+```
 
 #### Without the package - exact HTML and CSS
 

@@ -16,6 +16,7 @@
     "audit:recipes": "tsx scripts/audit-recipes.ts",
     "audit:snippets": "tsx scripts/audit-snippets.ts",
     "audit:ascii": "tsx scripts/audit-ascii.ts",
+    "audit:spec": "tsx scripts/audit-spec-standalone.ts",
     "build:pkg": "cd packages/components && tsup",
     "format": "oxfmt"
   },
