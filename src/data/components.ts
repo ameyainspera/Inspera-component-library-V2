@@ -3,7 +3,7 @@ import type { ComponentSpec } from './types'
 // SOURCE OF TRUTH for what each component *means*: purpose, accessibility
 // contract, do/dont guidance, and legacy alias names.
 //
-// Prop APIs are NOT defined here — they are derived from the TypeScript
+// Prop APIs are NOT defined here - they are derived from the TypeScript
 // interfaces in src/components/inspera/*.tsx by scripts/build-portable.ts.
 
 export const components: Record<string, ComponentSpec> = {
@@ -66,7 +66,7 @@ export const components: Record<string, ComponentSpec> = {
     },
     usage: {
       do: ['Use for multi-select scenarios', 'Always provide a label for each checkbox', 'Group related options together'],
-      dont: ['Do not use for mutually exclusive options — use Radio Button instead', 'Do not use without a label'],
+      dont: ['Do not use for mutually exclusive options - use Radio Button instead', 'Do not use without a label'],
     },
   },
 
@@ -86,7 +86,7 @@ export const components: Record<string, ComponentSpec> = {
     },
     usage: {
       do: ['Use for mutually exclusive options', 'Always group inside a radiogroup', 'Pre-select a default when appropriate'],
-      dont: ['Do not use for multi-select — use Checkbox instead', 'Do not use a single radio button alone'],
+      dont: ['Do not use for multi-select - use Checkbox instead', 'Do not use a single radio button alone'],
     },
   },
 
@@ -106,7 +106,7 @@ export const components: Record<string, ComponentSpec> = {
     },
     usage: {
       do: ['Use for 5+ options where space is limited', 'Always provide a label', 'Show a clear placeholder when no option is selected'],
-      dont: ['Do not use for fewer than 3 options — use Radio Button instead', 'Do not nest selects inside other selects'],
+      dont: ['Do not use for fewer than 3 options - use Radio Button instead', 'Do not nest selects inside other selects'],
     },
   },
 
@@ -126,7 +126,7 @@ export const components: Record<string, ComponentSpec> = {
     },
     usage: {
       do: ['Use for immediate on/off settings', 'Provide a clear label describing the setting', 'Show the current state visually'],
-      dont: ['Do not use for form submissions — use Checkbox instead', 'Do not use without a visible label'],
+      dont: ['Do not use for form submissions - use Checkbox instead', 'Do not use without a visible label'],
     },
   },
 
@@ -165,7 +165,7 @@ export const components: Record<string, ComponentSpec> = {
       ariaNotes: ['Use aria-label for icon-only badges', 'Use role="status" for dynamic count badges'],
     },
     usage: {
-      do: ['Use for status indicators and counts', 'Keep labels short — 1 to 2 words', 'Use intent colors consistently'],
+      do: ['Use for status indicators and counts', 'Keep labels short - 1 to 2 words', 'Use intent colors consistently'],
       dont: ['Do not use for long text content', 'Do not make badges interactive without clear affordance'],
     },
   },
@@ -186,7 +186,7 @@ export const components: Record<string, ComponentSpec> = {
     },
     usage: {
       do: ['Use for user profiles and participant lists', 'Provide meaningful alt text', 'Use consistent sizing within a context'],
-      dont: ['Do not stretch or distort avatar images', 'Do not use random colors — use a deterministic palette'],
+      dont: ['Do not stretch or distort avatar images', 'Do not use random colors - use a deterministic palette'],
     },
   },
 
@@ -202,7 +202,7 @@ export const components: Record<string, ComponentSpec> = {
     accessibility: {
       role: 'alert',
       keyboard: true,
-      ariaNotes: ['Error and Warning announce as role="alert"; Info and Success as a polite role="status" — never both on one element, since role="alert" already implies assertive', 'Close button must have aria-label="Close alert"'],
+      ariaNotes: ['Error and Warning announce as role="alert"; Info and Success as a polite role="status" - never both on one element, since role="alert" already implies assertive', 'Close button must have aria-label="Close alert"'],
     },
     usage: {
       do: ['Use for contextual inline messages', 'Match intent to message severity', 'Keep alert text concise'],
@@ -226,7 +226,7 @@ export const components: Record<string, ComponentSpec> = {
     },
     usage: {
       do: ['Use for confirmations and critical decisions', 'Always provide a way to close the dialog', 'Keep dialog content focused and concise'],
-      dont: ['Do not open dialogs from other dialogs', 'Do not use for non-blocking information — use Alert instead'],
+      dont: ['Do not open dialogs from other dialogs', 'Do not use for non-blocking information - use Alert instead'],
     },
   },
 
@@ -246,7 +246,7 @@ export const components: Record<string, ComponentSpec> = {
     },
     usage: {
       do: ['Use for brief confirmation messages', 'Include an undo action when appropriate', 'Limit to one snackbar at a time'],
-      dont: ['Do not use for critical errors — use Alert or Dialog instead', 'Do not stack multiple snackbars'],
+      dont: ['Do not use for critical errors - use Alert or Dialog instead', 'Do not stack multiple snackbars'],
     },
   },
 
@@ -266,7 +266,7 @@ export const components: Record<string, ComponentSpec> = {
     },
     usage: {
       do: ['Use for supplementary information', 'Keep tooltip text short and scannable', 'Position to avoid clipping viewport edges'],
-      dont: ['Do not put critical information only in tooltips', 'Do not use for interactive content — use Popover instead'],
+      dont: ['Do not put critical information only in tooltips', 'Do not use for interactive content - use Popover instead'],
     },
   },
 
@@ -286,7 +286,7 @@ export const components: Record<string, ComponentSpec> = {
     },
     usage: {
       do: ['Use to organize related content sections', 'Label tabs clearly and concisely', 'Use a maximum of 6 tabs per set'],
-      dont: ['Do not use tabs for sequential steps — use a stepper instead', 'Do not nest tab sets inside other tab sets'],
+      dont: ['Do not use tabs for sequential steps - use a stepper instead', 'Do not nest tab sets inside other tab sets'],
     },
   },
 
@@ -326,7 +326,7 @@ export const components: Record<string, ComponentSpec> = {
     },
     usage: {
       do: ['Always include a visible label', 'Use rows to hint expected length', 'Show a character counter when a max length applies'],
-      dont: ['Do not use for single-line input — use Text Input instead', 'Do not disable resize without reason'],
+      dont: ['Do not use for single-line input - use Text Input instead', 'Do not disable resize without reason'],
     },
   },
 
@@ -366,7 +366,7 @@ export const components: Record<string, ComponentSpec> = {
     },
     usage: {
       do: ['Use for adjustable numeric ranges', 'Show the current value for precision', 'Provide a clear label'],
-      dont: ['Do not use for exact numeric entry — use Text Input instead', 'Do not use without min/max bounds'],
+      dont: ['Do not use for exact numeric entry - use Text Input instead', 'Do not use without min/max bounds'],
     },
   },
 
@@ -385,8 +385,8 @@ export const components: Record<string, ComponentSpec> = {
       ariaNotes: ['Container uses role="radiogroup"', 'Each segment uses role="radio" with aria-checked', 'Arrow keys move between segments'],
     },
     usage: {
-      do: ['Use for 2–4 mutually exclusive views', 'Keep labels short and parallel', 'Show the active segment clearly'],
-      dont: ['Do not use for more than 4 options — use Tabs or Select', 'Do not use for multi-select'],
+      do: ['Use for 2-4 mutually exclusive views', 'Keep labels short and parallel', 'Show the active segment clearly'],
+      dont: ['Do not use for more than 4 options - use Tabs or Select', 'Do not use for multi-select'],
     },
   },
 
@@ -445,8 +445,8 @@ export const components: Record<string, ComponentSpec> = {
       ariaNotes: ['Container uses role="radiogroup" with an accessible label', 'Each option is a radio with aria-checked', 'Arrow keys navigate between options'],
     },
     usage: {
-      do: ['Use for single selection among 2–6 options', 'Provide a group label', 'Pre-select a sensible default'],
-      dont: ['Do not use for multi-select — use Checkbox Group', 'Do not use a single radio alone'],
+      do: ['Use for single selection among 2-6 options', 'Provide a group label', 'Pre-select a sensible default'],
+      dont: ['Do not use for multi-select - use Checkbox Group', 'Do not use a single radio alone'],
     },
   },
 
@@ -466,7 +466,7 @@ export const components: Record<string, ComponentSpec> = {
     },
     usage: {
       do: ['Use for selecting multiple related options', 'Provide a group label', 'Keep options parallel and concise'],
-      dont: ['Do not use for mutually exclusive options — use Radio Group', 'Do not omit the group label'],
+      dont: ['Do not use for mutually exclusive options - use Radio Group', 'Do not omit the group label'],
     },
   },
 
@@ -568,8 +568,8 @@ export const components: Record<string, ComponentSpec> = {
       ariaNotes: ['Removable tags expose a button with aria-label "Remove {label}"', 'Interactive tags must be keyboard focusable', 'Use aria-label for icon-only tags'],
     },
     usage: {
-      do: ['Use for filters, categories, and selections', 'Keep labels to 1–2 words', 'Provide a remove control when tags are dismissible'],
-      dont: ['Do not use for status that never changes — use Badge', 'Do not pack long text into a tag'],
+      do: ['Use for filters, categories, and selections', 'Keep labels to 1-2 words', 'Provide a remove control when tags are dismissible'],
+      dont: ['Do not use for status that never changes - use Badge', 'Do not pack long text into a tag'],
     },
   },
 
@@ -609,7 +609,7 @@ export const components: Record<string, ComponentSpec> = {
     },
     usage: {
       do: ['Explain why the area is empty', 'Offer a clear next action when possible', 'Keep the tone helpful'],
-      dont: ['Do not leave empty areas blank with no guidance', 'Do not use for transient loading — use Skeleton'],
+      dont: ['Do not leave empty areas blank with no guidance', 'Do not use for transient loading - use Skeleton'],
     },
   },
 
@@ -669,7 +669,7 @@ export const components: Record<string, ComponentSpec> = {
     },
     usage: {
       do: ['Use for settings, results, and simple records', 'Keep primary text scannable', 'Use secondary text for supporting detail'],
-      dont: ['Do not use for comparable tabular data — use Table', 'Do not make only part of a row clickable'],
+      dont: ['Do not use for comparable tabular data - use Table', 'Do not make only part of a row clickable'],
     },
   },
 
@@ -721,7 +721,7 @@ export const components: Record<string, ComponentSpec> = {
     keywords: ['placeholder', 'loading', 'shimmer', 'ghost', 'pending'],
     status: 'ready',
     deprecatedAliases: ['Placeholder', 'Shimmer', 'Ghost'],
-    tokens: ['gradient var(--gray-200)→var(--gray-100)', 'keyframes inspera-shimmer', 'radius.sm / radius.pill'],
+    tokens: ['gradient var(--gray-200)->var(--gray-100)', 'keyframes inspera-shimmer', 'radius.sm / radius.pill'],
     accessibility: {
       role: 'presentation',
       keyboard: false,
@@ -729,7 +729,7 @@ export const components: Record<string, ComponentSpec> = {
     },
     usage: {
       do: ['Match skeleton shapes to real content', 'Use for perceived performance on initial load', 'Replace with content as soon as it arrives'],
-      dont: ['Do not animate skeletons indefinitely', 'Do not use for user-triggered actions — use Spinner'],
+      dont: ['Do not animate skeletons indefinitely', 'Do not use for user-triggered actions - use Spinner'],
     },
   },
 
@@ -749,7 +749,7 @@ export const components: Record<string, ComponentSpec> = {
     },
     usage: {
       do: ['Use for rich, interactive overflow content', 'Anchor to the triggering element', 'Allow dismissal via Escape and outside click'],
-      dont: ['Do not use for simple hover hints — use Tooltip', 'Do not stack popovers'],
+      dont: ['Do not use for simple hover hints - use Tooltip', 'Do not stack popovers'],
     },
   },
 
@@ -769,7 +769,7 @@ export const components: Record<string, ComponentSpec> = {
     },
     usage: {
       do: ['Use for secondary tasks and detail panels', 'Provide a clear close control', 'Return focus to the trigger on close'],
-      dont: ['Do not use for critical confirmations — use Dialog', 'Do not open multiple drawers at once'],
+      dont: ['Do not use for critical confirmations - use Dialog', 'Do not open multiple drawers at once'],
     },
   },
 
@@ -809,7 +809,7 @@ export const components: Record<string, ComponentSpec> = {
     },
     usage: {
       do: ['Use for grouped actions and overflow', 'Separate destructive actions with a divider', 'Keep item labels action-oriented'],
-      dont: ['Do not use for selecting a value — use Select', 'Do not nest menus more than one level'],
+      dont: ['Do not use for selecting a value - use Select', 'Do not nest menus more than one level'],
     },
   },
 
@@ -829,7 +829,7 @@ export const components: Record<string, ComponentSpec> = {
     },
     usage: {
       do: ['Use for multi-step flows and wizards', 'Show completed, current, and upcoming states', 'Keep step labels short'],
-      dont: ['Do not use for non-sequential navigation — use Tabs', 'Do not exceed a handful of steps'],
+      dont: ['Do not use for non-sequential navigation - use Tabs', 'Do not exceed a handful of steps'],
     },
   },
 
@@ -849,7 +849,7 @@ export const components: Record<string, ComponentSpec> = {
     },
     usage: {
       do: ['Use for navigation, not actions', 'Signal external links with an icon', 'Keep link text descriptive'],
-      dont: ['Do not use links to trigger actions — use Button', 'Do not use "click here" as link text'],
+      dont: ['Do not use links to trigger actions - use Button', 'Do not use "click here" as link text'],
     },
   },
 }

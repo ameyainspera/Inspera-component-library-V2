@@ -1,18 +1,18 @@
-<!-- Inspera Design System v1.0.0 — generated file, do not edit. -->
+<!-- Inspera Design System v1.0.0 - generated file, do not edit. -->
 
-# Inspera — Progress
+# Inspera - Progress
 
 1. Do not invent design decisions. Never invent a colour, spacing value, radius, shadow, font size, weight, icon library, focus style, breakpoint, or component variant that this document defines.
 2. Use a canonical component before building a lookalike. If one exists for the job, use it.
 3. Never rename a canonical component or prop. A deprecated alias may be understood as input, but output must use the canonical name.
 4. Consume tokens, not literals. Raw values here define what a token resolves to; application code references `var(--token)`.
 5. Do not introduce another design system. No Material UI, Bootstrap, Ant, Chakra, shadcn default styling, Tailwind default palette, or Radix Themes look. Headless behaviour libraries are fine if restyled entirely to this spec.
-6. No arbitrary Tailwind values where a token exists. Never `bg-[#004080]` — use the token.
+6. No arbitrary Tailwind values where a token exists. Never `bg-[#004080]` - use the token.
 7. Inter for product UI. Noto Sans Mono only for code, identifiers and technical values; Noto Serif only for long-form content.
 8. Material Symbols Outlined only. Do not mix in Lucide, Heroicons, or Font Awesome.
 9. Accessibility is part of the component contract, not an enhancement. Keyboard operation, visible focus, labels, roles, names, and states are required.
 10. Never use colour alone to carry meaning. Pair it with text, an icon, or shape.
-11. Respect `prefers-reduced-motion: reduce` — drop non-essential motion.
+11. Respect `prefers-reduced-motion: reduce` - drop non-essential motion.
 12. Compose rather than invent. If a pattern is not a canonical component, build it from canonical components using the patterns below.
 13. Do not silently add a component. If the system genuinely cannot express something, emit `DESIGN_SYSTEM_GAP` in your output and use the closest documented composition.
 14. No decoration that competes with hierarchy: no gradients, glassmorphism, oversized radii, decorative shadows, or animated backgrounds.
@@ -42,10 +42,10 @@ variant with no error at all. Variant *values* are Capitalised
 
 ### Progress
 
-Show completion of an ongoing task. — category: `feedback`.
+Show completion of an ongoing task. - category: `feedback`.
 
 > `@inspera/components` is **not published yet**. If you cannot resolve that import, do
-> not swap in another UI library — build the markup from the HTML and CSS under
+> not swap in another UI library - build the markup from the HTML and CSS under
 > **Without the package** below, which is this component exactly.
 
 ```tsx
@@ -65,21 +65,21 @@ import { Progress } from '@inspera/components'
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `variant` | `'Linear' \| 'Circular'` | `'Linear'` | Bar or ring. |
-| `value` | `number` | `60` | Completion percentage 0–100. Ignored when indeterminate. |
+| `value` | `number` | `60` | Completion percentage 0-100. Ignored when indeterminate. |
 | `indeterminate` | `boolean` | `false` | Unknown-duration animation. |
 | `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Bar height / ring diameter. |
 | `intent` | `'Primary' \| 'Success' \| 'Warning' \| 'Error'` | `'Primary'` | Fill color. |
 | `showValue` | `boolean` | `false` | Render the percentage. |
 | `label` | `string` | `'Progress'` | Accessible name. Say what is progressing, not just "Progress". |
 
-**Accessibility** — role `progressbar`. Use role="progressbar" with aria-valuenow / min / max; Omit aria-valuenow when indeterminate; Provide an accessible label for the task.
+**Accessibility** - role `progressbar`. Use role="progressbar" with aria-valuenow / min / max; Omit aria-valuenow when indeterminate; Provide an accessible label for the task.
 
 **Do:** Use determinate progress when completion is known; Use indeterminate for unknown-duration waits; Match intent color to context.
 **Don't:** Do not use for very short operations; Do not fake progress values.
 
 **Deprecated aliases** (do not use): `Progress bar`, `Loading bar`, `Meter`
 
-#### Without the package — exact HTML and CSS
+#### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
@@ -88,7 +88,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 - The bar heights are 4 / 8 / 12 and the ring diameters 24 / 40 / 56, with stroke widths 3 / 4 / 5.
 - `role="progressbar"` with `aria-valuemin`, `aria-valuemax` and an `aria-label` is mandatory. A styled div announces nothing.
 - When indeterminate, omit `aria-valuenow` entirely. Sending 0 tells the user it is stuck at zero.
-- The indeterminate bar is a 40% sliver swept by keyframes across a clipped track — not a full-width bar that fades.
+- The indeterminate bar is a 40% sliver swept by keyframes across a clipped track - not a full-width bar that fades.
 - The ring is rotated -90deg so the arc starts at twelve o'clock, and the arc length is set by `stroke-dashoffset`.
 
 ```css
@@ -200,4 +200,4 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 ---
 
-Tokens: ./tokens.css · Full system: ./llms.txt
+Tokens: ./tokens.css | Full system: ./llms.txt

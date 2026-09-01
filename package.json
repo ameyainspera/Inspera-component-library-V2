@@ -15,6 +15,7 @@
     "audit:search": "tsx scripts/audit-search.ts",
     "audit:recipes": "tsx scripts/audit-recipes.ts",
     "audit:snippets": "tsx scripts/audit-snippets.ts",
+    "audit:ascii": "tsx scripts/audit-ascii.ts",
     "build:pkg": "cd packages/components && tsup",
     "format": "oxfmt"
   },

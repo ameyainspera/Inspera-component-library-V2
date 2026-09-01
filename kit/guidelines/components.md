@@ -1,16 +1,16 @@
 # Components
 
 The Inspera kit ships 42 components. Import from `@inspera/kit`. Read the
-component's entry before using it — prop names and variant casing are exact.
+component's entry before using it - prop names and variant casing are exact.
 
 ## input-controls
 
 ### Button
 
-Trigger an action. — category: `input-controls`.
+Trigger an action. - category: `input-controls`.
 
 > `@inspera/kit` is **not published yet**. If you cannot resolve that import, do
-> not swap in another UI library — build the markup from the HTML and CSS under
+> not swap in another UI library - build the markup from the HTML and CSS under
 > **Without the package** below, which is this component exactly.
 
 ```tsx
@@ -26,32 +26,32 @@ import { Button } from '@inspera/kit'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | `'Button'` | The button text. Start with a verb — "Save", not "OK". |
+| `label` | `string` | `'Button'` | The button text. Start with a verb - "Save", not "OK". |
 | `intent` | `'Primary' \| 'Secondary' \| 'Outline' \| 'Text' \| 'Success' \| 'Warning' \| 'Destructive'` | `'Primary'` | Visual role / semantic weight. |
 | `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Height 32 / 40 / 48. |
-| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Pressed' \| 'Disabled'` | — | Freezes a visual state so documentation can show it without a pointer. Leave unset in application code — hover, focus and active are handled in CSS and work on their own. |
+| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Pressed' \| 'Disabled'` | - | Freezes a visual state so documentation can show it without a pointer. Leave unset in application code - hover, focus and active are handled in CSS and work on their own. |
 | `content` | `'Text' \| 'Icon + Text' \| 'Text + Icon' \| 'Text + Disclosure'` | `'Text'` | Label / icon composition. |
 | `icon` | `string` | `'add'` | Material Symbols name. Only rendered by the icon-bearing content variants. |
-| `onClick` | `() => void` | — | Fired on click and on Enter or Space. |
+| `onClick` | `() => void` | - | Fired on click and on Enter or Space. |
 
-**Accessibility** — role `button`, keyboard operable. Icon-only buttons must have an accessible label.
+**Accessibility** - role `button`, keyboard operable. Icon-only buttons must have an accessible label.
 
 **Do:** Use Primary for main actions; Use Secondary for alternative actions; Use Destructive only for destructive flows.
 **Don't:** Do not create separate component files per intent; Do not use deprecated alias names.
 
 **Deprecated aliases** (do not use): `Primary button`, `Secondary button`, `Outline button`, `Text button`, `Success button`, `Warning button`
 
-#### Without the package — exact HTML and CSS
+#### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
 font weight of your own, and do not restyle it with a UI kit's defaults.
 
 - Corner radius is 4px (`--radius-sm`). Not 6, not 8, not `rounded-lg`.
-- Type is 16px/600 at every size — Small and Large change height, padding and gap only.
+- Type is 16px/600 at every size - Small and Large change height, padding and gap only.
 - Primary is `--primary` #004080, a deep navy. It is not a mid blue and never a gradient.
 - Every solid intent carries the inset top-light button shadow; Outline and Text carry none.
-- Hover darkens the fill to 90% and pressed to 82%, both mixed toward black — no separate hover token.
+- Hover darkens the fill to 90% and pressed to 82%, both mixed toward black - no separate hover token.
 - Minimum width is 80px, so short labels still read as buttons.
 
 ```css
@@ -112,7 +112,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
     transform var(--duration-fast) var(--easing-standard);
 }
 
-/* Sizes change height, padding and gap only — never the 16px type. */
+/* Sizes change height, padding and gap only - never the 16px type. */
 .inspera-btn--small { height: 32px; padding: 0 12px; gap: 6px; }
 .inspera-btn--large { height: 48px; padding: 0 24px; gap: 10px; }
 
@@ -180,10 +180,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 ### Text Input
 
-Collect single-line text input. — category: `input-controls`.
+Collect single-line text input. - category: `input-controls`.
 
 > `@inspera/kit` is **not published yet**. If you cannot resolve that import, do
-> not swap in another UI library — build the markup from the HTML and CSS under
+> not swap in another UI library - build the markup from the HTML and CSS under
 > **Without the package** below, which is this component exactly.
 
 ```tsx
@@ -200,30 +200,30 @@ import { TextInput } from '@inspera/kit'
 | --- | --- | --- | --- |
 | `label` | `string` | `'Label'` | Show the field label. |
 | `placeholder` | `string` | `'Placeholder text'` | Hint shown when empty. Not a substitute for the label. |
-| `value` | `string` | — | Current value. Controlled — pair with onChange. |
-| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Disabled' \| 'Error' \| 'Filled' \| 'ReadOnly'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Filled` are presentation-only — leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Error`, `Disabled` and `ReadOnly` are real application state and belong in your code. |
+| `value` | `string` | - | Current value. Controlled - pair with onChange. |
+| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Disabled' \| 'Error' \| 'Filled' \| 'ReadOnly'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Filled` are presentation-only - leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Error`, `Disabled` and `ReadOnly` are real application state and belong in your code. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Control height. |
-| `leadingIcon` | `string` | — | Show a leading icon. |
-| `trailingIcon` | `string` | — | Show a trailing icon. |
+| `leadingIcon` | `string` | - | Show a leading icon. |
+| `trailingIcon` | `string` | - | Show a trailing icon. |
 | `showLabel` | `boolean` | `true` | Render the visible label. Hiding it still requires an accessible name. |
-| `helpText` | `string` | — | Show helper text. |
-| `errorText` | `string` | — | Show error message. |
-| `onChange` | `(value: string) => void` | — | Fired with the new value on every keystroke. |
+| `helpText` | `string` | - | Show helper text. |
+| `errorText` | `string` | - | Show error message. |
+| `onChange` | `(value: string) => void` | - | Fired with the new value on every keystroke. |
 
-**Accessibility** — role `textbox`, keyboard operable. Always associate label with input using htmlFor/id; Error text must be linked via aria-describedby; Required fields must use aria-required.
+**Accessibility** - role `textbox`, keyboard operable. Always associate label with input using htmlFor/id; Error text must be linked via aria-describedby; Required fields must use aria-required.
 
 **Do:** Always include a visible label; Provide clear placeholder text as a hint; Show error messages below the input.
 **Don't:** Do not use placeholder as the only label; Do not disable inputs without explanation.
 
 **Deprecated aliases** (do not use): `Text inputs`, `Content`, `Content (small)`
 
-#### Without the package — exact HTML and CSS
+#### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
 font weight of your own, and do not restyle it with a UI kit's defaults.
 
-- The border belongs to the wrapper, not the `<input>`. The input itself has no border, no outline and no background — otherwise icons cannot sit inside the field.
+- The border belongs to the wrapper, not the `<input>`. The input itself has no border, no outline and no background - otherwise icons cannot sit inside the field.
 - Focus is `:focus-within` on the wrapper, drawn as `--effect-state-focus` (a 3px box-shadow) plus a `--primary` border. Fields ring with a shadow; buttons ring with an outline.
 - Height is 40px (32px small), radius `--radius-md`, resting border `--border-control` #C4C4C4 going to `--border-control-strong` on hover.
 - Help and error text are 12px. Only one shows at a time, and `aria-describedby` points at whichever it is.
@@ -288,7 +288,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 .inspera-input__field:hover { border-color: var(--border-control-strong); }
 
-/* :focus-within, not :focus — the focusable element is the <input> inside. */
+/* :focus-within, not :focus - the focusable element is the <input> inside. */
 .inspera-input__field:focus-within {
   border-color: var(--primary);
   box-shadow: var(--effect-state-focus);
@@ -322,7 +322,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   color: var(--error);
 }
 
-/* Invalid outranks hover and focus — the error has to stay legible. */
+/* Invalid outranks hover and focus - the error has to stay legible. */
 .inspera-input__field[data-invalid='true'],
 .inspera-input__field[data-invalid='true']:hover,
 .inspera-input__field[data-invalid='true']:focus-within {
@@ -366,10 +366,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 ### Checkbox
 
-Allow multiple selection. — category: `input-controls`.
+Allow multiple selection. - category: `input-controls`.
 
 > `@inspera/kit` is **not published yet**. If you cannot resolve that import, do
-> not swap in another UI library — build the markup from the HTML and CSS under
+> not swap in another UI library - build the markup from the HTML and CSS under
 > **Without the package** below, which is this component exactly.
 
 ```tsx
@@ -386,28 +386,28 @@ import { Checkbox } from '@inspera/kit'
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `label` | `string` | `'Checkbox label'` | Text beside the box. Always provide one. |
-| `checked` | `boolean` | — | Checked state. |
+| `checked` | `boolean` | - | Checked state. |
 | `indeterminate` | `boolean` | `false` | Partially-selected state, for a parent whose children are mixed. Wins over `checked` visually and announces as `aria-checked="mixed"`. |
-| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Pressed' \| 'Disabled' \| 'Error'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Pressed` are presentation-only — leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Error` and `Disabled` are real application state and belong in your code. |
+| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Pressed' \| 'Disabled' \| 'Error'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Pressed` are presentation-only - leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Error` and `Disabled` are real application state and belong in your code. |
 | `withLabel` | `boolean` | `true` | Render the label. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Indicator size. |
-| `onChange` | `(checked: boolean) => void` | — | Fired with the new checked state. |
+| `onChange` | `(checked: boolean) => void` | - | Fired with the new checked state. |
 
-**Accessibility** — role `checkbox`, keyboard operable. Use aria-checked to reflect state; Group related checkboxes with fieldset and legend.
+**Accessibility** - role `checkbox`, keyboard operable. Use aria-checked to reflect state; Group related checkboxes with fieldset and legend.
 
 **Do:** Use for multi-select scenarios; Always provide a label for each checkbox; Group related options together.
-**Don't:** Do not use for mutually exclusive options — use Radio Button instead; Do not use without a label.
+**Don't:** Do not use for mutually exclusive options - use Radio Button instead; Do not use without a label.
 
 **Deprecated aliases** (do not use): `Checkbox/Unchecked`, `Checkbox/Checked`, `Checkbox with label`, `Checkbox (fill width)`, `Checkbox (Cards)`
 
-#### Without the package — exact HTML and CSS
+#### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
 font weight of your own, and do not restyle it with a UI kit's defaults.
 
 - Keep the native `<input type="checkbox">` in the DOM, visually hidden with `position: absolute; opacity: 0; width: 0; height: 0`. `display: none` removes it from the tab order and from form submission.
-- Draw the focus ring on the box via `:focus-visible + .box`. A ring on a 0×0 input is invisible — this is the detail custom checkboxes miss most often.
+- Draw the focus ring on the box via `:focus-visible + .box`. A ring on a 0x0 input is invisible - this is the detail custom checkboxes miss most often.
 - The box is 20px (16px small) with a 2px border and `--radius-xs`. Unchecked is `--border-control-strong`; checked fills with `--primary`.
 - Indeterminate is a DOM property (`el.indeterminate = true`), not an HTML attribute, and it announces as `aria-checked="mixed"`. Its glyph is `remove`, not a tick. Static markup that cannot run script uses the `inspera-checkbox--mixed` class instead.
 - The whole row is the `<label>`, so the text is part of the hit target.
@@ -488,7 +488,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   background: var(--primary);
 }
 
-/* The ring goes on the drawn box: the real input is 0×0, so a ring on it is
+/* The ring goes on the drawn box: the real input is 0x0, so a ring on it is
    invisible. This is the single most-missed detail in a custom checkbox. */
 .inspera-checkbox__input:focus-visible + .inspera-checkbox__box {
   outline: var(--focus-ring-width) solid var(--focus-ring-color);
@@ -533,10 +533,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 ### Radio Button
 
-Allow single selection. — category: `input-controls`.
+Allow single selection. - category: `input-controls`.
 
 > `@inspera/kit` is **not published yet**. If you cannot resolve that import, do
-> not swap in another UI library — build the markup from the HTML and CSS under
+> not swap in another UI library - build the markup from the HTML and CSS under
 > **Without the package** below, which is this component exactly.
 
 ```tsx
@@ -553,20 +553,20 @@ import { RadioButton } from '@inspera/kit'
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `label` | `string` | `'Radio option'` | Text beside the control. Always provide one. |
-| `selected` | `boolean` | — | Selected state. |
-| `name` | `string` | — | Shared form name. Every radio in a group must use the same value. Left unset, each radio gets its own generated name and stands alone — this used to default to the literal `"radio"`, which silently put every unrelated RadioButton on a page into one mutually exclusive group. |
-| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Pressed' \| 'Disabled' \| 'Error'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Pressed` are presentation-only — leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Error` and `Disabled` are real application state and belong in your code. |
+| `selected` | `boolean` | - | Selected state. |
+| `name` | `string` | - | Shared form name. Every radio in a group must use the same value. Left unset, each radio gets its own generated name and stands alone - this used to default to the literal `"radio"`, which silently put every unrelated RadioButton on a page into one mutually exclusive group. |
+| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Pressed' \| 'Disabled' \| 'Error'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Pressed` are presentation-only - leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Error` and `Disabled` are real application state and belong in your code. |
 | `withLabel` | `boolean` | `true` | Render the label. |
-| `onChange` | `(selected: boolean) => void` | — | Fired when this option becomes selected. |
+| `onChange` | `(selected: boolean) => void` | - | Fired when this option becomes selected. |
 
-**Accessibility** — role `radio`, keyboard operable. Use role="radiogroup" for the group container; Use aria-checked to indicate selected state; Arrow keys navigate between options in the group.
+**Accessibility** - role `radio`, keyboard operable. Use role="radiogroup" for the group container; Use aria-checked to indicate selected state; Arrow keys navigate between options in the group.
 
 **Do:** Use for mutually exclusive options; Always group inside a radiogroup; Pre-select a default when appropriate.
-**Don't:** Do not use for multi-select — use Checkbox instead; Do not use a single radio button alone.
+**Don't:** Do not use for multi-select - use Checkbox instead; Do not use a single radio button alone.
 
 **Deprecated aliases** (do not use): `Radiobutton`, `Radiobuttons`, `Radio Button New-BonW`, `Radio Button New-BonY`, `Radio Button New-WonB`, `Radio Button New-YonB`
 
-#### Without the package — exact HTML and CSS
+#### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
@@ -574,7 +574,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 - Identical structure to Checkbox: a visually hidden native `<input type="radio">` plus a drawn circle, with the ring on the circle.
 - The circle is 20px with a 2px border and `--radius-pill`; the selected dot is a 10px child element, not a background, so it stays centred while the circle scales on press.
-- Grouping is the `name` attribute. Every radio in one question shares it, and unrelated questions must not — two groups sharing a name become one.
+- Grouping is the `name` attribute. Every radio in one question shares it, and unrelated questions must not - two groups sharing a name become one.
 - For a set of options prefer the Radio Group component, which owns the name and the group label for you.
 
 ```css
@@ -623,7 +623,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   transition: all 120ms ease;
 }
 
-/* The dot is a child element, not a background — it has to stay centred as the
+/* The dot is a child element, not a background - it has to stay centred as the
    circle scales on press. */
 .inspera-radio__dot {
   width: 10px;
@@ -670,10 +670,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 ### Select
 
-Select one option from a list. — category: `input-controls`.
+Select one option from a list. - category: `input-controls`.
 
 > `@inspera/kit` is **not published yet**. If you cannot resolve that import, do
-> not swap in another UI library — build the markup from the HTML and CSS under
+> not swap in another UI library - build the markup from the HTML and CSS under
 > **Without the package** below, which is this component exactly.
 
 ```tsx
@@ -692,30 +692,30 @@ import { Select } from '@inspera/kit'
 | `label` | `string` | `'Country'` | Render the label. |
 | `placeholder` | `string` | `'Select an option'` | Shown when nothing is selected. Not a substitute for the label. |
 | `options` | `string[]` | `defaultOptions` | The selectable values, in the order they should appear. |
-| `value` | `string` | — | Selected value. Controlled — pair with onChange. |
-| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Disabled' \| 'Error' \| 'Open'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Open` are presentation-only — leave them unset in application code, where CSS and the component's own state drive them. `Error` and `Disabled` are real application state and belong in your code. |
+| `value` | `string` | - | Selected value. Controlled - pair with onChange. |
+| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Disabled' \| 'Error' \| 'Open'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Open` are presentation-only - leave them unset in application code, where CSS and the component's own state drive them. `Error` and `Disabled` are real application state and belong in your code. |
 | `widthMode` | `'Fixed' \| 'Content Adaptable'` | `'Fixed'` | Trigger sizing. |
 | `showLabel` | `boolean` | `true` | Render the visible label. Hiding it still requires an accessible name. |
 | `search` | `boolean` | `false` | Filterable option list. |
-| `onChange` | `(value: string) => void` | — | Fired with the selected value. |
+| `onChange` | `(value: string) => void` | - | Fired with the selected value. |
 
-**Accessibility** — role `combobox`, keyboard operable. Use aria-expanded to indicate open state; Use aria-activedescendant for highlighted option; Support arrow key navigation through options.
+**Accessibility** - role `combobox`, keyboard operable. Use aria-expanded to indicate open state; Use aria-activedescendant for highlighted option; Support arrow key navigation through options.
 
 **Do:** Use for 5+ options where space is limited; Always provide a label; Show a clear placeholder when no option is selected.
-**Don't:** Do not use for fewer than 3 options — use Radio Button instead; Do not nest selects inside other selects.
+**Don't:** Do not use for fewer than 3 options - use Radio Button instead; Do not nest selects inside other selects.
 
 **Deprecated aliases** (do not use): `Select / Fixed width`, `Select / Content adaptable`, `Dropdown`, `Dropdown with Label`
 
-#### Without the package — exact HTML and CSS
+#### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
 font weight of your own, and do not restyle it with a UI kit's defaults.
 
-- The trigger is a `role="combobox"` element with `tabindex="0"`, `aria-expanded`, `aria-haspopup="listbox"` and `aria-controls` pointing at the list. None of that comes free — this is not a native `<select>`.
+- The trigger is a `role="combobox"` element with `tabindex="0"`, `aria-expanded`, `aria-haspopup="listbox"` and `aria-controls` pointing at the list. None of that comes free - this is not a native `<select>`.
 - The list is `role="listbox"` with `role="option"` children carrying `aria-selected`; it is positioned against the trigger, not appended to the body.
 - Keep the keyboard cursor and the selected value as two different states. The highlighted option (`--active`, `--blue-100`) is where the arrows are; `aria-selected` is what has been chosen.
-- The chevron rotates 180° while open, driven off `aria-expanded` so the attribute and the visual cannot disagree.
+- The chevron rotates 180deg while open, driven off `aria-expanded` so the attribute and the visual cannot disagree.
 - Keyboard: Down opens and moves, Up moves back, Enter commits, Escape closes.
 - Fixed width is 220px; Content Adaptable drops to `auto` with a 120px floor.
 
@@ -866,10 +866,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 ### Toggle
 
-Switch a setting on or off instantly. — category: `input-controls`.
+Switch a setting on or off instantly. - category: `input-controls`.
 
 > `@inspera/kit` is **not published yet**. If you cannot resolve that import, do
-> not swap in another UI library — build the markup from the HTML and CSS under
+> not swap in another UI library - build the markup from the HTML and CSS under
 > **Without the package** below, which is this component exactly.
 
 ```tsx
@@ -886,29 +886,29 @@ import { Toggle } from '@inspera/kit'
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `label` | `string` | `'Toggle setting'` | Text beside the switch describing the setting. |
-| `checked` | `boolean` | — | On / off state. |
-| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Disabled'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Hover` and `Focused` are presentation-only — leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Disabled` is real application state and belongs in your code. |
+| `checked` | `boolean` | - | On / off state. |
+| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Disabled'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Hover` and `Focused` are presentation-only - leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Disabled` is real application state and belongs in your code. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Track / thumb size. |
 | `withLabel` | `boolean` | `true` | Render the label. |
-| `onChange` | `(checked: boolean) => void` | — | Fired with the new on/off state. |
+| `onChange` | `(checked: boolean) => void` | - | Fired with the new on/off state. |
 
-**Accessibility** — role `switch`, keyboard operable. Use role="switch" for the toggle; Use aria-checked to reflect on/off state; Space key toggles the switch.
+**Accessibility** - role `switch`, keyboard operable. Use role="switch" for the toggle; Use aria-checked to reflect on/off state; Space key toggles the switch.
 
 **Do:** Use for immediate on/off settings; Provide a clear label describing the setting; Show the current state visually.
-**Don't:** Do not use for form submissions — use Checkbox instead; Do not use without a visible label.
+**Don't:** Do not use for form submissions - use Checkbox instead; Do not use without a visible label.
 
 **Deprecated aliases** (do not use): `Switch`, `Toggle switch`
 
-#### Without the package — exact HTML and CSS
+#### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
 font weight of your own, and do not restyle it with a UI kit's defaults.
 
 - The input carries `role="switch"`. Without it the control announces as a checkbox, which promises a form value rather than an immediate change.
-- Track 44×24 (36×20 small), thumb 20px (16px), 2px padding. Thumb travel is track − thumb − 2×padding: 20px, or 16px when small.
-- The track fill is `--border-control` off and `--primary` on. It does not tint on hover — only the thumb shadow deepens.
-- The focus ring goes on the track, since the real input is 0×0.
+- Track 44x24 (36x20 small), thumb 20px (16px), 2px padding. Thumb travel is track - thumb - 2xpadding: 20px, or 16px when small.
+- The track fill is `--border-control` off and `--primary` on. It does not tint on hover - only the thumb shadow deepens.
+- The focus ring goes on the track, since the real input is 0x0.
 - A toggle applies immediately. If the change needs a Save button, use a Checkbox instead.
 
 ```css
@@ -970,7 +970,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 .inspera-toggle__input:checked + .inspera-toggle__track { background: var(--primary); }
 
-/* Travel is track − thumb − (2 × padding). */
+/* Travel is track - thumb - (2 x padding). */
 .inspera-toggle__input:checked + .inspera-toggle__track .inspera-toggle__thumb {
   transform: translateX(20px);
 }
@@ -1001,10 +1001,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 ### Textarea
 
-Collect multi-line text input. — category: `input-controls`.
+Collect multi-line text input. - category: `input-controls`.
 
 > `@inspera/kit` is **not published yet**. If you cannot resolve that import, do
-> not swap in another UI library — build the markup from the HTML and CSS under
+> not swap in another UI library - build the markup from the HTML and CSS under
 > **Without the package** below, which is this component exactly.
 
 ```tsx
@@ -1012,7 +1012,7 @@ import { Textarea } from '@inspera/kit'
 
 <Textarea
   label="Feedback"
-  placeholder="Share your thoughts…"
+  placeholder="Share your thoughts..."
   size="Medium"
   showCount={false}
   maxLength={280}
@@ -1024,25 +1024,25 @@ import { Textarea } from '@inspera/kit'
 | --- | --- | --- | --- |
 | `label` | `string` | `'Description'` | Field label. |
 | `placeholder` | `string` | `'Placeholder text'` | Hint shown when empty. Not a substitute for the label. |
-| `value` | `string` | — | Current value. Controlled — pair with onChange. |
+| `value` | `string` | - | Current value. Controlled - pair with onChange. |
 | `rows` | `number` | `4` | Visible text rows. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Vertical padding density. |
-| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Filled' \| 'Error' \| 'Disabled' \| 'ReadOnly'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Filled` are presentation-only — leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Error`, `Disabled` and `ReadOnly` are real application state and belong in your code. |
+| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Filled' \| 'Error' \| 'Disabled' \| 'ReadOnly'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Filled` are presentation-only - leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Error`, `Disabled` and `ReadOnly` are real application state and belong in your code. |
 | `showLabel` | `boolean` | `true` | Show the field label. |
-| `helpText` | `string` | — | Guidance shown below the field. Replaced by errorText when invalid. |
-| `errorText` | `string` | — | Validation message. Linked to the control via aria-describedby. |
-| `maxLength` | `number` | — | Maximum character length. |
+| `helpText` | `string` | - | Guidance shown below the field. Replaced by errorText when invalid. |
+| `errorText` | `string` | - | Validation message. Linked to the control via aria-describedby. |
+| `maxLength` | `number` | - | Maximum character length. |
 | `showCount` | `boolean` | `false` | Show character counter. |
-| `onChange` | `(value: string) => void` | — | Fired with the new value on every keystroke. |
+| `onChange` | `(value: string) => void` | - | Fired with the new value on every keystroke. |
 
-**Accessibility** — role `textbox`, keyboard operable. Always associate label with textarea using htmlFor/id; Error text must be linked via aria-describedby; aria-invalid reflects the error state.
+**Accessibility** - role `textbox`, keyboard operable. Always associate label with textarea using htmlFor/id; Error text must be linked via aria-describedby; aria-invalid reflects the error state.
 
 **Do:** Always include a visible label; Use rows to hint expected length; Show a character counter when a max length applies.
-**Don't:** Do not use for single-line input — use Text Input instead; Do not disable resize without reason.
+**Don't:** Do not use for single-line input - use Text Input instead; Do not disable resize without reason.
 
 **Deprecated aliases** (do not use): `Text area`, `Multiline input`, `Comment box`
 
-#### Without the package — exact HTML and CSS
+#### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
@@ -1051,7 +1051,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 - Same field treatment as Text Input, but the wrapper is a column so the counter sits inside the border, under the text.
 - Vertical padding is 8px (6px small); horizontal stays 12px at both sizes.
 - `resize: vertical` only. Free resize lets the user drag the field out of the layout.
-- The counter is presentational — pair `maxlength` on the control with it, and do not rely on the counter to enforce the limit.
+- The counter is presentational - pair `maxlength` on the control with it, and do not rely on the counter to enforce the limit.
 
 ```css
 /* Tokens this component needs. Paste once, at `:root`. */
@@ -1153,7 +1153,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   <label class="inspera-textarea__label" for="feedback">Feedback</label>
   <div class="inspera-textarea__field">
     <textarea class="inspera-textarea__control" id="feedback" rows="4"
-              maxlength="280" placeholder="Share your thoughts…"
+              maxlength="280" placeholder="Share your thoughts..."
               aria-describedby="feedback-help"></textarea>
     <span class="inspera-textarea__count">0/280</span>
   </div>
@@ -1164,10 +1164,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 ### Form Field
 
-Standardize label, control, and help/error layout around any input. — category: `input-controls`.
+Standardize label, control, and help/error layout around any input. - category: `input-controls`.
 
 > `@inspera/kit` is **not published yet**. If you cannot resolve that import, do
-> not swap in another UI library — build the markup from the HTML and CSS under
+> not swap in another UI library - build the markup from the HTML and CSS under
 > **Without the package** below, which is this component exactly.
 
 ```tsx
@@ -1185,29 +1185,29 @@ import { FormField } from '@inspera/kit'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | — | Field label text. |
-| `htmlFor` | `string` | — | id of the wrapped control for label association. |
+| `label` | `string` | - | Field label text. |
+| `htmlFor` | `string` | - | id of the wrapped control for label association. |
 | `required` | `boolean` | `false` | Show a required asterisk. |
-| `helpText` | `string` | — | Helper text shown below the control. |
-| `errorText` | `string` | — | Error message; replaces help text when present. |
-| `children` **(required)** | `ReactNode` | — | The control this field wraps. Exactly one. |
+| `helpText` | `string` | - | Helper text shown below the control. |
+| `errorText` | `string` | - | Error message; replaces help text when present. |
+| `children` **(required)** | `ReactNode` | - | The control this field wraps. Exactly one. |
 
-**Accessibility** — role `group`, keyboard operable. Associate the label with the control via htmlFor/id; Link error and help text with aria-describedby on the control; Required fields should set aria-required on the control.
+**Accessibility** - role `group`, keyboard operable. Associate the label with the control via htmlFor/id; Link error and help text with aria-describedby on the control; Required fields should set aria-required on the control.
 
 **Do:** Wrap any single control for consistent spacing; Use htmlFor to link the label to the control; Show only one of help or error at a time.
 **Don't:** Do not wrap multiple unrelated controls; Do not omit the label for accessibility.
 
 **Deprecated aliases** (do not use): `Field wrapper`, `Input group`
 
-#### Without the package — exact HTML and CSS
+#### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
 font weight of your own, and do not restyle it with a UI kit's defaults.
 
-- The wrapper owns three links the control cannot make for itself: `for` → the control id, `aria-describedby` → the message id, and `aria-invalid` when the message is an error.
+- The wrapper owns three links the control cannot make for itself: `for` -> the control id, `aria-describedby` -> the message id, and `aria-invalid` when the message is an error.
 - Only one message shows at a time. When there is an error it replaces the help text; it does not stack under it.
-- The red asterisk is `aria-hidden` decoration. Requiredness is announced from the control’s own `required` attribute — the asterisk alone tells a screen reader nothing.
+- The red asterisk is `aria-hidden` decoration. Requiredness is announced from the control's own `required` attribute - the asterisk alone tells a screen reader nothing.
 - Gap between label, control and message is 6px; message text is 12px.
 - The nested control keeps its own label markup off (there is already one here) but still needs an accessible name via the outer `for`.
 
@@ -1270,7 +1270,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 .inspera-input__field:hover { border-color: var(--border-control-strong); }
 
-/* :focus-within, not :focus — the focusable element is the <input> inside. */
+/* :focus-within, not :focus - the focusable element is the <input> inside. */
 .inspera-input__field:focus-within {
   border-color: var(--primary);
   box-shadow: var(--effect-state-focus);
@@ -1304,7 +1304,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   color: var(--error);
 }
 
-/* Invalid outranks hover and focus — the error has to stay legible. */
+/* Invalid outranks hover and focus - the error has to stay legible. */
 .inspera-input__field[data-invalid='true'],
 .inspera-input__field[data-invalid='true']:hover,
 .inspera-input__field[data-invalid='true']:focus-within {
@@ -1365,10 +1365,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 ### Slider
 
-Select a numeric value from a continuous range. — category: `input-controls`.
+Select a numeric value from a continuous range. - category: `input-controls`.
 
 > `@inspera/kit` is **not published yet**. If you cannot resolve that import, do
-> not swap in another UI library — build the markup from the HTML and CSS under
+> not swap in another UI library - build the markup from the HTML and CSS under
 > **Without the package** below, which is this component exactly.
 
 ```tsx
@@ -1389,21 +1389,21 @@ import { Slider } from '@inspera/kit'
 | `label` | `string` | `'Value'` | Field label describing what is being adjusted. |
 | `min` | `number` | `0` | Minimum value. |
 | `max` | `number` | `100` | Maximum value. |
-| `value` | `number` | — | Current value. Controlled — pair with onChange. |
+| `value` | `number` | - | Current value. Controlled - pair with onChange. |
 | `step` | `number` | `1` | Increment granularity. |
-| `state` | `'Default' \| 'Focused' \| 'Disabled'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Focused` is presentation-only — leave it unset in application code, where CSS drives it from the real pointer and keyboard. `Disabled` is real application state and belongs in your code. |
+| `state` | `'Default' \| 'Focused' \| 'Disabled'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Focused` is presentation-only - leave it unset in application code, where CSS drives it from the real pointer and keyboard. `Disabled` is real application state and belongs in your code. |
 | `showValue` | `boolean` | `true` | Show the current value. |
 | `showLabel` | `boolean` | `true` | Show the field label. |
-| `onChange` | `(value: number) => void` | — | Fired as the value changes, by drag or arrow key. |
+| `onChange` | `(value: number) => void` | - | Fired as the value changes, by drag or arrow key. |
 
-**Accessibility** — role `slider`, keyboard operable. Use role="slider" with aria-valuemin / aria-valuemax / aria-valuenow; Provide an accessible label via aria-label; Arrow keys adjust the value.
+**Accessibility** - role `slider`, keyboard operable. Use role="slider" with aria-valuemin / aria-valuemax / aria-valuenow; Provide an accessible label via aria-label; Arrow keys adjust the value.
 
 **Do:** Use for adjustable numeric ranges; Show the current value for precision; Provide a clear label.
-**Don't:** Do not use for exact numeric entry — use Text Input instead; Do not use without min/max bounds.
+**Don't:** Do not use for exact numeric entry - use Text Input instead; Do not use without min/max bounds.
 
 **Deprecated aliases** (do not use): `Range`, `Range slider`
 
-#### Without the package — exact HTML and CSS
+#### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
@@ -1482,7 +1482,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   background: var(--primary);
 }
 
-/* Drawn, and deliberately not hit-testable — the real input above it takes
+/* Drawn, and deliberately not hit-testable - the real input above it takes
    every pointer event, so drag, click-to-seek and touch all still work. */
 .inspera-slider__thumb {
   position: absolute;
@@ -1539,10 +1539,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 ### Segmented Control
 
-Choose one option from a small set of mutually exclusive segments. — category: `input-controls`.
+Choose one option from a small set of mutually exclusive segments. - category: `input-controls`.
 
 > `@inspera/kit` is **not published yet**. If you cannot resolve that import, do
-> not swap in another UI library — build the markup from the HTML and CSS under
+> not swap in another UI library - build the markup from the HTML and CSS under
 > **Without the package** below, which is this component exactly.
 
 ```tsx
@@ -1560,19 +1560,19 @@ import { SegmentedControl } from '@inspera/kit'
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `items` | `string[]` | `['Day', 'Week', 'Month']` | Segment labels. |
-| `value` | `number` | — | Active segment index. |
+| `value` | `number` | - | Active segment index. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Segment height. |
 | `fullWidth` | `boolean` | `false` | Stretch to fill the row. |
-| `onChange` | `(index: number) => void` | — | Fired with the index of the chosen segment. |
+| `onChange` | `(index: number) => void` | - | Fired with the index of the chosen segment. |
 
-**Accessibility** — role `radiogroup`, keyboard operable. Container uses role="radiogroup"; Each segment uses role="radio" with aria-checked; Arrow keys move between segments.
+**Accessibility** - role `radiogroup`, keyboard operable. Container uses role="radiogroup"; Each segment uses role="radio" with aria-checked; Arrow keys move between segments.
 
-**Do:** Use for 2–4 mutually exclusive views; Keep labels short and parallel; Show the active segment clearly.
-**Don't:** Do not use for more than 4 options — use Tabs or Select; Do not use for multi-select.
+**Do:** Use for 2-4 mutually exclusive views; Keep labels short and parallel; Show the active segment clearly.
+**Don't:** Do not use for more than 4 options - use Tabs or Select; Do not use for multi-select.
 
 **Deprecated aliases** (do not use): `Segment control`, `Toggle group`, `Button group`
 
-#### Without the package — exact HTML and CSS
+#### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
@@ -1649,10 +1649,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 ### Date Picker
 
-Select a calendar date from a popover. — category: `input-controls`.
+Select a calendar date from a popover. - category: `input-controls`.
 
 > `@inspera/kit` is **not published yet**. If you cannot resolve that import, do
-> not swap in another UI library — build the markup from the HTML and CSS under
+> not swap in another UI library - build the markup from the HTML and CSS under
 > **Without the package** below, which is this component exactly.
 
 ```tsx
@@ -1668,28 +1668,28 @@ import { DatePicker } from '@inspera/kit'
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `label` | `string` | `'Date'` | Field label. |
-| `value` | `string` | — | Selected date (YYYY-MM-DD). |
+| `value` | `string` | - | Selected date (YYYY-MM-DD). |
 | `placeholder` | `string` | `'Select date'` | Trigger placeholder. |
-| `state` | `'Default' \| 'Focused' \| 'Disabled' \| 'Error'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Focused` is presentation-only — leave it unset in application code, where CSS drives it from the real pointer and keyboard. `Error` and `Disabled` are real application state and belong in your code. |
+| `state` | `'Default' \| 'Focused' \| 'Disabled' \| 'Error'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Focused` is presentation-only - leave it unset in application code, where CSS drives it from the real pointer and keyboard. `Error` and `Disabled` are real application state and belong in your code. |
 | `showLabel` | `boolean` | `true` | Show the field label. |
 | `defaultOpen` | `boolean` | `false` | Open the calendar initially. |
-| `onChange` | `(iso: string) => void` | — | Fired with the selected date as an ISO string (YYYY-MM-DD). |
+| `onChange` | `(iso: string) => void` | - | Fired with the selected date as an ISO string (YYYY-MM-DD). |
 
-**Accessibility** — role `dialog`, keyboard operable. Trigger uses aria-haspopup="dialog" and aria-expanded; Popover uses role="dialog" with a label; Day cells are buttons with descriptive aria-labels; Escape closes the popover.
+**Accessibility** - role `dialog`, keyboard operable. Trigger uses aria-haspopup="dialog" and aria-expanded; Popover uses role="dialog" with a label; Day cells are buttons with descriptive aria-labels; Escape closes the popover.
 
 **Do:** Use for selecting a single calendar date; Highlight today and the selected day; Provide clear month navigation.
 **Don't:** Do not use for free-form date typing without validation; Do not trap keyboard focus without an escape.
 
 **Deprecated aliases** (do not use): `Calendar input`, `Date field`
 
-#### Without the package — exact HTML and CSS
+#### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
 font weight of your own, and do not restyle it with a UI kit's defaults.
 
 - The grid is `repeat(7, 1fr)` and always padded to 42 cells with empty spans. A grid sized to the month makes the panel jump height as you page through it.
-- Leading blanks come from the first of the month’s weekday index — they are empty `<span>`s, not disabled buttons, so they are skipped by the keyboard.
+- Leading blanks come from the first of the month's weekday index - they are empty `<span>`s, not disabled buttons, so they are skipped by the keyboard.
 - Every day button needs a full `aria-label` ("March 1, 2026"). A bare "1" tells a screen reader nothing.
 - Today is outlined with a 1px `--primary` border; the selected day is filled with `--primary`. A day that is both shows only the fill.
 - The panel is anchored under the trigger, `--radius-md` on `--surface` with `--shadow-200`, and closes on Escape and on an outside click.
@@ -1873,10 +1873,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
     </div>
     <div class="inspera-datepicker__grid">
       <span class="inspera-datepicker__weekday">Su</span>
-      <!-- …Mo through Sa… -->
+      <!-- ...Mo through Sa... -->
       <span></span><!-- leading blanks to the first weekday -->
       <button class="inspera-datepicker__day" type="button" aria-label="March 1, 2026">1</button>
-      <!-- …padded to 42 cells so the panel height never changes… -->
+      <!-- ...padded to 42 cells so the panel height never changes... -->
     </div>
   </div>
 </div>
@@ -1885,10 +1885,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 ### File Upload
 
-Upload files via drag-and-drop or browse. — category: `input-controls`.
+Upload files via drag-and-drop or browse. - category: `input-controls`.
 
 > `@inspera/kit` is **not published yet**. If you cannot resolve that import, do
-> not swap in another UI library — build the markup from the HTML and CSS under
+> not swap in another UI library - build the markup from the HTML and CSS under
 > **Without the package** below, which is this component exactly.
 
 ```tsx
@@ -1905,30 +1905,30 @@ import { FileUpload } from '@inspera/kit'
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `label` | `string` | `'Upload files'` | Field label describing what to upload. |
-| `accept` | `string` | — | Accepted MIME types / extensions. |
+| `accept` | `string` | - | Accepted MIME types / extensions. |
 | `multiple` | `boolean` | `false` | Allow multiple files. |
 | `state` | `'Default' \| 'Dragging' \| 'Disabled' \| 'Error'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
 | `helpText` | `string` | `'PNG, JPG or PDF up to 10MB'` | Constraint hint text. |
-| `onFiles` | `(files: File[]) => void` | — | Fired with the selected files, from both drop and browse. |
+| `onFiles` | `(files: File[]) => void` | - | Fired with the selected files, from both drop and browse. |
 
-**Accessibility** — role `button`, keyboard operable. Dropzone uses role="button" and is keyboard focusable; Enter / Space open the file browser; Provide an accessible label describing the action.
+**Accessibility** - role `button`, keyboard operable. Dropzone uses role="button" and is keyboard focusable; Enter / Space open the file browser; Provide an accessible label describing the action.
 
 **Do:** Support both drag-and-drop and click-to-browse; State accepted file types and size limits; Give visible drag feedback.
 **Don't:** Do not hide the browse affordance; Do not omit constraint help text.
 
 **Deprecated aliases** (do not use): `Dropzone`, `File dropzone`, `Uploader`
 
-#### Without the package — exact HTML and CSS
+#### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
 font weight of your own, and do not restyle it with a UI kit's defaults.
 
 - The zone carries `role="button"`, `tabindex="0"` and an Enter/Space handler that clicks the hidden input. Drag and drop alone is not an accessible way to upload.
-- Keep the native `<input type="file">` in the DOM, visually hidden — the zone triggers it with `.click()`.
+- Keep the native `<input type="file">` in the DOM, visually hidden - the zone triggers it with `.click()`.
 - Border is 2px dashed `--gray-400`; a 1px dash reads as a table rule at this size.
 - The drag state and hover share one look: `--primary` border on a `--blue-100` wash. Handle `dragover`, `dragleave` and `drop`, and `preventDefault` on dragover or the browser opens the file instead.
-- Always state the constraint ("PNG, JPG or PDF up to 10MB") — a bare drop zone gives no way to know what will be rejected.
+- Always state the constraint ("PNG, JPG or PDF up to 10MB") - a bare drop zone gives no way to know what will be rejected.
 
 ```css
 /* Tokens this component needs. Paste once, at `:root`. */
@@ -1957,7 +1957,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   gap: 8px;
   width: 100%;
   padding: 32px 24px;
-  /* Dashed, and 2px — a 1px dashed border reads as a table rule at this size. */
+  /* Dashed, and 2px - a 1px dashed border reads as a table rule at this size. */
   border: 2px dashed var(--gray-400);
   border-radius: var(--radius-md);
   background: var(--surface);
@@ -2035,10 +2035,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 ### Radio Group
 
-Group mutually exclusive radio options. — category: `input-controls`.
+Group mutually exclusive radio options. - category: `input-controls`.
 
 > `@inspera/kit` is **not published yet**. If you cannot resolve that import, do
-> not swap in another UI library — build the markup from the HTML and CSS under
+> not swap in another UI library - build the markup from the HTML and CSS under
 > **Without the package** below, which is this component exactly.
 
 ```tsx
@@ -2055,13 +2055,13 @@ import { RadioGroup } from '@inspera/kit'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | — | Group label, announced as the radiogroup name. |
-| `name` | `string` | — | Shared input name for the group. |
+| `label` | `string` | - | Group label, announced as the radiogroup name. |
+| `name` | `string` | - | Shared input name for the group. |
 | `options` | `RadioOption[]` | `DEFAULT_OPTIONS` | Radio options. |
-| `value` | `string` | — | Selected option value. |
+| `value` | `string` | - | Selected option value. |
 | `orientation` | `'Vertical' \| 'Horizontal'` | `'Vertical'` | Layout direction. |
 | `state` | `'Default' \| 'Disabled' \| 'Error'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
-| `onChange` | `(value: string) => void` | — | Fired with the newly selected value. |
+| `onChange` | `(value: string) => void` | - | Fired with the newly selected value. |
 
 ```ts
 export interface RadioOption {
@@ -2070,14 +2070,14 @@ export interface RadioOption {
 }
 ```
 
-**Accessibility** — role `radiogroup`, keyboard operable. Container uses role="radiogroup" with an accessible label; Each option is a radio with aria-checked; Arrow keys navigate between options.
+**Accessibility** - role `radiogroup`, keyboard operable. Container uses role="radiogroup" with an accessible label; Each option is a radio with aria-checked; Arrow keys navigate between options.
 
-**Do:** Use for single selection among 2–6 options; Provide a group label; Pre-select a sensible default.
-**Don't:** Do not use for multi-select — use Checkbox Group; Do not use a single radio alone.
+**Do:** Use for single selection among 2-6 options; Provide a group label; Pre-select a sensible default.
+**Don't:** Do not use for multi-select - use Checkbox Group; Do not use a single radio alone.
 
 **Deprecated aliases** (do not use): `Radio list`, `Option group`
 
-#### Without the package — exact HTML and CSS
+#### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
@@ -2085,7 +2085,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 - The group label is a `<span>` with an id, linked by `aria-labelledby` on the `role="radiogroup"` element. A bare `<label>` cannot name a group.
 - Every option shares one `name`, and no other question on the page may reuse it.
-- Vertical options have no gap — each row carries its own 8px vertical padding. Horizontal adds a 24px gap.
+- Vertical options have no gap - each row carries its own 8px vertical padding. Horizontal adds a 24px gap.
 - Group-level state (error, disabled) is applied to each option, not drawn once on the wrapper.
 
 ```css
@@ -2134,7 +2134,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   transition: all 120ms ease;
 }
 
-/* The dot is a child element, not a background — it has to stay centred as the
+/* The dot is a child element, not a background - it has to stay centred as the
    circle scales on press. */
 .inspera-radio__dot {
   width: 10px;
@@ -2207,10 +2207,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 ### Checkbox Group
 
-Group related multi-select checkboxes. — category: `input-controls`.
+Group related multi-select checkboxes. - category: `input-controls`.
 
 > `@inspera/kit` is **not published yet**. If you cannot resolve that import, do
-> not swap in another UI library — build the markup from the HTML and CSS under
+> not swap in another UI library - build the markup from the HTML and CSS under
 > **Without the package** below, which is this component exactly.
 
 ```tsx
@@ -2226,12 +2226,12 @@ import { CheckboxGroup } from '@inspera/kit'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | — | Group label, announced as the fieldset legend. |
+| `label` | `string` | - | Group label, announced as the fieldset legend. |
 | `options` | `CheckboxOption[]` | `DEFAULT_OPTIONS` | Checkbox options. |
-| `value` | `string[]` | — | Selected option values. |
+| `value` | `string[]` | - | Selected option values. |
 | `orientation` | `'Vertical' \| 'Horizontal'` | `'Vertical'` | Layout direction. |
 | `state` | `'Default' \| 'Disabled' \| 'Error'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
-| `onChange` | `(value: string[]) => void` | — | Fired with the full array of selected values. |
+| `onChange` | `(value: string[]) => void` | - | Fired with the full array of selected values. |
 
 ```ts
 export interface CheckboxOption {
@@ -2240,20 +2240,20 @@ export interface CheckboxOption {
 }
 ```
 
-**Accessibility** — role `group`, keyboard operable. Container uses role="group" with aria-labelledby; Each option is a checkbox with aria-checked; Group related options under a shared legend/label.
+**Accessibility** - role `group`, keyboard operable. Container uses role="group" with aria-labelledby; Each option is a checkbox with aria-checked; Group related options under a shared legend/label.
 
 **Do:** Use for selecting multiple related options; Provide a group label; Keep options parallel and concise.
-**Don't:** Do not use for mutually exclusive options — use Radio Group; Do not omit the group label.
+**Don't:** Do not use for mutually exclusive options - use Radio Group; Do not omit the group label.
 
 **Deprecated aliases** (do not use): `Checkbox list`, `Multi-select group`
 
-#### Without the package — exact HTML and CSS
+#### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
 font weight of your own, and do not restyle it with a UI kit's defaults.
 
-- Checkboxes take `role="group"`, not `radiogroup`, and they do **not** share a `name` — each carries its own value.
+- Checkboxes take `role="group"`, not `radiogroup`, and they do **not** share a `name` - each carries its own value.
 - The group label is a `<span>` with an id, linked by `aria-labelledby`.
 - Same spacing as Radio Group: no gap vertically (rows carry their own padding), 24px horizontally.
 - A "select all" control on top of a group is the natural place for the indeterminate checkbox state.
@@ -2334,7 +2334,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   background: var(--primary);
 }
 
-/* The ring goes on the drawn box: the real input is 0×0, so a ring on it is
+/* The ring goes on the drawn box: the real input is 0x0, so a ring on it is
    invisible. This is the single most-missed detail in a custom checkbox. */
 .inspera-checkbox__input:focus-visible + .inspera-checkbox__box {
   outline: var(--focus-ring-width) solid var(--focus-ring-color);
@@ -2401,10 +2401,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 ### Rating
 
-Capture or display a star rating. — category: `input-controls`.
+Capture or display a star rating. - category: `input-controls`.
 
 > `@inspera/kit` is **not published yet**. If you cannot resolve that import, do
-> not swap in another UI library — build the markup from the HTML and CSS under
+> not swap in another UI library - build the markup from the HTML and CSS under
 > **Without the package** below, which is this component exactly.
 
 ```tsx
@@ -2421,27 +2421,27 @@ import { Rating } from '@inspera/kit'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `value` | `number` | — | Current rating. Controlled — pair with onChange. Omit it and the component tracks its own, the same contract Checkbox and Toggle use. |
+| `value` | `number` | - | Current rating. Controlled - pair with onChange. Omit it and the component tracks its own, the same contract Checkbox and Toggle use. |
 | `max` | `number` | `5` | Number of stars. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Star size. |
 | `readOnly` | `boolean` | `false` | Display-only mode. |
 | `showValue` | `boolean` | `false` | Show numeric value. |
-| `onChange` | `(value: number) => void` | — | Fired with the chosen rating. Not fired when readOnly. |
+| `onChange` | `(value: number) => void` | - | Fired with the chosen rating. Not fired when readOnly. |
 
-**Accessibility** — role `radiogroup`, keyboard operable. Container uses role="radiogroup" with an accessible label; Each star is a radio with aria-checked and an aria-label; Arrow keys adjust the rating.
+**Accessibility** - role `radiogroup`, keyboard operable. Container uses role="radiogroup" with an accessible label; Each star is a radio with aria-checked and an aria-label; Arrow keys adjust the rating.
 
 **Do:** Use for feedback and review scores; Show hover preview when interactive; Use read-only mode to display aggregate scores.
 **Don't:** Do not use for precise numeric input; Do not omit accessible labels on stars.
 
 **Deprecated aliases** (do not use): `Star rating`, `Stars`
 
-#### Without the package — exact HTML and CSS
+#### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
 font weight of your own, and do not restyle it with a UI kit's defaults.
 
-- One glyph — `star` — with the variable font’s FILL axis at 0 or 1. Swapping to a different outline glyph changes the shape and makes the row jump on hover.
+- One glyph - `star` - with the variable font's FILL axis at 0 or 1. Swapping to a different outline glyph changes the shape and makes the row jump on hover.
 - Filled stars are `--warning` #EF6C00; empty ones `--gray-400`. Stars are 28px (20px small) with a 2px gap.
 - `role="radiogroup"` with `role="radio"` stars, a roving tabindex, and arrow keys that both move focus and set the value.
 - Every star needs its own label ("3 stars"), or the control announces as five unlabelled radios.
@@ -2526,10 +2526,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 ### OTP Input
 
-Enter a one-time verification code. — category: `input-controls`.
+Enter a one-time verification code. - category: `input-controls`.
 
 > `@inspera/kit` is **not published yet**. If you cannot resolve that import, do
-> not swap in another UI library — build the markup from the HTML and CSS under
+> not swap in another UI library - build the markup from the HTML and CSS under
 > **Without the package** below, which is this component exactly.
 
 ```tsx
@@ -2545,28 +2545,28 @@ import { OtpInput } from '@inspera/kit'
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `length` | `number` | `6` | Number of digit boxes. |
-| `value` | `string` | — | Current code value. |
-| `state` | `'Default' \| 'Focused' \| 'Error' \| 'Disabled'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Focused` is presentation-only — leave it unset in application code, where CSS drives it from the real pointer and keyboard. `Error` and `Disabled` are real application state and belong in your code. |
-| `onChange` | `(value: string) => void` | — | Fired with the full code as digits are entered or pasted. |
+| `value` | `string` | - | Current code value. |
+| `state` | `'Default' \| 'Focused' \| 'Error' \| 'Disabled'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Focused` is presentation-only - leave it unset in application code, where CSS drives it from the real pointer and keyboard. `Error` and `Disabled` are real application state and belong in your code. |
+| `onChange` | `(value: string) => void` | - | Fired with the full code as digits are entered or pasted. |
 
-**Accessibility** — role `textbox`, keyboard operable. Each box has an aria-label "Digit N"; aria-invalid reflects the error state; Backspace moves focus to the previous box; paste distributes digits.
+**Accessibility** - role `textbox`, keyboard operable. Each box has an aria-label "Digit N"; aria-invalid reflects the error state; Backspace moves focus to the previous box; paste distributes digits.
 
 **Do:** Auto-advance focus as digits are entered; Support paste of the full code; Use a monospace font for even alignment.
 **Don't:** Do not require manual box-by-box focus; Do not allow non-numeric characters.
 
 **Deprecated aliases** (do not use): `PIN input`, `Verification code`, `Code input`
 
-#### Without the package — exact HTML and CSS
+#### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
 font weight of your own, and do not restyle it with a UI kit's defaults.
 
-- One `<input>` per digit, 44×48, `--radius-md`, in `--font-mono` at 20px so the digits do not shift as they are typed.
+- One `<input>` per digit, 44x48, `--radius-md`, in `--font-mono` at 20px so the digits do not shift as they are typed.
 - `autocomplete="one-time-code"` goes on the first box only, and `off` on the rest. On every box the platform offers the code once per field.
 - Each box needs `aria-label="Digit N"` and `inputmode="numeric"`, plus `maxlength="1"`.
 - Wire the behaviour: typing advances focus, Backspace on an empty box moves back and clears, arrows move between boxes, and a paste on any box fills the rest.
-- Focus is per box — do not ring the whole row.
+- Focus is per box - do not ring the whole row.
 
 ```css
 /* Tokens this component needs. Paste once, at `:root`. */
@@ -2647,10 +2647,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 ### Card
 
-Group related content in a contained surface. — category: `data-display`.
+Group related content in a contained surface. - category: `data-display`.
 
 > `@inspera/kit` is **not published yet**. If you cannot resolve that import, do
-> not swap in another UI library — build the markup from the HTML and CSS under
+> not swap in another UI library - build the markup from the HTML and CSS under
 > **Without the package** below, which is this component exactly.
 
 ```tsx
@@ -2671,15 +2671,15 @@ import { Card } from '@inspera/kit'
 | `elevation` | `'Flat' \| 'Raised' \| 'Outlined'` | `'Raised'` | Surface treatment. |
 | `padding` | `'Compact' \| 'Default' \| 'Spacious'` | `'Default'` | Internal padding (12 / 16 / 24). |
 | `interactive` | `boolean` | `false` | Renders as a focusable button with hover elevation. |
-| `children` | `ReactNode` | — | Card contents. Takes precedence over title and body. |
-| `onClick` | `() => void` | — | Fired when an interactive card is activated. Set interactive as well, or there is no affordance. |
+| `children` | `ReactNode` | - | Card contents. Takes precedence over title and body. |
+| `onClick` | `() => void` | - | Fired when an interactive card is activated. Set interactive as well, or there is no affordance. |
 
-**Accessibility** — role `article`, keyboard operable. Interactive cards should use role="button" or be wrapped in an anchor; Non-interactive cards use role="article" or a semantic section.
+**Accessibility** - role `article`, keyboard operable. Interactive cards should use role="button" or be wrapped in an anchor; Non-interactive cards use role="article" or a semantic section.
 
 **Do:** Use to group related content; Maintain consistent padding within a view; Use raised elevation for primary content cards.
 **Don't:** Do not nest cards inside other cards; Do not use cards for layout-only purposes without content.
 
-#### Without the package — exact HTML and CSS
+#### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
@@ -2689,7 +2689,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 - Flat has neither border nor shadow, Raised adds `--shadow-200`, Outlined adds a 1px `--border-strong`. Never both a shadow and a strong border.
 - The transparent 1px border at rest is deliberate: without it, Outlined would be 2px wider than Flat.
 - An interactive card is a `<button>`. A `<div>` with a click handler is not keyboard operable and will fail review.
-- Title 16px/500, body 16px/1.4 in `--gray-700` — the body is not smaller than the title.
+- Title 16px/500, body 16px/1.4 in `--gray-700` - the body is not smaller than the title.
 
 ```css
 /* Tokens this component needs. Paste once, at `:root`. */
@@ -2761,7 +2761,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 ```html
 <article class="inspera-card inspera-card--raised">
   <h3 class="inspera-card__title">Algebra Quiz</h3>
-  <p class="inspera-card__body">24 questions · 45 minutes.</p>
+  <p class="inspera-card__body">24 questions | 45 minutes.</p>
 </article>
 
 <!-- Interactive: a real button, never a div with a click handler. -->
@@ -2774,10 +2774,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 ### Badge
 
-Display a short status label or count. — category: `data-display`.
+Display a short status label or count. - category: `data-display`.
 
 > `@inspera/kit` is **not published yet**. If you cannot resolve that import, do
-> not swap in another UI library — build the markup from the HTML and CSS under
+> not swap in another UI library - build the markup from the HTML and CSS under
 > **Without the package** below, which is this component exactly.
 
 ```tsx
@@ -2797,22 +2797,22 @@ import { Badge } from '@inspera/kit'
 | `intent` | `'Neutral' \| 'Info' \| 'Success' \| 'Warning' \| 'Error'` | `'Neutral'` | Semantic color. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Height 20 / 24. |
 | `withIcon` | `boolean` | `false` | Show a leading status icon. |
-| `icon` | `string` | — | Material Symbols name shown before the label when withIcon is set. |
+| `icon` | `string` | - | Material Symbols name shown before the label when withIcon is set. |
 
-**Accessibility** — role `status`. Use aria-label for icon-only badges; Use role="status" for dynamic count badges.
+**Accessibility** - role `status`. Use aria-label for icon-only badges; Use role="status" for dynamic count badges.
 
-**Do:** Use for status indicators and counts; Keep labels short — 1 to 2 words; Use intent colors consistently.
+**Do:** Use for status indicators and counts; Keep labels short - 1 to 2 words; Use intent colors consistently.
 **Don't:** Do not use for long text content; Do not make badges interactive without clear affordance.
 
 **Deprecated aliases** (do not use): `Status Badge`, `Tag`, `Chip`
 
-#### Without the package — exact HTML and CSS
+#### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
 font weight of your own, and do not restyle it with a UI kit's defaults.
 
-- Height is 24px (20px small) and the radius is a full pill — not `rounded-md`.
+- Height is 24px (20px small) and the radius is a full pill - not `rounded-md`.
 - Type is 12px/500 at both sizes; Small changes height and padding only.
 - Neutral is `--surface-neutral` with `--gray-900` text, not a grey chip with white text.
 - Every intent pairs a `*-surface` tint with the matching solid as the text colour.
@@ -2855,7 +2855,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   white-space: nowrap;
 }
 
-/* Small changes height and padding only — never the 12px type. */
+/* Small changes height and padding only - never the 12px type. */
 .inspera-badge--small { height: 20px; padding: 0 6px; }
 
 /* Neutral is written out even though it matches the base, so the class name
@@ -2879,7 +2879,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 <span class="inspera-badge inspera-badge--neutral inspera-badge--small" role="status">Draft</span>
 
-<!-- With an icon. Material Symbols Outlined, filled — never another set. -->
+<!-- With an icon. Material Symbols Outlined, filled - never another set. -->
 <span class="inspera-badge inspera-badge--error" role="status">
   <span class="material-symbols-outlined" aria-hidden="true">error</span>
   Failed
@@ -2889,10 +2889,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 ### Avatar
 
-Represent a user or entity with an image or initials. — category: `data-display`.
+Represent a user or entity with an image or initials. - category: `data-display`.
 
 > `@inspera/kit` is **not published yet**. If you cannot resolve that import, do
-> not swap in another UI library — build the markup from the HTML and CSS under
+> not swap in another UI library - build the markup from the HTML and CSS under
 > **Without the package** below, which is this component exactly.
 
 ```tsx
@@ -2915,18 +2915,18 @@ import { Avatar } from '@inspera/kit'
 | `alt` | `string` | `'User avatar'` | Alternative text for the image. Required whenever an image is shown. |
 | `icon` | `string` | `'person'` | Material Symbols name, used when content is Icon. |
 
-**Accessibility** — role `img`. Provide alt text for image avatars; Use aria-label for initials and icon variants.
+**Accessibility** - role `img`. Provide alt text for image avatars; Use aria-label for initials and icon variants.
 
 **Do:** Use for user profiles and participant lists; Provide meaningful alt text; Use consistent sizing within a context.
-**Don't:** Do not stretch or distort avatar images; Do not use random colors — use a deterministic palette.
+**Don't:** Do not stretch or distort avatar images; Do not use random colors - use a deterministic palette.
 
-#### Without the package — exact HTML and CSS
+#### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
 font weight of your own, and do not restyle it with a UI kit's defaults.
 
-- Diameters are 32 / 40 / 56. Initials are 40% of that, the icon 55%, the status dot 28% — never a fixed size.
+- Diameters are 32 / 40 / 56. Initials are 40% of that, the icon 55%, the status dot 28% - never a fixed size.
 - The surface uses `--avatar-surface`, not a random grey, and `--radius-pill`.
 - The status dot needs its 2px `--white` ring, or it disappears against a photo.
 - The accessible name lives on the surface (`role="img"`); the initials themselves are decorative text.
@@ -3026,10 +3026,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 ### Table
 
-Display structured data in rows and columns. — category: `data-display`.
+Display structured data in rows and columns. - category: `data-display`.
 
 > `@inspera/kit` is **not published yet**. If you cannot resolve that import, do
-> not swap in another UI library — build the markup from the HTML and CSS under
+> not swap in another UI library - build the markup from the HTML and CSS under
 > **Without the package** below, which is this component exactly.
 
 ```tsx
@@ -3051,8 +3051,8 @@ import { Table } from '@inspera/kit'
 | `striped` | `boolean` | `false` | Zebra-stripe rows. |
 | `hoverable` | `boolean` | `true` | Highlight rows on hover. |
 | `selectable` | `boolean` | `false` | Add a row selection column. |
-| `caption` | `string` | — | Describes the table for screen readers. Provide one unless a heading already names it. |
-| `onRowClick` | `(row: Record<string, ReactNode>, index: number) => void` | — | Fired with the row data and its index. |
+| `caption` | `string` | - | Describes the table for screen readers. Provide one unless a heading already names it. |
+| `onRowClick` | `(row: Record<string, ReactNode>, index: number) => void` | - | Fired with the row data and its index. |
 
 ```ts
 export interface TableColumn {
@@ -3063,14 +3063,14 @@ export interface TableColumn {
 }
 ```
 
-**Accessibility** — role `table`, keyboard operable. Use semantic table / thead / tbody markup; Header cells use scope="col"; Provide a caption or aria-label describing the table.
+**Accessibility** - role `table`, keyboard operable. Use semantic table / thead / tbody markup; Header cells use scope="col"; Provide a caption or aria-label describing the table.
 
 **Do:** Use for comparable, structured records; Right-align numeric columns; Keep headers concise.
 **Don't:** Do not use tables for page layout; Do not overload rows with unrelated actions.
 
 **Deprecated aliases** (do not use): `Data table`, `Grid`, `Datagrid`
 
-#### Without the package — exact HTML and CSS
+#### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
@@ -3079,7 +3079,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 - Use a real `<table>` with `<thead>`, `<tbody>` and `scope="col"` on every header. A grid of divs loses row and column association completely.
 - Row height is 52px (40px compact) and the header sits on `--gray-100`. Cells are 14px with 16px horizontal padding.
 - Right-align numeric columns only, so digits line up. Never right-align text.
-- The stripe is passed as the row’s resting fill (`--inspera-row-bg`) rather than a plain background, so the hover rule can still win on striped rows.
+- The stripe is passed as the row's resting fill (`--inspera-row-bg`) rather than a plain background, so the hover rule can still win on striped rows.
 - Selection checkboxes need a per-row `aria-label` ("Select row 3") and `accent-color: var(--primary)`.
 - Give the table a `<caption>` unless a heading immediately above already names it.
 
@@ -3133,7 +3133,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   white-space: nowrap;
 }
 
-/* Small changes height and padding only — never the 12px type. */
+/* Small changes height and padding only - never the 12px type. */
 .inspera-badge--small { height: 20px; padding: 0 6px; }
 
 /* Neutral is written out even though it matches the base, so the class name
@@ -3247,10 +3247,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 ### Accordion
 
-Show and hide sections of related content. — category: `data-display`.
+Show and hide sections of related content. - category: `data-display`.
 
 > `@inspera/kit` is **not published yet**. If you cannot resolve that import, do
-> not swap in another UI library — build the markup from the HTML and CSS under
+> not swap in another UI library - build the markup from the HTML and CSS under
 > **Without the package** below, which is this component exactly.
 
 ```tsx
@@ -3259,7 +3259,7 @@ import { Accordion } from '@inspera/kit'
 <Accordion
   type="Single"
   iconPosition="Right"
-  items={[{ title: 'What is Inspera?', content: '…' }]}
+  items={[{ title: 'What is Inspera?', content: '...' }]}
 />
 ```
 
@@ -3277,14 +3277,14 @@ export interface AccordionItem {
 }
 ```
 
-**Accessibility** — role `region`, keyboard operable. Header is a button with aria-expanded and aria-controls; Panel uses role="region" linked via aria-labelledby; Enter / Space toggle the section.
+**Accessibility** - role `region`, keyboard operable. Header is a button with aria-expanded and aria-controls; Panel uses role="region" linked via aria-labelledby; Enter / Space toggle the section.
 
 **Do:** Use to progressively disclose content; Keep section titles scannable; Use Single mode when only one section is relevant at a time.
 **Don't:** Do not nest accordions deeply; Do not hide critical content behind collapsed sections.
 
 **Deprecated aliases** (do not use): `Disclosure`, `Collapse`, `Expander`
 
-#### Without the package — exact HTML and CSS
+#### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
@@ -3293,7 +3293,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 - Each header is a `<button>` inside an `<h3>`. The heading gives the section its place in the document outline; the button makes it operable.
 - `aria-expanded` on the trigger and `aria-controls` pointing at the panel, with the panel as `role="region"` labelled back by the trigger id. All four, or the pattern does not work.
 - Collapse with the `hidden` attribute so the panel leaves both the tab order and the accessibility tree.
-- The chevron rotates 180° driven off `[aria-expanded="true"]`, so the attribute and the arrow cannot disagree.
+- The chevron rotates 180deg driven off `[aria-expanded="true"]`, so the attribute and the arrow cannot disagree.
 - Icon-left reverses the flex row rather than reordering the markup, so the title is still read first.
 - Single mode closes the open panel when another opens; multiple leaves them independent. Neither changes the markup.
 
@@ -3320,7 +3320,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   background: var(--white);
 }
 
-/* Rules between items, not around them — the wrapper already has a border. */
+/* Rules between items, not around them - the wrapper already has a border. */
 .inspera-accordion__item + .inspera-accordion__item {
   border-top: 1px solid var(--border);
 }
@@ -3406,10 +3406,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 ### Tag
 
-Label, categorize, or filter with a removable chip. — category: `data-display`.
+Label, categorize, or filter with a removable chip. - category: `data-display`.
 
 > `@inspera/kit` is **not published yet**. If you cannot resolve that import, do
-> not swap in another UI library — build the markup from the HTML and CSS under
+> not swap in another UI library - build the markup from the HTML and CSS under
 > **Without the package** below, which is this component exactly.
 
 ```tsx
@@ -3425,29 +3425,29 @@ import { Tag } from '@inspera/kit'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` **(required)** | `string` | — | Tag text. |
+| `label` **(required)** | `string` | - | Tag text. |
 | `intent` | `'Neutral' \| 'Info' \| 'Success' \| 'Warning' \| 'Error'` | `'Neutral'` | Semantic color. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Tag height. |
 | `removable` | `boolean` | `false` | Show a remove affordance. |
-| `leadingIcon` | `string` | — | Optional leading icon. |
-| `onRemove` | `() => void` | — | Fired when the remove control is activated. Set removable as well. |
-| `onClick` | `() => void` | — | Fired when the tag itself is activated. |
+| `leadingIcon` | `string` | - | Optional leading icon. |
+| `onRemove` | `() => void` | - | Fired when the remove control is activated. Set removable as well. |
+| `onClick` | `() => void` | - | Fired when the tag itself is activated. |
 
-**Accessibility** — role `status`, keyboard operable. Removable tags expose a button with aria-label "Remove {label}"; Interactive tags must be keyboard focusable; Use aria-label for icon-only tags.
+**Accessibility** - role `status`, keyboard operable. Removable tags expose a button with aria-label "Remove {label}"; Interactive tags must be keyboard focusable; Use aria-label for icon-only tags.
 
-**Do:** Use for filters, categories, and selections; Keep labels to 1–2 words; Provide a remove control when tags are dismissible.
-**Don't:** Do not use for status that never changes — use Badge; Do not pack long text into a tag.
+**Do:** Use for filters, categories, and selections; Keep labels to 1-2 words; Provide a remove control when tags are dismissible.
+**Don't:** Do not use for status that never changes - use Badge; Do not pack long text into a tag.
 
 **Deprecated aliases** (do not use): `Chip`, `Pill`, `Label`
 
-#### Without the package — exact HTML and CSS
+#### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
 font weight of your own, and do not restyle it with a UI kit's defaults.
 
 - Identical geometry to Badge: 24px tall (20px small), full pill radius, 12px/500 type.
-- The remove control is a `<button>` with `aria-label="Remove <label>"` — never a bare icon span, and never just "close".
+- The remove control is a `<button>` with `aria-label="Remove <label>"` - never a bare icon span, and never just "close".
 - The leading icon is filled (`FILL 1`); the close icon is not.
 - A tag with no `onClick` is a `<span>` and takes `cursor: default`. Only a clickable tag becomes a `<button>`.
 
@@ -3506,7 +3506,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 .inspera-tag--small .material-symbols-outlined { font-size: 14px; }
 
 /* The remove control. Square, inherits the tag's colour, and keeps its own
-   accessible name — "Remove <label>", not a bare "close". */
+   accessible name - "Remove <label>", not a bare "close". */
 .inspera-tag__remove {
   display: inline-flex;
   align-items: center;
@@ -3545,10 +3545,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 ### Divider
 
-Separate content with a thin rule. — category: `data-display`.
+Separate content with a thin rule. - category: `data-display`.
 
 > `@inspera/kit` is **not published yet**. If you cannot resolve that import, do
-> not swap in another UI library — build the markup from the HTML and CSS under
+> not swap in another UI library - build the markup from the HTML and CSS under
 > **Without the package** below, which is this component exactly.
 
 ```tsx
@@ -3563,24 +3563,24 @@ import { Divider } from '@inspera/kit'
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `orientation` | `'Horizontal' \| 'Vertical'` | `'Horizontal'` | Divider direction. |
-| `label` | `string` | — | Optional centered label (horizontal only). |
+| `label` | `string` | - | Optional centered label (horizontal only). |
 | `spacing` | `'Compact' \| 'Default' \| 'Spacious'` | `'Default'` | Surrounding margin. |
 
-**Accessibility** — role `separator`. Use role="separator" with aria-orientation; Purely decorative dividers may be aria-hidden.
+**Accessibility** - role `separator`. Use role="separator" with aria-orientation; Purely decorative dividers may be aria-hidden.
 
 **Do:** Use to group and separate related content; Use a labeled divider to introduce a section; Keep dividers hairline-thin.
 **Don't:** Do not overuse dividers where whitespace suffices; Do not use heavy rules.
 
 **Deprecated aliases** (do not use): `Separator`, `Rule`, `HR`
 
-#### Without the package — exact HTML and CSS
+#### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
 font weight of your own, and do not restyle it with a UI kit's defaults.
 
 - The rule is 1px of `--border` as a background, not a border. A bare `<hr>` keeps the browser default and renders as a grey groove.
-- Spacing is margin on the divider itself: 16px default, 8px compact, 24px spacious — on the block axis horizontally, the inline axis vertically.
+- Spacing is margin on the divider itself: 16px default, 8px compact, 24px spacious - on the block axis horizontally, the inline axis vertically.
 - A labelled divider is a flex row of rule / label / rule, with the label at 13px `--muted-foreground`. It is not text laid over a line.
 - Always carry `role="separator"` and `aria-orientation`; a labelled one also needs `aria-label`.
 
@@ -3664,10 +3664,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 ### Empty State
 
-Communicate the absence of content and offer a next step. — category: `data-display`.
+Communicate the absence of content and offer a next step. - category: `data-display`.
 
 > `@inspera/kit` is **not published yet**. If you cannot resolve that import, do
-> not swap in another UI library — build the markup from the HTML and CSS under
+> not swap in another UI library - build the markup from the HTML and CSS under
 > **Without the package** below, which is this component exactly.
 
 ```tsx
@@ -3687,18 +3687,18 @@ import { EmptyState } from '@inspera/kit'
 | `icon` | `string` | `'inbox'` | Material Symbols icon name. |
 | `title` | `string` | `'No results found'` | Primary message. |
 | `description` | `string` | `'Try adjusting your filters or search terms.'` | Supporting explanation. |
-| `actionLabel` | `string` | — | Optional primary action label. |
-| `onAction` | `() => void` | — | Fired when the action is activated. Only rendered when actionLabel is set. |
+| `actionLabel` | `string` | - | Optional primary action label. |
+| `onAction` | `() => void` | - | Fired when the action is activated. Only rendered when actionLabel is set. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Overall scale. |
 
-**Accessibility** — role `status`, keyboard operable. Announce dynamically-appearing empty states with role="status"; The action must be a real focusable button; The illustration/icon is decorative (aria-hidden).
+**Accessibility** - role `status`, keyboard operable. Announce dynamically-appearing empty states with role="status"; The action must be a real focusable button; The illustration/icon is decorative (aria-hidden).
 
 **Do:** Explain why the area is empty; Offer a clear next action when possible; Keep the tone helpful.
-**Don't:** Do not leave empty areas blank with no guidance; Do not use for transient loading — use Skeleton.
+**Don't:** Do not leave empty areas blank with no guidance; Do not use for transient loading - use Skeleton.
 
 **Deprecated aliases** (do not use): `Blank slate`, `Zero state`, `No data`
 
-#### Without the package — exact HTML and CSS
+#### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
@@ -3770,7 +3770,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
     transform var(--duration-fast) var(--easing-standard);
 }
 
-/* Sizes change height, padding and gap only — never the 16px type. */
+/* Sizes change height, padding and gap only - never the 16px type. */
 .inspera-btn--small { height: 32px; padding: 0 12px; gap: 6px; }
 .inspera-btn--large { height: 48px; padding: 0 24px; gap: 10px; }
 
@@ -3882,10 +3882,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 ### Avatar Group
 
-Show a set of users as overlapping avatars with an overflow count. — category: `data-display`.
+Show a set of users as overlapping avatars with an overflow count. - category: `data-display`.
 
 > `@inspera/kit` is **not published yet**. If you cannot resolve that import, do
-> not swap in another UI library — build the markup from the HTML and CSS under
+> not swap in another UI library - build the markup from the HTML and CSS under
 > **Without the package** below, which is this component exactly.
 
 ```tsx
@@ -3911,20 +3911,20 @@ export interface AvatarGroupItem {
 }
 ```
 
-**Accessibility** — role `group`. Wrap in a group with an aria-label describing the set; Each avatar keeps its own accessible label; The overflow chip states the hidden count.
+**Accessibility** - role `group`. Wrap in a group with an aria-label describing the set; Each avatar keeps its own accessible label; The overflow chip states the hidden count.
 
 **Do:** Use for participant and collaborator lists; Cap visible avatars and show a +N overflow; Keep sizing consistent within a context.
 **Don't:** Do not show dozens of avatars inline; Do not omit the overflow count.
 
 **Deprecated aliases** (do not use): `Avatar stack`, `Facepile`
 
-#### Without the package — exact HTML and CSS
+#### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
 font weight of your own, and do not restyle it with a UI kit's defaults.
 
-- Overlap is 30% of the diameter as a negative left margin — 10 / 12 / 17px for small / medium / large — and the first item has none.
+- Overlap is 30% of the diameter as a negative left margin - 10 / 12 / 17px for small / medium / large - and the first item has none.
 - The separating ring is a `box-shadow`, not a border: a border would grow each avatar and break the spacing.
 - The overflow chip is `+N` on `--gray-200` at 34% of the diameter, sized identically to an avatar.
 - The group carries `role="group"` and a count in its label; the chip carries "N more". Overlapping avatars are meaningless to a screen reader without both.
@@ -4059,10 +4059,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 ### Stat
 
-Highlight a key metric with an optional trend. — category: `data-display`.
+Highlight a key metric with an optional trend. - category: `data-display`.
 
 > `@inspera/kit` is **not published yet**. If you cannot resolve that import, do
-> not swap in another UI library — build the markup from the HTML and CSS under
+> not swap in another UI library - build the markup from the HTML and CSS under
 > **Without the package** below, which is this component exactly.
 
 ```tsx
@@ -4083,23 +4083,23 @@ import { Stat } from '@inspera/kit'
 | `value` **(required)** | `string \| number` | `'84%'` | Metric value. |
 | `delta` | `string` | `'+4.2%'` | Change indicator text. |
 | `deltaIntent` | `'up' \| 'down' \| 'neutral'` | `'up'` | Trend direction / color. |
-| `icon` | `string` | — | Optional leading icon. |
-| `helpText` | `string` | — | Optional context below the value, such as the comparison period. |
+| `icon` | `string` | - | Optional leading icon. |
+| `helpText` | `string` | - | Optional context below the value, such as the comparison period. |
 
-**Accessibility** — role `group`. Associate the value with its label for screen readers; Convey trend with text, not color alone; Use aria-label to summarize the metric and change.
+**Accessibility** - role `group`. Associate the value with its label for screen readers; Convey trend with text, not color alone; Use aria-label to summarize the metric and change.
 
 **Do:** Use for dashboard summaries; Pair a value with a clear label; Indicate trend direction with an icon and text.
 **Don't:** Do not rely on color alone for the delta; Do not crowd many stats without spacing.
 
 **Deprecated aliases** (do not use): `Metric`, `KPI`, `Stat card`
 
-#### Without the package — exact HTML and CSS
+#### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
 font weight of your own, and do not restyle it with a UI kit's defaults.
 
-- The label is 12px/600 uppercase with 0.04em tracking in `--muted-foreground` — not body text.
+- The label is 12px/600 uppercase with 0.04em tracking in `--muted-foreground` - not body text.
 - The value is 28px/600 at line-height 1.1. It is the only large type in the tile.
 - The tile uses `--radius-lg` and a 1px `--border`, with no shadow.
 - Trend colour is `--success` up, `--error` down, `--muted-foreground` flat, and always ships with the matching arrow so the direction is not colour-only.
@@ -4192,10 +4192,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 ### List
 
-Present a vertical series of related items. — category: `data-display`.
+Present a vertical series of related items. - category: `data-display`.
 
 > `@inspera/kit` is **not published yet**. If you cannot resolve that import, do
-> not swap in another UI library — build the markup from the HTML and CSS under
+> not swap in another UI library - build the markup from the HTML and CSS under
 > **Without the package** below, which is this component exactly.
 
 ```tsx
@@ -4205,7 +4205,7 @@ import { List } from '@inspera/kit'
   size="Default"
   divided={true}
   interactive={false}
-  items={[{ primary: 'General settings', secondary: '…', leading: 'settings' }]}
+  items={[{ primary: 'General settings', secondary: '...', leading: 'settings' }]}
 />
 ```
 
@@ -4215,7 +4215,7 @@ import { List } from '@inspera/kit'
 | `divided` | `boolean` | `true` | Show dividers between rows. |
 | `interactive` | `boolean` | `false` | Make rows clickable. |
 | `size` | `'Compact' \| 'Default'` | `'Default'` | Row density. |
-| `onItemClick` | `(item: ListItem, index: number) => void` | — | Fired with the item and its index. Set interactive as well. |
+| `onItemClick` | `(item: ListItem, index: number) => void` | - | Fired with the item and its index. Set interactive as well. |
 
 ```ts
 export interface ListItem {
@@ -4226,24 +4226,24 @@ export interface ListItem {
 }
 ```
 
-**Accessibility** — role `list`, keyboard operable. Use semantic list markup (ul / li); Interactive rows are buttons and keyboard focusable; Provide meaningful text for each item.
+**Accessibility** - role `list`, keyboard operable. Use semantic list markup (ul / li); Interactive rows are buttons and keyboard focusable; Provide meaningful text for each item.
 
 **Do:** Use for settings, results, and simple records; Keep primary text scannable; Use secondary text for supporting detail.
-**Don't:** Do not use for comparable tabular data — use Table; Do not make only part of a row clickable.
+**Don't:** Do not use for comparable tabular data - use Table; Do not make only part of a row clickable.
 
 **Deprecated aliases** (do not use): `List view`, `Item list`
 
-#### Without the package — exact HTML and CSS
+#### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
 font weight of your own, and do not restyle it with a UI kit's defaults.
 
-- Set the four border longhands, never the `border` shorthand. A shorthand on the row wipes the bottom border that draws the divider — the exact bug this component shipped with.
+- Set the four border longhands, never the `border` shorthand. A shorthand on the row wipes the bottom border that draws the divider - the exact bug this component shipped with.
 - Interactive rows are `<button>` inside the `<li>`, so focus and Enter/Space work without a keydown handler.
 - Row padding is 12px (8px compact) vertical, 16px horizontal; primary text 14px/500, secondary 13px `--muted-foreground`.
 - The divider is on every row but the last, drawn by `li:not(:last-child)` rather than by counting in script.
-- Leading and trailing icons are 20px (18px compact) and always `aria-hidden` — the row’s text is the label.
+- Leading and trailing icons are 20px (18px compact) and always `aria-hidden` - the row's text is the label.
 
 ```css
 /* Tokens this component needs. Paste once, at `:root`. */
@@ -4373,10 +4373,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 ### Alert
 
-Display semantic inline feedback. — category: `feedback`.
+Display semantic inline feedback. - category: `feedback`.
 
 > `@inspera/kit` is **not published yet**. If you cannot resolve that import, do
-> not swap in another UI library — build the markup from the HTML and CSS under
+> not swap in another UI library - build the markup from the HTML and CSS under
 > **Without the package** below, which is this component exactly.
 
 ```tsx
@@ -4385,7 +4385,7 @@ import { Alert } from '@inspera/kit'
 <Alert
   intent="Info"
   title="Heads up"
-  message="…"
+  message="..."
   layout="Simple"
   background={true}
 />
@@ -4399,25 +4399,25 @@ import { Alert } from '@inspera/kit'
 | `layout` | `'Simple' \| 'With CTA' \| 'With Close' \| 'With CTA + Close'` | `'Simple'` | Action affordances. |
 | `background` | `boolean` | `true` | Tinted fill vs. left-accent only. |
 | `ctaLabel` | `string` | `'View details'` | Label for the inline action. Only rendered by the "With CTA" layouts. |
-| `onCta` | `() => void` | — | Fired when the inline action is activated. |
-| `onClose` | `() => void` | — | Fired when the alert is dismissed. Only rendered by the "With Close" layouts. |
+| `onCta` | `() => void` | - | Fired when the inline action is activated. |
+| `onClose` | `() => void` | - | Fired when the alert is dismissed. Only rendered by the "With Close" layouts. |
 
-**Accessibility** — role `alert`, keyboard operable. Error and Warning announce as role="alert"; Info and Success as a polite role="status" — never both on one element, since role="alert" already implies assertive; Close button must have aria-label="Close alert".
+**Accessibility** - role `alert`, keyboard operable. Error and Warning announce as role="alert"; Info and Success as a polite role="status" - never both on one element, since role="alert" already implies assertive; Close button must have aria-label="Close alert".
 
 **Do:** Use for contextual inline messages; Match intent to message severity; Keep alert text concise.
 **Don't:** Do not stack more than 2 alerts in the same area; Do not use alerts for permanent content.
 
-#### Without the package — exact HTML and CSS
+#### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
 font weight of your own, and do not restyle it with a UI kit's defaults.
 
 - Each intent pairs the `*-surface` tint as background with the solid colour as both border and icon.
-- The live region follows severity: Error and Warning use `role="alert"`, Info and Success use `role="status"` with `aria-live="polite"`. Never put `role="alert"` and `aria-live="polite"` on the same element — alert already implies assertive.
+- The live region follows severity: Error and Warning use `role="alert"`, Info and Success use `role="status"` with `aria-live="polite"`. Never put `role="alert"` and `aria-live="polite"` on the same element - alert already implies assertive.
 - The icon is filled (`FILL 1`) at 20px, nudged 1px down so it sits on the title baseline.
 - Without the tint, the accent becomes a 4px left border and the other three sides stay 1px.
-- The close button needs `aria-label="Close alert"` — an unlabelled × announces as nothing.
+- The close button needs `aria-label="Close alert"` - an unlabelled x announces as nothing.
 
 ```css
 /* Tokens this component needs. Paste once, at `:root`. */
@@ -4541,10 +4541,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 ### Dialog
 
-Present content or actions that require user attention. — category: `feedback`.
+Present content or actions that require user attention. - category: `feedback`.
 
 > `@inspera/kit` is **not published yet**. If you cannot resolve that import, do
-> not swap in another UI library — build the markup from the HTML and CSS under
+> not swap in another UI library - build the markup from the HTML and CSS under
 > **Without the package** below, which is this component exactly.
 
 ```tsx
@@ -4568,21 +4568,21 @@ import { Dialog } from '@inspera/kit'
 | `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Panel width 400 / 480 / 560. |
 | `hasCloseButton` | `boolean` | `true` | Show the header close affordance. |
 | `hasActions` | `boolean` | `true` | Show the footer action buttons. |
-| `confirmLabel` | `string` | `'Continue'` | Label for the confirming action. Name the action — "Delete", not "OK". |
+| `confirmLabel` | `string` | `'Continue'` | Label for the confirming action. Name the action - "Delete", not "OK". |
 | `cancelLabel` | `string` | `'Cancel'` | Label for the dismissing action. |
-| `open` | `boolean` | `true` | Whether the dialog is shown. Controlled — pair with onClose. |
-| `embedded` | `boolean` | `false` | Render just the panel (no overlay) — used for documentation previews. |
-| `onClose` | `() => void` | — | Fired on the close button, the overlay, and Escape. |
-| `onConfirm` | `() => void` | — | Fired when the confirming action is activated. |
+| `open` | `boolean` | `true` | Whether the dialog is shown. Controlled - pair with onClose. |
+| `embedded` | `boolean` | `false` | Render just the panel (no overlay) - used for documentation previews. |
+| `onClose` | `() => void` | - | Fired on the close button, the overlay, and Escape. |
+| `onConfirm` | `() => void` | - | Fired when the confirming action is activated. |
 
-**Accessibility** — role `dialog`, keyboard operable. Use role="dialog" with aria-modal="true"; Set aria-labelledby to the dialog title; Trap focus inside the dialog when open; Return focus to trigger element on close; Escape key closes the dialog.
+**Accessibility** - role `dialog`, keyboard operable. Use role="dialog" with aria-modal="true"; Set aria-labelledby to the dialog title; Trap focus inside the dialog when open; Return focus to trigger element on close; Escape key closes the dialog.
 
 **Do:** Use for confirmations and critical decisions; Always provide a way to close the dialog; Keep dialog content focused and concise.
-**Don't:** Do not open dialogs from other dialogs; Do not use for non-blocking information — use Alert instead.
+**Don't:** Do not open dialogs from other dialogs; Do not use for non-blocking information - use Alert instead.
 
 **Deprecated aliases** (do not use): `Modal`, `Popup`
 
-#### Without the package — exact HTML and CSS
+#### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
@@ -4590,9 +4590,9 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 - Widths are exactly 400 / 480 / 560 with `max-width: 100%`, `--radius-lg` and `--shadow-500`.
 - Wrap the panel in the scrim. `rgba(39,39,39,0.48)`, fixed, full-viewport, at `--z-modal`. Without it the page behind stays clickable and this is a floating card, not a modal.
-- `role="dialog"` with `aria-modal="true"` and `aria-labelledby` pointing at the title id. Generate a unique id — a hardcoded one collides the moment two dialogs exist on a page.
+- `role="dialog"` with `aria-modal="true"` and `aria-labelledby` pointing at the title id. Generate a unique id - a hardcoded one collides the moment two dialogs exist on a page.
 - Behaviour the markup cannot express, and that you must add: move focus into the panel on open, trap Tab inside it, return focus to the trigger on close, close on Escape and on a scrim click, and lock body scroll while open.
-- The title is 22.78px/500 — an exact export from Figma, not a rounded 24.
+- The title is 22.78px/500 - an exact export from Figma, not a rounded 24.
 - Name the confirming action for what it does ("Delete"), never "OK".
 
 ```css
@@ -4732,10 +4732,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 ### Snackbar
 
-Show brief, non-blocking feedback at the bottom of the screen. — category: `feedback`.
+Show brief, non-blocking feedback at the bottom of the screen. - category: `feedback`.
 
 > `@inspera/kit` is **not published yet**. If you cannot resolve that import, do
-> not swap in another UI library — build the markup from the HTML and CSS under
+> not swap in another UI library - build the markup from the HTML and CSS under
 > **Without the package** below, which is this component exactly.
 
 ```tsx
@@ -4756,26 +4756,26 @@ import { Snackbar } from '@inspera/kit'
 | `hasAction` | `boolean` | `false` | Show an inline action (e.g. Undo). |
 | `hasClose` | `boolean` | `true` | Show the dismiss button. |
 | `actionLabel` | `string` | `'Undo'` | Label for the inline action, typically "Undo". |
-| `onAction` | `() => void` | — | Fired when the inline action is activated. |
-| `onClose` | `() => void` | — | Fired when dismissed. |
+| `onAction` | `() => void` | - | Fired when the inline action is activated. |
+| `onClose` | `() => void` | - | Fired when dismissed. |
 
-**Accessibility** — role `status`, keyboard operable. Use role="status" with aria-live="polite"; Action button must be focusable; Auto-dismiss timing must be generous (5s minimum).
+**Accessibility** - role `status`, keyboard operable. Use role="status" with aria-live="polite"; Action button must be focusable; Auto-dismiss timing must be generous (5s minimum).
 
 **Do:** Use for brief confirmation messages; Include an undo action when appropriate; Limit to one snackbar at a time.
-**Don't:** Do not use for critical errors — use Alert or Dialog instead; Do not stack multiple snackbars.
+**Don't:** Do not use for critical errors - use Alert or Dialog instead; Do not stack multiple snackbars.
 
 **Deprecated aliases** (do not use): `Toast`, `Notification bar`
 
-#### Without the package — exact HTML and CSS
+#### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
 font weight of your own, and do not restyle it with a UI kit's defaults.
 
-- The bar is always `--gray-900` with white text. The intent tints the icon and the action label only — a green snackbar is wrong.
+- The bar is always `--gray-900` with white text. The intent tints the icon and the action label only - a green snackbar is wrong.
 - Fixed 48px height, `--radius-md`, `--shadow-300`, and asymmetric padding (16px leading, 8px trailing) because the close button carries its own.
 - Accents are the 400 shade of each family, which reads on the dark bar; the 600 shades do not.
-- Always `role="status"` with `aria-live="polite"` — a snackbar must never interrupt, which is also why nothing the user has to act on later belongs here.
+- Always `role="status"` with `aria-live="polite"` - a snackbar must never interrupt, which is also why nothing the user has to act on later belongs here.
 
 ```css
 /* Tokens this component needs. Paste once, at `:root`. */
@@ -4863,10 +4863,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 ### Tooltip
 
-Provide contextual help on hover or focus. — category: `feedback`.
+Provide contextual help on hover or focus. - category: `feedback`.
 
 > `@inspera/kit` is **not published yet**. If you cannot resolve that import, do
-> not swap in another UI library — build the markup from the HTML and CSS under
+> not swap in another UI library - build the markup from the HTML and CSS under
 > **Without the package** below, which is this component exactly.
 
 ```tsx
@@ -4888,28 +4888,28 @@ import { Tooltip } from '@inspera/kit'
 | `placement` | `'Top' \| 'Bottom' \| 'Left' \| 'Right'` | `'Top'` | Position relative to the trigger. |
 | `theme` | `'Light' \| 'Dark'` | `'Dark'` | Surface color. |
 | `type` | `'Default' \| 'Accessibility'` | `'Default'` | Accessibility type uses larger text. |
-| `children` | `ReactNode` | — | The element the tooltip describes. |
-| `forceVisible` | `boolean` | `false` | Keep the tooltip visible regardless of hover — used for documentation. |
+| `children` | `ReactNode` | - | The element the tooltip describes. |
+| `forceVisible` | `boolean` | `false` | Keep the tooltip visible regardless of hover - used for documentation. |
 
-**Accessibility** — role `tooltip`, keyboard operable. Use role="tooltip" on the tooltip element; Link trigger and tooltip with aria-describedby; Escape key dismisses the tooltip; Tooltip must not contain interactive content.
+**Accessibility** - role `tooltip`, keyboard operable. Use role="tooltip" on the tooltip element; Link trigger and tooltip with aria-describedby; Escape key dismisses the tooltip; Tooltip must not contain interactive content.
 
 **Do:** Use for supplementary information; Keep tooltip text short and scannable; Position to avoid clipping viewport edges.
-**Don't:** Do not put critical information only in tooltips; Do not use for interactive content — use Popover instead.
+**Don't:** Do not put critical information only in tooltips; Do not use for interactive content - use Popover instead.
 
 **Deprecated aliases** (do not use): `Tooltips`, `Walkthrough`, `a11y tooltips`
 
-#### Without the package — exact HTML and CSS
+#### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
 font weight of your own, and do not restyle it with a UI kit's defaults.
 
-- The trigger points at the bubble with `aria-describedby`, and the bubble is `role="tooltip"`. A custom trigger needs that attribute too — the tooltip is not announced without it.
+- The trigger points at the bubble with `aria-describedby`, and the bubble is `role="tooltip"`. A custom trigger needs that attribute too - the tooltip is not announced without it.
 - Show on `:hover` **and** `:focus-within`. A hint only a mouse can reach is unreachable for anyone navigating by keyboard.
 - The bubble takes `pointer-events: none` so it can never sit between the pointer and what it describes.
 - Dark is `--gray-900` with white text and no border; Light is white with a 1px `--border-strong`, and the arrow has to pick up that border on its two trigger-facing edges.
 - Default type is 12px; the accessibility type is 14px with more padding, for hints that carry real instruction.
-- Escape must dismiss it (WCAG 1.4.13), and nothing essential may live only here — a tooltip is supplementary by definition.
+- Escape must dismiss it (WCAG 1.4.13), and nothing essential may live only here - a tooltip is supplementary by definition.
 
 ```css
 /* Tokens this component needs. Paste once, at `:root`. */
@@ -4953,7 +4953,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   transition: opacity 140ms ease;
 }
 
-/* Shown on hover and on keyboard focus. Focus is not optional — a hint only
+/* Shown on hover and on keyboard focus. Focus is not optional - a hint only
    available to a mouse is unreachable for half the people who need it. */
 .inspera-tooltip:hover .inspera-tooltip__bubble,
 .inspera-tooltip:focus-within .inspera-tooltip__bubble { opacity: 1; }
@@ -5046,10 +5046,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 ### Progress
 
-Show completion of an ongoing task. — category: `feedback`.
+Show completion of an ongoing task. - category: `feedback`.
 
 > `@inspera/kit` is **not published yet**. If you cannot resolve that import, do
-> not swap in another UI library — build the markup from the HTML and CSS under
+> not swap in another UI library - build the markup from the HTML and CSS under
 > **Without the package** below, which is this component exactly.
 
 ```tsx
@@ -5069,21 +5069,21 @@ import { Progress } from '@inspera/kit'
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `variant` | `'Linear' \| 'Circular'` | `'Linear'` | Bar or ring. |
-| `value` | `number` | `60` | Completion percentage 0–100. Ignored when indeterminate. |
+| `value` | `number` | `60` | Completion percentage 0-100. Ignored when indeterminate. |
 | `indeterminate` | `boolean` | `false` | Unknown-duration animation. |
 | `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Bar height / ring diameter. |
 | `intent` | `'Primary' \| 'Success' \| 'Warning' \| 'Error'` | `'Primary'` | Fill color. |
 | `showValue` | `boolean` | `false` | Render the percentage. |
 | `label` | `string` | `'Progress'` | Accessible name. Say what is progressing, not just "Progress". |
 
-**Accessibility** — role `progressbar`. Use role="progressbar" with aria-valuenow / min / max; Omit aria-valuenow when indeterminate; Provide an accessible label for the task.
+**Accessibility** - role `progressbar`. Use role="progressbar" with aria-valuenow / min / max; Omit aria-valuenow when indeterminate; Provide an accessible label for the task.
 
 **Do:** Use determinate progress when completion is known; Use indeterminate for unknown-duration waits; Match intent color to context.
 **Don't:** Do not use for very short operations; Do not fake progress values.
 
 **Deprecated aliases** (do not use): `Progress bar`, `Loading bar`, `Meter`
 
-#### Without the package — exact HTML and CSS
+#### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
@@ -5092,7 +5092,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 - The bar heights are 4 / 8 / 12 and the ring diameters 24 / 40 / 56, with stroke widths 3 / 4 / 5.
 - `role="progressbar"` with `aria-valuemin`, `aria-valuemax` and an `aria-label` is mandatory. A styled div announces nothing.
 - When indeterminate, omit `aria-valuenow` entirely. Sending 0 tells the user it is stuck at zero.
-- The indeterminate bar is a 40% sliver swept by keyframes across a clipped track — not a full-width bar that fades.
+- The indeterminate bar is a 40% sliver swept by keyframes across a clipped track - not a full-width bar that fades.
 - The ring is rotated -90deg so the arc starts at twelve o'clock, and the arc length is set by `stroke-dashoffset`.
 
 ```css
@@ -5204,10 +5204,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 ### Spinner
 
-Indicate an indeterminate loading state. — category: `feedback`.
+Indicate an indeterminate loading state. - category: `feedback`.
 
 > `@inspera/kit` is **not published yet**. If you cannot resolve that import, do
-> not swap in another UI library — build the markup from the HTML and CSS under
+> not swap in another UI library - build the markup from the HTML and CSS under
 > **Without the package** below, which is this component exactly.
 
 ```tsx
@@ -5226,24 +5226,24 @@ import { Spinner } from '@inspera/kit'
 | `intent` | `'Primary' \| 'Neutral' \| 'Inverse'` | `'Primary'` | Arc color. |
 | `label` | `string` | `'Loading'` | Accessible label. |
 
-**Accessibility** — role `status`. Use role="status" with aria-live="polite"; Provide an accessible label via aria-label; Include visually-hidden loading text.
+**Accessibility** - role `status`. Use role="status" with aria-live="polite"; Provide an accessible label via aria-label; Include visually-hidden loading text.
 
 **Do:** Use for short, indeterminate waits; Use Inverse on dark surfaces; Pair with context describing what is loading.
 **Don't:** Do not use where determinate Progress is possible; Do not show multiple competing spinners.
 
 **Deprecated aliases** (do not use): `Loader`, `Loading indicator`, `Activity indicator`
 
-#### Without the package — exact HTML and CSS
+#### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
 font weight of your own, and do not restyle it with a UI kit's defaults.
 
-- It is an SVG of two circles — a full `--gray-200` track and a coloured arc — not a bordered div with one transparent side.
+- It is an SVG of two circles - a full `--gray-200` track and a coloured arc - not a bordered div with one transparent side.
 - The arc is drawn by `stroke-dasharray` = circumference and `stroke-dashoffset` = 70% of it. Change the offset, not the geometry.
 - Diameters are 16 / 24 / 40 with stroke widths 2 / 3 / 4.
 - Rotation is 0.8s linear infinite on the `<svg>`, so the arc spins and the track does not.
-- The visually hidden label is required — `role="status"` with no name announces nothing.
+- The visually hidden label is required - `role="status"` with no name announces nothing.
 
 ```css
 /* Tokens this component needs. Paste once, at `:root`. */
@@ -5301,10 +5301,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 ### Skeleton
 
-Show placeholder shapes while content loads. — category: `feedback`.
+Show placeholder shapes while content loads. - category: `feedback`.
 
 > `@inspera/kit` is **not published yet**. If you cannot resolve that import, do
-> not swap in another UI library — build the markup from the HTML and CSS under
+> not swap in another UI library - build the markup from the HTML and CSS under
 > **Without the package** below, which is this component exactly.
 
 ```tsx
@@ -5319,19 +5319,19 @@ import { Skeleton } from '@inspera/kit'
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `variant` | `'Text' \| 'Rect' \| 'Circle'` | `'Text'` | Placeholder shape. |
-| `width` | `string \| number` | — | Explicit width. |
-| `height` | `string \| number` | — | Explicit height. |
+| `width` | `string \| number` | - | Explicit width. |
+| `height` | `string \| number` | - | Explicit height. |
 | `lines` | `number` | `1` | Number of text lines. Only applies to the Text variant. |
-| `radius` | `string \| number` | — | Corner radius override. Match the shape being stood in for. |
+| `radius` | `string \| number` | - | Corner radius override. Match the shape being stood in for. |
 
-**Accessibility** — role `presentation`. Skeletons are decorative and aria-hidden; Announce the real content once loaded; Mirror the layout of the content being loaded.
+**Accessibility** - role `presentation`. Skeletons are decorative and aria-hidden; Announce the real content once loaded; Mirror the layout of the content being loaded.
 
 **Do:** Match skeleton shapes to real content; Use for perceived performance on initial load; Replace with content as soon as it arrives.
-**Don't:** Do not animate skeletons indefinitely; Do not use for user-triggered actions — use Spinner.
+**Don't:** Do not animate skeletons indefinitely; Do not use for user-triggered actions - use Spinner.
 
 **Deprecated aliases** (do not use): `Placeholder`, `Shimmer`, `Ghost`
 
-#### Without the package — exact HTML and CSS
+#### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
@@ -5340,7 +5340,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 - The shimmer is a 400%-wide linear gradient panned by `background-position`, 1.4s ease infinite. It is not an opacity pulse.
 - Text lines are 12px tall with `--radius-sm` and an 8px gap; the last of several is 60% wide so the block reads as a paragraph.
 - Rect uses `--radius-md`, Circle uses `--radius-pill`. Match the radius to whatever the placeholder stands in for.
-- Always `aria-hidden` — a skeleton is decoration, and announcing it interrupts the user with nothing.
+- Always `aria-hidden` - a skeleton is decoration, and announcing it interrupts the user with nothing.
 
 ```css
 /* Tokens this component needs. Paste once, at `:root`. */
@@ -5414,10 +5414,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 ### Popover
 
-Show interactive content anchored to a trigger. — category: `feedback`.
+Show interactive content anchored to a trigger. - category: `feedback`.
 
 > `@inspera/kit` is **not published yet**. If you cannot resolve that import, do
-> not swap in another UI library — build the markup from the HTML and CSS under
+> not swap in another UI library - build the markup from the HTML and CSS under
 > **Without the package** below, which is this component exactly.
 
 ```tsx
@@ -5433,23 +5433,23 @@ import { Popover } from '@inspera/kit'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `trigger` | `ReactNode` | — | Element that toggles the popover. |
+| `trigger` | `ReactNode` | - | Element that toggles the popover. |
 | `title` | `string` | `'Popover title'` | Optional panel heading. |
 | `content` | `ReactNode` | `'Popover content with interactive elements.'` | Popover body content. |
 | `placement` | `'Top' \| 'Bottom' \| 'Left' \| 'Right'` | `'Bottom'` | Position relative to the trigger. |
-| `open` | `boolean` | — | Controlled open state. Leave unset to let the popover manage itself. |
+| `open` | `boolean` | - | Controlled open state. Leave unset to let the popover manage itself. |
 | `defaultOpen` | `boolean` | `false` | Open on mount. |
-| `forceVisible` | `boolean` | `false` | Keep the panel visible regardless of state — used for documentation. |
-| `onOpenChange` | `(open: boolean) => void` | — | Fired when the popover opens or closes. |
+| `forceVisible` | `boolean` | `false` | Keep the panel visible regardless of state - used for documentation. |
+| `onOpenChange` | `(open: boolean) => void` | - | Fired when the popover opens or closes. |
 
-**Accessibility** — role `dialog`, keyboard operable. Trigger uses aria-haspopup and aria-expanded; Panel uses role="dialog"; Escape and outside-click close the popover; May contain interactive content (unlike Tooltip).
+**Accessibility** - role `dialog`, keyboard operable. Trigger uses aria-haspopup and aria-expanded; Panel uses role="dialog"; Escape and outside-click close the popover; May contain interactive content (unlike Tooltip).
 
 **Do:** Use for rich, interactive overflow content; Anchor to the triggering element; Allow dismissal via Escape and outside click.
-**Don't:** Do not use for simple hover hints — use Tooltip; Do not stack popovers.
+**Don't:** Do not use for simple hover hints - use Tooltip; Do not stack popovers.
 
 **Deprecated aliases** (do not use): `Flyout`, `Overlay panel`
 
-#### Without the package — exact HTML and CSS
+#### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
@@ -5458,7 +5458,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 - A popover holds interactive content, so it is `role="dialog"` (not `tooltip`), it is reachable by keyboard, and it does not disappear on mouseout.
 - The panel is `--radius-md` on `--surface` with a 1px `--border` and `--shadow-300`, 16px padding, capped at 280px with `width: max-content`.
 - Placement sets the offset and the centring transform together; the 10px gap leaves room for the arrow without it touching the trigger.
-- The arrow is a 10px square rotated 45° that borrows exactly two of the panel’s borders — the two facing the trigger.
+- The arrow is a 10px square rotated 45deg that borrows exactly two of the panel's borders - the two facing the trigger.
 - Close on Escape and on an outside click, and return focus to the trigger.
 - For plain text with no controls, use a Tooltip. For anything that must be acted on, this.
 
@@ -5503,7 +5503,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   font-family: var(--font-sans);
 }
 
-/* Placement sets the offset and the centring transform together — a 10px gap
+/* Placement sets the offset and the centring transform together - a 10px gap
    leaves room for the arrow without it touching the trigger. */
 .inspera-popover__panel--bottom { top: calc(100% + 10px); left: 50%; transform: translateX(-50%); }
 .inspera-popover__panel--top    { bottom: calc(100% + 10px); left: 50%; transform: translateX(-50%); }
@@ -5584,10 +5584,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 ### Drawer
 
-Slide a panel in from the edge of the screen. — category: `feedback`.
+Slide a panel in from the edge of the screen. - category: `feedback`.
 
 > `@inspera/kit` is **not published yet**. If you cannot resolve that import, do
-> not swap in another UI library — build the markup from the HTML and CSS under
+> not swap in another UI library - build the markup from the HTML and CSS under
 > **Without the package** below, which is this component exactly.
 
 ```tsx
@@ -5612,18 +5612,18 @@ import { Drawer } from '@inspera/kit'
 | `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Panel width / height. |
 | `title` | `string` | `'Panel'` | Header title. |
 | `hasCloseButton` | `boolean` | `true` | Show the close affordance. |
-| `children` | `ReactNode` | — | Panel contents. |
-| `embedded` | `boolean` | `false` | Render just the panel inline (no overlay/scrim) — used for documentation previews. |
-| `onClose` | `() => void` | — | Fired on the close button, the scrim, and Escape. |
+| `children` | `ReactNode` | - | Panel contents. |
+| `embedded` | `boolean` | `false` | Render just the panel inline (no overlay/scrim) - used for documentation previews. |
+| `onClose` | `() => void` | - | Fired on the close button, the scrim, and Escape. |
 
-**Accessibility** — role `dialog`, keyboard operable. Use role="dialog" with aria-modal="true"; Set aria-labelledby to the drawer title; Trap focus while open and restore it on close; Escape closes the drawer.
+**Accessibility** - role `dialog`, keyboard operable. Use role="dialog" with aria-modal="true"; Set aria-labelledby to the drawer title; Trap focus while open and restore it on close; Escape closes the drawer.
 
 **Do:** Use for secondary tasks and detail panels; Provide a clear close control; Return focus to the trigger on close.
-**Don't:** Do not use for critical confirmations — use Dialog; Do not open multiple drawers at once.
+**Don't:** Do not use for critical confirmations - use Dialog; Do not open multiple drawers at once.
 
 **Deprecated aliases** (do not use): `Sheet`, `Side panel`, `Off-canvas`
 
-#### Without the package — exact HTML and CSS
+#### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
@@ -5631,8 +5631,8 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 - Side panels are 320 / 400 / 560 wide and pinned top-to-bottom; a bottom drawer takes that number as its height, spans the full width, and caps at 90% of the viewport.
 - Same scrim and the same modal obligations as Dialog: focus in, Tab trapped, focus restored, Escape and scrim click close, body scroll locked.
-- The body scrolls (`flex: 1; overflow-y: auto`), not the panel — the header has to stay put.
-- The header is 16px/20px padding with an 18px/500 title, smaller than a Dialog’s because a drawer is a secondary surface.
+- The body scrolls (`flex: 1; overflow-y: auto`), not the panel - the header has to stay put.
+- The header is 16px/20px padding with an 18px/500 title, smaller than a Dialog's because a drawer is a secondary surface.
 - Slide it in from its own edge. A drawer that fades in reads as a dialog in the wrong place.
 
 ```css
@@ -5714,7 +5714,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 }
 .inspera-drawer__close .material-symbols-outlined { font-size: 22px; }
 
-/* The body scrolls, not the panel — the header stays put. */
+/* The body scrolls, not the panel - the header stays put. */
 .inspera-drawer__body {
   flex: 1;
   overflow-y: auto;
@@ -5745,10 +5745,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 ### Tabs
 
-Organize content into switchable panels. — category: `navigation`.
+Organize content into switchable panels. - category: `navigation`.
 
 > `@inspera/kit` is **not published yet**. If you cannot resolve that import, do
-> not swap in another UI library — build the markup from the HTML and CSS under
+> not swap in another UI library - build the markup from the HTML and CSS under
 > **Without the package** below, which is this component exactly.
 
 ```tsx
@@ -5768,8 +5768,8 @@ import { Tabs } from '@inspera/kit'
 | `style` | `'Underline' \| 'Contained'` | `'Underline'` | Visual treatment. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Tab height 40 / 48. |
 | `fullWidth` | `boolean` | `false` | Stretch tabs to fill the row. |
-| `value` | `number` | — | Index of the active tab. Controlled — pair with onChange. |
-| `onChange` | `(index: number) => void` | — | Fired with the index of the newly selected tab. |
+| `value` | `number` | - | Index of the active tab. Controlled - pair with onChange. |
+| `onChange` | `(index: number) => void` | - | Fired with the index of the newly selected tab. |
 
 ```ts
 export interface TabItem {
@@ -5778,21 +5778,21 @@ export interface TabItem {
 }
 ```
 
-**Accessibility** — role `tablist`, keyboard operable. Use role="tablist" on the tab container; Each tab uses role="tab" with aria-selected; Tab panels use role="tabpanel" linked by aria-labelledby; Arrow keys navigate between tabs.
+**Accessibility** - role `tablist`, keyboard operable. Use role="tablist" on the tab container; Each tab uses role="tab" with aria-selected; Tab panels use role="tabpanel" linked by aria-labelledby; Arrow keys navigate between tabs.
 
 **Do:** Use to organize related content sections; Label tabs clearly and concisely; Use a maximum of 6 tabs per set.
-**Don't:** Do not use tabs for sequential steps — use a stepper instead; Do not nest tab sets inside other tab sets.
+**Don't:** Do not use tabs for sequential steps - use a stepper instead; Do not nest tab sets inside other tab sets.
 
 **Deprecated aliases** (do not use): `Tab bar`, `Tab navigation`
 
-#### Without the package — exact HTML and CSS
+#### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
 font weight of your own, and do not restyle it with a UI kit's defaults.
 
 - Underline tabs are 48px tall (40px small) on a 1px `--border-strong` rail, with `margin-bottom: -1px` so the selected 2px `--primary` underline covers the rail.
-- The resting bottom border is a transparent 2px, not none — otherwise selecting a tab shifts the whole row by two pixels.
+- The resting bottom border is a transparent 2px, not none - otherwise selecting a tab shifts the whole row by two pixels.
 - Contained tabs drop the rail entirely and become a pill group on `--gray-100`, with the selected tab a white `--shadow-100` card.
 - `role="tablist"` / `role="tab"` / `role="tabpanel"`, each tab pointing at its panel with `aria-controls` and each panel back with `aria-labelledby`.
 - Roving tabindex: only the selected tab is a tab stop; Left/Right move between them.
@@ -5892,17 +5892,17 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
           id="tab-questions" aria-controls="panel-questions" tabindex="-1">Questions</button>
 </div>
 
-<div id="panel-overview" role="tabpanel" aria-labelledby="tab-overview" tabindex="0">…</div>
-<div id="panel-questions" role="tabpanel" aria-labelledby="tab-questions" tabindex="0" hidden>…</div>
+<div id="panel-overview" role="tabpanel" aria-labelledby="tab-overview" tabindex="0">...</div>
+<div id="panel-questions" role="tabpanel" aria-labelledby="tab-questions" tabindex="0" hidden>...</div>
 ```
 
 
 ### Breadcrumb
 
-Show the user's current location in a hierarchy. — category: `navigation`.
+Show the user's current location in a hierarchy. - category: `navigation`.
 
 > `@inspera/kit` is **not published yet**. If you cannot resolve that import, do
-> not swap in another UI library — build the markup from the HTML and CSS under
+> not swap in another UI library - build the markup from the HTML and CSS under
 > **Without the package** below, which is this component exactly.
 
 ```tsx
@@ -5920,26 +5920,26 @@ import { Breadcrumb } from '@inspera/kit'
 | `items` | `string[]` | `defaultItems` | Trail from root to current page. The last entry is the current page and is not a link. |
 | `separator` | `'Slash' \| 'Chevron'` | `'Chevron'` | Divider glyph between items. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Text size 14 / 16. |
-| `onNavigate` | `(index: number) => void` | — | Fired with the index of the crumb that was clicked. |
+| `onNavigate` | `(index: number) => void` | - | Fired with the index of the crumb that was clicked. |
 
-**Accessibility** — role `navigation`, keyboard operable. Wrap in nav with aria-label="Breadcrumb"; Use an ordered list for semantic structure; Mark current page with aria-current="page".
+**Accessibility** - role `navigation`, keyboard operable. Wrap in nav with aria-label="Breadcrumb"; Use an ordered list for semantic structure; Mark current page with aria-current="page".
 
 **Do:** Use for hierarchical navigation structures; Always include the current page as the last item; Keep breadcrumb labels concise.
 **Don't:** Do not use for flat navigation; Do not make the current page breadcrumb a link.
 
 **Deprecated aliases** (do not use): `Breadcrumbs`, `Path navigation`
 
-#### Without the package — exact HTML and CSS
+#### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
 font weight of your own, and do not restyle it with a UI kit's defaults.
 
-- It is a `<nav aria-label="Breadcrumb">` wrapping an `<ol>` — order is the meaning, so not a `<div>` of spans.
+- It is a `<nav aria-label="Breadcrumb">` wrapping an `<ol>` - order is the meaning, so not a `<div>` of spans.
 - The last crumb is the current page: `aria-current="page"`, `--text-primary` at 500 weight, and not a control.
 - Separators live in their own `<li>` marked `aria-hidden="true"`. Left announced, a screen reader reads "chevron right" between every crumb.
 - Crumbs are 16px (14px small) in `--primary`, underlined on hover only. The chevron runs 2px larger than the text.
-- With real URLs use `<a href>` rather than `<button>`, keeping the same class — a breadcrumb should be openable in a new tab.
+- With real URLs use `<a href>` rather than `<button>`, keeping the same class - a breadcrumb should be openable in a new tab.
 
 ```css
 /* Tokens this component needs. Paste once, at `:root`. */
@@ -6022,10 +6022,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 ### Pagination
 
-Navigate between pages of content. — category: `navigation`.
+Navigate between pages of content. - category: `navigation`.
 
 > `@inspera/kit` is **not published yet**. If you cannot resolve that import, do
-> not swap in another UI library — build the markup from the HTML and CSS under
+> not swap in another UI library - build the markup from the HTML and CSS under
 > **Without the package** below, which is this component exactly.
 
 ```tsx
@@ -6047,16 +6047,16 @@ import { Pagination } from '@inspera/kit'
 | `siblingCount` | `number` | `1` | Pages shown either side of current. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Control height. |
 | `showEdges` | `boolean` | `true` | Show first / last controls. |
-| `onChange` | `(page: number) => void` | — | Fired with the requested page number, 1-based. |
+| `onChange` | `(page: number) => void` | - | Fired with the requested page number, 1-based. |
 
-**Accessibility** — role `navigation`, keyboard operable. Wrap in nav with aria-label="Pagination"; Mark the current page with aria-current="page"; Disable and aria-disable prev/next at the bounds.
+**Accessibility** - role `navigation`, keyboard operable. Wrap in nav with aria-label="Pagination"; Mark the current page with aria-current="page"; Disable and aria-disable prev/next at the bounds.
 
 **Do:** Use for long, paged result sets; Show current, first, and last pages; Collapse large gaps with an ellipsis.
 **Don't:** Do not use for a handful of items; Do not hide the current page indicator.
 
 **Deprecated aliases** (do not use): `Pager`, `Page navigation`
 
-#### Without the package — exact HTML and CSS
+#### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
@@ -6064,7 +6064,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 - A `<nav aria-label="Pagination">` around a `<ul>`; the current page is a button with `aria-current="page"`, filled `--primary`.
 - Every page button needs a real label ("Page 4"), and the arrows need "Previous page" / "Next page". A bare chevron announces as nothing.
-- The ellipsis is a `<span>` marked `aria-hidden`, not a disabled button — it is a gap marker, not a control.
+- The ellipsis is a `<span>` marked `aria-hidden`, not a disabled button - it is a gap marker, not a control.
 - Cells are 40px (32px small) with `--radius-md` and a 4px gap, and the list wraps rather than overflowing in a narrow column.
 - Disable the arrows at the ends rather than hiding them, so the control does not change width as you page.
 
@@ -6150,7 +6150,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
       <span class="material-symbols-outlined" aria-hidden="true">chevron_left</span>
     </button></li>
     <li><button type="button" class="inspera-pagination__item" aria-label="Page 1">1</button></li>
-    <li><span class="inspera-pagination__item inspera-pagination__ellipsis" aria-hidden="true">…</span></li>
+    <li><span class="inspera-pagination__item inspera-pagination__ellipsis" aria-hidden="true">...</span></li>
     <li><button type="button" class="inspera-pagination__item" aria-label="Page 4" aria-current="page">4</button></li>
     <li><button type="button" class="inspera-pagination__item" aria-label="Next page">
       <span class="material-symbols-outlined" aria-hidden="true">chevron_right</span>
@@ -6162,10 +6162,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 ### Menu
 
-Present a list of actions in a dropdown. — category: `navigation`.
+Present a list of actions in a dropdown. - category: `navigation`.
 
 > `@inspera/kit` is **not published yet**. If you cannot resolve that import, do
-> not swap in another UI library — build the markup from the HTML and CSS under
+> not swap in another UI library - build the markup from the HTML and CSS under
 > **Without the package** below, which is this component exactly.
 
 ```tsx
@@ -6184,10 +6184,10 @@ import { Menu } from '@inspera/kit'
 | `label` | `string` | `'Actions'` | Trigger label. |
 | `items` | `MenuItem[]` | `sampleItems` | Menu items. |
 | `placement` | `'Bottom Start' \| 'Bottom End'` | `'Bottom Start'` | Alignment to trigger. |
-| `open` | `boolean` | — | Controlled open state. Leave unset to let the menu manage itself. |
+| `open` | `boolean` | - | Controlled open state. Leave unset to let the menu manage itself. |
 | `defaultOpen` | `boolean` | `false` | Open on mount. |
 | `forceVisible` | `boolean` | `false` | Always render the open menu, for documentation. |
-| `onSelect` | `(label: string) => void` | — | Fired with the label of the chosen item. |
+| `onSelect` | `(label: string) => void` | - | Fired with the label of the chosen item. |
 
 ```ts
 export interface MenuItem {
@@ -6199,14 +6199,14 @@ export interface MenuItem {
 }
 ```
 
-**Accessibility** — role `menu`, keyboard operable. Trigger uses aria-haspopup="menu" and aria-expanded; Items use role="menuitem"; Arrow keys move, Enter selects, Escape closes; Outside click closes the menu.
+**Accessibility** - role `menu`, keyboard operable. Trigger uses aria-haspopup="menu" and aria-expanded; Items use role="menuitem"; Arrow keys move, Enter selects, Escape closes; Outside click closes the menu.
 
 **Do:** Use for grouped actions and overflow; Separate destructive actions with a divider; Keep item labels action-oriented.
-**Don't:** Do not use for selecting a value — use Select; Do not nest menus more than one level.
+**Don't:** Do not use for selecting a value - use Select; Do not nest menus more than one level.
 
 **Deprecated aliases** (do not use): `Dropdown menu`, `Action menu`, `Context menu`, `Overflow menu`
 
-#### Without the package — exact HTML and CSS
+#### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
@@ -6215,7 +6215,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 - The trigger takes `aria-haspopup="menu"`, `aria-expanded` and `aria-controls`; the panel is `role="menu"` with `role="menuitem"` buttons at `tabindex="-1"`.
 - Focus stays on the trigger and the arrows move a highlight, so hover and the keyboard cursor must drive the same `--active` state.
 - Separators are `role="separator"` and `aria-hidden`, 1px of `--border` with a 4px margin.
-- Destructive items are `--error` text, never a red fill — a filled row reads as selected.
+- Destructive items are `--error` text, never a red fill - a filled row reads as selected.
 - Panel is `--radius-md` on `--surface` with `--shadow-200` and a 180px floor, anchored 4px under the trigger. Bottom End flips it to `right: 0` for menus near the viewport edge.
 - Escape closes and returns focus to the trigger; an outside click closes without moving focus.
 
@@ -6354,10 +6354,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 ### Stepper
 
-Show progress through a sequence of steps. — category: `navigation`.
+Show progress through a sequence of steps. - category: `navigation`.
 
 > `@inspera/kit` is **not published yet**. If you cannot resolve that import, do
-> not swap in another UI library — build the markup from the HTML and CSS under
+> not swap in another UI library - build the markup from the HTML and CSS under
 > **Without the package** below, which is this component exactly.
 
 ```tsx
@@ -6385,14 +6385,14 @@ export interface Step {
 }
 ```
 
-**Accessibility** — role `list`. Use an ordered list for step semantics; Mark the current step with aria-current="step"; Convey completion with an icon, not color alone.
+**Accessibility** - role `list`. Use an ordered list for step semantics; Mark the current step with aria-current="step"; Convey completion with an icon, not color alone.
 
 **Do:** Use for multi-step flows and wizards; Show completed, current, and upcoming states; Keep step labels short.
-**Don't:** Do not use for non-sequential navigation — use Tabs; Do not exceed a handful of steps.
+**Don't:** Do not use for non-sequential navigation - use Tabs; Do not exceed a handful of steps.
 
 **Deprecated aliases** (do not use): `Wizard`, `Progress steps`, `Step indicator`
 
-#### Without the package — exact HTML and CSS
+#### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
@@ -6584,10 +6584,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 ### Link
 
-Navigate to another location or resource. — category: `navigation`.
+Navigate to another location or resource. - category: `navigation`.
 
 > `@inspera/kit` is **not published yet**. If you cannot resolve that import, do
-> not swap in another UI library — build the markup from the HTML and CSS under
+> not swap in another UI library - build the markup from the HTML and CSS under
 > **Without the package** below, which is this component exactly.
 
 ```tsx
@@ -6605,7 +6605,7 @@ import { Link } from '@inspera/kit'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `children` | `ReactNode` | — | Link text. Takes precedence over label. |
+| `children` | `ReactNode` | - | Link text. Takes precedence over label. |
 | `label` | `string` | `'Learn more'` | Link text, when not passing children. |
 | `href` | `string` | `'#'` | Destination URL. Always provide a real one. |
 | `intent` | `'Default' \| 'Muted'` | `'Default'` | Color emphasis. |
@@ -6613,28 +6613,28 @@ import { Link } from '@inspera/kit'
 | `underline` | `'Always' \| 'Hover' \| 'None'` | `'Hover'` | Underline behavior. |
 | `external` | `boolean` | `false` | Open in a new tab with an icon. |
 | `disabled` | `boolean` | `false` | Non-interactive state. |
-| `leadingIcon` | `string` | — | Material Symbols name shown before the text. |
-| `trailingIcon` | `string` | — | Material Symbols name shown after the text. |
-| `onClick` | `(e: React.MouseEvent) => void` | — | Fired on activation. Use for routing, not to replace href. |
+| `leadingIcon` | `string` | - | Material Symbols name shown before the text. |
+| `trailingIcon` | `string` | - | Material Symbols name shown after the text. |
+| `onClick` | `(e: React.MouseEvent) => void` | - | Fired on activation. Use for routing, not to replace href. |
 
-**Accessibility** — role `link`, keyboard operable. Use a real anchor with a valid href; External links set target="_blank" and rel="noreferrer"; Disabled links set aria-disabled and prevent navigation; Focus ring is visible on keyboard focus.
+**Accessibility** - role `link`, keyboard operable. Use a real anchor with a valid href; External links set target="_blank" and rel="noreferrer"; Disabled links set aria-disabled and prevent navigation; Focus ring is visible on keyboard focus.
 
 **Do:** Use for navigation, not actions; Signal external links with an icon; Keep link text descriptive.
-**Don't:** Do not use links to trigger actions — use Button; Do not use "click here" as link text.
+**Don't:** Do not use links to trigger actions - use Button; Do not use "click here" as link text.
 
 **Deprecated aliases** (do not use): `Hyperlink`, `Text link`, `Anchor`
 
-#### Without the package — exact HTML and CSS
+#### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
 font weight of your own, and do not restyle it with a UI kit's defaults.
 
-- The default is underline **on hover only** — not always, and not never.
+- The default is underline **on hover only** - not always, and not never.
 - Colour is `--primary` at 16px/500 (14px when small), with `text-underline-offset: 2px` so the rule clears the descenders.
 - An external link gets `target="_blank"`, `rel="noreferrer"`, and the `open_in_new` icon. All three, not one.
 - A disabled link carries no `href` and sets `aria-disabled="true"`. Do not leave the href and swallow the click.
-- The focus ring is `--primary-focus-ring` at 2px with a 2px offset — different from the solid `--primary` ring buttons use.
+- The focus ring is `--primary-focus-ring` at 2px with a 2px offset - different from the solid `--primary` ring buttons use.
 
 ```css
 /* Tokens this component needs. Paste once, at `:root`. */

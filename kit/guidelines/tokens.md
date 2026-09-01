@@ -10,7 +10,7 @@ Every value below is a CSS custom property. Import the stylesheet once at the
 app root and reference tokens as `var(--primary)`, `var(--space-4)`,
 `var(--radius-md)`. Never hardcode a colour that is not in this list.
 
-### Colour — brand & semantic
+### Colour - brand & semantic
 
 | Token | CSS variable | Value | Use |
 | --- | --- | --- | --- |
@@ -24,10 +24,10 @@ app root and reference tokens as `var(--primary)`, `var(--space-4)`,
 | `accent.berry` | `var(--accent-berry)` | #89239A | Sparingly, for accent moments |
 | `accent.algae` | `var(--accent-algae)` | #00A788 | Sparingly, for accent moments |
 
-### Colour — palette
+### Colour - palette
 
-Each family runs 100 (lightest) to 900 (darkest). 600–900 are safe for text on
-a light background; 100–300 are surface tints.
+Each family runs 100 (lightest) to 900 (darkest). 600-900 are safe for text on
+a light background; 100-300 are surface tints.
 
 #### gray
 
@@ -141,19 +141,19 @@ a light background; 100–300 are surface tints.
 | 800 | `var(--pink-800)` | #740B2E |
 | 900 | `var(--pink-900)` | #540821 |
 
-### Colour — roles
+### Colour - roles
 
 Prefer a role token over a raw palette shade wherever one exists.
 
-**Interaction** — `var(--primary-hover-overlay)` rgba(0, 64, 128, 0.04), `var(--primary-focus-ring)` rgba(0, 64, 128, 0.3), `var(--action-active)` rgba(0, 0, 0, 0.56), `var(--action-hover)` rgba(0, 0, 0, 0.04), `var(--action-focus)` rgba(0, 0, 0, 0.12), `var(--action-disabled)` rgba(0, 0, 0, 0.38)
+**Interaction** - `var(--primary-hover-overlay)` rgba(0, 64, 128, 0.04), `var(--primary-focus-ring)` rgba(0, 64, 128, 0.3), `var(--action-active)` rgba(0, 0, 0, 0.56), `var(--action-hover)` rgba(0, 0, 0, 0.04), `var(--action-focus)` rgba(0, 0, 0, 0.12), `var(--action-disabled)` rgba(0, 0, 0, 0.38)
 
-**Text** — `var(--text-primary)` rgba(0, 0, 0, 0.87), `var(--text-secondary)` var(--gray-600), `var(--text-disabled)` var(--action-disabled), `var(--text-on-primary)` #ffffff
+**Text** - `var(--text-primary)` rgba(0, 0, 0, 0.87), `var(--text-secondary)` var(--gray-600), `var(--text-disabled)` var(--action-disabled), `var(--text-on-primary)` #ffffff
 
-**Status** — `var(--info-surface)` #E1F5FE, `var(--success-surface)` #E8F5E9, `var(--warning-surface)` #FFF3E0, `var(--error-surface)` #FFEBEE
+**Status** - `var(--info-surface)` #E1F5FE, `var(--success-surface)` #E8F5E9, `var(--warning-surface)` #FFF3E0, `var(--error-surface)` #FFEBEE
 
-**Controls** — `var(--border-control)` #C4C4C4, `var(--border-control-strong)` #8C8C8C, `var(--text-placeholder)` #8C8C8C, `var(--surface-disabled)` #F5F5F5, `var(--surface-readonly)` var(--gray-100), `var(--surface-neutral)` #F0F0F0, `var(--avatar-surface)` #E0E0E0
+**Controls** - `var(--border-control)` #C4C4C4, `var(--border-control-strong)` #8C8C8C, `var(--text-placeholder)` #8C8C8C, `var(--surface-disabled)` #F5F5F5, `var(--surface-readonly)` var(--gray-100), `var(--surface-neutral)` #F0F0F0, `var(--avatar-surface)` #E0E0E0
 
-**Surface** — `var(--background)` var(--gray-100), `var(--surface)` var(--white), `var(--surface-sunken)` var(--gray-100), `var(--border)` var(--gray-200), `var(--border-strong)` var(--gray-300), `var(--border-interactive)` var(--gray-500), `var(--muted-foreground)` var(--gray-600)
+**Surface** - `var(--background)` var(--gray-100), `var(--surface)` var(--white), `var(--surface-sunken)` var(--gray-100), `var(--border)` var(--gray-200), `var(--border-strong)` var(--gray-300), `var(--border-interactive)` var(--gray-500), `var(--muted-foreground)` var(--gray-600)
 
 ### Typography
 
@@ -161,7 +161,7 @@ Inter for all UI text (weights 300, 400, 500, 600). Noto Sans Mono for
 code, identifiers and token values. Noto Serif for long-form content. Material
 Symbols Outlined for icons.
 
-Every style below has a ready-made class — prefer `class="inspera-h1"` over
+Every style below has a ready-made class - prefer `class="inspera-h1"` over
 setting four properties by hand.
 
 Sizes are exact, exported from Figma. Figma exports font-size only for text
@@ -172,8 +172,8 @@ the V3 spec rather than measured.
 
 | Style | Class | Size | Weight | Line height | Notes |
 | --- | --- | --- | --- | --- | --- |
-| `Default/Default 16 px/Regular` | `.inspera-default-16-regular` | 16px | 400 | 1.25 | V3 body.mdRegular — line height fixed at 20px |
-| `Default/16 px/Medium` | `.inspera-default-16-medium` | 16px | 500 | 1.25 | V3 body.mdMedium — line height fixed at 20px |
+| `Default/Default 16 px/Regular` | `.inspera-default-16-regular` | 16px | 400 | 1.25 | V3 body.mdRegular - line height fixed at 20px |
+| `Default/16 px/Medium` | `.inspera-default-16-medium` | 16px | 500 | 1.25 | V3 body.mdMedium - line height fixed at 20px |
 | `Default/Link 16 px` | `.inspera-link-16` | 16px | 500 | 1.25 | underline, unconfirmed: weight, lineHeight |
 
 #### Regular
@@ -218,9 +218,9 @@ the V3 spec rather than measured.
 
 | Style | Class | Size | Weight | Line height | Notes |
 | --- | --- | --- | --- | --- | --- |
-| `Paragraph/Default` | `.inspera-paragraph-default` | 16px | 400 | 1.5 | V3 body.paragraph — 150% |
+| `Paragraph/Default` | `.inspera-paragraph-default` | 16px | 400 | 1.5 | V3 body.paragraph - 150% |
 | `Paragraph/Content` | `.inspera-paragraph-content` | 16px | 400 | 1.5 | unconfirmed: lineHeight |
-| `Paragraph/Captions` | `.inspera-paragraph-captions` | 12px | 400 | 1.2 | V3 body.caption — 120% |
+| `Paragraph/Captions` | `.inspera-paragraph-captions` | 12px | 400 | 1.2 | V3 body.caption - 120% |
 | `Paragraph/Heading` | `.inspera-paragraph-heading` | 20.25px | 500 | 1.12 | unconfirmed: weight, lineHeight |
 
 #### Extra
@@ -238,7 +238,7 @@ the V3 spec rather than measured.
 
 ### Spacing
 
-Use the scale — no arbitrary pixel values.
+Use the scale - no arbitrary pixel values.
 
 | Token | CSS variable | Value |
 | --- | --- | --- |
@@ -264,12 +264,12 @@ actually does rather than what this document claims.
 
 | Token | CSS variable | Value | When to use | Used by |
 | --- | --- | --- | --- | --- |
-| `none` | `var(--radius-none)` | 0px | Flush edges — table cells, full-bleed surfaces, anything that meets another edge. | — |
+| `none` | `var(--radius-none)` | 0px | Flush edges - table cells, full-bleed surfaces, anything that meets another edge. | - |
 | `xs` | `var(--radius-xs)` | 2px | The smallest indicators, where 4px would read as a visible curve. | Checkbox, Link, Rating |
 | `sm` | `var(--radius-sm)` | 4px | Controls: buttons, tags, segments, menu items. | Button, DatePicker, Dialog, List, Menu, Popover, SegmentedControl, Select, Skeleton, Tabs, Tooltip |
-| `md` | `var(--radius-md)` | 8px | Inputs, alerts and floating panels — the system default. | Accordion, Alert, DatePicker, Drawer, FileUpload, List, Menu, OtpInput, Pagination, Popover, SegmentedControl, Select, Skeleton, Snackbar, Table, Tabs, TextInput, Textarea |
+| `md` | `var(--radius-md)` | 8px | Inputs, alerts and floating panels - the system default. | Accordion, Alert, DatePicker, Drawer, FileUpload, List, Menu, OtpInput, Pagination, Popover, SegmentedControl, Select, Skeleton, Snackbar, Table, Tabs, TextInput, Textarea |
 | `lg` | `var(--radius-lg)` | 12px | Large surfaces that contain other components: cards, dialogs, drawers. | Card, Dialog, Stat |
-| `xl` | `var(--radius-xl)` | 16px | Reserved for oversized surfaces. Nothing uses it today; prefer lg. | — |
+| `xl` | `var(--radius-xl)` | 16px | Reserved for oversized surfaces. Nothing uses it today; prefer lg. | - |
 | `pill` | `var(--radius-pill)` | fully round | Only for shapes that are conceptually round: toggles, badges, radios, avatars. | Avatar, Badge, Dialog, Progress, RadioButton, Skeleton, Slider, Stepper, Tag, Toggle, Tooltip |
 
 ### Depth / elevation
@@ -293,11 +293,11 @@ as `box-shadow`. Their colours are palette colours.
 
 | Token | CSS variable | Value | Use |
 | --- | --- | --- | --- |
-| `state-focus` | `var(--effect-state-focus)` | `0px 0px 0px 3px var(--blue-300)` | Standard input focus ring · unconfirmed: spread |
-| `state-focus-standalone` | `var(--effect-state-focus-standalone)` | `0px 0px 0px 3px var(--blue-600)` | High-contrast standalone focus · unconfirmed: spread |
-| `state-error` | `var(--effect-state-error)` | `0px 0px 0px 3px var(--red-300)` | Error ring · unconfirmed: spread |
-| `state-hover-light` | `var(--effect-state-hover-light)` | `0px 0px 0px 3px var(--gray-500)` | Hover outline · unconfirmed: spread |
-| `state-focus-on-dark` | `var(--effect-state-focus-on-dark)` | `0px 0px 0px 3px var(--green-300)` | Focus ring on a dark container · unconfirmed: spread |
+| `state-focus` | `var(--effect-state-focus)` | `0px 0px 0px 3px var(--blue-300)` | Standard input focus ring | unconfirmed: spread |
+| `state-focus-standalone` | `var(--effect-state-focus-standalone)` | `0px 0px 0px 3px var(--blue-600)` | High-contrast standalone focus | unconfirmed: spread |
+| `state-error` | `var(--effect-state-error)` | `0px 0px 0px 3px var(--red-300)` | Error ring | unconfirmed: spread |
+| `state-hover-light` | `var(--effect-state-hover-light)` | `0px 0px 0px 3px var(--gray-500)` | Hover outline | unconfirmed: spread |
+| `state-focus-on-dark` | `var(--effect-state-focus-on-dark)` | `0px 0px 0px 3px var(--green-300)` | Focus ring on a dark container | unconfirmed: spread |
 | `button-shadow` | `var(--effect-button-shadow)` | `inset 0px -1px 0px rgba(0, 0, 0, 0.2), 0px 1px 0px rgba(0, 0, 0, 0.08)` | Standard button elevation highlight |
 | `link-underline-dark` | `var(--effect-link-underline-dark)` | `inset 0px -1px 0px var(--gray-700)` | Link underline on light ground |
 | `link-underline-blue` | `var(--effect-link-underline-blue)` | `inset 0px -1px 0px var(--blue-800)` | Primary link underline |

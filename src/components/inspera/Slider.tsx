@@ -9,13 +9,13 @@ export interface SliderProps {
   min?: number
   /** Maximum value. */
   max?: number
-  /** Current value. Controlled — pair with onChange. */
+  /** Current value. Controlled - pair with onChange. */
   value?: number
   /** Increment granularity. */
   step?: number
   /**
    * Freezes a visual state so documentation can show it without a pointer.
-   * `Focused` is presentation-only — leave it unset in application code, where
+   * `Focused` is presentation-only - leave it unset in application code, where
    * CSS drives it from the real pointer and keyboard. `Disabled` is real
    * application state and belongs in your code.
    */
@@ -47,7 +47,7 @@ export default function Slider({
   const pct = max === min ? 0 : ((current - min) / (max - min)) * 100
 
   // The real control is a visually hidden range input, so the ring has to be
-  // drawn on the thumb standing in for it — .inspera-control in runtime.css
+  // drawn on the thumb standing in for it - .inspera-control in runtime.css
   // does that from :focus-visible, which is why Tab used to show nothing here.
   const thumb: CSSProperties & Record<string, string | number> = {
     '--inspera-indicator-border': 'var(--primary)',

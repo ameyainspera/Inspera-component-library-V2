@@ -1,18 +1,18 @@
-<!-- Inspera Design System v1.0.0 — generated file, do not edit. -->
+<!-- Inspera Design System v1.0.0 - generated file, do not edit. -->
 
-# Inspera — Textarea
+# Inspera - Textarea
 
 1. Do not invent design decisions. Never invent a colour, spacing value, radius, shadow, font size, weight, icon library, focus style, breakpoint, or component variant that this document defines.
 2. Use a canonical component before building a lookalike. If one exists for the job, use it.
 3. Never rename a canonical component or prop. A deprecated alias may be understood as input, but output must use the canonical name.
 4. Consume tokens, not literals. Raw values here define what a token resolves to; application code references `var(--token)`.
 5. Do not introduce another design system. No Material UI, Bootstrap, Ant, Chakra, shadcn default styling, Tailwind default palette, or Radix Themes look. Headless behaviour libraries are fine if restyled entirely to this spec.
-6. No arbitrary Tailwind values where a token exists. Never `bg-[#004080]` — use the token.
+6. No arbitrary Tailwind values where a token exists. Never `bg-[#004080]` - use the token.
 7. Inter for product UI. Noto Sans Mono only for code, identifiers and technical values; Noto Serif only for long-form content.
 8. Material Symbols Outlined only. Do not mix in Lucide, Heroicons, or Font Awesome.
 9. Accessibility is part of the component contract, not an enhancement. Keyboard operation, visible focus, labels, roles, names, and states are required.
 10. Never use colour alone to carry meaning. Pair it with text, an icon, or shape.
-11. Respect `prefers-reduced-motion: reduce` — drop non-essential motion.
+11. Respect `prefers-reduced-motion: reduce` - drop non-essential motion.
 12. Compose rather than invent. If a pattern is not a canonical component, build it from canonical components using the patterns below.
 13. Do not silently add a component. If the system genuinely cannot express something, emit `DESIGN_SYSTEM_GAP` in your output and use the closest documented composition.
 14. No decoration that competes with hierarchy: no gradients, glassmorphism, oversized radii, decorative shadows, or animated backgrounds.
@@ -42,10 +42,10 @@ variant with no error at all. Variant *values* are Capitalised
 
 ### Textarea
 
-Collect multi-line text input. — category: `input-controls`.
+Collect multi-line text input. - category: `input-controls`.
 
 > `@inspera/components` is **not published yet**. If you cannot resolve that import, do
-> not swap in another UI library — build the markup from the HTML and CSS under
+> not swap in another UI library - build the markup from the HTML and CSS under
 > **Without the package** below, which is this component exactly.
 
 ```tsx
@@ -53,7 +53,7 @@ import { Textarea } from '@inspera/components'
 
 <Textarea
   label="Feedback"
-  placeholder="Share your thoughts…"
+  placeholder="Share your thoughts..."
   size="Medium"
   showCount={false}
   maxLength={280}
@@ -65,25 +65,25 @@ import { Textarea } from '@inspera/components'
 | --- | --- | --- | --- |
 | `label` | `string` | `'Description'` | Field label. |
 | `placeholder` | `string` | `'Placeholder text'` | Hint shown when empty. Not a substitute for the label. |
-| `value` | `string` | — | Current value. Controlled — pair with onChange. |
+| `value` | `string` | - | Current value. Controlled - pair with onChange. |
 | `rows` | `number` | `4` | Visible text rows. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Vertical padding density. |
-| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Filled' \| 'Error' \| 'Disabled' \| 'ReadOnly'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Filled` are presentation-only — leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Error`, `Disabled` and `ReadOnly` are real application state and belong in your code. |
+| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Filled' \| 'Error' \| 'Disabled' \| 'ReadOnly'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Filled` are presentation-only - leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Error`, `Disabled` and `ReadOnly` are real application state and belong in your code. |
 | `showLabel` | `boolean` | `true` | Show the field label. |
-| `helpText` | `string` | — | Guidance shown below the field. Replaced by errorText when invalid. |
-| `errorText` | `string` | — | Validation message. Linked to the control via aria-describedby. |
-| `maxLength` | `number` | — | Maximum character length. |
+| `helpText` | `string` | - | Guidance shown below the field. Replaced by errorText when invalid. |
+| `errorText` | `string` | - | Validation message. Linked to the control via aria-describedby. |
+| `maxLength` | `number` | - | Maximum character length. |
 | `showCount` | `boolean` | `false` | Show character counter. |
-| `onChange` | `(value: string) => void` | — | Fired with the new value on every keystroke. |
+| `onChange` | `(value: string) => void` | - | Fired with the new value on every keystroke. |
 
-**Accessibility** — role `textbox`, keyboard operable. Always associate label with textarea using htmlFor/id; Error text must be linked via aria-describedby; aria-invalid reflects the error state.
+**Accessibility** - role `textbox`, keyboard operable. Always associate label with textarea using htmlFor/id; Error text must be linked via aria-describedby; aria-invalid reflects the error state.
 
 **Do:** Always include a visible label; Use rows to hint expected length; Show a character counter when a max length applies.
-**Don't:** Do not use for single-line input — use Text Input instead; Do not disable resize without reason.
+**Don't:** Do not use for single-line input - use Text Input instead; Do not disable resize without reason.
 
 **Deprecated aliases** (do not use): `Text area`, `Multiline input`, `Comment box`
 
-#### Without the package — exact HTML and CSS
+#### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
@@ -92,7 +92,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 - Same field treatment as Text Input, but the wrapper is a column so the counter sits inside the border, under the text.
 - Vertical padding is 8px (6px small); horizontal stays 12px at both sizes.
 - `resize: vertical` only. Free resize lets the user drag the field out of the layout.
-- The counter is presentational — pair `maxlength` on the control with it, and do not rely on the counter to enforce the limit.
+- The counter is presentational - pair `maxlength` on the control with it, and do not rely on the counter to enforce the limit.
 
 ```css
 /* Tokens this component needs. Paste once, at `:root`. */
@@ -194,7 +194,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   <label class="inspera-textarea__label" for="feedback">Feedback</label>
   <div class="inspera-textarea__field">
     <textarea class="inspera-textarea__control" id="feedback" rows="4"
-              maxlength="280" placeholder="Share your thoughts…"
+              maxlength="280" placeholder="Share your thoughts..."
               aria-describedby="feedback-help"></textarea>
     <span class="inspera-textarea__count">0/280</span>
   </div>
@@ -205,4 +205,4 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 ---
 
-Tokens: ./tokens.css · Full system: ./llms.txt
+Tokens: ./tokens.css | Full system: ./llms.txt

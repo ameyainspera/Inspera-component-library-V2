@@ -14,13 +14,13 @@ export interface DialogProps {
   hasCloseButton?: boolean
   /** Show the footer action buttons. */
   hasActions?: boolean
-  /** Label for the confirming action. Name the action — "Delete", not "OK". */
+  /** Label for the confirming action. Name the action - "Delete", not "OK". */
   confirmLabel?: string
   /** Label for the dismissing action. */
   cancelLabel?: string
-  /** Whether the dialog is shown. Controlled — pair with onClose. */
+  /** Whether the dialog is shown. Controlled - pair with onClose. */
   open?: boolean
-  /** Render just the panel (no overlay) — used for documentation previews. */
+  /** Render just the panel (no overlay) - used for documentation previews. */
   embedded?: boolean
   /** Fired on the close button, the overlay, and Escape. */
   onClose?: () => void

@@ -1,18 +1,18 @@
-<!-- Inspera Design System v1.0.0 — generated file, do not edit. -->
+<!-- Inspera Design System v1.0.0 - generated file, do not edit. -->
 
-# Inspera — Snackbar
+# Inspera - Snackbar
 
 1. Do not invent design decisions. Never invent a colour, spacing value, radius, shadow, font size, weight, icon library, focus style, breakpoint, or component variant that this document defines.
 2. Use a canonical component before building a lookalike. If one exists for the job, use it.
 3. Never rename a canonical component or prop. A deprecated alias may be understood as input, but output must use the canonical name.
 4. Consume tokens, not literals. Raw values here define what a token resolves to; application code references `var(--token)`.
 5. Do not introduce another design system. No Material UI, Bootstrap, Ant, Chakra, shadcn default styling, Tailwind default palette, or Radix Themes look. Headless behaviour libraries are fine if restyled entirely to this spec.
-6. No arbitrary Tailwind values where a token exists. Never `bg-[#004080]` — use the token.
+6. No arbitrary Tailwind values where a token exists. Never `bg-[#004080]` - use the token.
 7. Inter for product UI. Noto Sans Mono only for code, identifiers and technical values; Noto Serif only for long-form content.
 8. Material Symbols Outlined only. Do not mix in Lucide, Heroicons, or Font Awesome.
 9. Accessibility is part of the component contract, not an enhancement. Keyboard operation, visible focus, labels, roles, names, and states are required.
 10. Never use colour alone to carry meaning. Pair it with text, an icon, or shape.
-11. Respect `prefers-reduced-motion: reduce` — drop non-essential motion.
+11. Respect `prefers-reduced-motion: reduce` - drop non-essential motion.
 12. Compose rather than invent. If a pattern is not a canonical component, build it from canonical components using the patterns below.
 13. Do not silently add a component. If the system genuinely cannot express something, emit `DESIGN_SYSTEM_GAP` in your output and use the closest documented composition.
 14. No decoration that competes with hierarchy: no gradients, glassmorphism, oversized radii, decorative shadows, or animated backgrounds.
@@ -42,10 +42,10 @@ variant with no error at all. Variant *values* are Capitalised
 
 ### Snackbar
 
-Show brief, non-blocking feedback at the bottom of the screen. — category: `feedback`.
+Show brief, non-blocking feedback at the bottom of the screen. - category: `feedback`.
 
 > `@inspera/components` is **not published yet**. If you cannot resolve that import, do
-> not swap in another UI library — build the markup from the HTML and CSS under
+> not swap in another UI library - build the markup from the HTML and CSS under
 > **Without the package** below, which is this component exactly.
 
 ```tsx
@@ -66,26 +66,26 @@ import { Snackbar } from '@inspera/components'
 | `hasAction` | `boolean` | `false` | Show an inline action (e.g. Undo). |
 | `hasClose` | `boolean` | `true` | Show the dismiss button. |
 | `actionLabel` | `string` | `'Undo'` | Label for the inline action, typically "Undo". |
-| `onAction` | `() => void` | — | Fired when the inline action is activated. |
-| `onClose` | `() => void` | — | Fired when dismissed. |
+| `onAction` | `() => void` | - | Fired when the inline action is activated. |
+| `onClose` | `() => void` | - | Fired when dismissed. |
 
-**Accessibility** — role `status`, keyboard operable. Use role="status" with aria-live="polite"; Action button must be focusable; Auto-dismiss timing must be generous (5s minimum).
+**Accessibility** - role `status`, keyboard operable. Use role="status" with aria-live="polite"; Action button must be focusable; Auto-dismiss timing must be generous (5s minimum).
 
 **Do:** Use for brief confirmation messages; Include an undo action when appropriate; Limit to one snackbar at a time.
-**Don't:** Do not use for critical errors — use Alert or Dialog instead; Do not stack multiple snackbars.
+**Don't:** Do not use for critical errors - use Alert or Dialog instead; Do not stack multiple snackbars.
 
 **Deprecated aliases** (do not use): `Toast`, `Notification bar`
 
-#### Without the package — exact HTML and CSS
+#### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
 font weight of your own, and do not restyle it with a UI kit's defaults.
 
-- The bar is always `--gray-900` with white text. The intent tints the icon and the action label only — a green snackbar is wrong.
+- The bar is always `--gray-900` with white text. The intent tints the icon and the action label only - a green snackbar is wrong.
 - Fixed 48px height, `--radius-md`, `--shadow-300`, and asymmetric padding (16px leading, 8px trailing) because the close button carries its own.
 - Accents are the 400 shade of each family, which reads on the dark bar; the 600 shades do not.
-- Always `role="status"` with `aria-live="polite"` — a snackbar must never interrupt, which is also why nothing the user has to act on later belongs here.
+- Always `role="status"` with `aria-live="polite"` - a snackbar must never interrupt, which is also why nothing the user has to act on later belongs here.
 
 ```css
 /* Tokens this component needs. Paste once, at `:root`. */
@@ -173,4 +173,4 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 ---
 
-Tokens: ./tokens.css · Full system: ./llms.txt
+Tokens: ./tokens.css | Full system: ./llms.txt

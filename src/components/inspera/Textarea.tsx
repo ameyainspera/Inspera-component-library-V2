@@ -9,7 +9,7 @@ export interface TextareaProps {
   label?: string
   /** Hint shown when empty. Not a substitute for the label. */
   placeholder?: string
-  /** Current value. Controlled — pair with onChange. */
+  /** Current value. Controlled - pair with onChange. */
   value?: string
   /** Visible text rows. */
   rows?: number
@@ -17,7 +17,7 @@ export interface TextareaProps {
   size?: TextareaSize
   /**
    * Freezes a visual state so documentation can show it without a pointer.
-   * `Hover`, `Focused` and `Filled` are presentation-only — leave them unset in
+   * `Hover`, `Focused` and `Filled` are presentation-only - leave them unset in
    * application code, where CSS drives them from the real pointer and keyboard.
    * `Error`, `Disabled` and `ReadOnly` are real application state and belong in
    * your code.
@@ -57,7 +57,7 @@ export default function Textarea({
 
   // `state="Filled"` has to be an effect, not just a useState initializer: the
   // docs playground swaps the prop on a live instance rather than remounting
-  // it, and an initializer only ever runs once — so the control showed an
+  // it, and an initializer only ever runs once - so the control showed an
   // empty field. Only seeds the sample text; typing still wins afterwards.
   useEffect(() => {
     if (state === 'Filled') setInternal('The quick brown fox jumps over the lazy dog.')

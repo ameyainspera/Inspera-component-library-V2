@@ -3,10 +3,10 @@
  *
  * Built so you never have to know the canonical name. Four things have to work:
  *
- *   "dialog"   exact / prefix          — the easy case
- *   "modal"    a synonym               — keywords on each spec
- *   "dilaog"   a typo                  — bounded edit distance
- *   "txtinpt"  abbreviated / skipped   — subsequence match
+ *   "dialog"   exact / prefix          - the easy case
+ *   "modal"    a synonym               - keywords on each spec
+ *   "dilaog"   a typo                  - bounded edit distance
+ *   "txtinpt"  abbreviated / skipped   - subsequence match
  *
  * Scores are ordered so a weaker match on the *name* still loses to a strong
  * match on a keyword, and a fuzzy match never outranks a literal one.
@@ -27,7 +27,7 @@ export interface Searchable {
 export interface SearchHit {
   item: Searchable
   score: number
-  /** The term that matched, when it wasn't the name — shown as "matched: toast". */
+  /** The term that matched, when it wasn't the name - shown as "matched: toast". */
   via?: string
 }
 

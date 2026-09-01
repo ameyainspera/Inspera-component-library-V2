@@ -9,7 +9,7 @@ export interface OtpInputProps {
   value?: string
   /**
    * Freezes a visual state so documentation can show it without a pointer.
-   * `Focused` is presentation-only — leave it unset in application code, where
+   * `Focused` is presentation-only - leave it unset in application code, where
    * CSS drives it from the real pointer and keyboard. `Error` and `Disabled`
    * are real application state and belong in your code.
    */

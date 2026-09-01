@@ -1,18 +1,18 @@
-<!-- Inspera Design System v1.0.0 — generated file, do not edit. -->
+<!-- Inspera Design System v1.0.0 - generated file, do not edit. -->
 
-# Inspera — Date Picker
+# Inspera - Date Picker
 
 1. Do not invent design decisions. Never invent a colour, spacing value, radius, shadow, font size, weight, icon library, focus style, breakpoint, or component variant that this document defines.
 2. Use a canonical component before building a lookalike. If one exists for the job, use it.
 3. Never rename a canonical component or prop. A deprecated alias may be understood as input, but output must use the canonical name.
 4. Consume tokens, not literals. Raw values here define what a token resolves to; application code references `var(--token)`.
 5. Do not introduce another design system. No Material UI, Bootstrap, Ant, Chakra, shadcn default styling, Tailwind default palette, or Radix Themes look. Headless behaviour libraries are fine if restyled entirely to this spec.
-6. No arbitrary Tailwind values where a token exists. Never `bg-[#004080]` — use the token.
+6. No arbitrary Tailwind values where a token exists. Never `bg-[#004080]` - use the token.
 7. Inter for product UI. Noto Sans Mono only for code, identifiers and technical values; Noto Serif only for long-form content.
 8. Material Symbols Outlined only. Do not mix in Lucide, Heroicons, or Font Awesome.
 9. Accessibility is part of the component contract, not an enhancement. Keyboard operation, visible focus, labels, roles, names, and states are required.
 10. Never use colour alone to carry meaning. Pair it with text, an icon, or shape.
-11. Respect `prefers-reduced-motion: reduce` — drop non-essential motion.
+11. Respect `prefers-reduced-motion: reduce` - drop non-essential motion.
 12. Compose rather than invent. If a pattern is not a canonical component, build it from canonical components using the patterns below.
 13. Do not silently add a component. If the system genuinely cannot express something, emit `DESIGN_SYSTEM_GAP` in your output and use the closest documented composition.
 14. No decoration that competes with hierarchy: no gradients, glassmorphism, oversized radii, decorative shadows, or animated backgrounds.
@@ -42,10 +42,10 @@ variant with no error at all. Variant *values* are Capitalised
 
 ### Date Picker
 
-Select a calendar date from a popover. — category: `input-controls`.
+Select a calendar date from a popover. - category: `input-controls`.
 
 > `@inspera/components` is **not published yet**. If you cannot resolve that import, do
-> not swap in another UI library — build the markup from the HTML and CSS under
+> not swap in another UI library - build the markup from the HTML and CSS under
 > **Without the package** below, which is this component exactly.
 
 ```tsx
@@ -61,28 +61,28 @@ import { DatePicker } from '@inspera/components'
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `label` | `string` | `'Date'` | Field label. |
-| `value` | `string` | — | Selected date (YYYY-MM-DD). |
+| `value` | `string` | - | Selected date (YYYY-MM-DD). |
 | `placeholder` | `string` | `'Select date'` | Trigger placeholder. |
-| `state` | `'Default' \| 'Focused' \| 'Disabled' \| 'Error'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Focused` is presentation-only — leave it unset in application code, where CSS drives it from the real pointer and keyboard. `Error` and `Disabled` are real application state and belong in your code. |
+| `state` | `'Default' \| 'Focused' \| 'Disabled' \| 'Error'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Focused` is presentation-only - leave it unset in application code, where CSS drives it from the real pointer and keyboard. `Error` and `Disabled` are real application state and belong in your code. |
 | `showLabel` | `boolean` | `true` | Show the field label. |
 | `defaultOpen` | `boolean` | `false` | Open the calendar initially. |
-| `onChange` | `(iso: string) => void` | — | Fired with the selected date as an ISO string (YYYY-MM-DD). |
+| `onChange` | `(iso: string) => void` | - | Fired with the selected date as an ISO string (YYYY-MM-DD). |
 
-**Accessibility** — role `dialog`, keyboard operable. Trigger uses aria-haspopup="dialog" and aria-expanded; Popover uses role="dialog" with a label; Day cells are buttons with descriptive aria-labels; Escape closes the popover.
+**Accessibility** - role `dialog`, keyboard operable. Trigger uses aria-haspopup="dialog" and aria-expanded; Popover uses role="dialog" with a label; Day cells are buttons with descriptive aria-labels; Escape closes the popover.
 
 **Do:** Use for selecting a single calendar date; Highlight today and the selected day; Provide clear month navigation.
 **Don't:** Do not use for free-form date typing without validation; Do not trap keyboard focus without an escape.
 
 **Deprecated aliases** (do not use): `Calendar input`, `Date field`
 
-#### Without the package — exact HTML and CSS
+#### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
 font weight of your own, and do not restyle it with a UI kit's defaults.
 
 - The grid is `repeat(7, 1fr)` and always padded to 42 cells with empty spans. A grid sized to the month makes the panel jump height as you page through it.
-- Leading blanks come from the first of the month’s weekday index — they are empty `<span>`s, not disabled buttons, so they are skipped by the keyboard.
+- Leading blanks come from the first of the month's weekday index - they are empty `<span>`s, not disabled buttons, so they are skipped by the keyboard.
 - Every day button needs a full `aria-label` ("March 1, 2026"). A bare "1" tells a screen reader nothing.
 - Today is outlined with a 1px `--primary` border; the selected day is filled with `--primary`. A day that is both shows only the fill.
 - The panel is anchored under the trigger, `--radius-md` on `--surface` with `--shadow-200`, and closes on Escape and on an outside click.
@@ -266,10 +266,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
     </div>
     <div class="inspera-datepicker__grid">
       <span class="inspera-datepicker__weekday">Su</span>
-      <!-- …Mo through Sa… -->
+      <!-- ...Mo through Sa... -->
       <span></span><!-- leading blanks to the first weekday -->
       <button class="inspera-datepicker__day" type="button" aria-label="March 1, 2026">1</button>
-      <!-- …padded to 42 cells so the panel height never changes… -->
+      <!-- ...padded to 42 cells so the panel height never changes... -->
     </div>
   </div>
 </div>
@@ -278,4 +278,4 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 ---
 
-Tokens: ./tokens.css · Full system: ./llms.txt
+Tokens: ./tokens.css | Full system: ./llms.txt

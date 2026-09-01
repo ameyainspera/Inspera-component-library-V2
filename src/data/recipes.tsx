@@ -3,8 +3,8 @@
  *
  * The prop API in `components.ts` answers "how do I call this component".
  * It only helps someone who already *has* the component. In an AI builder
- * that cannot install `@inspera/components` — v0, Lovable, Bolt, a fresh
- * Figma Make file — the model hand-rolls the element instead, and every
+ * that cannot install `@inspera/components` - v0, Lovable, Bolt, a fresh
+ * Figma Make file - the model hand-rolls the element instead, and every
  * visual fact the API doc leaves out (radius, fill, padding, weight, the
  * hover shade) gets filled in from that tool's defaults. That is the whole
  * reason a pasted spec produces an off-brand button.
@@ -62,14 +62,14 @@ import Tag from '../components/inspera/Tag'
 export interface Recipe {
   /** Root class the recipe defines, e.g. `inspera-btn`. */
   className: string
-  /** Self-contained CSS. Every `var(--…)` it uses is emitted alongside it. */
+  /** Self-contained CSS. Every `var(--...)` it uses is emitted alongside it. */
   css: string
   /** Canonical markup, one line per realistic usage. Goes in the spec doc. */
   html: string
   /**
    * Live markup for the playground, driven by the same control values as the
    * JSX snippet. Static example markup would go stale the moment someone moved
-   * a control — the exact defect the JSX snippets were just fixed for.
+   * a control - the exact defect the JSX snippets were just fixed for.
    */
   markup: (v: Record<string, string>) => string
   /**
@@ -84,7 +84,7 @@ export interface Recipe {
   component: (v: Record<string, string>) => ReactElement
   /**
    * Computed properties to compare, on top of the shared set in the audit.
-   * Add whatever decides whether *this* component looks right — `stroke-width`
+   * Add whatever decides whether *this* component looks right - `stroke-width`
    * for a ring, `grid-template-columns` for a calendar.
    */
   props?: string[]
@@ -97,12 +97,12 @@ export interface Recipe {
   vars?: [label: string, component: string, recipe: string][]
   /**
    * Compare the root element only. For a recipe whose DOM shape legitimately
-   * differs from the component's — a wrapper the component needs and plain
+   * differs from the component's - a wrapper the component needs and plain
    * HTML does not. Use sparingly: the parallel walk is the point.
    */
   rootOnly?: boolean
   /**
-   * Slugs of recipes whose CSS this one builds on — an empty state that uses
+   * Slugs of recipes whose CSS this one builds on - an empty state that uses
    * the canonical button, say. The generator emits their CSS alongside this
    * one, so the published block is complete: a tool that copies it gets a real
    * button, not an unstyled one.
@@ -150,7 +150,7 @@ const button: Recipe = {
     transform var(--duration-fast) var(--easing-standard);
 }
 
-/* Sizes change height, padding and gap only — never the 16px type. */
+/* Sizes change height, padding and gap only - never the 16px type. */
 .inspera-btn--small { height: 32px; padding: 0 12px; gap: 6px; }
 .inspera-btn--large { height: 48px; padding: 0 24px; gap: 10px; }
 
@@ -241,16 +241,16 @@ const button: Recipe = {
   ],
   notes: [
     'Corner radius is 4px (`--radius-sm`). Not 6, not 8, not `rounded-lg`.',
-    'Type is 16px/600 at every size — Small and Large change height, padding and gap only.',
+    'Type is 16px/600 at every size - Small and Large change height, padding and gap only.',
     'Primary is `--primary` #004080, a deep navy. It is not a mid blue and never a gradient.',
     'Every solid intent carries the inset top-light button shadow; Outline and Text carry none.',
-    'Hover darkens the fill to 90% and pressed to 82%, both mixed toward black — no separate hover token.',
+    'Hover darkens the fill to 90% and pressed to 82%, both mixed toward black - no separate hover token.',
     'Minimum width is 80px, so short labels still read as buttons.',
   ],
 }
 
 // ---------------------------------------------------------------------------
-// Badge — a status pill. Small enough that every value matters: get the height
+// Badge - a status pill. Small enough that every value matters: get the height
 // or the radius wrong and it reads as a button.
 // ---------------------------------------------------------------------------
 const badge: Recipe = {
@@ -275,7 +275,7 @@ const badge: Recipe = {
   white-space: nowrap;
 }
 
-/* Small changes height and padding only — never the 12px type. */
+/* Small changes height and padding only - never the 12px type. */
 .inspera-badge--small { height: 20px; padding: 0 6px; }
 
 /* Neutral is written out even though it matches the base, so the class name
@@ -296,7 +296,7 @@ const badge: Recipe = {
 
 <span class="inspera-badge inspera-badge--neutral inspera-badge--small" role="status">Draft</span>
 
-<!-- With an icon. Material Symbols Outlined, filled — never another set. -->
+<!-- With an icon. Material Symbols Outlined, filled - never another set. -->
 <span class="inspera-badge inspera-badge--error" role="status">
   <span class="material-symbols-outlined" aria-hidden="true">error</span>
   Failed
@@ -314,7 +314,7 @@ const badge: Recipe = {
     <Badge label={v.intent} intent={v.intent as never} size={v.size as never} withIcon={v.withIcon === 'true'} />
   ),
   notes: [
-    'Height is 24px (20px small) and the radius is a full pill — not `rounded-md`.',
+    'Height is 24px (20px small) and the radius is a full pill - not `rounded-md`.',
     'Type is 12px/500 at both sizes; Small changes height and padding only.',
     'Neutral is `--surface-neutral` with `--gray-900` text, not a grey chip with white text.',
     'Every intent pairs a `*-surface` tint with the matching solid as the text colour.',
@@ -323,7 +323,7 @@ const badge: Recipe = {
 }
 
 // ---------------------------------------------------------------------------
-// Tag — same pill as Badge, but it can carry a leading icon and a remove
+// Tag - same pill as Badge, but it can carry a leading icon and a remove
 // button. The remove control is a real button, not a styled span.
 // ---------------------------------------------------------------------------
 const tag: Recipe = {
@@ -366,7 +366,7 @@ const tag: Recipe = {
 .inspera-tag--small .material-symbols-outlined { font-size: 14px; }
 
 /* The remove control. Square, inherits the tag's colour, and keeps its own
-   accessible name — "Remove <label>", not a bare "close". */
+   accessible name - "Remove <label>", not a bare "close". */
 .inspera-tag__remove {
   display: inline-flex;
   align-items: center;
@@ -420,14 +420,14 @@ const tag: Recipe = {
   ),
   notes: [
     'Identical geometry to Badge: 24px tall (20px small), full pill radius, 12px/500 type.',
-    'The remove control is a `<button>` with `aria-label="Remove <label>"` — never a bare icon span, and never just "close".',
+    'The remove control is a `<button>` with `aria-label="Remove <label>"` - never a bare icon span, and never just "close".',
     'The leading icon is filled (`FILL 1`); the close icon is not.',
     'A tag with no `onClick` is a `<span>` and takes `cursor: default`. Only a clickable tag becomes a `<button>`.',
   ],
 }
 
 // ---------------------------------------------------------------------------
-// Divider — three separate elements depending on orientation and label, and a
+// Divider - three separate elements depending on orientation and label, and a
 // model left to guess reaches for a bare <hr> with a browser default border.
 // ---------------------------------------------------------------------------
 const divider: Recipe = {
@@ -516,14 +516,14 @@ const divider: Recipe = {
   ),
   notes: [
     'The rule is 1px of `--border` as a background, not a border. A bare `<hr>` keeps the browser default and renders as a grey groove.',
-    'Spacing is margin on the divider itself: 16px default, 8px compact, 24px spacious — on the block axis horizontally, the inline axis vertically.',
+    'Spacing is margin on the divider itself: 16px default, 8px compact, 24px spacious - on the block axis horizontally, the inline axis vertically.',
     'A labelled divider is a flex row of rule / label / rule, with the label at 13px `--muted-foreground`. It is not text laid over a line.',
     'Always carry `role="separator"` and `aria-orientation`; a labelled one also needs `aria-label`.',
   ],
 }
 
 // ---------------------------------------------------------------------------
-// Stat — a KPI tile. The uppercase micro-label above a large number is the
+// Stat - a KPI tile. The uppercase micro-label above a large number is the
 // whole shape; a model left to guess makes the label the same size as the body.
 // ---------------------------------------------------------------------------
 const stat: Recipe = {
@@ -619,7 +619,7 @@ const stat: Recipe = {
     />
   ),
   notes: [
-    'The label is 12px/600 uppercase with 0.04em tracking in `--muted-foreground` — not body text.',
+    'The label is 12px/600 uppercase with 0.04em tracking in `--muted-foreground` - not body text.',
     'The value is 28px/600 at line-height 1.1. It is the only large type in the tile.',
     'The tile uses `--radius-lg` and a 1px `--border`, with no shadow.',
     'Trend colour is `--success` up, `--error` down, `--muted-foreground` flat, and always ships with the matching arrow so the direction is not colour-only.',
@@ -627,7 +627,7 @@ const stat: Recipe = {
 }
 
 // ---------------------------------------------------------------------------
-// Empty state — the icon sits in a filled circle. Skip the circle and it reads
+// Empty state - the icon sits in a filled circle. Skip the circle and it reads
 // as a broken image; that is the detail models miss most often here.
 // ---------------------------------------------------------------------------
 const emptyState: Recipe = {
@@ -726,7 +726,7 @@ const emptyState: Recipe = {
 }
 
 // ---------------------------------------------------------------------------
-// Spinner — an SVG ring, not a spinning border trick. The dash offset is what
+// Spinner - an SVG ring, not a spinning border trick. The dash offset is what
 // makes it an arc rather than a full circle.
 // ---------------------------------------------------------------------------
 const spinner: Recipe = {
@@ -792,16 +792,16 @@ const spinner: Recipe = {
   ),
   props: ['stroke-width', 'stroke-linecap'],
   notes: [
-    'It is an SVG of two circles — a full `--gray-200` track and a coloured arc — not a bordered div with one transparent side.',
+    'It is an SVG of two circles - a full `--gray-200` track and a coloured arc - not a bordered div with one transparent side.',
     'The arc is drawn by `stroke-dasharray` = circumference and `stroke-dashoffset` = 70% of it. Change the offset, not the geometry.',
     'Diameters are 16 / 24 / 40 with stroke widths 2 / 3 / 4.',
     'Rotation is 0.8s linear infinite on the `<svg>`, so the arc spins and the track does not.',
-    'The visually hidden label is required — `role="status"` with no name announces nothing.',
+    'The visually hidden label is required - `role="status"` with no name announces nothing.',
   ],
 }
 
 // ---------------------------------------------------------------------------
-// Skeleton — the shimmer is a moving gradient, and the last text line is short.
+// Skeleton - the shimmer is a moving gradient, and the last text line is short.
 // ---------------------------------------------------------------------------
 const skeleton: Recipe = {
   className: 'inspera-skeleton',
@@ -881,12 +881,12 @@ const skeleton: Recipe = {
     'The shimmer is a 400%-wide linear gradient panned by `background-position`, 1.4s ease infinite. It is not an opacity pulse.',
     'Text lines are 12px tall with `--radius-sm` and an 8px gap; the last of several is 60% wide so the block reads as a paragraph.',
     'Rect uses `--radius-md`, Circle uses `--radius-pill`. Match the radius to whatever the placeholder stands in for.',
-    'Always `aria-hidden` — a skeleton is decoration, and announcing it interrupts the user with nothing.',
+    'Always `aria-hidden` - a skeleton is decoration, and announcing it interrupts the user with nothing.',
   ],
 }
 
 // ---------------------------------------------------------------------------
-// Card — a contained surface. Three elevations that differ only in border and
+// Card - a contained surface. Three elevations that differ only in border and
 // shadow, and an interactive card that is a real <button>.
 // ---------------------------------------------------------------------------
 const card: Recipe = {
@@ -940,7 +940,7 @@ const card: Recipe = {
 }`,
   html: `<article class="inspera-card inspera-card--raised">
   <h3 class="inspera-card__title">Algebra Quiz</h3>
-  <p class="inspera-card__body">24 questions · 45 minutes.</p>
+  <p class="inspera-card__body">24 questions | 45 minutes.</p>
 </article>
 
 <!-- Interactive: a real button, never a div with a click handler. -->
@@ -954,7 +954,7 @@ const card: Recipe = {
     const interactive = v.interactive === 'true'
     const cls = `inspera-card${elev}${pad}${interactive ? ' inspera-card--interactive' : ''}`
     const inner = `  <h3 class="inspera-card__title">Algebra Quiz</h3>\n` +
-      `  <p class="inspera-card__body">24 questions · 45 minutes. Group related content in a contained surface.</p>\n`
+      `  <p class="inspera-card__body">24 questions | 45 minutes. Group related content in a contained surface.</p>\n`
     return interactive
       ? `<button type="button" class="${cls}">\n${inner}</button>`
       : `<article class="${cls}">\n${inner}</article>`
@@ -962,7 +962,7 @@ const card: Recipe = {
   component: (v) => (
     <Card
       title="Algebra Quiz"
-      body="24 questions · 45 minutes. Group related content in a contained surface."
+      body="24 questions | 45 minutes. Group related content in a contained surface."
       elevation={v.elevation as never}
       padding={v.padding as never}
       interactive={v.interactive === 'true'}
@@ -973,12 +973,12 @@ const card: Recipe = {
     'Flat has neither border nor shadow, Raised adds `--shadow-200`, Outlined adds a 1px `--border-strong`. Never both a shadow and a strong border.',
     'The transparent 1px border at rest is deliberate: without it, Outlined would be 2px wider than Flat.',
     'An interactive card is a `<button>`. A `<div>` with a click handler is not keyboard operable and will fail review.',
-    'Title 16px/500, body 16px/1.4 in `--gray-700` — the body is not smaller than the title.',
+    'Title 16px/500, body 16px/1.4 in `--gray-700` - the body is not smaller than the title.',
   ],
 }
 
 // ---------------------------------------------------------------------------
-// Link — inline navigation. The trap here is the underline: it is a hover
+// Link - inline navigation. The trap here is the underline: it is a hover
 // behaviour by default, and models tend to hardcode one or the other.
 // ---------------------------------------------------------------------------
 const link: Recipe = {
@@ -1067,16 +1067,16 @@ const link: Recipe = {
     />
   ),
   notes: [
-    'The default is underline **on hover only** — not always, and not never.',
+    'The default is underline **on hover only** - not always, and not never.',
     'Colour is `--primary` at 16px/500 (14px when small), with `text-underline-offset: 2px` so the rule clears the descenders.',
     'An external link gets `target="_blank"`, `rel="noreferrer"`, and the `open_in_new` icon. All three, not one.',
     'A disabled link carries no `href` and sets `aria-disabled="true"`. Do not leave the href and swallow the click.',
-    'The focus ring is `--primary-focus-ring` at 2px with a 2px offset — different from the solid `--primary` ring buttons use.',
+    'The focus ring is `--primary-focus-ring` at 2px with a 2px offset - different from the solid `--primary` ring buttons use.',
   ],
 }
 
 // ---------------------------------------------------------------------------
-// Alert — inline feedback. Every intent pairs a tinted surface with the solid
+// Alert - inline feedback. Every intent pairs a tinted surface with the solid
 // as icon and border, and the live-region role follows the severity.
 // ---------------------------------------------------------------------------
 const alert: Recipe = {
@@ -1202,15 +1202,15 @@ const alert: Recipe = {
   ),
   notes: [
     'Each intent pairs the `*-surface` tint as background with the solid colour as both border and icon.',
-    'The live region follows severity: Error and Warning use `role="alert"`, Info and Success use `role="status"` with `aria-live="polite"`. Never put `role="alert"` and `aria-live="polite"` on the same element — alert already implies assertive.',
+    'The live region follows severity: Error and Warning use `role="alert"`, Info and Success use `role="status"` with `aria-live="polite"`. Never put `role="alert"` and `aria-live="polite"` on the same element - alert already implies assertive.',
     'The icon is filled (`FILL 1`) at 20px, nudged 1px down so it sits on the title baseline.',
     'Without the tint, the accent becomes a 4px left border and the other three sides stay 1px.',
-    'The close button needs `aria-label="Close alert"` — an unlabelled × announces as nothing.',
+    'The close button needs `aria-label="Close alert"` - an unlabelled x announces as nothing.',
   ],
 }
 
 // ---------------------------------------------------------------------------
-// Snackbar — a transient dark bar. The intent tints only the icon and action,
+// Snackbar - a transient dark bar. The intent tints only the icon and action,
 // never the surface, which stays --gray-900 for every intent.
 // ---------------------------------------------------------------------------
 const snackbar: Recipe = {
@@ -1295,15 +1295,15 @@ const snackbar: Recipe = {
     <Snackbar intent={v.intent as never} hasAction={v.hasAction === 'true'} hasClose={v.hasClose === 'true'} />
   ),
   notes: [
-    'The bar is always `--gray-900` with white text. The intent tints the icon and the action label only — a green snackbar is wrong.',
+    'The bar is always `--gray-900` with white text. The intent tints the icon and the action label only - a green snackbar is wrong.',
     'Fixed 48px height, `--radius-md`, `--shadow-300`, and asymmetric padding (16px leading, 8px trailing) because the close button carries its own.',
     'Accents are the 400 shade of each family, which reads on the dark bar; the 600 shades do not.',
-    'Always `role="status"` with `aria-live="polite"` — a snackbar must never interrupt, which is also why nothing the user has to act on later belongs here.',
+    'Always `role="status"` with `aria-live="polite"` - a snackbar must never interrupt, which is also why nothing the user has to act on later belongs here.',
   ],
 }
 
 // ---------------------------------------------------------------------------
-// Avatar — a round surface holding initials, a photo or an icon, with an
+// Avatar - a round surface holding initials, a photo or an icon, with an
 // optional status dot. Every dimension derives from the diameter.
 // ---------------------------------------------------------------------------
 const AVATAR_IMG = 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=112&h=112&fit=crop&auto=format'
@@ -1403,7 +1403,7 @@ ${inner}  </span>${status}
   ),
   props: ['object-fit'],
   notes: [
-    'Diameters are 32 / 40 / 56. Initials are 40% of that, the icon 55%, the status dot 28% — never a fixed size.',
+    'Diameters are 32 / 40 / 56. Initials are 40% of that, the icon 55%, the status dot 28% - never a fixed size.',
     'The surface uses `--avatar-surface`, not a random grey, and `--radius-pill`.',
     'The status dot needs its 2px `--white` ring, or it disappears against a photo.',
     'The accessible name lives on the surface (`role="img"`); the initials themselves are decorative text.',
@@ -1412,7 +1412,7 @@ ${inner}  </span>${status}
 }
 
 // ---------------------------------------------------------------------------
-// Avatar group — overlapped avatars with a +N overflow chip. The white ring on
+// Avatar group - overlapped avatars with a +N overflow chip. The white ring on
 // each is what makes the overlap read as separate people.
 // ---------------------------------------------------------------------------
 const avatarGroup: Recipe = {
@@ -1494,7 +1494,7 @@ ${shown}${more}
     />
   ),
   notes: [
-    'Overlap is 30% of the diameter as a negative left margin — 10 / 12 / 17px for small / medium / large — and the first item has none.',
+    'Overlap is 30% of the diameter as a negative left margin - 10 / 12 / 17px for small / medium / large - and the first item has none.',
     'The separating ring is a `box-shadow`, not a border: a border would grow each avatar and break the spacing.',
     'The overflow chip is `+N` on `--gray-200` at 34% of the diameter, sized identically to an avatar.',
     'The group carries `role="group"` and a count in its label; the chip carries "N more". Overlapping avatars are meaningless to a screen reader without both.',
@@ -1502,7 +1502,7 @@ ${shown}${more}
 }
 
 // ---------------------------------------------------------------------------
-// Progress — a bar or a ring. Both need explicit ARIA; a styled div announces
+// Progress - a bar or a ring. Both need explicit ARIA; a styled div announces
 // nothing at all.
 // ---------------------------------------------------------------------------
 const progress: Recipe = {
@@ -1646,13 +1646,13 @@ ${fill}
     'The bar heights are 4 / 8 / 12 and the ring diameters 24 / 40 / 56, with stroke widths 3 / 4 / 5.',
     '`role="progressbar"` with `aria-valuemin`, `aria-valuemax` and an `aria-label` is mandatory. A styled div announces nothing.',
     'When indeterminate, omit `aria-valuenow` entirely. Sending 0 tells the user it is stuck at zero.',
-    'The indeterminate bar is a 40% sliver swept by keyframes across a clipped track — not a full-width bar that fades.',
+    'The indeterminate bar is a 40% sliver swept by keyframes across a clipped track - not a full-width bar that fades.',
     'The ring is rotated -90deg so the arc starts at twelve o\'clock, and the arc length is set by `stroke-dashoffset`.',
   ],
 }
 
 // ---------------------------------------------------------------------------
-// Breadcrumb — an ordered list. The last crumb is the current page and is not
+// Breadcrumb - an ordered list. The last crumb is the current page and is not
 // a control; the separators are decorative and must be hidden.
 // ---------------------------------------------------------------------------
 const breadcrumb: Recipe = {
@@ -1745,16 +1745,16 @@ ${rows.join('\n')}
     <Breadcrumb separator={v.separator as never} size={v.size as never} />
   ),
   notes: [
-    'It is a `<nav aria-label="Breadcrumb">` wrapping an `<ol>` — order is the meaning, so not a `<div>` of spans.',
+    'It is a `<nav aria-label="Breadcrumb">` wrapping an `<ol>` - order is the meaning, so not a `<div>` of spans.',
     'The last crumb is the current page: `aria-current="page"`, `--text-primary` at 500 weight, and not a control.',
     'Separators live in their own `<li>` marked `aria-hidden="true"`. Left announced, a screen reader reads "chevron right" between every crumb.',
     'Crumbs are 16px (14px small) in `--primary`, underlined on hover only. The chevron runs 2px larger than the text.',
-    'With real URLs use `<a href>` rather than `<button>`, keeping the same class — a breadcrumb should be openable in a new tab.',
+    'With real URLs use `<a href>` rather than `<button>`, keeping the same class - a breadcrumb should be openable in a new tab.',
   ],
 }
 
 // ---------------------------------------------------------------------------
-// Text input — label, field, help text. The field is a flex row wrapping the
+// Text input - label, field, help text. The field is a flex row wrapping the
 // <input>, because the icons sit inside the border, not beside it.
 // ---------------------------------------------------------------------------
 const textInput: Recipe = {
@@ -1793,7 +1793,7 @@ const textInput: Recipe = {
 
 .inspera-input__field:hover { border-color: var(--border-control-strong); }
 
-/* :focus-within, not :focus — the focusable element is the <input> inside. */
+/* :focus-within, not :focus - the focusable element is the <input> inside. */
 .inspera-input__field:focus-within {
   border-color: var(--primary);
   box-shadow: var(--effect-state-focus);
@@ -1827,7 +1827,7 @@ const textInput: Recipe = {
   color: var(--error);
 }
 
-/* Invalid outranks hover and focus — the error has to stay legible. */
+/* Invalid outranks hover and focus - the error has to stay legible. */
 .inspera-input__field[data-invalid='true'],
 .inspera-input__field[data-invalid='true']:hover,
 .inspera-input__field[data-invalid='true']:focus-within {
@@ -1889,7 +1889,7 @@ const textInput: Recipe = {
     />
   ),
   notes: [
-    'The border belongs to the wrapper, not the `<input>`. The input itself has no border, no outline and no background — otherwise icons cannot sit inside the field.',
+    'The border belongs to the wrapper, not the `<input>`. The input itself has no border, no outline and no background - otherwise icons cannot sit inside the field.',
     'Focus is `:focus-within` on the wrapper, drawn as `--effect-state-focus` (a 3px box-shadow) plus a `--primary` border. Fields ring with a shadow; buttons ring with an outline.',
     'Height is 40px (32px small), radius `--radius-md`, resting border `--border-control` #C4C4C4 going to `--border-control-strong` on hover.',
     'Help and error text are 12px. Only one shows at a time, and `aria-describedby` points at whichever it is.',
@@ -1898,7 +1898,7 @@ const textInput: Recipe = {
 }
 
 // ---------------------------------------------------------------------------
-// Textarea — the same field, stacked, with an optional character counter that
+// Textarea - the same field, stacked, with an optional character counter that
 // lives inside the border.
 // ---------------------------------------------------------------------------
 const textarea: Recipe = {
@@ -1977,7 +1977,7 @@ const textarea: Recipe = {
   <label class="inspera-textarea__label" for="feedback">Feedback</label>
   <div class="inspera-textarea__field">
     <textarea class="inspera-textarea__control" id="feedback" rows="4"
-              maxlength="280" placeholder="Share your thoughts…"
+              maxlength="280" placeholder="Share your thoughts..."
               aria-describedby="feedback-help"></textarea>
     <span class="inspera-textarea__count">0/280</span>
   </div>
@@ -1993,14 +1993,14 @@ const textarea: Recipe = {
     return `<div class="inspera-textarea${small}">
   <label class="inspera-textarea__label" for="feedback">Feedback</label>
   <div class="inspera-textarea__field">
-    <textarea class="inspera-textarea__control" id="feedback" rows="4" maxlength="280" placeholder="Share your thoughts…"${describedBy}></textarea>${count}
+    <textarea class="inspera-textarea__control" id="feedback" rows="4" maxlength="280" placeholder="Share your thoughts..."${describedBy}></textarea>${count}
   </div>${help}
 </div>`
   },
   component: (v) => (
     <Textarea
       label="Feedback"
-      placeholder="Share your thoughts…"
+      placeholder="Share your thoughts..."
       size={v.size as never}
       showCount={v.showCount === 'true'}
       maxLength={280}
@@ -2012,12 +2012,12 @@ const textarea: Recipe = {
     'Same field treatment as Text Input, but the wrapper is a column so the counter sits inside the border, under the text.',
     'Vertical padding is 8px (6px small); horizontal stays 12px at both sizes.',
     '`resize: vertical` only. Free resize lets the user drag the field out of the layout.',
-    'The counter is presentational — pair `maxlength` on the control with it, and do not rely on the counter to enforce the limit.',
+    'The counter is presentational - pair `maxlength` on the control with it, and do not rely on the counter to enforce the limit.',
   ],
 }
 
 // ---------------------------------------------------------------------------
-// Checkbox — a visually hidden native input plus a drawn box. The input has to
+// Checkbox - a visually hidden native input plus a drawn box. The input has to
 // stay in the DOM and stay focusable; hiding it with display:none breaks both
 // keyboard access and form submission.
 // ---------------------------------------------------------------------------
@@ -2084,7 +2084,7 @@ const checkbox: Recipe = {
   background: var(--primary);
 }
 
-/* The ring goes on the drawn box: the real input is 0×0, so a ring on it is
+/* The ring goes on the drawn box: the real input is 0x0, so a ring on it is
    invisible. This is the single most-missed detail in a custom checkbox. */
 .inspera-checkbox__input:focus-visible + .inspera-checkbox__box {
   outline: var(--focus-ring-width) solid var(--focus-ring-color);
@@ -2144,7 +2144,7 @@ const checkbox: Recipe = {
   ),
   notes: [
     'Keep the native `<input type="checkbox">` in the DOM, visually hidden with `position: absolute; opacity: 0; width: 0; height: 0`. `display: none` removes it from the tab order and from form submission.',
-    'Draw the focus ring on the box via `:focus-visible + .box`. A ring on a 0×0 input is invisible — this is the detail custom checkboxes miss most often.',
+    'Draw the focus ring on the box via `:focus-visible + .box`. A ring on a 0x0 input is invisible - this is the detail custom checkboxes miss most often.',
     'The box is 20px (16px small) with a 2px border and `--radius-xs`. Unchecked is `--border-control-strong`; checked fills with `--primary`.',
     'Indeterminate is a DOM property (`el.indeterminate = true`), not an HTML attribute, and it announces as `aria-checked="mixed"`. Its glyph is `remove`, not a tick. Static markup that cannot run script uses the `inspera-checkbox--mixed` class instead.',
     'The whole row is the `<label>`, so the text is part of the hit target.',
@@ -2152,7 +2152,7 @@ const checkbox: Recipe = {
 }
 
 // ---------------------------------------------------------------------------
-// Radio — the same pattern as Checkbox, with a dot instead of a tick, and the
+// Radio - the same pattern as Checkbox, with a dot instead of a tick, and the
 // `name` attribute doing the grouping.
 // ---------------------------------------------------------------------------
 const radioButton: Recipe = {
@@ -2188,7 +2188,7 @@ const radioButton: Recipe = {
   transition: all 120ms ease;
 }
 
-/* The dot is a child element, not a background — it has to stay centred as the
+/* The dot is a child element, not a background - it has to stay centred as the
    circle scales on press. */
 .inspera-radio__dot {
   width: 10px;
@@ -2240,13 +2240,13 @@ const radioButton: Recipe = {
   notes: [
     'Identical structure to Checkbox: a visually hidden native `<input type="radio">` plus a drawn circle, with the ring on the circle.',
     'The circle is 20px with a 2px border and `--radius-pill`; the selected dot is a 10px child element, not a background, so it stays centred while the circle scales on press.',
-    'Grouping is the `name` attribute. Every radio in one question shares it, and unrelated questions must not — two groups sharing a name become one.',
+    'Grouping is the `name` attribute. Every radio in one question shares it, and unrelated questions must not - two groups sharing a name become one.',
     'For a set of options prefer the Radio Group component, which owns the name and the group label for you.',
   ],
 }
 
 // ---------------------------------------------------------------------------
-// Toggle — an immediate on/off switch. It needs role="switch"; a bare checkbox
+// Toggle - an immediate on/off switch. It needs role="switch"; a bare checkbox
 // announces as a checkbox, which is a different promise.
 // ---------------------------------------------------------------------------
 const toggle: Recipe = {
@@ -2296,7 +2296,7 @@ const toggle: Recipe = {
 
 .inspera-toggle__input:checked + .inspera-toggle__track { background: var(--primary); }
 
-/* Travel is track − thumb − (2 × padding). */
+/* Travel is track - thumb - (2 x padding). */
 .inspera-toggle__input:checked + .inspera-toggle__track .inspera-toggle__thumb {
   transform: translateX(20px);
 }
@@ -2334,15 +2334,15 @@ const toggle: Recipe = {
   ),
   notes: [
     'The input carries `role="switch"`. Without it the control announces as a checkbox, which promises a form value rather than an immediate change.',
-    'Track 44×24 (36×20 small), thumb 20px (16px), 2px padding. Thumb travel is track − thumb − 2×padding: 20px, or 16px when small.',
-    'The track fill is `--border-control` off and `--primary` on. It does not tint on hover — only the thumb shadow deepens.',
-    'The focus ring goes on the track, since the real input is 0×0.',
+    'Track 44x24 (36x20 small), thumb 20px (16px), 2px padding. Thumb travel is track - thumb - 2xpadding: 20px, or 16px when small.',
+    'The track fill is `--border-control` off and `--primary` on. It does not tint on hover - only the thumb shadow deepens.',
+    'The focus ring goes on the track, since the real input is 0x0.',
     'A toggle applies immediately. If the change needs a Save button, use a Checkbox instead.',
   ],
 }
 
 // ---------------------------------------------------------------------------
-// Segmented control — a radiogroup of buttons on a tinted track. The selected
+// Segmented control - a radiogroup of buttons on a tinted track. The selected
 // segment is a raised white card, not just a colour change.
 // ---------------------------------------------------------------------------
 const segmentedControl: Recipe = {
@@ -2409,7 +2409,7 @@ const segmentedControl: Recipe = {
 }
 
 // ---------------------------------------------------------------------------
-// Slider — a native range input made invisible, with the track and thumb drawn
+// Slider - a native range input made invisible, with the track and thumb drawn
 // underneath it. Keeps every keyboard and touch behaviour for free.
 // ---------------------------------------------------------------------------
 const slider: Recipe = {
@@ -2464,7 +2464,7 @@ const slider: Recipe = {
   background: var(--primary);
 }
 
-/* Drawn, and deliberately not hit-testable — the real input above it takes
+/* Drawn, and deliberately not hit-testable - the real input above it takes
    every pointer event, so drag, click-to-seek and touch all still work. */
 .inspera-slider__thumb {
   position: absolute;
@@ -2541,7 +2541,7 @@ const slider: Recipe = {
 }
 
 // ---------------------------------------------------------------------------
-// Rating — a radiogroup of stars. The fill axis of the variable font does the
+// Rating - a radiogroup of stars. The fill axis of the variable font does the
 // work; two different glyphs would jump.
 // ---------------------------------------------------------------------------
 const rating: Recipe = {
@@ -2621,7 +2621,7 @@ ${stars.join('\n')}
   ),
   props: ['font-variation-settings'],
   notes: [
-    'One glyph — `star` — with the variable font’s FILL axis at 0 or 1. Swapping to a different outline glyph changes the shape and makes the row jump on hover.',
+    "One glyph - `star` - with the variable font's FILL axis at 0 or 1. Swapping to a different outline glyph changes the shape and makes the row jump on hover.",
     'Filled stars are `--warning` #EF6C00; empty ones `--gray-400`. Stars are 28px (20px small) with a 2px gap.',
     '`role="radiogroup"` with `role="radio"` stars, a roving tabindex, and arrow keys that both move focus and set the value.',
     'Every star needs its own label ("3 stars"), or the control announces as five unlabelled radios.',
@@ -2630,7 +2630,7 @@ ${stars.join('\n')}
 }
 
 // ---------------------------------------------------------------------------
-// OTP input — one input per digit, wired so typing advances, backspace
+// OTP input - one input per digit, wired so typing advances, backspace
 // retreats, and a paste of the whole code fills every box.
 // ---------------------------------------------------------------------------
 const otpInput: Recipe = {
@@ -2696,16 +2696,16 @@ const otpInput: Recipe = {
     <OtpInput value="123" length={Number(v.length)} />
   ),
   notes: [
-    'One `<input>` per digit, 44×48, `--radius-md`, in `--font-mono` at 20px so the digits do not shift as they are typed.',
+    'One `<input>` per digit, 44x48, `--radius-md`, in `--font-mono` at 20px so the digits do not shift as they are typed.',
     '`autocomplete="one-time-code"` goes on the first box only, and `off` on the rest. On every box the platform offers the code once per field.',
     'Each box needs `aria-label="Digit N"` and `inputmode="numeric"`, plus `maxlength="1"`.',
     'Wire the behaviour: typing advances focus, Backspace on an empty box moves back and clears, arrows move between boxes, and a paste on any box fills the rest.',
-    'Focus is per box — do not ring the whole row.',
+    'Focus is per box - do not ring the whole row.',
   ],
 }
 
 // ---------------------------------------------------------------------------
-// Form field — the label / control / message wrapper. It owns the association
+// Form field - the label / control / message wrapper. It owns the association
 // between them, which is the part hand-rolled forms get wrong.
 // ---------------------------------------------------------------------------
 const formField: Recipe = {
@@ -2776,16 +2776,16 @@ ${message}
     </FormField>
   ),
   notes: [
-    'The wrapper owns three links the control cannot make for itself: `for` → the control id, `aria-describedby` → the message id, and `aria-invalid` when the message is an error.',
+    'The wrapper owns three links the control cannot make for itself: `for` -> the control id, `aria-describedby` -> the message id, and `aria-invalid` when the message is an error.',
     'Only one message shows at a time. When there is an error it replaces the help text; it does not stack under it.',
-    'The red asterisk is `aria-hidden` decoration. Requiredness is announced from the control’s own `required` attribute — the asterisk alone tells a screen reader nothing.',
+    "The red asterisk is `aria-hidden` decoration. Requiredness is announced from the control's own `required` attribute - the asterisk alone tells a screen reader nothing.",
     'Gap between label, control and message is 6px; message text is 12px.',
     'The nested control keeps its own label markup off (there is already one here) but still needs an accessible name via the outer `for`.',
   ],
 }
 
 // ---------------------------------------------------------------------------
-// Select — a combobox trigger plus a listbox. The trigger is not a <select>,
+// Select - a combobox trigger plus a listbox. The trigger is not a <select>,
 // so every ARIA relationship has to be stated.
 // ---------------------------------------------------------------------------
 const select: Recipe = {
@@ -2920,17 +2920,17 @@ const select: Recipe = {
     <Select label="Country" widthMode={v.widthMode as never} search={v.search === 'true'} />
   ),
   notes: [
-    'The trigger is a `role="combobox"` element with `tabindex="0"`, `aria-expanded`, `aria-haspopup="listbox"` and `aria-controls` pointing at the list. None of that comes free — this is not a native `<select>`.',
+    'The trigger is a `role="combobox"` element with `tabindex="0"`, `aria-expanded`, `aria-haspopup="listbox"` and `aria-controls` pointing at the list. None of that comes free - this is not a native `<select>`.',
     'The list is `role="listbox"` with `role="option"` children carrying `aria-selected`; it is positioned against the trigger, not appended to the body.',
     'Keep the keyboard cursor and the selected value as two different states. The highlighted option (`--active`, `--blue-100`) is where the arrows are; `aria-selected` is what has been chosen.',
-    'The chevron rotates 180° while open, driven off `aria-expanded` so the attribute and the visual cannot disagree.',
+    'The chevron rotates 180deg while open, driven off `aria-expanded` so the attribute and the visual cannot disagree.',
     'Keyboard: Down opens and moves, Up moves back, Enter commits, Escape closes.',
     'Fixed width is 220px; Content Adaptable drops to `auto` with a 120px floor.',
   ],
 }
 
 // ---------------------------------------------------------------------------
-// Date picker — a trigger and an anchored calendar. The grid is fixed at six
+// Date picker - a trigger and an anchored calendar. The grid is fixed at six
 // rows so the panel does not resize as you page through months.
 // ---------------------------------------------------------------------------
 const WEEKDAY_LABELS = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']
@@ -3089,10 +3089,10 @@ const datePicker: Recipe = {
     </div>
     <div class="inspera-datepicker__grid">
       <span class="inspera-datepicker__weekday">Su</span>
-      <!-- …Mo through Sa… -->
+      <!-- ...Mo through Sa... -->
       <span></span><!-- leading blanks to the first weekday -->
       <button class="inspera-datepicker__day" type="button" aria-label="March 1, 2026">1</button>
-      <!-- …padded to 42 cells so the panel height never changes… -->
+      <!-- ...padded to 42 cells so the panel height never changes... -->
     </div>
   </div>
 </div>`,
@@ -3151,7 +3151,7 @@ ${days.join('\n')}
   props: ['grid-template-columns'],
   notes: [
     'The grid is `repeat(7, 1fr)` and always padded to 42 cells with empty spans. A grid sized to the month makes the panel jump height as you page through it.',
-    'Leading blanks come from the first of the month’s weekday index — they are empty `<span>`s, not disabled buttons, so they are skipped by the keyboard.',
+    "Leading blanks come from the first of the month's weekday index - they are empty `<span>`s, not disabled buttons, so they are skipped by the keyboard.",
     'Every day button needs a full `aria-label` ("March 1, 2026"). A bare "1" tells a screen reader nothing.',
     'Today is outlined with a 1px `--primary` border; the selected day is filled with `--primary`. A day that is both shows only the fill.',
     'The panel is anchored under the trigger, `--radius-md` on `--surface` with `--shadow-200`, and closes on Escape and on an outside click.',
@@ -3160,7 +3160,7 @@ ${days.join('\n')}
 }
 
 // ---------------------------------------------------------------------------
-// File upload — a drop zone that is also a keyboard-operable button, wrapping
+// File upload - a drop zone that is also a keyboard-operable button, wrapping
 // a hidden native file input.
 // ---------------------------------------------------------------------------
 const fileUpload: Recipe = {
@@ -3173,7 +3173,7 @@ const fileUpload: Recipe = {
   gap: 8px;
   width: 100%;
   padding: 32px 24px;
-  /* Dashed, and 2px — a 1px dashed border reads as a table rule at this size. */
+  /* Dashed, and 2px - a 1px dashed border reads as a table rule at this size. */
   border: 2px dashed var(--gray-400);
   border-radius: var(--radius-md);
   background: var(--surface);
@@ -3259,15 +3259,15 @@ const fileUpload: Recipe = {
   ),
   notes: [
     'The zone carries `role="button"`, `tabindex="0"` and an Enter/Space handler that clicks the hidden input. Drag and drop alone is not an accessible way to upload.',
-    'Keep the native `<input type="file">` in the DOM, visually hidden — the zone triggers it with `.click()`.',
+    'Keep the native `<input type="file">` in the DOM, visually hidden - the zone triggers it with `.click()`.',
     'Border is 2px dashed `--gray-400`; a 1px dash reads as a table rule at this size.',
     'The drag state and hover share one look: `--primary` border on a `--blue-100` wash. Handle `dragover`, `dragleave` and `drop`, and `preventDefault` on dragover or the browser opens the file instead.',
-    'Always state the constraint ("PNG, JPG or PDF up to 10MB") — a bare drop zone gives no way to know what will be rejected.',
+    'Always state the constraint ("PNG, JPG or PDF up to 10MB") - a bare drop zone gives no way to know what will be rejected.',
   ],
 }
 
 // ---------------------------------------------------------------------------
-// Radio group — the wrapper that makes a set of radios one question: a shared
+// Radio group - the wrapper that makes a set of radios one question: a shared
 // name, a group role, and a label pointing at it.
 // ---------------------------------------------------------------------------
 const radioGroup: Recipe = {
@@ -3345,13 +3345,13 @@ ${options.join('\n')}
   notes: [
     'The group label is a `<span>` with an id, linked by `aria-labelledby` on the `role="radiogroup"` element. A bare `<label>` cannot name a group.',
     'Every option shares one `name`, and no other question on the page may reuse it.',
-    'Vertical options have no gap — each row carries its own 8px vertical padding. Horizontal adds a 24px gap.',
+    'Vertical options have no gap - each row carries its own 8px vertical padding. Horizontal adds a 24px gap.',
     'Group-level state (error, disabled) is applied to each option, not drawn once on the wrapper.',
   ],
 }
 
 // ---------------------------------------------------------------------------
-// Checkbox group — the same wrapper for a multi-select question. Unlike radios
+// Checkbox group - the same wrapper for a multi-select question. Unlike radios
 // there is no shared name; the group role is what ties them together.
 // ---------------------------------------------------------------------------
 const checkboxGroup: Recipe = {
@@ -3424,7 +3424,7 @@ ${options.join('\n')}
     />
   ),
   notes: [
-    'Checkboxes take `role="group"`, not `radiogroup`, and they do **not** share a `name` — each carries its own value.',
+    'Checkboxes take `role="group"`, not `radiogroup`, and they do **not** share a `name` - each carries its own value.',
     'The group label is a `<span>` with an id, linked by `aria-labelledby`.',
     'Same spacing as Radio Group: no gap vertically (rows carry their own padding), 24px horizontally.',
     'A "select all" control on top of a group is the natural place for the indeterminate checkbox state.',
@@ -3432,7 +3432,7 @@ ${options.join('\n')}
 }
 
 // ---------------------------------------------------------------------------
-// Table — a real <table>. The semantics are the component: a grid of divs
+// Table - a real <table>. The semantics are the component: a grid of divs
 // loses row/column association entirely for a screen reader.
 // ---------------------------------------------------------------------------
 const table: Recipe = {
@@ -3581,14 +3581,14 @@ ${rows.join('\n')}
     'Use a real `<table>` with `<thead>`, `<tbody>` and `scope="col"` on every header. A grid of divs loses row and column association completely.',
     'Row height is 52px (40px compact) and the header sits on `--gray-100`. Cells are 14px with 16px horizontal padding.',
     'Right-align numeric columns only, so digits line up. Never right-align text.',
-    'The stripe is passed as the row’s resting fill (`--inspera-row-bg`) rather than a plain background, so the hover rule can still win on striped rows.',
+    "The stripe is passed as the row's resting fill (`--inspera-row-bg`) rather than a plain background, so the hover rule can still win on striped rows.",
     'Selection checkboxes need a per-row `aria-label` ("Select row 3") and `accent-color: var(--primary)`.',
     'Give the table a `<caption>` unless a heading immediately above already names it.',
   ],
 }
 
 // ---------------------------------------------------------------------------
-// List — rows of primary/secondary text with optional leading and trailing
+// List - rows of primary/secondary text with optional leading and trailing
 // slots. Interactive rows are buttons; static rows are not.
 // ---------------------------------------------------------------------------
 const list: Recipe = {
@@ -3729,16 +3729,16 @@ const list: Recipe = {
     />
   ),
   notes: [
-    'Set the four border longhands, never the `border` shorthand. A shorthand on the row wipes the bottom border that draws the divider — the exact bug this component shipped with.',
+    'Set the four border longhands, never the `border` shorthand. A shorthand on the row wipes the bottom border that draws the divider - the exact bug this component shipped with.',
     'Interactive rows are `<button>` inside the `<li>`, so focus and Enter/Space work without a keydown handler.',
     'Row padding is 12px (8px compact) vertical, 16px horizontal; primary text 14px/500, secondary 13px `--muted-foreground`.',
     'The divider is on every row but the last, drawn by `li:not(:last-child)` rather than by counting in script.',
-    'Leading and trailing icons are 20px (18px compact) and always `aria-hidden` — the row’s text is the label.',
+    "Leading and trailing icons are 20px (18px compact) and always `aria-hidden` - the row's text is the label.",
   ],
 }
 
 // ---------------------------------------------------------------------------
-// Accordion — headers are buttons inside headings, panels are regions. The
+// Accordion - headers are buttons inside headings, panels are regions. The
 // aria-expanded / aria-controls pair is what makes it operable.
 // ---------------------------------------------------------------------------
 const accordion: Recipe = {
@@ -3752,7 +3752,7 @@ const accordion: Recipe = {
   background: var(--white);
 }
 
-/* Rules between items, not around them — the wrapper already has a border. */
+/* Rules between items, not around them - the wrapper already has a border. */
 .inspera-accordion__item + .inspera-accordion__item {
   border-top: 1px solid var(--border);
 }
@@ -3835,7 +3835,7 @@ const accordion: Recipe = {
     const items = [
       ['What is Inspera?', 'A digital assessment platform for education and certification.'],
       ['How are results scored?', 'Automatically for objective items, with manual grading for essays.'],
-      ['Is it accessible?', 'Yes — components follow WCAG 2.1 AA guidance.'],
+      ['Is it accessible?', 'Yes - components follow WCAG 2.1 AA guidance.'],
     ].map(([title, body], i) => {
       const open = i === 0
       return `  <div class="inspera-accordion__item">
@@ -3857,7 +3857,7 @@ const accordion: Recipe = {
       items={[
         { title: 'What is Inspera?', content: 'A digital assessment platform for education and certification.' },
         { title: 'How are results scored?', content: 'Automatically for objective items, with manual grading for essays.' },
-        { title: 'Is it accessible?', content: 'Yes — components follow WCAG 2.1 AA guidance.' },
+        { title: 'Is it accessible?', content: 'Yes - components follow WCAG 2.1 AA guidance.' },
       ]}
     />
   ),
@@ -3865,14 +3865,14 @@ const accordion: Recipe = {
     'Each header is a `<button>` inside an `<h3>`. The heading gives the section its place in the document outline; the button makes it operable.',
     '`aria-expanded` on the trigger and `aria-controls` pointing at the panel, with the panel as `role="region"` labelled back by the trigger id. All four, or the pattern does not work.',
     'Collapse with the `hidden` attribute so the panel leaves both the tab order and the accessibility tree.',
-    'The chevron rotates 180° driven off `[aria-expanded="true"]`, so the attribute and the arrow cannot disagree.',
+    'The chevron rotates 180deg driven off `[aria-expanded="true"]`, so the attribute and the arrow cannot disagree.',
     'Icon-left reverses the flex row rather than reordering the markup, so the title is still read first.',
     'Single mode closes the open panel when another opens; multiple leaves them independent. Neither changes the markup.',
   ],
 }
 
 // ---------------------------------------------------------------------------
-// Tabs — a tablist of buttons. Two treatments: an underline rail, and a
+// Tabs - a tablist of buttons. Two treatments: an underline rail, and a
 // contained pill group.
 // ---------------------------------------------------------------------------
 const tabs: Recipe = {
@@ -3954,8 +3954,8 @@ const tabs: Recipe = {
           id="tab-questions" aria-controls="panel-questions" tabindex="-1">Questions</button>
 </div>
 
-<div id="panel-overview" role="tabpanel" aria-labelledby="tab-overview" tabindex="0">…</div>
-<div id="panel-questions" role="tabpanel" aria-labelledby="tab-questions" tabindex="0" hidden>…</div>`,
+<div id="panel-overview" role="tabpanel" aria-labelledby="tab-overview" tabindex="0">...</div>
+<div id="panel-questions" role="tabpanel" aria-labelledby="tab-questions" tabindex="0" hidden>...</div>`,
   markup: (v) => {
     const contained = v.style === 'Contained' ? ' inspera-tabs--contained' : ''
     const small = v.size === 'Small' ? ' inspera-tabs--small' : ''
@@ -3969,7 +3969,7 @@ const tabs: Recipe = {
   ),
   notes: [
     'Underline tabs are 48px tall (40px small) on a 1px `--border-strong` rail, with `margin-bottom: -1px` so the selected 2px `--primary` underline covers the rail.',
-    'The resting bottom border is a transparent 2px, not none — otherwise selecting a tab shifts the whole row by two pixels.',
+    'The resting bottom border is a transparent 2px, not none - otherwise selecting a tab shifts the whole row by two pixels.',
     'Contained tabs drop the rail entirely and become a pill group on `--gray-100`, with the selected tab a white `--shadow-100` card.',
     '`role="tablist"` / `role="tab"` / `role="tabpanel"`, each tab pointing at its panel with `aria-controls` and each panel back with `aria-labelledby`.',
     'Roving tabindex: only the selected tab is a tab stop; Left/Right move between them.',
@@ -3977,7 +3977,7 @@ const tabs: Recipe = {
 }
 
 // ---------------------------------------------------------------------------
-// Stepper — progress through an ordered flow. The connector has to run through
+// Stepper - progress through an ordered flow. The connector has to run through
 // the circles, which is what makes the flex sizing here fiddly.
 // ---------------------------------------------------------------------------
 const stepper: Recipe = {
@@ -4186,7 +4186,7 @@ const stepper: Recipe = {
 }
 
 // ---------------------------------------------------------------------------
-// Pagination — a nav of page buttons. The ellipsis is decorative; the current
+// Pagination - a nav of page buttons. The ellipsis is decorative; the current
 // page is announced with aria-current.
 // ---------------------------------------------------------------------------
 const pagination: Recipe = {
@@ -4256,7 +4256,7 @@ const pagination: Recipe = {
       <span class="material-symbols-outlined" aria-hidden="true">chevron_left</span>
     </button></li>
     <li><button type="button" class="inspera-pagination__item" aria-label="Page 1">1</button></li>
-    <li><span class="inspera-pagination__item inspera-pagination__ellipsis" aria-hidden="true">…</span></li>
+    <li><span class="inspera-pagination__item inspera-pagination__ellipsis" aria-hidden="true">...</span></li>
     <li><button type="button" class="inspera-pagination__item" aria-label="Page 4" aria-current="page">4</button></li>
     <li><button type="button" class="inspera-pagination__item" aria-label="Next page">
       <span class="material-symbols-outlined" aria-hidden="true">chevron_right</span>
@@ -4266,7 +4266,7 @@ const pagination: Recipe = {
   markup: (v) => {
     const small = v.size === 'Small' ? ' inspera-pagination--small' : ''
     const page = 4
-    const items: (number | string)[] = [1, '…', 3, 4, 5, '…', 12]
+    const items: (number | string)[] = [1, '...', 3, 4, 5, '...', 12]
     const arrow = (icon: string, label: string, disabled: boolean) =>
       `    <li><button type="button" class="inspera-pagination__item" aria-label="${label}"${disabled ? ' disabled' : ''}>` +
       `<span class="material-symbols-outlined" aria-hidden="true">${icon}</span></button></li>`
@@ -4288,14 +4288,14 @@ const pagination: Recipe = {
   notes: [
     'A `<nav aria-label="Pagination">` around a `<ul>`; the current page is a button with `aria-current="page"`, filled `--primary`.',
     'Every page button needs a real label ("Page 4"), and the arrows need "Previous page" / "Next page". A bare chevron announces as nothing.',
-    'The ellipsis is a `<span>` marked `aria-hidden`, not a disabled button — it is a gap marker, not a control.',
+    'The ellipsis is a `<span>` marked `aria-hidden`, not a disabled button - it is a gap marker, not a control.',
     'Cells are 40px (32px small) with `--radius-md` and a 4px gap, and the list wraps rather than overflowing in a narrow column.',
     'Disable the arrows at the ends rather than hiding them, so the control does not change width as you page.',
   ],
 }
 
 // ---------------------------------------------------------------------------
-// Menu — a trigger and an anchored action list. Items are buttons with
+// Menu - a trigger and an anchored action list. Items are buttons with
 // role="menuitem" and a roving focus the trigger drives.
 // ---------------------------------------------------------------------------
 const menu: Recipe = {
@@ -4447,14 +4447,14 @@ ${rows.join('\n')}
     'The trigger takes `aria-haspopup="menu"`, `aria-expanded` and `aria-controls`; the panel is `role="menu"` with `role="menuitem"` buttons at `tabindex="-1"`.',
     'Focus stays on the trigger and the arrows move a highlight, so hover and the keyboard cursor must drive the same `--active` state.',
     'Separators are `role="separator"` and `aria-hidden`, 1px of `--border` with a 4px margin.',
-    'Destructive items are `--error` text, never a red fill — a filled row reads as selected.',
+    'Destructive items are `--error` text, never a red fill - a filled row reads as selected.',
     'Panel is `--radius-md` on `--surface` with `--shadow-200` and a 180px floor, anchored 4px under the trigger. Bottom End flips it to `right: 0` for menus near the viewport edge.',
     'Escape closes and returns focus to the trigger; an outside click closes without moving focus.',
   ],
 }
 
 // ---------------------------------------------------------------------------
-// Dialog — the panel plus the scrim that makes it modal. The overlay is not
+// Dialog - the panel plus the scrim that makes it modal. The overlay is not
 // decoration: it is what stops the page behind being reachable.
 // ---------------------------------------------------------------------------
 const dialog: Recipe = {
@@ -4601,15 +4601,15 @@ const dialog: Recipe = {
   notes: [
     'Widths are exactly 400 / 480 / 560 with `max-width: 100%`, `--radius-lg` and `--shadow-500`.',
     'Wrap the panel in the scrim. `rgba(39,39,39,0.48)`, fixed, full-viewport, at `--z-modal`. Without it the page behind stays clickable and this is a floating card, not a modal.',
-    '`role="dialog"` with `aria-modal="true"` and `aria-labelledby` pointing at the title id. Generate a unique id — a hardcoded one collides the moment two dialogs exist on a page.',
+    '`role="dialog"` with `aria-modal="true"` and `aria-labelledby` pointing at the title id. Generate a unique id - a hardcoded one collides the moment two dialogs exist on a page.',
     'Behaviour the markup cannot express, and that you must add: move focus into the panel on open, trap Tab inside it, return focus to the trigger on close, close on Escape and on a scrim click, and lock body scroll while open.',
-    'The title is 22.78px/500 — an exact export from Figma, not a rounded 24.',
+    'The title is 22.78px/500 - an exact export from Figma, not a rounded 24.',
     'Name the confirming action for what it does ("Delete"), never "OK".',
   ],
 }
 
 // ---------------------------------------------------------------------------
-// Drawer — a panel pinned to an edge. Same modal obligations as Dialog.
+// Drawer - a panel pinned to an edge. Same modal obligations as Dialog.
 // ---------------------------------------------------------------------------
 const drawer: Recipe = {
   className: 'inspera-drawer',
@@ -4677,7 +4677,7 @@ const drawer: Recipe = {
 }
 .inspera-drawer__close .material-symbols-outlined { font-size: 22px; }
 
-/* The body scrolls, not the panel — the header stays put. */
+/* The body scrolls, not the panel - the header stays put. */
 .inspera-drawer__body {
   flex: 1;
   overflow-y: auto;
@@ -4729,14 +4729,14 @@ const drawer: Recipe = {
   notes: [
     'Side panels are 320 / 400 / 560 wide and pinned top-to-bottom; a bottom drawer takes that number as its height, spans the full width, and caps at 90% of the viewport.',
     'Same scrim and the same modal obligations as Dialog: focus in, Tab trapped, focus restored, Escape and scrim click close, body scroll locked.',
-    'The body scrolls (`flex: 1; overflow-y: auto`), not the panel — the header has to stay put.',
-    'The header is 16px/20px padding with an 18px/500 title, smaller than a Dialog’s because a drawer is a secondary surface.',
+    'The body scrolls (`flex: 1; overflow-y: auto`), not the panel - the header has to stay put.',
+    "The header is 16px/20px padding with an 18px/500 title, smaller than a Dialog's because a drawer is a secondary surface.",
     'Slide it in from its own edge. A drawer that fades in reads as a dialog in the wrong place.',
   ],
 }
 
 // ---------------------------------------------------------------------------
-// Popover — a panel anchored to a trigger, holding interactive content. Unlike
+// Popover - a panel anchored to a trigger, holding interactive content. Unlike
 // a tooltip it can be focused and clicked into.
 // ---------------------------------------------------------------------------
 const popover: Recipe = {
@@ -4763,7 +4763,7 @@ const popover: Recipe = {
   font-family: var(--font-sans);
 }
 
-/* Placement sets the offset and the centring transform together — a 10px gap
+/* Placement sets the offset and the centring transform together - a 10px gap
    leaves room for the arrow without it touching the trigger. */
 .inspera-popover__panel--bottom { top: calc(100% + 10px); left: 50%; transform: translateX(-50%); }
 .inspera-popover__panel--top    { bottom: calc(100% + 10px); left: 50%; transform: translateX(-50%); }
@@ -4856,14 +4856,14 @@ const popover: Recipe = {
     'A popover holds interactive content, so it is `role="dialog"` (not `tooltip`), it is reachable by keyboard, and it does not disappear on mouseout.',
     'The panel is `--radius-md` on `--surface` with a 1px `--border` and `--shadow-300`, 16px padding, capped at 280px with `width: max-content`.',
     'Placement sets the offset and the centring transform together; the 10px gap leaves room for the arrow without it touching the trigger.',
-    'The arrow is a 10px square rotated 45° that borrows exactly two of the panel’s borders — the two facing the trigger.',
+    "The arrow is a 10px square rotated 45deg that borrows exactly two of the panel's borders - the two facing the trigger.",
     'Close on Escape and on an outside click, and return focus to the trigger.',
     'For plain text with no controls, use a Tooltip. For anything that must be acted on, this.',
   ],
 }
 
 // ---------------------------------------------------------------------------
-// Tooltip — a hint on hover or focus. Non-interactive by construction, which
+// Tooltip - a hint on hover or focus. Non-interactive by construction, which
 // is the whole difference from a popover.
 // ---------------------------------------------------------------------------
 const tooltip: Recipe = {
@@ -4894,7 +4894,7 @@ const tooltip: Recipe = {
   transition: opacity 140ms ease;
 }
 
-/* Shown on hover and on keyboard focus. Focus is not optional — a hint only
+/* Shown on hover and on keyboard focus. Focus is not optional - a hint only
    available to a mouse is unreachable for half the people who need it. */
 .inspera-tooltip:hover .inspera-tooltip__bubble,
 .inspera-tooltip:focus-within .inspera-tooltip__bubble { opacity: 1; }
@@ -5003,16 +5003,16 @@ const tooltip: Recipe = {
     />
   ),
   notes: [
-    'The trigger points at the bubble with `aria-describedby`, and the bubble is `role="tooltip"`. A custom trigger needs that attribute too — the tooltip is not announced without it.',
+    'The trigger points at the bubble with `aria-describedby`, and the bubble is `role="tooltip"`. A custom trigger needs that attribute too - the tooltip is not announced without it.',
     'Show on `:hover` **and** `:focus-within`. A hint only a mouse can reach is unreachable for anyone navigating by keyboard.',
     'The bubble takes `pointer-events: none` so it can never sit between the pointer and what it describes.',
     'Dark is `--gray-900` with white text and no border; Light is white with a 1px `--border-strong`, and the arrow has to pick up that border on its two trigger-facing edges.',
     'Default type is 12px; the accessibility type is 14px with more padding, for hints that carry real instruction.',
-    'Escape must dismiss it (WCAG 1.4.13), and nothing essential may live only here — a tooltip is supplementary by definition.',
+    'Escape must dismiss it (WCAG 1.4.13), and nothing essential may live only here - a tooltip is supplementary by definition.',
   ],
 }
 
-// Keyed by component slug — this is what ComponentPage and the generator look
+// Keyed by component slug - this is what ComponentPage and the generator look
 // up, so a camelCase key would silently mean "no recipe".
 export const recipes: Record<string, Recipe> = {
   button,

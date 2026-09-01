@@ -3,7 +3,7 @@
  * any preview that overflows its cell.
  *
  * Components size to their container now, so a preview that does not fit is a
- * gallery-width problem, not a component problem — and eyeballing 42 pages is
+ * gallery-width problem, not a component problem - and eyeballing 42 pages is
  * not a check.
  */
 import { chromium } from 'playwright-core'
@@ -46,7 +46,7 @@ for (const slug of slugs) {
     return found
   })
   for (const label of duplicateCopy) {
-    problems.push(`${slug} · duplicate "${label}" button in one panel`)
+    problems.push(`${slug} | duplicate "${label}" button in one panel`)
   }
 
   // Playground: the live preview canvas must not clip or overflow either.
@@ -62,7 +62,7 @@ for (const slug of slugs) {
     }
   })
   if (playground && playground.overflowX > 1) {
-    problems.push(`${slug} · playground preview overflows by ${playground.overflowX}px`)
+    problems.push(`${slug} | playground preview overflows by ${playground.overflowX}px`)
   }
 
   const result = await page.evaluate(() => {
@@ -93,17 +93,17 @@ for (const slug of slugs) {
 
   for (const c of result.cells) {
     if (c.overflowX > 1) {
-      problems.push(`${slug} · "${c.label}" overflows horizontally by ${c.overflowX}px (cell ${c.cellWidth}px)`)
+      problems.push(`${slug} | "${c.label}" overflows horizontally by ${c.overflowX}px (cell ${c.cellWidth}px)`)
     }
     // A floating panel (Popover, Menu) that spills below the cell is cut off
-    // whenever the cell clips — which `overflow-x: auto` silently causes,
+    // whenever the cell clips - which `overflow-x: auto` silently causes,
     // because a non-visible value on one axis forces the other to compute to
     // auto rather than visible.
     if (c.overflowY > 1 && c.clips) {
-      problems.push(`${slug} · "${c.label}" is cut off vertically by ${c.overflowY}px`)
+      problems.push(`${slug} | "${c.label}" is cut off vertically by ${c.overflowY}px`)
     }
     if (c.height > 620) {
-      problems.push(`${slug} · "${c.label}" is ${c.height}px tall`)
+      problems.push(`${slug} | "${c.label}" is ${c.height}px tall`)
     }
   }
 }

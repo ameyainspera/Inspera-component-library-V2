@@ -10,14 +10,14 @@ export interface RadioButtonProps {
   selected?: boolean
   /**
    * Shared form name. Every radio in a group must use the same value.
-   * Left unset, each radio gets its own generated name and stands alone —
+   * Left unset, each radio gets its own generated name and stands alone -
    * this used to default to the literal `"radio"`, which silently put every
    * unrelated RadioButton on a page into one mutually exclusive group.
    */
   name?: string
   /**
    * Freezes a visual state so documentation can show it without a pointer.
-   * `Hover`, `Focused` and `Pressed` are presentation-only — leave them unset
+   * `Hover`, `Focused` and `Pressed` are presentation-only - leave them unset
    * in application code, where CSS drives them from the real pointer and
    * keyboard. `Error` and `Disabled` are real application state and belong in
    * your code.

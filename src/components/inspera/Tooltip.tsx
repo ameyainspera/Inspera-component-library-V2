@@ -15,12 +15,12 @@ export interface TooltipProps {
   type?: TooltipType
   /** The element the tooltip describes. */
   children?: ReactNode
-  /** Keep the tooltip visible regardless of hover — used for documentation. */
+  /** Keep the tooltip visible regardless of hover - used for documentation. */
   forceVisible?: boolean
 }
 
 const ARROW = 8 // square size px
-const GAP = 8   // bubble ↔ trigger gap (must be >= ARROW/2 so arrow fits)
+const GAP = 8   // bubble-to-trigger gap (must be >= ARROW/2 so arrow fits)
 
 function positionStyle(placement: TooltipPlacement): CSSProperties {
   switch (placement) {
@@ -96,7 +96,7 @@ export default function Tooltip({
   }
 
   // A custom trigger has to carry the describedby too, or the tooltip it owns
-  // is never announced — the spec's "link trigger and tooltip" held only for
+  // is never announced - the spec's "link trigger and tooltip" held only for
   // the built-in trigger below.
   const trigger = children
     ? isValidElement(children)

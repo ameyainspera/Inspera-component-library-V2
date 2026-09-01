@@ -68,7 +68,7 @@ export default function App() {
         </button>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
           {/* The complete document, not the index. llms.txt lists component
-              names and links a file per component — useful to an agent that
+              names and links a file per component - useful to an agent that
               fetches, but it reads as a bare list of names to a person who
               clicks it expecting the spec. */}
           {/* View and download are different intents, so they stay separate
@@ -88,7 +88,7 @@ export default function App() {
                 background: 'var(--surface)', color: 'var(--gray-800)', textDecoration: 'none',
                 fontSize: 13, fontWeight: 500,
               }}
-              title={`Open the complete AI build guide — foundations + all ${componentList.length} components`}
+              title={`Open the complete AI build guide - foundations + all ${componentList.length} components`}
             >
               <span className="material-symbols-outlined" style={{ fontSize: 18 }} aria-hidden>description</span>
               AI spec
@@ -103,7 +103,7 @@ export default function App() {
                 border: '1px solid var(--border-strong)',
                 background: 'var(--surface)', color: 'var(--gray-800)', textDecoration: 'none',
               }}
-              title={`Download as ${fullSpec.saveAs} — ${fullSpec.size}`}
+              title={`Download as ${fullSpec.saveAs} - ${fullSpec.size}`}
               aria-label={`Download the AI spec as ${fullSpec.saveAs}`}
             >
               <span className="material-symbols-outlined" style={{ fontSize: 18 }} aria-hidden>download</span>
@@ -114,7 +114,7 @@ export default function App() {
             target="_blank"
             rel="noreferrer"
             style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--muted-foreground)', textDecoration: 'none' }}
-            title="Short index that links a spec per component — paste this into a chat"
+            title="Short index that links a spec per component - paste this into a chat"
           >
             llms.txt
           </a>
@@ -128,7 +128,7 @@ export default function App() {
             tokens.json
           </a>
           <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--muted-foreground)' }}>
-            v4 · AI-ready
+            v4 | AI-ready
           </span>
         </div>
       </header>

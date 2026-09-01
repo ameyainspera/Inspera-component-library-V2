@@ -96,7 +96,7 @@ export default function Stepper({
               // Always top-align. Centring made the horizontal connector sit
               // against the full step height (circle + label + description),
               // so it rendered down at label level instead of through the
-              // circles — and steps with a description knocked their circle
+              // circles - and steps with a description knocked their circle
               // out of line with the rest.
               alignItems: 'flex-start',
               // '1 1 auto', not '1' (basis 0): with a zero basis every step

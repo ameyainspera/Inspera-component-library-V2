@@ -1,18 +1,18 @@
-<!-- Inspera Design System v1.0.0 — generated file, do not edit. -->
+<!-- Inspera Design System v1.0.0 - generated file, do not edit. -->
 
-# Inspera — OTP Input
+# Inspera - OTP Input
 
 1. Do not invent design decisions. Never invent a colour, spacing value, radius, shadow, font size, weight, icon library, focus style, breakpoint, or component variant that this document defines.
 2. Use a canonical component before building a lookalike. If one exists for the job, use it.
 3. Never rename a canonical component or prop. A deprecated alias may be understood as input, but output must use the canonical name.
 4. Consume tokens, not literals. Raw values here define what a token resolves to; application code references `var(--token)`.
 5. Do not introduce another design system. No Material UI, Bootstrap, Ant, Chakra, shadcn default styling, Tailwind default palette, or Radix Themes look. Headless behaviour libraries are fine if restyled entirely to this spec.
-6. No arbitrary Tailwind values where a token exists. Never `bg-[#004080]` — use the token.
+6. No arbitrary Tailwind values where a token exists. Never `bg-[#004080]` - use the token.
 7. Inter for product UI. Noto Sans Mono only for code, identifiers and technical values; Noto Serif only for long-form content.
 8. Material Symbols Outlined only. Do not mix in Lucide, Heroicons, or Font Awesome.
 9. Accessibility is part of the component contract, not an enhancement. Keyboard operation, visible focus, labels, roles, names, and states are required.
 10. Never use colour alone to carry meaning. Pair it with text, an icon, or shape.
-11. Respect `prefers-reduced-motion: reduce` — drop non-essential motion.
+11. Respect `prefers-reduced-motion: reduce` - drop non-essential motion.
 12. Compose rather than invent. If a pattern is not a canonical component, build it from canonical components using the patterns below.
 13. Do not silently add a component. If the system genuinely cannot express something, emit `DESIGN_SYSTEM_GAP` in your output and use the closest documented composition.
 14. No decoration that competes with hierarchy: no gradients, glassmorphism, oversized radii, decorative shadows, or animated backgrounds.
@@ -42,10 +42,10 @@ variant with no error at all. Variant *values* are Capitalised
 
 ### OTP Input
 
-Enter a one-time verification code. — category: `input-controls`.
+Enter a one-time verification code. - category: `input-controls`.
 
 > `@inspera/components` is **not published yet**. If you cannot resolve that import, do
-> not swap in another UI library — build the markup from the HTML and CSS under
+> not swap in another UI library - build the markup from the HTML and CSS under
 > **Without the package** below, which is this component exactly.
 
 ```tsx
@@ -61,28 +61,28 @@ import { OtpInput } from '@inspera/components'
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `length` | `number` | `6` | Number of digit boxes. |
-| `value` | `string` | — | Current code value. |
-| `state` | `'Default' \| 'Focused' \| 'Error' \| 'Disabled'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Focused` is presentation-only — leave it unset in application code, where CSS drives it from the real pointer and keyboard. `Error` and `Disabled` are real application state and belong in your code. |
-| `onChange` | `(value: string) => void` | — | Fired with the full code as digits are entered or pasted. |
+| `value` | `string` | - | Current code value. |
+| `state` | `'Default' \| 'Focused' \| 'Error' \| 'Disabled'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Focused` is presentation-only - leave it unset in application code, where CSS drives it from the real pointer and keyboard. `Error` and `Disabled` are real application state and belong in your code. |
+| `onChange` | `(value: string) => void` | - | Fired with the full code as digits are entered or pasted. |
 
-**Accessibility** — role `textbox`, keyboard operable. Each box has an aria-label "Digit N"; aria-invalid reflects the error state; Backspace moves focus to the previous box; paste distributes digits.
+**Accessibility** - role `textbox`, keyboard operable. Each box has an aria-label "Digit N"; aria-invalid reflects the error state; Backspace moves focus to the previous box; paste distributes digits.
 
 **Do:** Auto-advance focus as digits are entered; Support paste of the full code; Use a monospace font for even alignment.
 **Don't:** Do not require manual box-by-box focus; Do not allow non-numeric characters.
 
 **Deprecated aliases** (do not use): `PIN input`, `Verification code`, `Code input`
 
-#### Without the package — exact HTML and CSS
+#### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
 font weight of your own, and do not restyle it with a UI kit's defaults.
 
-- One `<input>` per digit, 44×48, `--radius-md`, in `--font-mono` at 20px so the digits do not shift as they are typed.
+- One `<input>` per digit, 44x48, `--radius-md`, in `--font-mono` at 20px so the digits do not shift as they are typed.
 - `autocomplete="one-time-code"` goes on the first box only, and `off` on the rest. On every box the platform offers the code once per field.
 - Each box needs `aria-label="Digit N"` and `inputmode="numeric"`, plus `maxlength="1"`.
 - Wire the behaviour: typing advances focus, Backspace on an empty box moves back and clears, arrows move between boxes, and a paste on any box fills the rest.
-- Focus is per box — do not ring the whole row.
+- Focus is per box - do not ring the whole row.
 
 ```css
 /* Tokens this component needs. Paste once, at `:root`. */
@@ -161,4 +161,4 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 ---
 
-Tokens: ./tokens.css · Full system: ./llms.txt
+Tokens: ./tokens.css | Full system: ./llms.txt

@@ -87,7 +87,7 @@ const specUrl = (path: string) =>
 
 const primerPrompt = () => `You are building UI with the Inspera Design System.
 
-Read ${specUrl('/llms.txt')} first — it lists all ${COUNT} components and links a
+Read ${specUrl('/llms.txt')} first - it lists all ${COUNT} components and links a
 short spec for each one. Fetch the spec for every component you use.
 
 Non-negotiable:
@@ -95,7 +95,7 @@ Non-negotiable:
   silently ignores an unknown prop, so wrong case renders the default variant
   with no error.
 - Variant values are Capitalised: intent="Primary", size="Medium".
-- Style with Inspera tokens (var(--primary), var(--space-4)) — never hardcode
+- Style with Inspera tokens (var(--primary), var(--space-4)) - never hardcode
   an off-palette color.
 
 Now build: <describe the screen or flow you want>.`
@@ -114,7 +114,7 @@ const TOOL_SETUPS: ToolSetup[] = [
     label: 'Cursor',
     file: '/rules/inspera.mdc',
     where: '.cursor/rules/inspera.mdc',
-    note: 'Applies to every .tsx/.jsx/.css file automatically — no per-chat priming.',
+    note: 'Applies to every .tsx/.jsx/.css file automatically - no per-chat priming.',
   },
   {
     id: 'Claude Code',
@@ -182,7 +182,7 @@ function ArtifactLink({ file, saveAs, note, size }: Artifact) {
 }
 
 // ---------------------------------------------------------------------------
-// "Set up for <tool>" — hands over the exact rules file and where it goes.
+// "Set up for <tool>" - hands over the exact rules file and where it goes.
 // A rules file beats a pasted primer: it is loaded on every request in that
 // repo, so nobody has to remember to prime the session.
 // ---------------------------------------------------------------------------
@@ -227,9 +227,9 @@ function ToolSetupCard() {
   return (
     <ContextCard
       icon="smart_toy"
-      eyebrow="Cursor · Claude Code · Copilot · Windsurf · v0 · Bolt · ChatGPT"
+      eyebrow="Cursor | Claude Code | Copilot | Windsurf | v0 | Bolt | ChatGPT"
       title="Any AI builder"
-      blurb="Drop one rules file into the project and the tool stays on-system for every request — no per-chat priming, no pasting the whole spec."
+      blurb="Drop one rules file into the project and the tool stays on-system for every request - no per-chat priming, no pasting the whole spec."
       best="Vibe-coding, prototypes, and any repo where you cannot install the private package."
     >
       <Step n={1} title="Pick your tool">
@@ -297,7 +297,7 @@ export default function IntegratePage() {
         </h1>
         <p style={{ margin: 0, fontSize: 16, color: 'var(--muted-foreground)', maxWidth: 660, lineHeight: 1.55 }}>
           This library ships from a single source in three portable formats, so whatever workspace
-          you design or build in — Figma Make, an AI app builder, or a real codebase — your screens,
+          you design or build in - Figma Make, an AI app builder, or a real codebase - your screens,
           flows, and mockups come out on-brand and consistent. Pick the path that matches your tool.
         </p>
       </header>
@@ -328,12 +328,12 @@ export default function IntegratePage() {
         icon="widgets"
         eyebrow="Design-to-build in Figma"
         title="Figma Make"
-        blurb="Attach the Inspera Kit to a Make project. The Make agent is then constrained to Inspera components, tokens, and guidance — every generated screen inherits the system automatically."
+        blurb="Attach the Inspera Kit to a Make project. The Make agent is then constrained to Inspera components, tokens, and guidance - every generated screen inherits the system automatically."
         best="Generating screens, flows, and mockups conversationally inside Figma."
       >
         <Step n={1} title="Publish or attach the Inspera Kit">
           <p style={{ margin: 0, fontSize: 13, color: 'var(--muted-foreground)', lineHeight: 1.5 }}>
-            In Figma Make, open <strong>Kits → Create / Publish kit</strong> and point it at the
+            In Figma Make, open <strong>Kits &gt; Create / Publish kit</strong> and point it at the
             <code style={{ fontFamily: 'var(--font-mono)', fontSize: 12, margin: '0 4px' }}>kit/</code>
             directory (or the published <code style={{ fontFamily: 'var(--font-mono)', fontSize: 12 }}>@inspera/kit</code>). New projects can attach it.
           </p>
@@ -341,7 +341,7 @@ export default function IntegratePage() {
         <Step n={2} title="Prompt as normal">
           <p style={{ margin: 0, fontSize: 13, color: 'var(--muted-foreground)', lineHeight: 1.5 }}>
             Describe the screen or flow you want. With the kit attached, the agent must build with
-            Inspera components and tokens — no extra instructions needed.
+            Inspera components and tokens - no extra instructions needed.
           </p>
         </Step>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: 'var(--gray-700)' }}>
@@ -357,17 +357,17 @@ export default function IntegratePage() {
       <ContextCard
         icon="code"
         eyebrow="React codebase"
-        title={`Code projects — ${componentsPackage.name}`}
+        title={`Code projects - ${componentsPackage.name}`}
         blurb="The real components as an importable package. Once published this is the strictest path, because the components enforce the spec at runtime rather than an AI interpreting it."
         best="Production apps, once the package is available on a registry."
       >
         {!componentsPackage.published && <NotPublishedNotice />}
-        <Step n={1} title={componentsPackage.published ? 'Install the package' : 'Install — once published'}>
+        <Step n={1} title={componentsPackage.published ? 'Install the package' : 'Install - once published'}>
           <CodeBlock
             code={
               componentsPackage.published
                 ? `npm i ${componentsPackage.name}`
-                : `# Not available yet — this returns 404 today.\n# npm i ${componentsPackage.name}`
+                : `# Not available yet - this returns 404 today.\n# npm i ${componentsPackage.name}`
             }
             language="bash"
             copyLabel="Copy"
@@ -398,7 +398,7 @@ export function SettingsScreen() {
           <span className="material-symbols-outlined" style={{ fontSize: 16, color: 'var(--primary)' }} aria-hidden>lightbulb</span>
           {componentsPackage.published
             ? 'Point your AI assistant (Cursor, Copilot, Claude Code) at this package and it will scaffold with the real components.'
-            : 'Until it ships, point your AI assistant at the rules file above instead — it links the per-component specs, which is the working equivalent today.'}
+            : 'Until it ships, point your AI assistant at the rules file above instead - it links the per-component specs, which is the working equivalent today.'}
         </div>
       </ContextCard>
 
@@ -414,7 +414,7 @@ export function SettingsScreen() {
               Every format is generated from the same source in <code style={{ fontFamily: 'var(--font-mono)', fontSize: 12 }}>src/</code>, and CI
               fails if a generated file drifts from it.
               Whichever path you take, you get the same {COUNT} components, the same tokens (Inter, Noto Sans Mono, Material Symbols,
-              the <code style={{ fontFamily: 'var(--font-mono)', fontSize: 12 }}>#004080</code> navy palette), and the same accessibility rules —
+              the <code style={{ fontFamily: 'var(--font-mono)', fontSize: 12 }}>#004080</code> navy palette), and the same accessibility rules -
               so a mockup built in Figma Make and a production screen built in code look and behave the same.
             </p>
           </div>

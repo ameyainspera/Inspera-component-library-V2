@@ -11,11 +11,11 @@ export interface SelectProps {
   placeholder?: string
   /** The selectable values, in the order they should appear. */
   options?: string[]
-  /** Selected value. Controlled — pair with onChange. */
+  /** Selected value. Controlled - pair with onChange. */
   value?: string
   /**
    * Freezes a visual state so documentation can show it without a pointer.
-   * `Hover`, `Focused` and `Open` are presentation-only — leave them unset in
+   * `Hover`, `Focused` and `Open` are presentation-only - leave them unset in
    * application code, where CSS and the component's own state drive them.
    * `Error` and `Disabled` are real application state and belong in your code.
    */
@@ -54,7 +54,7 @@ export default function Select({
   const isError = state === 'Error'
   // `state="Open"` has to be an effect, not just a useState initializer: the
   // docs playground swaps the prop on a live instance rather than remounting
-  // it, and an initializer only ever runs once — so the control moved nothing.
+  // it, and an initializer only ever runs once - so the control moved nothing.
   useEffect(() => {
     setOpen(state === 'Open')
   }, [state])
@@ -164,7 +164,7 @@ export default function Select({
                 <input
                   autoFocus
                   value={query}
-                  placeholder="Search…"
+                  placeholder="Search..."
                   onChange={(e) => { setQuery(e.target.value); setActive(0) }}
                   style={{
                     width: '100%', boxSizing: 'border-box', height: 32, padding: '0 8px',

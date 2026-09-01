@@ -11,7 +11,7 @@ export interface DatePickerProps {
   placeholder?: string
   /**
    * Freezes a visual state so documentation can show it without a pointer.
-   * `Focused` is presentation-only — leave it unset in application code, where
+   * `Focused` is presentation-only - leave it unset in application code, where
    * CSS drives it from the real pointer and keyboard. `Error` and `Disabled`
    * are real application state and belong in your code.
    */
@@ -51,7 +51,7 @@ export default function DatePicker({
 
   // `defaultOpen` has to be an effect, not just a useState initializer: the
   // docs playground swaps the prop on a live instance rather than remounting
-  // it, and an initializer only ever runs once — so the control moved nothing.
+  // it, and an initializer only ever runs once - so the control moved nothing.
   useEffect(() => {
     setOpen(defaultOpen)
   }, [defaultOpen])

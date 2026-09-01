@@ -19,7 +19,7 @@ function RampStrip({ shades }: { shades: Record<string, string> }) {
   return (
     <div style={{ display: 'flex', height: 56, borderRadius: 'var(--radius-md)', overflow: 'hidden', border: '1px solid var(--border)' }}>
       {Object.entries(shades).map(([shade, hex]) => (
-        <div key={shade} title={`${shade} · ${hex}`} style={{ flex: 1, background: hex }} />
+        <div key={shade} title={`${shade} | ${hex}`} style={{ flex: 1, background: hex }} />
       ))}
     </div>
   )
@@ -56,7 +56,7 @@ function TokenRow({ name, value, cssVar, note }: { name: string; value: string; 
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--gray-900)' }}>{name}</div>
         <div style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--muted-foreground)' }}>
-          {value}{rgb ? ` · ${rgb}` : ''}
+          {value}{rgb ? ` | ${rgb}` : ''}
         </div>
         <div style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--primary)' }}>{cssVar}</div>
         {note && <div style={{ fontSize: 12, color: 'var(--gray-700)', marginTop: 2 }}>{note}</div>}
@@ -103,7 +103,7 @@ function EffectsSection() {
               <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--muted-foreground)', wordBreak: 'break-all' }}>{e.value}</div>
               {e.pending?.length ? (
                 <div style={{ fontSize: 12, color: 'var(--warning)' }}>
-                  Unconfirmed: {e.pending.join(', ')} — Figma&rsquo;s CSS export drops the spread radius.
+                  Unconfirmed: {e.pending.join(', ')} - Figma&rsquo;s CSS export drops the spread radius.
                 </div>
               ) : null}
             </div>
@@ -147,7 +147,7 @@ function LayeringSection() {
   const max = Math.max(...zIndex.map((z) => z.value))
   return (
     <Panel>
-      <SectionTitle sub="Which layer sits above which. Use the scale — never an arbitrary value such as 99999.">
+      <SectionTitle sub="Which layer sits above which. Use the scale - never an arbitrary value such as 99999.">
         Layering
       </SectionTitle>
       <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -207,7 +207,7 @@ export interface FoundationSection {
 }
 
 /**
- * Foundations used to be one page carrying every token — roughly 8,500px of
+ * Foundations used to be one page carrying every token - roughly 8,500px of
  * scrolling, and five of the twelve documented categories had no page at all.
  * Each category is now its own route under #/foundations/<slug>.
  */
@@ -219,7 +219,7 @@ export const FOUNDATION_SECTIONS: FoundationSection[] = [
     render: () => (
 
       <Panel>
-        <SectionTitle sub="The reusable palette every component draws from. These carry no meaning on their own — they are the full range of shades each family offers.">
+        <SectionTitle sub="The reusable palette every component draws from. These carry no meaning on their own - they are the full range of shades each family offers.">
           Foundation colour shades
         </SectionTitle>
 
@@ -247,7 +247,7 @@ export const FOUNDATION_SECTIONS: FoundationSection[] = [
     description: 'Purpose-driven tokens for brand, status and interaction.',
     render: () => (
       <Panel>
-        <SectionTitle sub="Purpose-driven tokens for brand, status feedback and interaction. Separate from the foundation shades — these carry meaning, so use them for that meaning and nothing else.">
+        <SectionTitle sub="Purpose-driven tokens for brand, status feedback and interaction. Separate from the foundation shades - these carry meaning, so use them for that meaning and nothing else.">
           Semantic &amp; brand tokens
         </SectionTitle>
 
@@ -335,8 +335,8 @@ export const FOUNDATION_SECTIONS: FoundationSection[] = [
                     The quick brown fox jumps over the lazy dog
                   </span>
                   <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--muted-foreground)', flexShrink: 0, textAlign: 'right', width: 190 }}>
-                    {t.size}/{Math.round(t.lineHeight * 100)}% · {t.weight}
-                    {t.tracking !== undefined && ` · ${t.tracking > 0 ? '+' : ''}${t.tracking}`}
+                    {t.size}/{Math.round(t.lineHeight * 100)}% | {t.weight}
+                    {t.tracking !== undefined && ` | ${t.tracking > 0 ? '+' : ''}${t.tracking}`}
                     {t.pending?.length ? <span title={`Inferred, not from Figma: ${t.pending.join(', ')}`} style={{ color: 'var(--warning)' }}> °</span> : null}
                   </span>
                 </div>
@@ -372,7 +372,7 @@ export const FOUNDATION_SECTIONS: FoundationSection[] = [
     description: 'Corner rounding, what each value is for, and which components use it.',
     render: () => (
       <Panel>
-        <SectionTitle sub="Corner rounding. Each row shows the shape at true size, the value, the variable to reference, and which components actually use it — read from the component source, not asserted here.">
+        <SectionTitle sub="Corner rounding. Each row shows the shape at true size, the value, the variable to reference, and which components actually use it - read from the component source, not asserted here.">
           Radius
         </SectionTitle>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -386,7 +386,7 @@ export const FOUNDATION_SECTIONS: FoundationSection[] = [
                   padding: '14px 0', borderBottom: '1px solid var(--border)',
                 }}
               >
-                {/* True size — not clamped, so `pill` reads as a pill and `xs` as a hairline curve. */}
+                {/* True size - not clamped, so `pill` reads as a pill and `xs` as a hairline curve. */}
                 <div
                   style={{
                     width: 56, height: 56, flexShrink: 0,
@@ -405,7 +405,7 @@ export const FOUNDATION_SECTIONS: FoundationSection[] = [
                       var(--radius-{r.token})
                     </span>
                     <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--muted-foreground)' }}>
-                      {r.value === 9999 ? '9999px · fully round' : `${r.value}px`}
+                      {r.value === 9999 ? '9999px | fully round' : `${r.value}px`}
                     </span>
                   </div>
                   <p style={{ margin: 0, fontSize: 13, color: 'var(--gray-700)', lineHeight: 1.45 }}>{r.usage}</p>
@@ -447,7 +447,7 @@ export const FOUNDATION_SECTIONS: FoundationSection[] = [
   },
   { slug: 'effects', label: 'Effects', description: 'Focus rings, validation rings, button highlight and link underlines.', render: () => <EffectsSection /> },
   { slug: 'motion', label: 'Motion', description: 'Duration and easing tokens, and the reduced-motion rule.', render: () => <MotionSection /> },
-  { slug: 'layering', label: 'Layering', description: 'The z-index scale — which layer sits above which.', render: () => <LayeringSection /> },
+  { slug: 'layering', label: 'Layering', description: 'The z-index scale - which layer sits above which.', render: () => <LayeringSection /> },
   { slug: 'breakpoints', label: 'Breakpoints', description: 'Layout thresholds, border widths and the focus ring.', render: () => <BreakpointsSection /> },
 ]
 

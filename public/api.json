@@ -22,7 +22,7 @@
           "type": "string",
           "required": false,
           "default": "'Button'",
-          "description": "The button text. Start with a verb — \"Save\", not \"OK\"."
+          "description": "The button text. Start with a verb - \"Save\", not \"OK\"."
         },
         {
           "name": "intent",
@@ -42,7 +42,7 @@
           "name": "state",
           "type": "'Default' | 'Hover' | 'Focused' | 'Pressed' | 'Disabled'",
           "required": false,
-          "description": "Freezes a visual state so documentation can show it without a pointer. Leave unset in application code — hover, focus and active are handled in CSS and work on their own."
+          "description": "Freezes a visual state so documentation can show it without a pointer. Leave unset in application code - hover, focus and active are handled in CSS and work on their own."
         },
         {
           "name": "content",
@@ -126,14 +126,14 @@
           "name": "value",
           "type": "string",
           "required": false,
-          "description": "Current value. Controlled — pair with onChange."
+          "description": "Current value. Controlled - pair with onChange."
         },
         {
           "name": "state",
           "type": "'Default' | 'Hover' | 'Focused' | 'Disabled' | 'Error' | 'Filled' | 'ReadOnly'",
           "required": false,
           "default": "'Default'",
-          "description": "Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Filled` are presentation-only — leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Error`, `Disabled` and `ReadOnly` are real application state and belong in your code."
+          "description": "Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Filled` are presentation-only - leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Error`, `Disabled` and `ReadOnly` are real application state and belong in your code."
         },
         {
           "name": "size",
@@ -246,7 +246,7 @@
           "type": "'Default' | 'Hover' | 'Focused' | 'Pressed' | 'Disabled' | 'Error'",
           "required": false,
           "default": "'Default'",
-          "description": "Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Pressed` are presentation-only — leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Error` and `Disabled` are real application state and belong in your code."
+          "description": "Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Pressed` are presentation-only - leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Error` and `Disabled` are real application state and belong in your code."
         },
         {
           "name": "withLabel",
@@ -285,7 +285,7 @@
           "Group related options together"
         ],
         "dont": [
-          "Do not use for mutually exclusive options — use Radio Button instead",
+          "Do not use for mutually exclusive options - use Radio Button instead",
           "Do not use without a label"
         ]
       },
@@ -327,14 +327,14 @@
           "name": "name",
           "type": "string",
           "required": false,
-          "description": "Shared form name. Every radio in a group must use the same value. Left unset, each radio gets its own generated name and stands alone — this used to default to the literal `\"radio\"`, which silently put every unrelated RadioButton on a page into one mutually exclusive group."
+          "description": "Shared form name. Every radio in a group must use the same value. Left unset, each radio gets its own generated name and stands alone - this used to default to the literal `\"radio\"`, which silently put every unrelated RadioButton on a page into one mutually exclusive group."
         },
         {
           "name": "state",
           "type": "'Default' | 'Hover' | 'Focused' | 'Pressed' | 'Disabled' | 'Error'",
           "required": false,
           "default": "'Default'",
-          "description": "Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Pressed` are presentation-only — leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Error` and `Disabled` are real application state and belong in your code."
+          "description": "Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Pressed` are presentation-only - leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Error` and `Disabled` are real application state and belong in your code."
         },
         {
           "name": "withLabel",
@@ -367,7 +367,7 @@
           "Pre-select a default when appropriate"
         ],
         "dont": [
-          "Do not use for multi-select — use Checkbox instead",
+          "Do not use for multi-select - use Checkbox instead",
           "Do not use a single radio button alone"
         ]
       },
@@ -421,14 +421,14 @@
           "name": "value",
           "type": "string",
           "required": false,
-          "description": "Selected value. Controlled — pair with onChange."
+          "description": "Selected value. Controlled - pair with onChange."
         },
         {
           "name": "state",
           "type": "'Default' | 'Hover' | 'Focused' | 'Disabled' | 'Error' | 'Open'",
           "required": false,
           "default": "'Default'",
-          "description": "Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Open` are presentation-only — leave them unset in application code, where CSS and the component's own state drive them. `Error` and `Disabled` are real application state and belong in your code."
+          "description": "Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Open` are presentation-only - leave them unset in application code, where CSS and the component's own state drive them. `Error` and `Disabled` are real application state and belong in your code."
         },
         {
           "name": "widthMode",
@@ -475,7 +475,7 @@
           "Show a clear placeholder when no option is selected"
         ],
         "dont": [
-          "Do not use for fewer than 3 options — use Radio Button instead",
+          "Do not use for fewer than 3 options - use Radio Button instead",
           "Do not nest selects inside other selects"
         ]
       },
@@ -518,7 +518,7 @@
           "type": "'Default' | 'Hover' | 'Focused' | 'Disabled'",
           "required": false,
           "default": "'Default'",
-          "description": "Freezes a visual state so documentation can show it without a pointer. `Hover` and `Focused` are presentation-only — leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Disabled` is real application state and belongs in your code."
+          "description": "Freezes a visual state so documentation can show it without a pointer. `Hover` and `Focused` are presentation-only - leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Disabled` is real application state and belongs in your code."
         },
         {
           "name": "size",
@@ -558,7 +558,7 @@
           "Show the current state visually"
         ],
         "dont": [
-          "Do not use for form submissions — use Checkbox instead",
+          "Do not use for form submissions - use Checkbox instead",
           "Do not use without a visible label"
         ]
       },
@@ -713,7 +713,7 @@
       "usage": {
         "do": [
           "Use for status indicators and counts",
-          "Keep labels short — 1 to 2 words",
+          "Keep labels short - 1 to 2 words",
           "Use intent colors consistently"
         ],
         "dont": [
@@ -808,7 +808,7 @@
         ],
         "dont": [
           "Do not stretch or distort avatar images",
-          "Do not use random colors — use a deterministic palette"
+          "Do not use random colors - use a deterministic palette"
         ]
       },
       "deprecatedAliases": []
@@ -888,7 +888,7 @@
         "role": "alert",
         "keyboard": true,
         "ariaNotes": [
-          "Error and Warning announce as role=\"alert\"; Info and Success as a polite role=\"status\" — never both on one element, since role=\"alert\" already implies assertive",
+          "Error and Warning announce as role=\"alert\"; Info and Success as a polite role=\"status\" - never both on one element, since role=\"alert\" already implies assertive",
           "Close button must have aria-label=\"Close alert\""
         ]
       },
@@ -961,7 +961,7 @@
           "type": "string",
           "required": false,
           "default": "'Continue'",
-          "description": "Label for the confirming action. Name the action — \"Delete\", not \"OK\"."
+          "description": "Label for the confirming action. Name the action - \"Delete\", not \"OK\"."
         },
         {
           "name": "cancelLabel",
@@ -975,14 +975,14 @@
           "type": "boolean",
           "required": false,
           "default": "true",
-          "description": "Whether the dialog is shown. Controlled — pair with onClose."
+          "description": "Whether the dialog is shown. Controlled - pair with onClose."
         },
         {
           "name": "embedded",
           "type": "boolean",
           "required": false,
           "default": "false",
-          "description": "Render just the panel (no overlay) — used for documentation previews."
+          "description": "Render just the panel (no overlay) - used for documentation previews."
         },
         {
           "name": "onClose",
@@ -1017,7 +1017,7 @@
         ],
         "dont": [
           "Do not open dialogs from other dialogs",
-          "Do not use for non-blocking information — use Alert instead"
+          "Do not use for non-blocking information - use Alert instead"
         ]
       },
       "deprecatedAliases": [
@@ -1104,7 +1104,7 @@
           "Limit to one snackbar at a time"
         ],
         "dont": [
-          "Do not use for critical errors — use Alert or Dialog instead",
+          "Do not use for critical errors - use Alert or Dialog instead",
           "Do not stack multiple snackbars"
         ]
       },
@@ -1166,7 +1166,7 @@
           "type": "boolean",
           "required": false,
           "default": "false",
-          "description": "Keep the tooltip visible regardless of hover — used for documentation."
+          "description": "Keep the tooltip visible regardless of hover - used for documentation."
         }
       ],
       "relatedTypes": {},
@@ -1188,7 +1188,7 @@
         ],
         "dont": [
           "Do not put critical information only in tooltips",
-          "Do not use for interactive content — use Popover instead"
+          "Do not use for interactive content - use Popover instead"
         ]
       },
       "deprecatedAliases": [
@@ -1242,7 +1242,7 @@
           "name": "value",
           "type": "number",
           "required": false,
-          "description": "Index of the active tab. Controlled — pair with onChange."
+          "description": "Index of the active tab. Controlled - pair with onChange."
         },
         {
           "name": "onChange",
@@ -1271,7 +1271,7 @@
           "Use a maximum of 6 tabs per set"
         ],
         "dont": [
-          "Do not use tabs for sequential steps — use a stepper instead",
+          "Do not use tabs for sequential steps - use a stepper instead",
           "Do not nest tab sets inside other tab sets"
         ]
       },
@@ -1381,7 +1381,7 @@
           "name": "value",
           "type": "string",
           "required": false,
-          "description": "Current value. Controlled — pair with onChange."
+          "description": "Current value. Controlled - pair with onChange."
         },
         {
           "name": "rows",
@@ -1402,7 +1402,7 @@
           "type": "'Default' | 'Hover' | 'Focused' | 'Filled' | 'Error' | 'Disabled' | 'ReadOnly'",
           "required": false,
           "default": "'Default'",
-          "description": "Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Filled` are presentation-only — leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Error`, `Disabled` and `ReadOnly` are real application state and belong in your code."
+          "description": "Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Filled` are presentation-only - leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Error`, `Disabled` and `ReadOnly` are real application state and belong in your code."
         },
         {
           "name": "showLabel",
@@ -1460,7 +1460,7 @@
           "Show a character counter when a max length applies"
         ],
         "dont": [
-          "Do not use for single-line input — use Text Input instead",
+          "Do not use for single-line input - use Text Input instead",
           "Do not disable resize without reason"
         ]
       },
@@ -1587,7 +1587,7 @@
           "name": "value",
           "type": "number",
           "required": false,
-          "description": "Current value. Controlled — pair with onChange."
+          "description": "Current value. Controlled - pair with onChange."
         },
         {
           "name": "step",
@@ -1601,7 +1601,7 @@
           "type": "'Default' | 'Focused' | 'Disabled'",
           "required": false,
           "default": "'Default'",
-          "description": "Freezes a visual state so documentation can show it without a pointer. `Focused` is presentation-only — leave it unset in application code, where CSS drives it from the real pointer and keyboard. `Disabled` is real application state and belongs in your code."
+          "description": "Freezes a visual state so documentation can show it without a pointer. `Focused` is presentation-only - leave it unset in application code, where CSS drives it from the real pointer and keyboard. `Disabled` is real application state and belongs in your code."
         },
         {
           "name": "showValue",
@@ -1641,7 +1641,7 @@
           "Provide a clear label"
         ],
         "dont": [
-          "Do not use for exact numeric entry — use Text Input instead",
+          "Do not use for exact numeric entry - use Text Input instead",
           "Do not use without min/max bounds"
         ]
       },
@@ -1709,12 +1709,12 @@
       },
       "usage": {
         "do": [
-          "Use for 2–4 mutually exclusive views",
+          "Use for 2-4 mutually exclusive views",
           "Keep labels short and parallel",
           "Show the active segment clearly"
         ],
         "dont": [
-          "Do not use for more than 4 options — use Tabs or Select",
+          "Do not use for more than 4 options - use Tabs or Select",
           "Do not use for multi-select"
         ]
       },
@@ -1764,7 +1764,7 @@
           "type": "'Default' | 'Focused' | 'Disabled' | 'Error'",
           "required": false,
           "default": "'Default'",
-          "description": "Freezes a visual state so documentation can show it without a pointer. `Focused` is presentation-only — leave it unset in application code, where CSS drives it from the real pointer and keyboard. `Error` and `Disabled` are real application state and belong in your code."
+          "description": "Freezes a visual state so documentation can show it without a pointer. `Focused` is presentation-only - leave it unset in application code, where CSS drives it from the real pointer and keyboard. `Error` and `Disabled` are real application state and belong in your code."
         },
         {
           "name": "showLabel",
@@ -1971,12 +1971,12 @@
       },
       "usage": {
         "do": [
-          "Use for single selection among 2–6 options",
+          "Use for single selection among 2-6 options",
           "Provide a group label",
           "Pre-select a sensible default"
         ],
         "dont": [
-          "Do not use for multi-select — use Checkbox Group",
+          "Do not use for multi-select - use Checkbox Group",
           "Do not use a single radio alone"
         ]
       },
@@ -2057,7 +2057,7 @@
           "Keep options parallel and concise"
         ],
         "dont": [
-          "Do not use for mutually exclusive options — use Radio Group",
+          "Do not use for mutually exclusive options - use Radio Group",
           "Do not omit the group label"
         ]
       },
@@ -2084,7 +2084,7 @@
           "name": "value",
           "type": "number",
           "required": false,
-          "description": "Current rating. Controlled — pair with onChange. Omit it and the component tracks its own, the same contract Checkbox and Toggle use."
+          "description": "Current rating. Controlled - pair with onChange. Omit it and the component tracks its own, the same contract Checkbox and Toggle use."
         },
         {
           "name": "max",
@@ -2181,7 +2181,7 @@
           "type": "'Default' | 'Focused' | 'Error' | 'Disabled'",
           "required": false,
           "default": "'Default'",
-          "description": "Freezes a visual state so documentation can show it without a pointer. `Focused` is presentation-only — leave it unset in application code, where CSS drives it from the real pointer and keyboard. `Error` and `Disabled` are real application state and belong in your code."
+          "description": "Freezes a visual state so documentation can show it without a pointer. `Focused` is presentation-only - leave it unset in application code, where CSS drives it from the real pointer and keyboard. `Error` and `Disabled` are real application state and belong in your code."
         },
         {
           "name": "onChange",
@@ -2463,11 +2463,11 @@
       "usage": {
         "do": [
           "Use for filters, categories, and selections",
-          "Keep labels to 1–2 words",
+          "Keep labels to 1-2 words",
           "Provide a remove control when tags are dismissible"
         ],
         "dont": [
-          "Do not use for status that never changes — use Badge",
+          "Do not use for status that never changes - use Badge",
           "Do not pack long text into a tag"
         ]
       },
@@ -2611,7 +2611,7 @@
         ],
         "dont": [
           "Do not leave empty areas blank with no guidance",
-          "Do not use for transient loading — use Skeleton"
+          "Do not use for transient loading - use Skeleton"
         ]
       },
       "deprecatedAliases": [
@@ -2834,7 +2834,7 @@
           "Use secondary text for supporting detail"
         ],
         "dont": [
-          "Do not use for comparable tabular data — use Table",
+          "Do not use for comparable tabular data - use Table",
           "Do not make only part of a row clickable"
         ]
       },
@@ -2869,7 +2869,7 @@
           "type": "number",
           "required": false,
           "default": "60",
-          "description": "Completion percentage 0–100. Ignored when indeterminate."
+          "description": "Completion percentage 0-100. Ignored when indeterminate."
         },
         {
           "name": "indeterminate",
@@ -3062,7 +3062,7 @@
         ],
         "dont": [
           "Do not animate skeletons indefinitely",
-          "Do not use for user-triggered actions — use Spinner"
+          "Do not use for user-triggered actions - use Spinner"
         ]
       },
       "deprecatedAliases": [
@@ -3130,7 +3130,7 @@
           "type": "boolean",
           "required": false,
           "default": "false",
-          "description": "Keep the panel visible regardless of state — used for documentation."
+          "description": "Keep the panel visible regardless of state - used for documentation."
         },
         {
           "name": "onOpenChange",
@@ -3157,7 +3157,7 @@
           "Allow dismissal via Escape and outside click"
         ],
         "dont": [
-          "Do not use for simple hover hints — use Tooltip",
+          "Do not use for simple hover hints - use Tooltip",
           "Do not stack popovers"
         ]
       },
@@ -3227,7 +3227,7 @@
           "type": "boolean",
           "required": false,
           "default": "false",
-          "description": "Render just the panel inline (no overlay/scrim) — used for documentation previews."
+          "description": "Render just the panel inline (no overlay/scrim) - used for documentation previews."
         },
         {
           "name": "onClose",
@@ -3254,7 +3254,7 @@
           "Return focus to the trigger on close"
         ],
         "dont": [
-          "Do not use for critical confirmations — use Dialog",
+          "Do not use for critical confirmations - use Dialog",
           "Do not open multiple drawers at once"
         ]
       },
@@ -3428,7 +3428,7 @@
           "Keep item labels action-oriented"
         ],
         "dont": [
-          "Do not use for selecting a value — use Select",
+          "Do not use for selecting a value - use Select",
           "Do not nest menus more than one level"
         ]
       },
@@ -3502,7 +3502,7 @@
           "Keep step labels short"
         ],
         "dont": [
-          "Do not use for non-sequential navigation — use Tabs",
+          "Do not use for non-sequential navigation - use Tabs",
           "Do not exceed a handful of steps"
         ]
       },
@@ -3618,7 +3618,7 @@
           "Keep link text descriptive"
         ],
         "dont": [
-          "Do not use links to trigger actions — use Button",
+          "Do not use links to trigger actions - use Button",
           "Do not use \"click here\" as link text"
         ]
       },

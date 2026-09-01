@@ -1,18 +1,18 @@
-<!-- Inspera Design System v1.0.0 — generated file, do not edit. -->
+<!-- Inspera Design System v1.0.0 - generated file, do not edit. -->
 
-# Inspera — Popover
+# Inspera - Popover
 
 1. Do not invent design decisions. Never invent a colour, spacing value, radius, shadow, font size, weight, icon library, focus style, breakpoint, or component variant that this document defines.
 2. Use a canonical component before building a lookalike. If one exists for the job, use it.
 3. Never rename a canonical component or prop. A deprecated alias may be understood as input, but output must use the canonical name.
 4. Consume tokens, not literals. Raw values here define what a token resolves to; application code references `var(--token)`.
 5. Do not introduce another design system. No Material UI, Bootstrap, Ant, Chakra, shadcn default styling, Tailwind default palette, or Radix Themes look. Headless behaviour libraries are fine if restyled entirely to this spec.
-6. No arbitrary Tailwind values where a token exists. Never `bg-[#004080]` — use the token.
+6. No arbitrary Tailwind values where a token exists. Never `bg-[#004080]` - use the token.
 7. Inter for product UI. Noto Sans Mono only for code, identifiers and technical values; Noto Serif only for long-form content.
 8. Material Symbols Outlined only. Do not mix in Lucide, Heroicons, or Font Awesome.
 9. Accessibility is part of the component contract, not an enhancement. Keyboard operation, visible focus, labels, roles, names, and states are required.
 10. Never use colour alone to carry meaning. Pair it with text, an icon, or shape.
-11. Respect `prefers-reduced-motion: reduce` — drop non-essential motion.
+11. Respect `prefers-reduced-motion: reduce` - drop non-essential motion.
 12. Compose rather than invent. If a pattern is not a canonical component, build it from canonical components using the patterns below.
 13. Do not silently add a component. If the system genuinely cannot express something, emit `DESIGN_SYSTEM_GAP` in your output and use the closest documented composition.
 14. No decoration that competes with hierarchy: no gradients, glassmorphism, oversized radii, decorative shadows, or animated backgrounds.
@@ -42,10 +42,10 @@ variant with no error at all. Variant *values* are Capitalised
 
 ### Popover
 
-Show interactive content anchored to a trigger. — category: `feedback`.
+Show interactive content anchored to a trigger. - category: `feedback`.
 
 > `@inspera/components` is **not published yet**. If you cannot resolve that import, do
-> not swap in another UI library — build the markup from the HTML and CSS under
+> not swap in another UI library - build the markup from the HTML and CSS under
 > **Without the package** below, which is this component exactly.
 
 ```tsx
@@ -61,23 +61,23 @@ import { Popover } from '@inspera/components'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `trigger` | `ReactNode` | — | Element that toggles the popover. |
+| `trigger` | `ReactNode` | - | Element that toggles the popover. |
 | `title` | `string` | `'Popover title'` | Optional panel heading. |
 | `content` | `ReactNode` | `'Popover content with interactive elements.'` | Popover body content. |
 | `placement` | `'Top' \| 'Bottom' \| 'Left' \| 'Right'` | `'Bottom'` | Position relative to the trigger. |
-| `open` | `boolean` | — | Controlled open state. Leave unset to let the popover manage itself. |
+| `open` | `boolean` | - | Controlled open state. Leave unset to let the popover manage itself. |
 | `defaultOpen` | `boolean` | `false` | Open on mount. |
-| `forceVisible` | `boolean` | `false` | Keep the panel visible regardless of state — used for documentation. |
-| `onOpenChange` | `(open: boolean) => void` | — | Fired when the popover opens or closes. |
+| `forceVisible` | `boolean` | `false` | Keep the panel visible regardless of state - used for documentation. |
+| `onOpenChange` | `(open: boolean) => void` | - | Fired when the popover opens or closes. |
 
-**Accessibility** — role `dialog`, keyboard operable. Trigger uses aria-haspopup and aria-expanded; Panel uses role="dialog"; Escape and outside-click close the popover; May contain interactive content (unlike Tooltip).
+**Accessibility** - role `dialog`, keyboard operable. Trigger uses aria-haspopup and aria-expanded; Panel uses role="dialog"; Escape and outside-click close the popover; May contain interactive content (unlike Tooltip).
 
 **Do:** Use for rich, interactive overflow content; Anchor to the triggering element; Allow dismissal via Escape and outside click.
-**Don't:** Do not use for simple hover hints — use Tooltip; Do not stack popovers.
+**Don't:** Do not use for simple hover hints - use Tooltip; Do not stack popovers.
 
 **Deprecated aliases** (do not use): `Flyout`, `Overlay panel`
 
-#### Without the package — exact HTML and CSS
+#### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
@@ -86,7 +86,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 - A popover holds interactive content, so it is `role="dialog"` (not `tooltip`), it is reachable by keyboard, and it does not disappear on mouseout.
 - The panel is `--radius-md` on `--surface` with a 1px `--border` and `--shadow-300`, 16px padding, capped at 280px with `width: max-content`.
 - Placement sets the offset and the centring transform together; the 10px gap leaves room for the arrow without it touching the trigger.
-- The arrow is a 10px square rotated 45° that borrows exactly two of the panel’s borders — the two facing the trigger.
+- The arrow is a 10px square rotated 45deg that borrows exactly two of the panel's borders - the two facing the trigger.
 - Close on Escape and on an outside click, and return focus to the trigger.
 - For plain text with no controls, use a Tooltip. For anything that must be acted on, this.
 
@@ -131,7 +131,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   font-family: var(--font-sans);
 }
 
-/* Placement sets the offset and the centring transform together — a 10px gap
+/* Placement sets the offset and the centring transform together - a 10px gap
    leaves room for the arrow without it touching the trigger. */
 .inspera-popover__panel--bottom { top: calc(100% + 10px); left: 50%; transform: translateX(-50%); }
 .inspera-popover__panel--top    { bottom: calc(100% + 10px); left: 50%; transform: translateX(-50%); }
@@ -212,4 +212,4 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 ---
 
-Tokens: ./tokens.css · Full system: ./llms.txt
+Tokens: ./tokens.css | Full system: ./llms.txt

@@ -260,7 +260,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "string",
         "required": false,
         "default": "'Button'",
-        "description": "The button text. Start with a verb — \"Save\", not \"OK\"."
+        "description": "The button text. Start with a verb - \"Save\", not \"OK\"."
       },
       {
         "name": "intent",
@@ -280,7 +280,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "name": "state",
         "type": "'Default' | 'Hover' | 'Focused' | 'Pressed' | 'Disabled'",
         "required": false,
-        "description": "Freezes a visual state so documentation can show it without a pointer. Leave unset in application code — hover, focus and active are handled in CSS and work on their own."
+        "description": "Freezes a visual state so documentation can show it without a pointer. Leave unset in application code - hover, focus and active are handled in CSS and work on their own."
       },
       {
         "name": "content",
@@ -384,7 +384,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "'Default' | 'Hover' | 'Focused' | 'Pressed' | 'Disabled' | 'Error'",
         "required": false,
         "default": "'Default'",
-        "description": "Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Pressed` are presentation-only — leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Error` and `Disabled` are real application state and belong in your code."
+        "description": "Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Pressed` are presentation-only - leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Error` and `Disabled` are real application state and belong in your code."
       },
       {
         "name": "withLabel",
@@ -482,7 +482,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "'Default' | 'Focused' | 'Disabled' | 'Error'",
         "required": false,
         "default": "'Default'",
-        "description": "Freezes a visual state so documentation can show it without a pointer. `Focused` is presentation-only — leave it unset in application code, where CSS drives it from the real pointer and keyboard. `Error` and `Disabled` are real application state and belong in your code."
+        "description": "Freezes a visual state so documentation can show it without a pointer. `Focused` is presentation-only - leave it unset in application code, where CSS drives it from the real pointer and keyboard. `Error` and `Disabled` are real application state and belong in your code."
       },
       {
         "name": "showLabel",
@@ -549,7 +549,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "string",
         "required": false,
         "default": "'Continue'",
-        "description": "Label for the confirming action. Name the action — \"Delete\", not \"OK\"."
+        "description": "Label for the confirming action. Name the action - \"Delete\", not \"OK\"."
       },
       {
         "name": "cancelLabel",
@@ -563,14 +563,14 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "boolean",
         "required": false,
         "default": "true",
-        "description": "Whether the dialog is shown. Controlled — pair with onClose."
+        "description": "Whether the dialog is shown. Controlled - pair with onClose."
       },
       {
         "name": "embedded",
         "type": "boolean",
         "required": false,
         "default": "false",
-        "description": "Render just the panel (no overlay) — used for documentation previews."
+        "description": "Render just the panel (no overlay) - used for documentation previews."
       },
       {
         "name": "onClose",
@@ -660,7 +660,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "boolean",
         "required": false,
         "default": "false",
-        "description": "Render just the panel inline (no overlay/scrim) — used for documentation previews."
+        "description": "Render just the panel inline (no overlay/scrim) - used for documentation previews."
       },
       {
         "name": "onClose",
@@ -1073,7 +1073,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "'Default' | 'Focused' | 'Error' | 'Disabled'",
         "required": false,
         "default": "'Default'",
-        "description": "Freezes a visual state so documentation can show it without a pointer. `Focused` is presentation-only — leave it unset in application code, where CSS drives it from the real pointer and keyboard. `Error` and `Disabled` are real application state and belong in your code."
+        "description": "Freezes a visual state so documentation can show it without a pointer. `Focused` is presentation-only - leave it unset in application code, where CSS drives it from the real pointer and keyboard. `Error` and `Disabled` are real application state and belong in your code."
       },
       {
         "name": "onChange",
@@ -1177,7 +1177,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "boolean",
         "required": false,
         "default": "false",
-        "description": "Keep the panel visible regardless of state — used for documentation."
+        "description": "Keep the panel visible regardless of state - used for documentation."
       },
       {
         "name": "onOpenChange",
@@ -1202,7 +1202,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "number",
         "required": false,
         "default": "60",
-        "description": "Completion percentage 0–100. Ignored when indeterminate."
+        "description": "Completion percentage 0-100. Ignored when indeterminate."
       },
       {
         "name": "indeterminate",
@@ -1261,14 +1261,14 @@ export const componentApi: Record<string, ComponentApi> = {
         "name": "name",
         "type": "string",
         "required": false,
-        "description": "Shared form name. Every radio in a group must use the same value. Left unset, each radio gets its own generated name and stands alone — this used to default to the literal `\"radio\"`, which silently put every unrelated RadioButton on a page into one mutually exclusive group."
+        "description": "Shared form name. Every radio in a group must use the same value. Left unset, each radio gets its own generated name and stands alone - this used to default to the literal `\"radio\"`, which silently put every unrelated RadioButton on a page into one mutually exclusive group."
       },
       {
         "name": "state",
         "type": "'Default' | 'Hover' | 'Focused' | 'Pressed' | 'Disabled' | 'Error'",
         "required": false,
         "default": "'Default'",
-        "description": "Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Pressed` are presentation-only — leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Error` and `Disabled` are real application state and belong in your code."
+        "description": "Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Pressed` are presentation-only - leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Error` and `Disabled` are real application state and belong in your code."
       },
       {
         "name": "withLabel",
@@ -1344,7 +1344,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "name": "value",
         "type": "number",
         "required": false,
-        "description": "Current rating. Controlled — pair with onChange. Omit it and the component tracks its own, the same contract Checkbox and Toggle use."
+        "description": "Current rating. Controlled - pair with onChange. Omit it and the component tracks its own, the same contract Checkbox and Toggle use."
       },
       {
         "name": "max",
@@ -1448,14 +1448,14 @@ export const componentApi: Record<string, ComponentApi> = {
         "name": "value",
         "type": "string",
         "required": false,
-        "description": "Selected value. Controlled — pair with onChange."
+        "description": "Selected value. Controlled - pair with onChange."
       },
       {
         "name": "state",
         "type": "'Default' | 'Hover' | 'Focused' | 'Disabled' | 'Error' | 'Open'",
         "required": false,
         "default": "'Default'",
-        "description": "Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Open` are presentation-only — leave them unset in application code, where CSS and the component's own state drive them. `Error` and `Disabled` are real application state and belong in your code."
+        "description": "Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Open` are presentation-only - leave them unset in application code, where CSS and the component's own state drive them. `Error` and `Disabled` are real application state and belong in your code."
       },
       {
         "name": "widthMode",
@@ -1551,7 +1551,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "name": "value",
         "type": "number",
         "required": false,
-        "description": "Current value. Controlled — pair with onChange."
+        "description": "Current value. Controlled - pair with onChange."
       },
       {
         "name": "step",
@@ -1565,7 +1565,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "'Default' | 'Focused' | 'Disabled'",
         "required": false,
         "default": "'Default'",
-        "description": "Freezes a visual state so documentation can show it without a pointer. `Focused` is presentation-only — leave it unset in application code, where CSS drives it from the real pointer and keyboard. `Disabled` is real application state and belongs in your code."
+        "description": "Freezes a visual state so documentation can show it without a pointer. `Focused` is presentation-only - leave it unset in application code, where CSS drives it from the real pointer and keyboard. `Disabled` is real application state and belongs in your code."
       },
       {
         "name": "showValue",
@@ -1843,7 +1843,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "name": "value",
         "type": "number",
         "required": false,
-        "description": "Index of the active tab. Controlled — pair with onChange."
+        "description": "Index of the active tab. Controlled - pair with onChange."
       },
       {
         "name": "onChange",
@@ -1926,14 +1926,14 @@ export const componentApi: Record<string, ComponentApi> = {
         "name": "value",
         "type": "string",
         "required": false,
-        "description": "Current value. Controlled — pair with onChange."
+        "description": "Current value. Controlled - pair with onChange."
       },
       {
         "name": "state",
         "type": "'Default' | 'Hover' | 'Focused' | 'Disabled' | 'Error' | 'Filled' | 'ReadOnly'",
         "required": false,
         "default": "'Default'",
-        "description": "Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Filled` are presentation-only — leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Error`, `Disabled` and `ReadOnly` are real application state and belong in your code."
+        "description": "Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Filled` are presentation-only - leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Error`, `Disabled` and `ReadOnly` are real application state and belong in your code."
       },
       {
         "name": "size",
@@ -2002,7 +2002,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "name": "value",
         "type": "string",
         "required": false,
-        "description": "Current value. Controlled — pair with onChange."
+        "description": "Current value. Controlled - pair with onChange."
       },
       {
         "name": "rows",
@@ -2023,7 +2023,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "'Default' | 'Hover' | 'Focused' | 'Filled' | 'Error' | 'Disabled' | 'ReadOnly'",
         "required": false,
         "default": "'Default'",
-        "description": "Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Filled` are presentation-only — leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Error`, `Disabled` and `ReadOnly` are real application state and belong in your code."
+        "description": "Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Filled` are presentation-only - leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Error`, `Disabled` and `ReadOnly` are real application state and belong in your code."
       },
       {
         "name": "showLabel",
@@ -2086,7 +2086,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "'Default' | 'Hover' | 'Focused' | 'Disabled'",
         "required": false,
         "default": "'Default'",
-        "description": "Freezes a visual state so documentation can show it without a pointer. `Hover` and `Focused` are presentation-only — leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Disabled` is real application state and belongs in your code."
+        "description": "Freezes a visual state so documentation can show it without a pointer. `Hover` and `Focused` are presentation-only - leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Disabled` is real application state and belongs in your code."
       },
       {
         "name": "size",
@@ -2152,7 +2152,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "boolean",
         "required": false,
         "default": "false",
-        "description": "Keep the tooltip visible regardless of hover — used for documentation."
+        "description": "Keep the tooltip visible regardless of hover - used for documentation."
       }
     ],
     "relatedTypes": {}

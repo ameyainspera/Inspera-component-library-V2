@@ -1,18 +1,18 @@
-<!-- Inspera Design System v1.0.0 — generated file, do not edit. -->
+<!-- Inspera Design System v1.0.0 - generated file, do not edit. -->
 
-# Inspera — Drawer
+# Inspera - Drawer
 
 1. Do not invent design decisions. Never invent a colour, spacing value, radius, shadow, font size, weight, icon library, focus style, breakpoint, or component variant that this document defines.
 2. Use a canonical component before building a lookalike. If one exists for the job, use it.
 3. Never rename a canonical component or prop. A deprecated alias may be understood as input, but output must use the canonical name.
 4. Consume tokens, not literals. Raw values here define what a token resolves to; application code references `var(--token)`.
 5. Do not introduce another design system. No Material UI, Bootstrap, Ant, Chakra, shadcn default styling, Tailwind default palette, or Radix Themes look. Headless behaviour libraries are fine if restyled entirely to this spec.
-6. No arbitrary Tailwind values where a token exists. Never `bg-[#004080]` — use the token.
+6. No arbitrary Tailwind values where a token exists. Never `bg-[#004080]` - use the token.
 7. Inter for product UI. Noto Sans Mono only for code, identifiers and technical values; Noto Serif only for long-form content.
 8. Material Symbols Outlined only. Do not mix in Lucide, Heroicons, or Font Awesome.
 9. Accessibility is part of the component contract, not an enhancement. Keyboard operation, visible focus, labels, roles, names, and states are required.
 10. Never use colour alone to carry meaning. Pair it with text, an icon, or shape.
-11. Respect `prefers-reduced-motion: reduce` — drop non-essential motion.
+11. Respect `prefers-reduced-motion: reduce` - drop non-essential motion.
 12. Compose rather than invent. If a pattern is not a canonical component, build it from canonical components using the patterns below.
 13. Do not silently add a component. If the system genuinely cannot express something, emit `DESIGN_SYSTEM_GAP` in your output and use the closest documented composition.
 14. No decoration that competes with hierarchy: no gradients, glassmorphism, oversized radii, decorative shadows, or animated backgrounds.
@@ -42,10 +42,10 @@ variant with no error at all. Variant *values* are Capitalised
 
 ### Drawer
 
-Slide a panel in from the edge of the screen. — category: `feedback`.
+Slide a panel in from the edge of the screen. - category: `feedback`.
 
 > `@inspera/components` is **not published yet**. If you cannot resolve that import, do
-> not swap in another UI library — build the markup from the HTML and CSS under
+> not swap in another UI library - build the markup from the HTML and CSS under
 > **Without the package** below, which is this component exactly.
 
 ```tsx
@@ -70,18 +70,18 @@ import { Drawer } from '@inspera/components'
 | `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Panel width / height. |
 | `title` | `string` | `'Panel'` | Header title. |
 | `hasCloseButton` | `boolean` | `true` | Show the close affordance. |
-| `children` | `ReactNode` | — | Panel contents. |
-| `embedded` | `boolean` | `false` | Render just the panel inline (no overlay/scrim) — used for documentation previews. |
-| `onClose` | `() => void` | — | Fired on the close button, the scrim, and Escape. |
+| `children` | `ReactNode` | - | Panel contents. |
+| `embedded` | `boolean` | `false` | Render just the panel inline (no overlay/scrim) - used for documentation previews. |
+| `onClose` | `() => void` | - | Fired on the close button, the scrim, and Escape. |
 
-**Accessibility** — role `dialog`, keyboard operable. Use role="dialog" with aria-modal="true"; Set aria-labelledby to the drawer title; Trap focus while open and restore it on close; Escape closes the drawer.
+**Accessibility** - role `dialog`, keyboard operable. Use role="dialog" with aria-modal="true"; Set aria-labelledby to the drawer title; Trap focus while open and restore it on close; Escape closes the drawer.
 
 **Do:** Use for secondary tasks and detail panels; Provide a clear close control; Return focus to the trigger on close.
-**Don't:** Do not use for critical confirmations — use Dialog; Do not open multiple drawers at once.
+**Don't:** Do not use for critical confirmations - use Dialog; Do not open multiple drawers at once.
 
 **Deprecated aliases** (do not use): `Sheet`, `Side panel`, `Off-canvas`
 
-#### Without the package — exact HTML and CSS
+#### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
@@ -89,8 +89,8 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 - Side panels are 320 / 400 / 560 wide and pinned top-to-bottom; a bottom drawer takes that number as its height, spans the full width, and caps at 90% of the viewport.
 - Same scrim and the same modal obligations as Dialog: focus in, Tab trapped, focus restored, Escape and scrim click close, body scroll locked.
-- The body scrolls (`flex: 1; overflow-y: auto`), not the panel — the header has to stay put.
-- The header is 16px/20px padding with an 18px/500 title, smaller than a Dialog’s because a drawer is a secondary surface.
+- The body scrolls (`flex: 1; overflow-y: auto`), not the panel - the header has to stay put.
+- The header is 16px/20px padding with an 18px/500 title, smaller than a Dialog's because a drawer is a secondary surface.
 - Slide it in from its own edge. A drawer that fades in reads as a dialog in the wrong place.
 
 ```css
@@ -172,7 +172,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 }
 .inspera-drawer__close .material-symbols-outlined { font-size: 22px; }
 
-/* The body scrolls, not the panel — the header stays put. */
+/* The body scrolls, not the panel - the header stays put. */
 .inspera-drawer__body {
   flex: 1;
   overflow-y: auto;
@@ -201,4 +201,4 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 ---
 
-Tokens: ./tokens.css · Full system: ./llms.txt
+Tokens: ./tokens.css | Full system: ./llms.txt

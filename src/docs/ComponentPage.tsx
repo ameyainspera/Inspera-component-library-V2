@@ -13,7 +13,7 @@ import {
  *
  * The rules are deliberately about *substitution*, not about props. A model
  * that cannot resolve `@inspera/components` will rebuild the element by hand,
- * and left to itself it reaches for its own defaults — a 8px radius, a mid
+ * and left to itself it reaches for its own defaults - a 8px radius, a mid
  * blue, `font-medium`. Naming that failure and pointing at the CSS block is
  * what keeps the output on-brand across tools.
  */
@@ -26,10 +26,10 @@ Rules:
   variant with no error. Variant *values* are Capitalized.
 - If you cannot install or import the package, do NOT substitute another UI
   library and do NOT style it yourself. Use the HTML and CSS under "Without the
-  package" verbatim — that section is the component, not an approximation.
+  package" verbatim - that section is the component, not an approximation.
 - Take every visual value from this spec: radius, fill, border, height,
   padding, font size and weight, shadow. If a value is not stated here, it is
-  not yours to choose — ask rather than guess.
+  not yours to choose - ask rather than guess.
 - Never translate the CSS into another design system's utilities. No
   \`rounded-lg\`, no \`bg-blue-600\`, no Tailwind default palette, no shadcn or
   Material defaults.
@@ -47,7 +47,7 @@ const CODE_FORMS = [
 ]
 
 /**
- * The recipe's tokens and CSS as one pasteable block — the same content the
+ * The recipe's tokens and CSS as one pasteable block - the same content the
  * spec doc carries, so a reader who takes it from here and a model that takes
  * it from the spec get byte-identical CSS.
  */
@@ -140,7 +140,7 @@ export default function ComponentPage({ slug }: { slug: string }) {
               <p style={{ margin: '0 0 8px', fontSize: 13, color: 'var(--muted-foreground)' }}>
                 {form === 'jsx'
                   ? 'For the product codebase, once the package is available.'
-                  : 'For anywhere you cannot install the package — another stack, an AI builder, a plain HTML page.'}
+                  : 'For anywhere you cannot install the package - another stack, an AI builder, a plain HTML page.'}
               </p>
               {form === 'jsx' ? (
                 <CodeBlock
@@ -209,7 +209,7 @@ export default function ComponentPage({ slug }: { slug: string }) {
 
       {/* Props / API */}
       <Panel>
-        <SectionTitle sub="Derived from the component's TypeScript interface — this is the real API, not a transcription.">Props API</SectionTitle>
+        <SectionTitle sub="Derived from the component's TypeScript interface - this is the real API, not a transcription.">Props API</SectionTitle>
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
             <thead>
@@ -228,7 +228,7 @@ export default function ComponentPage({ slug }: { slug: string }) {
                     {p.required && <span style={{ color: 'var(--error)', marginLeft: 2 }} title="Required">*</span>}
                   </td>
                   <td style={{ padding: '10px 12px', borderBottom: '1px solid var(--border)', fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--gray-700)' }}>{p.type}</td>
-                  <td style={{ padding: '10px 12px', borderBottom: '1px solid var(--border)', fontFamily: 'var(--font-mono)', fontSize: 12 }}>{p.default ?? '—'}</td>
+                  <td style={{ padding: '10px 12px', borderBottom: '1px solid var(--border)', fontFamily: 'var(--font-mono)', fontSize: 12 }}>{p.default ?? '-'}</td>
                   <td style={{ padding: '10px 12px', borderBottom: '1px solid var(--border)', color: 'var(--gray-700)' }}>{p.description ?? ''}</td>
                 </tr>
               ))}
@@ -281,7 +281,7 @@ export default function ComponentPage({ slug }: { slug: string }) {
       </div>
 
       {/* AI copy panel. Each block's copy affordance lives in the CodeBlock
-          header — no second button above it doing the same thing. */}
+          header - no second button above it doing the same thing. */}
       <Panel style={{ background: 'linear-gradient(180deg, #f8fbff, #ffffff)', borderColor: 'rgba(0,64,128,0.25)' }}>
         <SectionTitle sub="Two forms of the same content. If you are unsure, copy the first one.">AI copy blocks</SectionTitle>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
@@ -289,14 +289,14 @@ export default function ComponentPage({ slug }: { slug: string }) {
             <BlockLabel
               badge="Start here"
               title="Generation prompt"
-              detail="Paste into a chat — Claude, ChatGPT, Cursor, v0, Lovable, Bolt — then describe what you want. Contains the full spec below plus the rules that stop the model substituting its own styling."
+              detail="Paste into a chat - Claude, ChatGPT, Cursor, v0, Lovable, Bolt - then describe what you want. Contains the full spec below plus the rules that stop the model substituting its own styling."
             />
             <CodeBlock code={aiPrompt(spec.name, doc)} language="prompt" copyLabel="Copy prompt" />
           </div>
           <div>
             <BlockLabel
               title="Canonical spec"
-              detail="The same spec without the instructions. Use it when the rules are already in place — a rules file, a system prompt, or the project-wide spec from Integrate."
+              detail="The same spec without the instructions. Use it when the rules are already in place - a rules file, a system prompt, or the project-wide spec from Integrate."
             />
             <CodeBlock code={doc} language="markdown" copyLabel="Copy spec" />
           </div>

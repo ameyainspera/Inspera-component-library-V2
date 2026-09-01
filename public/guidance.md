@@ -1,6 +1,6 @@
-<!-- Inspera Design System v1.0.0 — generated file, do not edit. -->
+<!-- Inspera Design System v1.0.0 - generated file, do not edit. -->
 
-# Inspera Design System — Composition & rules
+# Inspera Design System - Composition & rules
 
 Version 1.0.0. How to assemble the canonical components into screens.
 
@@ -11,12 +11,12 @@ Version 1.0.0. How to assemble the canonical components into screens.
 3. Never rename a canonical component or prop. A deprecated alias may be understood as input, but output must use the canonical name.
 4. Consume tokens, not literals. Raw values here define what a token resolves to; application code references `var(--token)`.
 5. Do not introduce another design system. No Material UI, Bootstrap, Ant, Chakra, shadcn default styling, Tailwind default palette, or Radix Themes look. Headless behaviour libraries are fine if restyled entirely to this spec.
-6. No arbitrary Tailwind values where a token exists. Never `bg-[#004080]` — use the token.
+6. No arbitrary Tailwind values where a token exists. Never `bg-[#004080]` - use the token.
 7. Inter for product UI. Noto Sans Mono only for code, identifiers and technical values; Noto Serif only for long-form content.
 8. Material Symbols Outlined only. Do not mix in Lucide, Heroicons, or Font Awesome.
 9. Accessibility is part of the component contract, not an enhancement. Keyboard operation, visible focus, labels, roles, names, and states are required.
 10. Never use colour alone to carry meaning. Pair it with text, an icon, or shape.
-11. Respect `prefers-reduced-motion: reduce` — drop non-essential motion.
+11. Respect `prefers-reduced-motion: reduce` - drop non-essential motion.
 12. Compose rather than invent. If a pattern is not a canonical component, build it from canonical components using the patterns below.
 13. Do not silently add a component. If the system genuinely cannot express something, emit `DESIGN_SYSTEM_GAP` in your output and use the closest documented composition.
 14. No decoration that competes with hierarchy: no gradients, glassmorphism, oversized radii, decorative shadows, or animated backgrounds.
@@ -47,7 +47,7 @@ variant with no error at all. Variant *values* are Capitalised
 ## Composition patterns
 
 These are **compositions, not new components**. They do not authorise a new
-export — they say how to arrange the canonical ones. If a requested pattern is
+export - they say how to arrange the canonical ones. If a requested pattern is
 not here and not a canonical component, build it from canonical components and
 say so; do not invent a new one.
 
@@ -73,7 +73,7 @@ Build from: `Breadcrumb`, `Button`, `Menu`, `Tabs`.
 
 Build from: `Link`, `Badge`, `Tooltip`.
 
-- The selected item must be distinguished by more than colour — weight, a rule, or a background.
+- The selected item must be distinguished by more than colour - weight, a rule, or a background.
 - Collapsed icon-only items require accessible names and a Tooltip.
 - Preserve DOM and keyboard order when collapsing.
 
@@ -103,7 +103,7 @@ Build from: `TextInput`, `Select`, `Button`, `Table`, `Pagination`.
 Build from: `Toggle`, `Checkbox`, `Select`, `Divider`.
 
 - Order: setting title, supporting description, then the control.
-- Do not place the control between title and description — it breaks reading order.
+- Do not place the control between title and description - it breaks reading order.
 - The control's accessible name must map to the setting title.
 - Use a Divider only where it genuinely improves grouping.
 
@@ -119,7 +119,7 @@ Build from: `Badge`, `Tag`.
 Build from: `EmptyState`, `Button`.
 
 - Use `EmptyState` when a search or filter legitimately returns nothing.
-- Say what happened and offer the next step — usually clearing the filters.
+- Say what happened and offer the next step - usually clearing the filters.
 - A zero-result query is not an error. Do not show a failure state for it.
 
 ## Forms
@@ -129,7 +129,7 @@ Build from: `EmptyState`, `Button`.
 - Show help text or an error, not both; when invalid, the error must be programmatically associated with the control.
 - Use `RadioGroup` for mutually exclusive choices and `CheckboxGroup` for multi-select.
 - Use `Select` for a compact choice; enable its search mode for long lists.
-- Use `FileUpload` for files — never a text input styled to look like one.
+- Use `FileUpload` for files - never a text input styled to look like one.
 - Keep required/optional wording consistent within a form.
 - Never clear user input when validation fails.
 - Do not make a disabled submit button the only signal that something is wrong.
@@ -140,7 +140,7 @@ Build from: `EmptyState`, `Button`.
 - Expose sort direction programmatically, not just with an arrow glyph.
 - Use `Checkbox` for row selection and show a selected count.
 - Use `Skeleton` for initial load and `Spinner` for a user-triggered refresh.
-- An empty dataset and a no-results-for-this-filter state are different — say which.
+- An empty dataset and a no-results-for-this-filter state are different - say which.
 - Page long tables with `Pagination`.
 - Do not shrink text or targets to fit more columns; prioritise columns or scroll the table.
 
@@ -151,7 +151,7 @@ Build from: `EmptyState`, `Button`.
 | A single invalid field | Error text on the field itself, via FormField |
 | A section or the whole form | Alert, placed near the affected content |
 | Confirming something just happened | Snackbar |
-| A decision that must block progress | Dialog — only when it genuinely must block |
+| A decision that must block progress | Dialog - only when it genuinely must block |
 | A secondary task or detail panel | Drawer |
 | Known-duration work | Progress |
 | Unknown-duration work | Spinner |
@@ -164,7 +164,7 @@ Never put something the user must retain or act on later in a Snackbar.
 
 **Visual system**
 
-- [ ] Every colour resolves to a token — no hex literals in application code.
+- [ ] Every colour resolves to a token - no hex literals in application code.
 - [ ] Spacing, radius and shadow values come from the scales.
 - [ ] Typography uses Inter and the documented type scale.
 - [ ] Icons are Material Symbols Outlined.

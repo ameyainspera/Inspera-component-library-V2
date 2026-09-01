@@ -1,4 +1,4 @@
-# Inspera Design System — AI build guide
+# Inspera Design System - AI build guide
 
 > Version 1.0.0. Generate on-brand Inspera UI in any AI builder.
 > This index is deliberately small. Fetch the linked file for each component
@@ -7,11 +7,11 @@
 > **`@inspera/components` is NOT published.** The package builds from this repo, but the @inspera scope is unclaimed, so `npm i @inspera/components` currently fails with a 404.
 > Do not tell anyone to install it, and do not assume it resolves.
 >
-> Use the portable spec below — llms.txt and the per-component files. Once a registry is chosen the package becomes the strictest option, but it will need authentication, which most AI builders cannot do.
+> Use the portable spec below - llms.txt and the per-component files. Once a registry is chosen the package becomes the strictest option, but it will need authentication, which most AI builders cannot do.
 
 Follow the definitions in this document verbatim. Import paths shown per
 component (`import { Button } from '@inspera/components'`) are the
-canonical names for when the package ships — today, implement the component
+canonical names for when the package ships - today, implement the component
 from its spec instead.
 
 ## Rules
@@ -21,12 +21,12 @@ from its spec instead.
 3. Never rename a canonical component or prop. A deprecated alias may be understood as input, but output must use the canonical name.
 4. Consume tokens, not literals. Raw values here define what a token resolves to; application code references `var(--token)`.
 5. Do not introduce another design system. No Material UI, Bootstrap, Ant, Chakra, shadcn default styling, Tailwind default palette, or Radix Themes look. Headless behaviour libraries are fine if restyled entirely to this spec.
-6. No arbitrary Tailwind values where a token exists. Never `bg-[#004080]` — use the token.
+6. No arbitrary Tailwind values where a token exists. Never `bg-[#004080]` - use the token.
 7. Inter for product UI. Noto Sans Mono only for code, identifiers and technical values; Noto Serif only for long-form content.
 8. Material Symbols Outlined only. Do not mix in Lucide, Heroicons, or Font Awesome.
 9. Accessibility is part of the component contract, not an enhancement. Keyboard operation, visible focus, labels, roles, names, and states are required.
 10. Never use colour alone to carry meaning. Pair it with text, an icon, or shape.
-11. Respect `prefers-reduced-motion: reduce` — drop non-essential motion.
+11. Respect `prefers-reduced-motion: reduce` - drop non-essential motion.
 12. Compose rather than invent. If a pattern is not a canonical component, build it from canonical components using the patterns below.
 13. Do not silently add a component. If the system genuinely cannot express something, emit `DESIGN_SYSTEM_GAP` in your output and use the closest documented composition.
 14. No decoration that competes with hierarchy: no gradients, glassmorphism, oversized radii, decorative shadows, or animated backgrounds.
@@ -60,7 +60,7 @@ Every value below is a CSS custom property. Import the stylesheet once at the
 app root and reference tokens as `var(--primary)`, `var(--space-4)`,
 `var(--radius-md)`. Never hardcode a colour that is not in this list.
 
-### Colour — brand & semantic
+### Colour - brand & semantic
 
 | Token | CSS variable | Value | Use |
 | --- | --- | --- | --- |
@@ -74,33 +74,33 @@ app root and reference tokens as `var(--primary)`, `var(--space-4)`,
 | `accent.berry` | `var(--accent-berry)` | #89239A | Sparingly, for accent moments |
 | `accent.algae` | `var(--accent-algae)` | #00A788 | Sparingly, for accent moments |
 
-### Colour — palette
+### Colour - palette
 
-Each family runs 100 (lightest) to 900 (darkest). 600–900 are safe for text on
-a light background; 100–300 are surface tints.
+Each family runs 100 (lightest) to 900 (darkest). 600-900 are safe for text on
+a light background; 100-300 are surface tints.
 
-- **gray** — 100 `#F7F7F7` · 200 `#EDEDED` · 300 `#D9D9D9` · 400 `#BCBCBC` · 500 `#949494` · 600 `#7A7A7A` · 700 `#595959` · 800 `#404040` · 900 `#272727`
-- **blue** — 100 `#F0F7FF` · 200 `#DBEDFF` · 300 `#B3D9FF` · 400 `#7ABDFF` · 500 `#3399FF` · 600 `#007AF5` · 700 `#0059B3` · 800 `#004080` · 900 `#002E5C`
-- **green** — 100 `#F2FDF8` · 200 `#E0FAEF` · 300 `#BDF4DD` · 400 `#8DECC5` · 500 `#50E2A5` · 600 `#1BA76D` · 700 `#147B50` · 800 `#106542` · 900 `#0D4F33`
-- **red** — 100 `#FEF1F1` · 200 `#FCDEDE` · 300 `#F9B8B8` · 400 `#F58484` · 500 `#F04242` · 600 `#E21212` · 700 `#A50D0D` · 800 `#760A0A` · 900 `#550707`
-- **yellow** — 100 `#FFFCF0` · 200 `#FFF8DC` · 300 `#FEF0B3` · 400 `#FEE67C` · 500 `#FDD835` · 600 `#F2C602` · 700 `#B19102` · 800 `#7E6701` · 900 `#5B4A01`
-- **orange** — 100 `#FFFAF0` · 200 `#FFF3DC` · 300 `#FEE5B3` · 400 `#FED27C` · 500 `#FDBA35` · 600 `#F2A202` · 700 `#D99102` · 800 `#7E5501` · 900 `#5B3D01`
-- **purple** — 100 `#F6F4FB` · 200 `#E9E4F6` · 300 `#D0C6EC` · 400 `#9F88D7` · 500 `#8366CC` · 600 `#603DB8` · 700 `#462D86` · 800 `#322060` · 900 `#241745`
-- **pink** — 100 `#FEF1F5` · 200 `#FCDFE8` · 300 `#F8B9CE` · 400 `#F386AB` · 500 `#ED457D` · 600 `#DF1659` · 700 `#A21041` · 800 `#740B2E` · 900 `#540821`
+- **gray** - 100 `#F7F7F7` | 200 `#EDEDED` | 300 `#D9D9D9` | 400 `#BCBCBC` | 500 `#949494` | 600 `#7A7A7A` | 700 `#595959` | 800 `#404040` | 900 `#272727`
+- **blue** - 100 `#F0F7FF` | 200 `#DBEDFF` | 300 `#B3D9FF` | 400 `#7ABDFF` | 500 `#3399FF` | 600 `#007AF5` | 700 `#0059B3` | 800 `#004080` | 900 `#002E5C`
+- **green** - 100 `#F2FDF8` | 200 `#E0FAEF` | 300 `#BDF4DD` | 400 `#8DECC5` | 500 `#50E2A5` | 600 `#1BA76D` | 700 `#147B50` | 800 `#106542` | 900 `#0D4F33`
+- **red** - 100 `#FEF1F1` | 200 `#FCDEDE` | 300 `#F9B8B8` | 400 `#F58484` | 500 `#F04242` | 600 `#E21212` | 700 `#A50D0D` | 800 `#760A0A` | 900 `#550707`
+- **yellow** - 100 `#FFFCF0` | 200 `#FFF8DC` | 300 `#FEF0B3` | 400 `#FEE67C` | 500 `#FDD835` | 600 `#F2C602` | 700 `#B19102` | 800 `#7E6701` | 900 `#5B4A01`
+- **orange** - 100 `#FFFAF0` | 200 `#FFF3DC` | 300 `#FEE5B3` | 400 `#FED27C` | 500 `#FDBA35` | 600 `#F2A202` | 700 `#D99102` | 800 `#7E5501` | 900 `#5B3D01`
+- **purple** - 100 `#F6F4FB` | 200 `#E9E4F6` | 300 `#D0C6EC` | 400 `#9F88D7` | 500 `#8366CC` | 600 `#603DB8` | 700 `#462D86` | 800 `#322060` | 900 `#241745`
+- **pink** - 100 `#FEF1F5` | 200 `#FCDFE8` | 300 `#F8B9CE` | 400 `#F386AB` | 500 `#ED457D` | 600 `#DF1659` | 700 `#A21041` | 800 `#740B2E` | 900 `#540821`
 
-### Colour — roles
+### Colour - roles
 
 Prefer a role token over a raw palette shade wherever one exists.
 
-**Interaction** — `var(--primary-hover-overlay)` rgba(0, 64, 128, 0.04), `var(--primary-focus-ring)` rgba(0, 64, 128, 0.3), `var(--action-active)` rgba(0, 0, 0, 0.56), `var(--action-hover)` rgba(0, 0, 0, 0.04), `var(--action-focus)` rgba(0, 0, 0, 0.12), `var(--action-disabled)` rgba(0, 0, 0, 0.38)
+**Interaction** - `var(--primary-hover-overlay)` rgba(0, 64, 128, 0.04), `var(--primary-focus-ring)` rgba(0, 64, 128, 0.3), `var(--action-active)` rgba(0, 0, 0, 0.56), `var(--action-hover)` rgba(0, 0, 0, 0.04), `var(--action-focus)` rgba(0, 0, 0, 0.12), `var(--action-disabled)` rgba(0, 0, 0, 0.38)
 
-**Text** — `var(--text-primary)` rgba(0, 0, 0, 0.87), `var(--text-secondary)` var(--gray-600), `var(--text-disabled)` var(--action-disabled), `var(--text-on-primary)` #ffffff
+**Text** - `var(--text-primary)` rgba(0, 0, 0, 0.87), `var(--text-secondary)` var(--gray-600), `var(--text-disabled)` var(--action-disabled), `var(--text-on-primary)` #ffffff
 
-**Status** — `var(--info-surface)` #E1F5FE, `var(--success-surface)` #E8F5E9, `var(--warning-surface)` #FFF3E0, `var(--error-surface)` #FFEBEE
+**Status** - `var(--info-surface)` #E1F5FE, `var(--success-surface)` #E8F5E9, `var(--warning-surface)` #FFF3E0, `var(--error-surface)` #FFEBEE
 
-**Controls** — `var(--border-control)` #C4C4C4, `var(--border-control-strong)` #8C8C8C, `var(--text-placeholder)` #8C8C8C, `var(--surface-disabled)` #F5F5F5, `var(--surface-readonly)` var(--gray-100), `var(--surface-neutral)` #F0F0F0, `var(--avatar-surface)` #E0E0E0
+**Controls** - `var(--border-control)` #C4C4C4, `var(--border-control-strong)` #8C8C8C, `var(--text-placeholder)` #8C8C8C, `var(--surface-disabled)` #F5F5F5, `var(--surface-readonly)` var(--gray-100), `var(--surface-neutral)` #F0F0F0, `var(--avatar-surface)` #E0E0E0
 
-**Surface** — `var(--background)` var(--gray-100), `var(--surface)` var(--white), `var(--surface-sunken)` var(--gray-100), `var(--border)` var(--gray-200), `var(--border-strong)` var(--gray-300), `var(--border-interactive)` var(--gray-500), `var(--muted-foreground)` var(--gray-600)
+**Surface** - `var(--background)` var(--gray-100), `var(--surface)` var(--white), `var(--surface-sunken)` var(--gray-100), `var(--border)` var(--gray-200), `var(--border-strong)` var(--gray-300), `var(--border-interactive)` var(--gray-500), `var(--muted-foreground)` var(--gray-600)
 
 ### Typography
 
@@ -108,7 +108,7 @@ Inter for all UI text (weights 300, 400, 500, 600). Noto Sans Mono for
 code, identifiers and token values. Noto Serif for long-form content. Material
 Symbols Outlined for icons.
 
-Every style below has a ready-made class — prefer `class="inspera-h1"` over
+Every style below has a ready-made class - prefer `class="inspera-h1"` over
 setting four properties by hand.
 
 Sizes are exact, exported from Figma. Figma exports font-size only for text
@@ -119,8 +119,8 @@ the V3 spec rather than measured.
 
 | Style | Class | Size | Weight | Line height | Notes |
 | --- | --- | --- | --- | --- | --- |
-| `Default/Default 16 px/Regular` | `.inspera-default-16-regular` | 16px | 400 | 1.25 | V3 body.mdRegular — line height fixed at 20px |
-| `Default/16 px/Medium` | `.inspera-default-16-medium` | 16px | 500 | 1.25 | V3 body.mdMedium — line height fixed at 20px |
+| `Default/Default 16 px/Regular` | `.inspera-default-16-regular` | 16px | 400 | 1.25 | V3 body.mdRegular - line height fixed at 20px |
+| `Default/16 px/Medium` | `.inspera-default-16-medium` | 16px | 500 | 1.25 | V3 body.mdMedium - line height fixed at 20px |
 | `Default/Link 16 px` | `.inspera-link-16` | 16px | 500 | 1.25 | underline, unconfirmed: weight, lineHeight |
 
 #### Regular
@@ -165,9 +165,9 @@ the V3 spec rather than measured.
 
 | Style | Class | Size | Weight | Line height | Notes |
 | --- | --- | --- | --- | --- | --- |
-| `Paragraph/Default` | `.inspera-paragraph-default` | 16px | 400 | 1.5 | V3 body.paragraph — 150% |
+| `Paragraph/Default` | `.inspera-paragraph-default` | 16px | 400 | 1.5 | V3 body.paragraph - 150% |
 | `Paragraph/Content` | `.inspera-paragraph-content` | 16px | 400 | 1.5 | unconfirmed: lineHeight |
-| `Paragraph/Captions` | `.inspera-paragraph-captions` | 12px | 400 | 1.2 | V3 body.caption — 120% |
+| `Paragraph/Captions` | `.inspera-paragraph-captions` | 12px | 400 | 1.2 | V3 body.caption - 120% |
 | `Paragraph/Heading` | `.inspera-paragraph-heading` | 20.25px | 500 | 1.12 | unconfirmed: weight, lineHeight |
 
 #### Extra
@@ -185,7 +185,7 @@ the V3 spec rather than measured.
 
 ### Spacing
 
-Use the scale — no arbitrary pixel values.
+Use the scale - no arbitrary pixel values.
 
 | Token | CSS variable | Value |
 | --- | --- | --- |
@@ -211,12 +211,12 @@ actually does rather than what this document claims.
 
 | Token | CSS variable | Value | When to use | Used by |
 | --- | --- | --- | --- | --- |
-| `none` | `var(--radius-none)` | 0px | Flush edges — table cells, full-bleed surfaces, anything that meets another edge. | — |
+| `none` | `var(--radius-none)` | 0px | Flush edges - table cells, full-bleed surfaces, anything that meets another edge. | - |
 | `xs` | `var(--radius-xs)` | 2px | The smallest indicators, where 4px would read as a visible curve. | Checkbox, Link, Rating |
 | `sm` | `var(--radius-sm)` | 4px | Controls: buttons, tags, segments, menu items. | Button, DatePicker, Dialog, List, Menu, Popover, SegmentedControl, Select, Skeleton, Tabs, Tooltip |
-| `md` | `var(--radius-md)` | 8px | Inputs, alerts and floating panels — the system default. | Accordion, Alert, DatePicker, Drawer, FileUpload, List, Menu, OtpInput, Pagination, Popover, SegmentedControl, Select, Skeleton, Snackbar, Table, Tabs, TextInput, Textarea |
+| `md` | `var(--radius-md)` | 8px | Inputs, alerts and floating panels - the system default. | Accordion, Alert, DatePicker, Drawer, FileUpload, List, Menu, OtpInput, Pagination, Popover, SegmentedControl, Select, Skeleton, Snackbar, Table, Tabs, TextInput, Textarea |
 | `lg` | `var(--radius-lg)` | 12px | Large surfaces that contain other components: cards, dialogs, drawers. | Card, Dialog, Stat |
-| `xl` | `var(--radius-xl)` | 16px | Reserved for oversized surfaces. Nothing uses it today; prefer lg. | — |
+| `xl` | `var(--radius-xl)` | 16px | Reserved for oversized surfaces. Nothing uses it today; prefer lg. | - |
 | `pill` | `var(--radius-pill)` | fully round | Only for shapes that are conceptually round: toggles, badges, radios, avatars. | Avatar, Badge, Dialog, Progress, RadioButton, Skeleton, Slider, Stepper, Tag, Toggle, Tooltip |
 
 ### Depth / elevation
@@ -240,11 +240,11 @@ as `box-shadow`. Their colours are palette colours.
 
 | Token | CSS variable | Value | Use |
 | --- | --- | --- | --- |
-| `state-focus` | `var(--effect-state-focus)` | `0px 0px 0px 3px var(--blue-300)` | Standard input focus ring · unconfirmed: spread |
-| `state-focus-standalone` | `var(--effect-state-focus-standalone)` | `0px 0px 0px 3px var(--blue-600)` | High-contrast standalone focus · unconfirmed: spread |
-| `state-error` | `var(--effect-state-error)` | `0px 0px 0px 3px var(--red-300)` | Error ring · unconfirmed: spread |
-| `state-hover-light` | `var(--effect-state-hover-light)` | `0px 0px 0px 3px var(--gray-500)` | Hover outline · unconfirmed: spread |
-| `state-focus-on-dark` | `var(--effect-state-focus-on-dark)` | `0px 0px 0px 3px var(--green-300)` | Focus ring on a dark container · unconfirmed: spread |
+| `state-focus` | `var(--effect-state-focus)` | `0px 0px 0px 3px var(--blue-300)` | Standard input focus ring | unconfirmed: spread |
+| `state-focus-standalone` | `var(--effect-state-focus-standalone)` | `0px 0px 0px 3px var(--blue-600)` | High-contrast standalone focus | unconfirmed: spread |
+| `state-error` | `var(--effect-state-error)` | `0px 0px 0px 3px var(--red-300)` | Error ring | unconfirmed: spread |
+| `state-hover-light` | `var(--effect-state-hover-light)` | `0px 0px 0px 3px var(--gray-500)` | Hover outline | unconfirmed: spread |
+| `state-focus-on-dark` | `var(--effect-state-focus-on-dark)` | `0px 0px 0px 3px var(--green-300)` | Focus ring on a dark container | unconfirmed: spread |
 | `button-shadow` | `var(--effect-button-shadow)` | `inset 0px -1px 0px rgba(0, 0, 0, 0.2), 0px 1px 0px rgba(0, 0, 0, 0.08)` | Standard button elevation highlight |
 | `link-underline-dark` | `var(--effect-link-underline-dark)` | `inset 0px -1px 0px var(--gray-700)` | Link underline on light ground |
 | `link-underline-blue` | `var(--effect-link-underline-blue)` | `inset 0px -1px 0px var(--blue-800)` | Primary link underline |
@@ -318,67 +318,67 @@ Focus is never removed, only replaced by something at least as visible:
 
 ### input-controls
 
-- [Button](./c/button.md) — Trigger an action.
-- [Text Input](./c/text-input.md) — Collect single-line text input.
-- [Checkbox](./c/checkbox.md) — Allow multiple selection.
-- [Radio Button](./c/radio-button.md) — Allow single selection.
-- [Select](./c/select.md) — Select one option from a list.
-- [Toggle](./c/toggle.md) — Switch a setting on or off instantly.
-- [Textarea](./c/textarea.md) — Collect multi-line text input.
-- [Form Field](./c/form-field.md) — Standardize label, control, and help/error layout around any input.
-- [Slider](./c/slider.md) — Select a numeric value from a continuous range.
-- [Segmented Control](./c/segmented-control.md) — Choose one option from a small set of mutually exclusive segments.
-- [Date Picker](./c/date-picker.md) — Select a calendar date from a popover.
-- [File Upload](./c/file-upload.md) — Upload files via drag-and-drop or browse.
-- [Radio Group](./c/radio-group.md) — Group mutually exclusive radio options.
-- [Checkbox Group](./c/checkbox-group.md) — Group related multi-select checkboxes.
-- [Rating](./c/rating.md) — Capture or display a star rating.
-- [OTP Input](./c/otp-input.md) — Enter a one-time verification code.
+- [Button](./c/button.md) - Trigger an action.
+- [Text Input](./c/text-input.md) - Collect single-line text input.
+- [Checkbox](./c/checkbox.md) - Allow multiple selection.
+- [Radio Button](./c/radio-button.md) - Allow single selection.
+- [Select](./c/select.md) - Select one option from a list.
+- [Toggle](./c/toggle.md) - Switch a setting on or off instantly.
+- [Textarea](./c/textarea.md) - Collect multi-line text input.
+- [Form Field](./c/form-field.md) - Standardize label, control, and help/error layout around any input.
+- [Slider](./c/slider.md) - Select a numeric value from a continuous range.
+- [Segmented Control](./c/segmented-control.md) - Choose one option from a small set of mutually exclusive segments.
+- [Date Picker](./c/date-picker.md) - Select a calendar date from a popover.
+- [File Upload](./c/file-upload.md) - Upload files via drag-and-drop or browse.
+- [Radio Group](./c/radio-group.md) - Group mutually exclusive radio options.
+- [Checkbox Group](./c/checkbox-group.md) - Group related multi-select checkboxes.
+- [Rating](./c/rating.md) - Capture or display a star rating.
+- [OTP Input](./c/otp-input.md) - Enter a one-time verification code.
 
 ### data-display
 
-- [Card](./c/card.md) — Group related content in a contained surface.
-- [Badge](./c/badge.md) — Display a short status label or count.
-- [Avatar](./c/avatar.md) — Represent a user or entity with an image or initials.
-- [Table](./c/table.md) — Display structured data in rows and columns.
-- [Accordion](./c/accordion.md) — Show and hide sections of related content.
-- [Tag](./c/tag.md) — Label, categorize, or filter with a removable chip.
-- [Divider](./c/divider.md) — Separate content with a thin rule.
-- [Empty State](./c/empty-state.md) — Communicate the absence of content and offer a next step.
-- [Avatar Group](./c/avatar-group.md) — Show a set of users as overlapping avatars with an overflow count.
-- [Stat](./c/stat.md) — Highlight a key metric with an optional trend.
-- [List](./c/list.md) — Present a vertical series of related items.
+- [Card](./c/card.md) - Group related content in a contained surface.
+- [Badge](./c/badge.md) - Display a short status label or count.
+- [Avatar](./c/avatar.md) - Represent a user or entity with an image or initials.
+- [Table](./c/table.md) - Display structured data in rows and columns.
+- [Accordion](./c/accordion.md) - Show and hide sections of related content.
+- [Tag](./c/tag.md) - Label, categorize, or filter with a removable chip.
+- [Divider](./c/divider.md) - Separate content with a thin rule.
+- [Empty State](./c/empty-state.md) - Communicate the absence of content and offer a next step.
+- [Avatar Group](./c/avatar-group.md) - Show a set of users as overlapping avatars with an overflow count.
+- [Stat](./c/stat.md) - Highlight a key metric with an optional trend.
+- [List](./c/list.md) - Present a vertical series of related items.
 
 ### feedback
 
-- [Alert](./c/alert.md) — Display semantic inline feedback.
-- [Dialog](./c/dialog.md) — Present content or actions that require user attention.
-- [Snackbar](./c/snackbar.md) — Show brief, non-blocking feedback at the bottom of the screen.
-- [Tooltip](./c/tooltip.md) — Provide contextual help on hover or focus.
-- [Progress](./c/progress.md) — Show completion of an ongoing task.
-- [Spinner](./c/spinner.md) — Indicate an indeterminate loading state.
-- [Skeleton](./c/skeleton.md) — Show placeholder shapes while content loads.
-- [Popover](./c/popover.md) — Show interactive content anchored to a trigger.
-- [Drawer](./c/drawer.md) — Slide a panel in from the edge of the screen.
+- [Alert](./c/alert.md) - Display semantic inline feedback.
+- [Dialog](./c/dialog.md) - Present content or actions that require user attention.
+- [Snackbar](./c/snackbar.md) - Show brief, non-blocking feedback at the bottom of the screen.
+- [Tooltip](./c/tooltip.md) - Provide contextual help on hover or focus.
+- [Progress](./c/progress.md) - Show completion of an ongoing task.
+- [Spinner](./c/spinner.md) - Indicate an indeterminate loading state.
+- [Skeleton](./c/skeleton.md) - Show placeholder shapes while content loads.
+- [Popover](./c/popover.md) - Show interactive content anchored to a trigger.
+- [Drawer](./c/drawer.md) - Slide a panel in from the edge of the screen.
 
 ### navigation
 
-- [Tabs](./c/tabs.md) — Organize content into switchable panels.
-- [Breadcrumb](./c/breadcrumb.md) — Show the user's current location in a hierarchy.
-- [Pagination](./c/pagination.md) — Navigate between pages of content.
-- [Menu](./c/menu.md) — Present a list of actions in a dropdown.
-- [Stepper](./c/stepper.md) — Show progress through a sequence of steps.
-- [Link](./c/link.md) — Navigate to another location or resource.
+- [Tabs](./c/tabs.md) - Organize content into switchable panels.
+- [Breadcrumb](./c/breadcrumb.md) - Show the user's current location in a hierarchy.
+- [Pagination](./c/pagination.md) - Navigate between pages of content.
+- [Menu](./c/menu.md) - Present a list of actions in a dropdown.
+- [Stepper](./c/stepper.md) - Show progress through a sequence of steps.
+- [Link](./c/link.md) - Navigate to another location or resource.
 
 ## Machine-readable artifacts
 
 | File | What it is |
 | --- | --- |
-| [llms-full.txt](./llms-full.txt) | The complete document — foundations plus every component inline |
+| [llms-full.txt](./llms-full.txt) | The complete document - foundations plus every component inline |
 | [foundations.md](./foundations.md) | Colour, typography, spacing, radius, depth on their own |
 | [guidance.md](./guidance.md) | Composition patterns, form and table rules, the done checklist |
 | [api.json](./api.json) | Prop API, derived from the TypeScript types |
 | [tokens.css](./tokens.css) | Token custom properties + icon/keyframe runtime |
 | [inspera.theme.css](./inspera.theme.css) | Tailwind v4 `@theme` block |
 | [tokens.w3c.json](./tokens.w3c.json) | W3C Design Tokens format |
-| [aliases.json](./aliases.json) | Deprecated name → canonical component |
+| [aliases.json](./aliases.json) | Deprecated name -> canonical component |

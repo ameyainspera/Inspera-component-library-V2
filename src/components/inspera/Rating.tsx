@@ -4,7 +4,7 @@ export type RatingSize = 'Small' | 'Medium'
 
 export interface RatingProps {
   /**
-   * Current rating. Controlled — pair with onChange. Omit it and the component
+   * Current rating. Controlled - pair with onChange. Omit it and the component
    * tracks its own, the same contract Checkbox and Toggle use.
    */
   value?: number
@@ -33,7 +33,7 @@ export default function Rating({
   const [hover, setHover] = useState(0)
   const stars = useRef<(HTMLSpanElement | null)[]>([])
 
-  // `value ?? internal` — the same contract as every other control here. This
+  // `value ?? internal` - the same contract as every other control here. This
   // used to read `onChange ? internal : value`, which made an interactive
   // rating impossible without an onChange: `readOnly={false}` did nothing.
   const current = value ?? internal

@@ -4,7 +4,7 @@
  * A recipe is only worth shipping if it *is* the component rather than a
  * description of it. Chrome is the arbiter: render the real React component and
  * the recipe markup on the same page, with the same stylesheets, and compare
- * what the engine actually computes — element by element, through the whole
+ * what the engine actually computes - element by element, through the whole
  * tree, not just at the root. If someone changes Button.tsx and forgets
  * recipes.tsx, this fails loudly instead of quietly shipping an off-brand
  * button to every AI tool the team uses.
@@ -45,7 +45,7 @@ const SHARED_PROPS = [
 ]
 
 /**
- * One case per single-control variation, plus the defaults — the same shape
+ * One case per single-control variation, plus the defaults - the same shape
  * audit-snippets uses. `state` is skipped: its Hover/Focused/Pressed values
  * freeze an appearance for the docs, and a recipe describes the resting element
  * plus real pseudo-classes, so there is nothing to compare.
@@ -68,7 +68,7 @@ const problems: string[] = []
 // ---------------------------------------------------------------------------
 // Coverage first. Every published spec opens by telling a tool that cannot
 // install the package to build from the HTML and CSS under "Without the
-// package" — a section only a recipe produces. A component with no recipe ships
+// package" - a section only a recipe produces. A component with no recipe ships
 // a spec that points at nothing, which is worse than saying nothing at all.
 // ---------------------------------------------------------------------------
 const missing = componentList.filter((c) => !recipes[c.slug])
@@ -86,11 +86,11 @@ if (missing.length > 0) {
 for (const [slug, recipe] of Object.entries(recipes)) {
   const entry = registry[slug]
   if (!entry) {
-    problems.push(`${slug} · recipe has no playground entry to drive it`)
+    problems.push(`${slug} | recipe has no playground entry to drive it`)
     continue
   }
   // Every class the live markup emits must actually exist in the CSS shipped
-  // beside it. A modifier the stylesheet does not define is invisible — the
+  // beside it. A modifier the stylesheet does not define is invisible - the
   // element renders, it just renders wrong, which is the failure this stops.
   const seen = new Set<string>()
   for (const { values } of casesFor(slug)) {
@@ -103,11 +103,11 @@ for (const [slug, recipe] of Object.entries(recipes)) {
         // A composed recipe's CSS ships alongside this one, so its classes count.
         const available = [recipe, ...(recipe.composes ?? []).map((c) => recipes[c])]
         if (!available.every(Boolean)) {
-          problems.push(`${slug} · composes a recipe that does not exist`)
+          problems.push(`${slug} | composes a recipe that does not exist`)
           continue
         }
         if (!available.some((r) => r.css.includes(`.${cls}`))) {
-          problems.push(`${slug} · markup uses .${cls}, which no recipe CSS defines`)
+          problems.push(`${slug} | markup uses .${cls}, which no recipe CSS defines`)
         }
       }
     }
@@ -191,14 +191,14 @@ const found = await page.evaluate(
       const realRoot = wrap.querySelector('#real')!.firstElementChild as HTMLElement
       const mockRoot = wrap.querySelector('#mock')!.firstElementChild as HTMLElement
       if (!realRoot || !mockRoot) {
-        out.push(`${c.slug} · ${c.name} · could not render both sides`)
+        out.push(`${c.slug} | ${c.name} | could not render both sides`)
         wrap.remove()
         continue
       }
 
       const walk = (a: HTMLElement, b: HTMLElement, path: string) => {
         if (a.tagName !== b.tagName) {
-          out.push(`${c.slug} · ${c.name} · ${path}: component is <${a.tagName.toLowerCase()}>, recipe is <${b.tagName.toLowerCase()}>`)
+          out.push(`${c.slug} | ${c.name} | ${path}: component is <${a.tagName.toLowerCase()}>, recipe is <${b.tagName.toLowerCase()}>`)
           return
         }
         const sa = getComputedStyle(a)
@@ -206,13 +206,13 @@ const found = await page.evaluate(
         for (const p of c.props) {
           const va = sa.getPropertyValue(p)
           const vb = sb.getPropertyValue(p)
-          if (va !== vb) out.push(`${c.slug} · ${c.name} · ${path} · ${p}: component "${va}" vs recipe "${vb}"`)
+          if (va !== vb) out.push(`${c.slug} | ${c.name} | ${path} | ${p}: component "${va}" vs recipe "${vb}"`)
         }
         if (c.rootOnly) return
         const ca = [...a.children] as HTMLElement[]
         const cb = [...b.children] as HTMLElement[]
         if (ca.length !== cb.length) {
-          out.push(`${c.slug} · ${c.name} · ${path}: component has ${ca.length} child element(s), recipe has ${cb.length}`)
+          out.push(`${c.slug} | ${c.name} | ${path}: component has ${ca.length} child element(s), recipe has ${cb.length}`)
           return
         }
         for (let i = 0; i < ca.length; i++) walk(ca[i], cb[i], `${path} > ${ca[i].tagName.toLowerCase()}[${i}]`)
@@ -222,7 +222,7 @@ const found = await page.evaluate(
       for (const [label, x, y] of c.vars) {
         const va = resolve(realRoot, x)
         const vb = resolve(mockRoot, y)
-        if (va !== vb) out.push(`${c.slug} · ${c.name} · ${label}: component "${va}" vs recipe "${vb}"`)
+        if (va !== vb) out.push(`${c.slug} | ${c.name} | ${label}: component "${va}" vs recipe "${vb}"`)
       }
 
       wrap.remove()
@@ -240,7 +240,7 @@ if (found.length > 0) {
   const shown = found.slice(0, 60)
   console.error(`\n✗ Recipe drifted from the component in ${found.length} place(s):\n`)
   for (const p of shown) console.error('  ' + p)
-  if (found.length > shown.length) console.error(`\n  …and ${found.length - shown.length} more.`)
+  if (found.length > shown.length) console.error(`\n  ...and ${found.length - shown.length} more.`)
   console.error('\nFix src/data/recipes.tsx (or the component) so they agree.\n')
   process.exit(1)
 }

@@ -21,7 +21,7 @@ export interface ComponentSpec {
   purpose: string
   /**
    * Extra terms the sidebar search should match. People look for "modal", not
-   * "Dialog", and "dropdown", not "Select" — without these, search only works
+   * "Dialog", and "dropdown", not "Select" - without these, search only works
    * for someone who already knows the canonical name.
    */
   keywords?: string[]

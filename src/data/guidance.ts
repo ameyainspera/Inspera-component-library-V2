@@ -4,7 +4,7 @@
  *
  * This is the layer the component specs cannot supply. We document 42
  * components well; without this, nothing says how to build a *page* out of
- * them — which is where generated UI drifts apart between tools.
+ * them - which is where generated UI drifts apart between tools.
  *
  * Hand-written, but emitted by scripts/build-portable.ts into every published
  * artifact and covered by the CI drift check, so it cannot become a second
@@ -18,12 +18,12 @@ export const contract: string[] = [
   'Never rename a canonical component or prop. A deprecated alias may be understood as input, but output must use the canonical name.',
   'Consume tokens, not literals. Raw values here define what a token resolves to; application code references `var(--token)`.',
   'Do not introduce another design system. No Material UI, Bootstrap, Ant, Chakra, shadcn default styling, Tailwind default palette, or Radix Themes look. Headless behaviour libraries are fine if restyled entirely to this spec.',
-  'No arbitrary Tailwind values where a token exists. Never `bg-[#004080]` — use the token.',
+  'No arbitrary Tailwind values where a token exists. Never `bg-[#004080]` - use the token.',
   'Inter for product UI. Noto Sans Mono only for code, identifiers and technical values; Noto Serif only for long-form content.',
   'Material Symbols Outlined only. Do not mix in Lucide, Heroicons, or Font Awesome.',
   'Accessibility is part of the component contract, not an enhancement. Keyboard operation, visible focus, labels, roles, names, and states are required.',
   'Never use colour alone to carry meaning. Pair it with text, an icon, or shape.',
-  'Respect `prefers-reduced-motion: reduce` — drop non-essential motion.',
+  'Respect `prefers-reduced-motion: reduce` - drop non-essential motion.',
   'Compose rather than invent. If a pattern is not a canonical component, build it from canonical components using the patterns below.',
   'Do not silently add a component. If the system genuinely cannot express something, emit `DESIGN_SYSTEM_GAP` in your output and use the closest documented composition.',
   'No decoration that competes with hierarchy: no gradients, glassmorphism, oversized radii, decorative shadows, or animated backgrounds.',
@@ -84,7 +84,7 @@ export const patterns: Pattern[] = [
     name: 'Side navigation',
     from: ['Link', 'Badge', 'Tooltip'],
     guidance: [
-      'The selected item must be distinguished by more than colour — weight, a rule, or a background.',
+      'The selected item must be distinguished by more than colour - weight, a rule, or a background.',
       'Collapsed icon-only items require accessible names and a Tooltip.',
       'Preserve DOM and keyboard order when collapsing.',
     ],
@@ -118,7 +118,7 @@ export const patterns: Pattern[] = [
     from: ['Toggle', 'Checkbox', 'Select', 'Divider'],
     guidance: [
       'Order: setting title, supporting description, then the control.',
-      'Do not place the control between title and description — it breaks reading order.',
+      'Do not place the control between title and description - it breaks reading order.',
       "The control's accessible name must map to the setting title.",
       'Use a Divider only where it genuinely improves grouping.',
     ],
@@ -136,7 +136,7 @@ export const patterns: Pattern[] = [
     from: ['EmptyState', 'Button'],
     guidance: [
       'Use `EmptyState` when a search or filter legitimately returns nothing.',
-      'Say what happened and offer the next step — usually clearing the filters.',
+      'Say what happened and offer the next step - usually clearing the filters.',
       'A zero-result query is not an error. Do not show a failure state for it.',
     ],
   },
@@ -148,7 +148,7 @@ export const formRules: string[] = [
   'Show help text or an error, not both; when invalid, the error must be programmatically associated with the control.',
   'Use `RadioGroup` for mutually exclusive choices and `CheckboxGroup` for multi-select.',
   'Use `Select` for a compact choice; enable its search mode for long lists.',
-  'Use `FileUpload` for files — never a text input styled to look like one.',
+  'Use `FileUpload` for files - never a text input styled to look like one.',
   'Keep required/optional wording consistent within a form.',
   'Never clear user input when validation fails.',
   'Do not make a disabled submit button the only signal that something is wrong.',
@@ -159,7 +159,7 @@ export const tableRules: string[] = [
   'Expose sort direction programmatically, not just with an arrow glyph.',
   'Use `Checkbox` for row selection and show a selected count.',
   'Use `Skeleton` for initial load and `Spinner` for a user-triggered refresh.',
-  'An empty dataset and a no-results-for-this-filter state are different — say which.',
+  'An empty dataset and a no-results-for-this-filter state are different - say which.',
   'Page long tables with `Pagination`.',
   'Do not shrink text or targets to fit more columns; prioritise columns or scroll the table.',
 ]
@@ -169,7 +169,7 @@ export const feedbackHierarchy: { scope: string; use: string }[] = [
   { scope: 'A single invalid field', use: 'Error text on the field itself, via FormField' },
   { scope: 'A section or the whole form', use: 'Alert, placed near the affected content' },
   { scope: 'Confirming something just happened', use: 'Snackbar' },
-  { scope: 'A decision that must block progress', use: 'Dialog — only when it genuinely must block' },
+  { scope: 'A decision that must block progress', use: 'Dialog - only when it genuinely must block' },
   { scope: 'A secondary task or detail panel', use: 'Drawer' },
   { scope: 'Known-duration work', use: 'Progress' },
   { scope: 'Unknown-duration work', use: 'Spinner' },
@@ -182,7 +182,7 @@ export const checklist: { group: string; items: string[] }[] = [
   {
     group: 'Visual system',
     items: [
-      'Every colour resolves to a token — no hex literals in application code.',
+      'Every colour resolves to a token - no hex literals in application code.',
       'Spacing, radius and shadow values come from the scales.',
       'Typography uses Inter and the documented type scale.',
       'Icons are Material Symbols Outlined.',

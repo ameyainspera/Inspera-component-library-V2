@@ -17,7 +17,7 @@ export interface PaginationProps {
   onChange?: (page: number) => void
 }
 
-const ELLIPSIS = '…'
+const ELLIPSIS = '...'
 
 function range(start: number, end: number): number[] {
   const out: number[] = []

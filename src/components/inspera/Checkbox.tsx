@@ -16,7 +16,7 @@ export interface CheckboxProps {
   indeterminate?: boolean
   /**
    * Freezes a visual state so documentation can show it without a pointer.
-   * `Hover`, `Focused` and `Pressed` are presentation-only — leave them unset
+   * `Hover`, `Focused` and `Pressed` are presentation-only - leave them unset
    * in application code, where CSS drives them from the real pointer and
    * keyboard. `Error` and `Disabled` are real application state and belong in
    * your code.
@@ -44,7 +44,7 @@ export default function Checkbox({
   const [internal, setInternal] = useState(false)
   const isChecked = checked ?? internal
 
-  // `indeterminate` is a DOM property, not an attribute — React cannot set it
+  // `indeterminate` is a DOM property, not an attribute - React cannot set it
   // from JSX, so it has to be written to the node directly.
   useEffect(() => {
     if (input.current) input.current.indeterminate = indeterminate

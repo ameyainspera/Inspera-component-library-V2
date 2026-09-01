@@ -74,7 +74,7 @@ export function CopyButton({ text, label = 'Copy' }: { text: string; label?: str
 // Monospace code / spec block with an integrated copy affordance.
 //
 // Capped by default. A spec block runs to 200+ lines and nobody reads it in a
-// browser — they press Copy — so letting it set the page height just buries
+// browser - they press Copy - so letting it set the page height just buries
 // every panel underneath it. The cap lands just past the rules, which is the
 // part worth skimming, and the rest scrolls. Copy always takes the whole
 // thing regardless of what is visible.
@@ -91,7 +91,7 @@ export function CodeBlock({
   maxHeight?: number
   /**
    * Replaces the language label in the block's own header bar. Controls that
-   * decide *what code is shown* belong inside the panel they act on — put them
+   * decide *what code is shown* belong inside the panel they act on - put them
    * outside and they read as more component variants, which is what the
    * playground's controls directly above already look like.
    */
@@ -153,7 +153,7 @@ export function CodeBlock({
         ) : (
           <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: 1, textTransform: 'uppercase', color: 'var(--gray-500)' }}>
             {language ?? 'code'}
-            {overflowing && ` · ${lines} lines`}
+            {overflowing && ` | ${lines} lines`}
           </span>
         )}
         <CopyButton text={code} label={copyLabel ?? 'Copy'} />
@@ -313,7 +313,7 @@ export function PreviewCanvas({
   /**
    * Width budget for the previewed component. Components size to their
    * container rather than carrying a fixed width, so the *canvas* decides how
-   * wide a preview should be — the component never does.
+   * wide a preview should be - the component never does.
    */
   contentWidth?: number
 }) {

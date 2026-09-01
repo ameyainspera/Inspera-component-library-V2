@@ -65,7 +65,7 @@ export default function Alert({
   // role="alert" already implies aria-live="assertive", so pairing it with
   // "polite" asked the screen reader for two different things at once. The spec
   // says important messages get role="alert" and non-critical ones a polite
-  // live region, so the severity decides which — rather than both at once.
+  // live region, so the severity decides which - rather than both at once.
   const urgent = intent === 'Error' || intent === 'Warning'
 
   return (

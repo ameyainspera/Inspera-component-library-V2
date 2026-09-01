@@ -1,5 +1,5 @@
 /**
- * build-portable.ts — the single generator that keeps every distribution
+ * build-portable.ts - the single generator that keeps every distribution
  * output in sync with the source of truth.
  *
  * Source of truth:
@@ -43,7 +43,37 @@ import {
 } from '../src/data/tokens'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
+/**
+ * Every generated artifact must be plain ASCII.
+ *
+ * These files go out as text/plain and text/markdown, and neither content type
+ * carries a charset unless the server adds one. When it does not, the browser
+ * falls back to windows-1252 and decodes each UTF-8 byte separately, so an em
+ * dash (E2 80 94) arrives as three characters. That is where the mojibake in
+ * the AI spec came from: the bytes on disk were always correct.
+ *
+ * Sending the right charset is the other half of the fix, but it depends on a
+ * host that has not been chosen yet, and these files are also pasted into
+ * editors, chat windows and context uploaders that each guess for themselves.
+ * Staying inside ASCII leaves nothing to guess wrong about.
+ */
+const assertAscii = (rel: string, content: string) => {
+  const lines = content.split('\n')
+  for (let i = 0; i < lines.length; i++) {
+    const found = lines[i].match(/[^\x00-\x7F]/)
+    if (!found) continue
+    const point = found[0].codePointAt(0)!.toString(16).toUpperCase().padStart(4, '0')
+    throw new Error(
+      `${rel}:${i + 1} contains a non-ASCII character "${found[0]}" (U+${point}).\n` +
+        `  ${lines[i].trim().slice(0, 100)}\n` +
+        'Generated files must be ASCII so they survive being served without a charset. ' +
+        'Use an ASCII equivalent in the source string.',
+    )
+  }
+}
+
 const write = (rel: string, content: string) => {
+  assertAscii(rel, content)
   const abs = join(root, rel)
   mkdirSync(dirname(abs), { recursive: true })
   writeFileSync(abs, content)
@@ -51,7 +81,7 @@ const write = (rel: string, content: string) => {
 }
 
 // ---------------------------------------------------------------------------
-// Token CSS — generated from src/data/tokens.ts, the single typed source.
+// Token CSS - generated from src/data/tokens.ts, the single typed source.
 //
 // This replaced a regex that scraped the :root block out of src/index.css. That
 // scrape silently broke when index.css was reformatted: it dropped the Material
@@ -70,7 +100,7 @@ function tokenBlock(label: string, entries: { name: string; value: string; note?
   return `  /* ${label} */\n${lines.join('\n')}`
 }
 
-/** The `:root { … }` block: every token in tokens.ts, as a custom property. */
+/** The `:root { ... }` block: every token in tokens.ts, as a custom property. */
 function buildRootCss(): string {
   const blocks: string[] = []
 
@@ -81,7 +111,7 @@ function buildRootCss(): string {
 
   for (const [family, shades] of Object.entries(palette)) {
     blocks.push(tokenBlock(
-      `Palette — ${family}`,
+      `Palette - ${family}`,
       Object.entries(shades).map(([shade, value]) => ({ name: `${family}-${shade}`, value })),
     ))
   }
@@ -96,13 +126,13 @@ function buildRootCss(): string {
   blocks.push(tokenBlock('Effects', effects.map((e) => ({ name: `effect-${e.name}`, value: e.value, note: e.note }))))
   blocks.push(tokenBlock('Border width', borderWidths.map((b) => ({ name: `border-width-${b.token}`, value: b.value }))))
   blocks.push(tokenBlock('Focus ring', focusRing))
-  blocks.push(tokenBlock('Motion — duration', motion.duration.map((d) => ({ name: `duration-${d.token}`, value: d.value, note: d.note }))))
-  blocks.push(tokenBlock('Motion — easing', motion.easing.map((e) => ({ name: `easing-${e.token}`, value: e.value, note: e.note }))))
+  blocks.push(tokenBlock('Motion - duration', motion.duration.map((d) => ({ name: `duration-${d.token}`, value: d.value, note: d.note }))))
+  blocks.push(tokenBlock('Motion - easing', motion.easing.map((e) => ({ name: `easing-${e.token}`, value: e.value, note: e.note }))))
   blocks.push(tokenBlock('Layering', zIndex.map((z) => ({ name: `z-${z.token}`, value: String(z.value), note: z.note }))))
   blocks.push(tokenBlock('Breakpoints', breakpoints.map((b) => ({ name: `breakpoint-${b.token}`, value: `${b.value}px` }))))
-  blocks.push(tokenBlock('Typography — family', fonts))
+  blocks.push(tokenBlock('Typography - family', fonts))
   blocks.push(tokenBlock(
-    'Typography — scale',
+    'Typography - scale',
     typeScale.flatMap((t) => [
       { name: `${t.name}-size`, value: `${t.size}px` },
       { name: `${t.name}-weight`, value: String(t.weight) },
@@ -115,7 +145,7 @@ function buildRootCss(): string {
 }
 
 const GENERATED_HEADER = (from: string) =>
-  `/* Inspera Design System — GENERATED FILE, DO NOT EDIT.\n` +
+  `/* Inspera Design System - GENERATED FILE, DO NOT EDIT.\n` +
   `   Source: ${from}. Regenerate with \`pnpm generate\`. */\n\n`
 
 /**
@@ -135,7 +165,7 @@ function buildTypeClasses(): string {
     ]
     return `.inspera-${t.name} {\n  ${decl.join(';\n  ')};\n}`
   })
-  return `/* Type styles — one class per Figma style (${typeScale.length} total). */\n\n${rules.join('\n\n')}\n`
+  return `/* Type styles - one class per Figma style (${typeScale.length} total). */\n\n${rules.join('\n\n')}\n`
 }
 
 /** The stylesheet shipped to consumers: tokens + the runtime CSS, verbatim. */
@@ -186,7 +216,7 @@ function buildW3CTokens() {
   }
 
   return {
-    $description: 'Inspera Design System tokens (W3C Design Tokens format). Generated — do not edit.',
+    $description: 'Inspera Design System tokens (W3C Design Tokens format). Generated - do not edit.',
     color,
     spacing: dimension(spacing),
     radius: dimension(radius.map((r) => ({ token: r.token, value: r.value }))),
@@ -200,7 +230,7 @@ function buildW3CTokens() {
 //
 // The prop table is derived from the component's TypeScript interface, never
 // hand-written, and the example is the same JSX the reference site's playground
-// emits — so the spec, the site and the component always agree.
+// emits - so the spec, the site and the component always agree.
 // ---------------------------------------------------------------------------
 const componentApi = extractComponentProps()
 
@@ -211,7 +241,7 @@ function propTable(props: PropDoc[]): string {
   if (props.length === 0) return '_No props._'
   const rows = props.map((p) => {
     const name = p.required ? `\`${p.name}\` **(required)**` : `\`${p.name}\``
-    return `| ${name} | \`${cell(p.type)}\` | ${p.default ? `\`${cell(p.default)}\`` : '—'} | ${cell(p.description ?? '')} |`
+    return `| ${name} | \`${cell(p.type)}\` | ${p.default ? `\`${cell(p.default)}\`` : '-'} | ${cell(p.description ?? '')} |`
   })
   return `| Prop | Type | Default | Description |\n| --- | --- | --- | --- |\n${rows.join('\n')}`
 }
@@ -228,7 +258,7 @@ function exportNameFor(c: ComponentSpec): string {
   return name
 }
 
-/** Shapes a prop refers to — without these, `items: TabItem[]` is a dead end. */
+/** Shapes a prop refers to - without these, `items: TabItem[]` is a dead end. */
 function relatedTypesBlock(related: Record<string, string>): string {
   const entries = Object.entries(related)
   if (entries.length === 0) return ''
@@ -236,10 +266,10 @@ function relatedTypesBlock(related: Record<string, string>): string {
 }
 
 // ---------------------------------------------------------------------------
-// Visual contract — the component as plain HTML + CSS.
+// Visual contract - the component as plain HTML + CSS.
 //
 // The prop table only helps a tool that can import the package. Most AI
-// builders cannot (see distribution.ts — the scope is unpublished), so they
+// builders cannot (see distribution.ts - the scope is unpublished), so they
 // hand-roll the element and invent whatever the spec left unsaid: the radius,
 // the fill, the padding, the weight. Emitting the real CSS, with the tokens it
 // needs resolved to literals, removes the guessing entirely.
@@ -257,7 +287,7 @@ function tokenMap(): Map<string, string> {
 
 /**
  * The exact token subset a recipe references, resolved transitively and
- * ordered as tokens.css orders them — so the block stays readable and a
+ * ordered as tokens.css orders them - so the block stays readable and a
  * consumer pastes seventeen lines instead of the whole 686-line file.
  */
 function tokensUsedBy(css: string, locals: string): string[] {
@@ -284,7 +314,7 @@ function recipeBlock(slug: string): string {
   const all = tokenMap()
   const local = recipe.className.replace('inspera-', '') + '-'
   // A recipe that builds on another ships that one's CSS too. Without this the
-  // published block styles the wrapper and leaves the button inside it bare —
+  // published block styles the wrapper and leaves the button inside it bare -
   // exactly the half-finished output the recipes exist to prevent.
   const composed = (recipe.composes ?? []).map((c) => {
     const dep = recipes[c]
@@ -294,10 +324,10 @@ function recipeBlock(slug: string): string {
   const css = [...composed, recipe.css].join('\n\n')
   // Scan the markup too, not just the stylesheet. Spinner puts its colours in
   // SVG `stroke` attributes, so a CSS-only scan emitted an empty token block
-  // for it — and a consumer pasting the HTML got an uncoloured ring.
+  // for it - and a consumer pasting the HTML got an uncoloured ring.
   const used = tokensUsedBy(`${css}\n${recipe.html}`, local)
   if (used.length === 0) {
-    throw new Error(`Recipe "${slug}" references no design tokens — check the class prefix.`)
+    throw new Error(`Recipe "${slug}" references no design tokens - check the class prefix.`)
   }
   const width = Math.max(...used.map((n) => n.length))
   const decls = used.map((n) => `  --${n}:`.padEnd(width + 6) + ` ${all.get(n)};`).join('\n')
@@ -306,7 +336,7 @@ function recipeBlock(slug: string): string {
     : ''
 
   return `
-#### Without the package — exact HTML and CSS
+#### Without the package - exact HTML and CSS
 
 Use this whenever \`@inspera/components\` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
@@ -338,11 +368,11 @@ function componentMarkdown(c: ComponentSpec, importPath: string): string {
 
   const installed = componentsPackage.published
     ? ''
-    : `\n> \`${importPath}\` is **not published yet**. If you cannot resolve that import, do\n> not swap in another UI library — build the markup from the HTML and CSS under\n> **Without the package** below, which is this component exactly.\n`
+    : `\n> \`${importPath}\` is **not published yet**. If you cannot resolve that import, do\n> not swap in another UI library - build the markup from the HTML and CSS under\n> **Without the package** below, which is this component exactly.\n`
 
   return `### ${c.name}
 
-${c.purpose} — category: \`${c.category}\`.
+${c.purpose} - category: \`${c.category}\`.
 ${installed}
 \`\`\`tsx
 import { ${exportName} } from '${importPath}'
@@ -352,7 +382,7 @@ ${example}
 
 ${propTable(props)}
 ${relatedTypesBlock(relatedTypes)}
-**Accessibility** — role \`${c.accessibility.role}\`${c.accessibility.keyboard ? ', keyboard operable' : ''}. ${c.accessibility.ariaNotes.join('; ')}.
+**Accessibility** - role \`${c.accessibility.role}\`${c.accessibility.keyboard ? ', keyboard operable' : ''}. ${c.accessibility.ariaNotes.join('; ')}.
 
 **Do:** ${c.usage.do.join('; ')}.
 **Don't:** ${c.usage.dont.join('; ')}.
@@ -360,7 +390,7 @@ ${aliases}${recipeBlock(c.slug)}`
 }
 
 // ---------------------------------------------------------------------------
-// Portable spec — public/llms-full.txt (AGENTS/llms.txt style)
+// Portable spec - public/llms-full.txt (AGENTS/llms.txt style)
 // ---------------------------------------------------------------------------
 function buildLlmsTxt(): string {
   const byCategory: Record<string, ComponentSpec[]> = {}
@@ -368,10 +398,10 @@ function buildLlmsTxt(): string {
 
   const sections = Object.entries(byCategory)
     .map(([cat, list]) =>
-      `## Components — ${cat}\n\n${list.map((c) => componentMarkdown(c, '@inspera/components')).join('\n\n')}`)
+      `## Components - ${cat}\n\n${list.map((c) => componentMarkdown(c, '@inspera/components')).join('\n\n')}`)
     .join('\n\n')
 
-  return `# Inspera Design System — complete AI build guide
+  return `# Inspera Design System - complete AI build guide
 
 > Version ${VERSION}. Everything needed to generate on-brand Inspera UI, in one
 > document: the foundations, then all ${componentList.length} components with
@@ -398,17 +428,17 @@ ${sections}
 function buildFoundationsDoc(): string {
   return `${provenance()}
 
-# Inspera Design System — Foundations
+# Inspera Design System - Foundations
 
 Version ${VERSION}. Colour, typography, spacing, radius and depth. Components
-are documented separately — see llms.txt for the index.
+are documented separately - see llms.txt for the index.
 
 ${buildFoundations({ compact: false })}
 `
 }
 
 // ---------------------------------------------------------------------------
-// Figma Make kit — components.md + tokens.md + manifest
+// Figma Make kit - components.md + tokens.md + manifest
 // ---------------------------------------------------------------------------
 function buildKitComponentsMd(): string {
   const byCategory: Record<string, ComponentSpec[]> = {}
@@ -420,7 +450,7 @@ function buildKitComponentsMd(): string {
   return `# Components
 
 The Inspera kit ships ${componentList.length} components. Import from \`@inspera/kit\`. Read the
-component's entry before using it — prop names and variant casing are exact.
+component's entry before using it - prop names and variant casing are exact.
 
 ${sections}
 `
@@ -430,7 +460,7 @@ ${sections}
  * The kit's token reference is the same document as the portable foundations.
  * It used to be a thinner hand-rolled copy covering only colour, radius and
  * spacing, which meant shadows, motion, layering and effects were simply absent
- * from the kit — and any new category had to be remembered twice.
+ * from the kit - and any new category had to be remembered twice.
  */
 function buildKitTokensMd(): string {
   return `# Tokens
@@ -467,9 +497,9 @@ function buildKitManifest() {
 // Layered on purpose. The single 16k-token spec was too large to paste into
 // most chat contexts and burned budget in every builder, so tools got all of it
 // or none of it. Now each tool takes the strongest form it can consume:
-//   llms.txt        small index — what you paste
-//   c/<slug>.md     one component — what an agent fetches
-//   llms-full.txt   everything inline — the fallback
+//   llms.txt        small index - what you paste
+//   c/<slug>.md     one component - what an agent fetches
+//   llms-full.txt   everything inline - the fallback
 //   api.json        the prop API, machine-readable
 // ---------------------------------------------------------------------------
 const VERSION = JSON.parse(
@@ -484,13 +514,13 @@ const url = (path: string) => (BASE_URL ? `${BASE_URL}/${path}` : `./${path}`)
  * Deliberately carries no build date.
  *
  * A `new Date()` stamp made every generated file differ from its committed
- * copy the day after it was committed, so `verify:generated` — which
- * regenerates and fails on any diff — would have failed every CI run from the
+ * copy the day after it was committed, so `verify:generated` - which
+ * regenerates and fails on any diff - would have failed every CI run from the
  * next day onwards, on a diff that was only the date. The version is the part
  * a consumer can act on; when a file was built is what git history is for.
  */
 const provenance = () =>
-  `<!-- Inspera Design System v${VERSION} — generated file, do not edit. -->`
+  `<!-- Inspera Design System v${VERSION} - generated file, do not edit. -->`
 
 const num = (items: string[]) => items.map((r, i) => `${i + 1}. ${r}`).join('\n')
 
@@ -509,7 +539,7 @@ ${num(precedence)}
 
 ${whenUnsure.map((r) => `- ${r}`).join('\n')}`
 
-/** Composition, form, table and feedback guidance — how to build a screen. */
+/** Composition, form, table and feedback guidance - how to build a screen. */
 function buildGuidance(): string {
   const patternBlocks = patterns
     .map((p) =>
@@ -520,7 +550,7 @@ function buildGuidance(): string {
   return `## Composition patterns
 
 These are **compositions, not new components**. They do not authorise a new
-export — they say how to arrange the canonical ones. If a requested pattern is
+export - they say how to arrange the canonical ones. If a requested pattern is
 not here and not a canonical component, build it from canonical components and
 say so; do not invent a new one.
 
@@ -549,7 +579,7 @@ ${checklist.map((c) => `**${c.group}**\n\n${c.items.map((i) => `- [ ] ${i}`).joi
 }
 
 /**
- * Foundations — the design decisions every component is built from.
+ * Foundations - the design decisions every component is built from.
  *
  * `compact` collapses each palette family onto one line for the paste-able
  * index; the full form gets a table per family. Both carry real values: an
@@ -571,7 +601,7 @@ function buildFoundations({ compact }: { compact: boolean }): string {
   const paletteSection = compact
     ? Object.entries(palette)
         .map(([family, shades]) =>
-          `- **${family}** — ${Object.entries(shades).map(([sh, v]) => `${sh} \`${v}\``).join(' · ')}`)
+          `- **${family}** - ${Object.entries(shades).map(([sh, v]) => `${sh} \`${v}\``).join(' | ')}`)
         .join('\n')
     : Object.entries(palette)
         .map(([family, shades]) =>
@@ -583,7 +613,7 @@ function buildFoundations({ compact }: { compact: boolean }): string {
 
   const roles = Object.entries(systemTokens)
     .map(([label, entries]) =>
-      `**${label}** — ` +
+      `**${label}** - ` +
       entries.map((t) => `\`var(--${t.name})\` ${t.value}`).join(', '))
     .join('\n\n')
 
@@ -615,7 +645,7 @@ function buildFoundations({ compact }: { compact: boolean }): string {
   const rad = radius
     .map((r) => {
       const users = usage[r.token] ?? []
-      const used = users.length ? users.join(', ') : '—'
+      const used = users.length ? users.join(', ') : '-'
       return `| \`${r.token}\` | \`var(--radius-${r.token})\` | ${r.value === 9999 ? 'fully round' : `${r.value}px`} | ${r.usage} | ${used} |`
     })
     .join('\n')
@@ -630,19 +660,19 @@ Every value below is a CSS custom property. Import the stylesheet once at the
 app root and reference tokens as \`var(--primary)\`, \`var(--space-4)\`,
 \`var(--radius-md)\`. Never hardcode a colour that is not in this list.
 
-### Colour — brand & semantic
+### Colour - brand & semantic
 
 ${colourHead}
 ${brand}
 
-### Colour — palette
+### Colour - palette
 
-Each family runs 100 (lightest) to 900 (darkest). 600–900 are safe for text on
-a light background; 100–300 are surface tints.
+Each family runs 100 (lightest) to 900 (darkest). 600-900 are safe for text on
+a light background; 100-300 are surface tints.
 
 ${paletteSection}
 
-### Colour — roles
+### Colour - roles
 
 Prefer a role token over a raw palette shade wherever one exists.
 
@@ -654,7 +684,7 @@ Inter for all UI text (weights ${fontWeights.join(', ')}). Noto Sans Mono for
 code, identifiers and token values. Noto Serif for long-form content. Material
 Symbols Outlined for icons.
 
-Every style below has a ready-made class — prefer \`class="inspera-h1"\` over
+Every style below has a ready-made class - prefer \`class="inspera-h1"\` over
 setting four properties by hand.
 
 Sizes are exact, exported from Figma. Figma exports font-size only for text
@@ -665,7 +695,7 @@ ${type}
 
 ### Spacing
 
-Use the scale — no arbitrary pixel values.
+Use the scale - no arbitrary pixel values.
 
 | Token | CSS variable | Value |
 | --- | --- | --- |
@@ -699,7 +729,7 @@ as \`box-shadow\`. Their colours are palette colours.
 
 | Token | CSS variable | Value | Use |
 | --- | --- | --- | --- |
-${effects.map((e) => `| \`${e.name}\` | \`var(--effect-${e.name})\` | \`${e.value}\` | ${[e.note, e.pending?.length ? `unconfirmed: ${e.pending.join(', ')}` : ''].filter(Boolean).join(' · ')} |`).join('\n')}
+${effects.map((e) => `| \`${e.name}\` | \`var(--effect-${e.name})\` | \`${e.value}\` | ${[e.note, e.pending?.length ? `unconfirmed: ${e.pending.join(', ')}` : ''].filter(Boolean).join(' | ')} |`).join('\n')}
 
 ### Motion
 
@@ -754,7 +784,7 @@ Focus is never removed, only replaced by something at least as visible:
  */
 function packageBlock(): string {
   if (componentsPackage.published) {
-    return `If the project can install packages, prefer the real components — they enforce
+    return `If the project can install packages, prefer the real components - they enforce
 this spec at runtime:
 
 \`\`\`bash
@@ -774,11 +804,11 @@ Otherwise follow the definitions below verbatim.`
 
 Follow the definitions in this document verbatim. Import paths shown per
 component (\`import { Button } from '${componentsPackage.name}'\`) are the
-canonical names for when the package ships — today, implement the component
+canonical names for when the package ships - today, implement the component
 from its spec instead.`
 }
 
-/** The small index — this is what a person pastes into a chat. */
+/** The small index - this is what a person pastes into a chat. */
 function buildLlmsIndex(): string {
   const byCategory: Record<string, ComponentSpec[]> = {}
   for (const c of componentList) (byCategory[c.category] ??= []).push(c)
@@ -786,10 +816,10 @@ function buildLlmsIndex(): string {
   const index = Object.entries(byCategory)
     .map(([cat, list]) =>
       `### ${cat}\n\n` +
-      list.map((c) => `- [${c.name}](${url(`c/${c.slug}.md`)}) — ${c.purpose}`).join('\n'))
+      list.map((c) => `- [${c.name}](${url(`c/${c.slug}.md`)}) - ${c.purpose}`).join('\n'))
     .join('\n\n')
 
-  return `# Inspera Design System — AI build guide
+  return `# Inspera Design System - AI build guide
 
 > Version ${VERSION}. Generate on-brand Inspera UI in any AI builder.
 > This index is deliberately small. Fetch the linked file for each component
@@ -811,14 +841,14 @@ ${index}
 
 | File | What it is |
 | --- | --- |
-| [llms-full.txt](${url('llms-full.txt')}) | The complete document — foundations plus every component inline |
+| [llms-full.txt](${url('llms-full.txt')}) | The complete document - foundations plus every component inline |
 | [foundations.md](${url('foundations.md')}) | Colour, typography, spacing, radius, depth on their own |
 | [guidance.md](${url('guidance.md')}) | Composition patterns, form and table rules, the done checklist |
 | [api.json](${url('api.json')}) | Prop API, derived from the TypeScript types |
 | [tokens.css](${url('tokens.css')}) | Token custom properties + icon/keyframe runtime |
 | [inspera.theme.css](${url('inspera.theme.css')}) | Tailwind v4 \`@theme\` block |
 | [tokens.w3c.json](${url('tokens.w3c.json')}) | W3C Design Tokens format |
-| [aliases.json](${url('aliases.json')}) | Deprecated name → canonical component |
+| [aliases.json](${url('aliases.json')}) | Deprecated name -> canonical component |
 `
 }
 
@@ -828,7 +858,7 @@ function buildComponentFiles(): { path: string; content: string }[] {
     path: `public/c/${c.slug}.md`,
     content: `${provenance()}
 
-# Inspera — ${c.name}
+# Inspera - ${c.name}
 
 ${RULES}
 
@@ -836,14 +866,14 @@ ${componentMarkdown(c, '@inspera/components')}
 
 ---
 
-Tokens: ${url('tokens.css')} · Full system: ${url('llms.txt')}
+Tokens: ${url('tokens.css')} | Full system: ${url('llms.txt')}
 `,
   }))
 }
 
 /**
  * Which components actually use each radius token, read from the source rather
- * than asserted in prose — so the Foundations page cannot claim `xl` is for
+ * than asserted in prose - so the Foundations page cannot claim `xl` is for
  * cards when nothing uses it.
  */
 function radiusUsage(): Record<string, string[]> {
@@ -895,16 +925,16 @@ function buildApiJson() {
   }
 }
 
-/** Deprecated name → canonical component, so tools can auto-migrate. */
+/** Deprecated name -> canonical component, so tools can auto-migrate. */
 function buildAliasesJson() {
   const aliases: Record<string, string> = {}
   for (const c of componentList) {
     for (const a of c.deprecatedAliases) aliases[a] = exportNameFor(c)
   }
-  return { version: VERSION, description: 'Deprecated Inspera name → canonical component export.', aliases }
+  return { version: VERSION, description: 'Deprecated Inspera name -> canonical component export.', aliases }
 }
 
-/** Tailwind v4 @theme — most AI builders emit Tailwind, so meet them there. */
+/** Tailwind v4 @theme - most AI builders emit Tailwind, so meet them there. */
 function buildTailwindTheme(): string {
   const lines: string[] = []
   const push = (label: string, entries: [string, string][]) => {
@@ -919,24 +949,24 @@ function buildTailwindTheme(): string {
     ...brandAccents.map((c) => [`--color-accent-${c.name}`, c.value] as [string, string]),
   ])
   for (const [family, shades] of Object.entries(palette)) {
-    push(`Palette — ${family}`, Object.entries(shades).map(([sh, v]) => [`--color-${family}-${sh}`, v]))
+    push(`Palette - ${family}`, Object.entries(shades).map(([sh, v]) => [`--color-${family}-${sh}`, v]))
   }
   push('Radius', radius.map((r) => [`--radius-${r.token}`, `${r.value}px`]))
   push('Spacing', spacing.map((sp) => [`--spacing-${sp.token}`, `${sp.value}px`]))
   push('Elevation', shadows.map((sh) => [`--shadow-${sh.token}`, sh.value]))
   push('Typography', [
-    // Derived from `fonts`, not restated — a duplicated list is how the
+    // Derived from `fonts`, not restated - a duplicated list is how the
     // stylesheet and the Tailwind theme end up disagreeing about the face.
     ...fonts.map((f) => [`--${f.name}`, f.value] as [string, string]),
     ...typeScale.map((t) => [`--text-${t.name}`, `${t.size}px`] as [string, string]),
   ])
 
-  return `/* Inspera Design System v${VERSION} — Tailwind v4 theme. GENERATED, do not edit.
+  return `/* Inspera Design System v${VERSION} - Tailwind v4 theme. GENERATED, do not edit.
 
    Most AI builders emit Tailwind utilities, so this exposes every Inspera token
    as a Tailwind theme value: bg-primary, text-gray-700, rounded-md, p-4, shadow-200.
 
-   Usage — in your global stylesheet, after the Tailwind import:
+   Usage - in your global stylesheet, after the Tailwind import:
      @import 'tailwindcss';
      @import './inspera.theme.css';
 */
@@ -966,11 +996,11 @@ ${RULES}
 
 ${where}
 
-- \`llms.txt\` — component index. Read this first.
-- \`c/<component>.md\` — full spec for one component. Fetch only what you use.
-- \`api.json\` — every prop, type and default, machine-readable.
-- \`tokens.css\` — import once at the app root.
-- \`inspera.theme.css\` — Tailwind v4 \`@theme\` block, if this project uses Tailwind.
+- \`llms.txt\` - component index. Read this first.
+- \`c/<component>.md\` - full spec for one component. Fetch only what you use.
+- \`api.json\` - every prop, type and default, machine-readable.
+- \`tokens.css\` - import once at the app root.
+- \`inspera.theme.css\` - Tailwind v4 \`@theme\` block, if this project uses Tailwind.
 
 ${buildFoundations({ compact: true })}
 
@@ -984,17 +1014,17 @@ ${buildGuidance()}
     { path: 'public/rules/.windsurfrules', content: body },
     {
       path: 'public/rules/inspera.mdc',
-      content: `---\ndescription: Inspera Design System — component and token rules\nglobs: ["**/*.tsx", "**/*.jsx", "**/*.css"]\nalwaysApply: true\n---\n\n${body}`,
+      content: `---\ndescription: Inspera Design System - component and token rules\nglobs: ["**/*.tsx", "**/*.jsx", "**/*.css"]\nalwaysApply: true\n---\n\n${body}`,
     },
   ]
 }
 
 // ---------------------------------------------------------------------------
-console.log('Generating distribution outputs from source of truth…')
+console.log('Generating distribution outputs from source of truth...')
 const distributedCss = buildDistributedCss()
 write(
   'src/data/radius-usage.generated.ts',
-  '// GENERATED by scripts/build-portable.ts — which components use each radius\n' +
+  '// GENERATED by scripts/build-portable.ts - which components use each radius\n' +
     '// token, read from the component source. Do not edit.\n\n' +
     'export const radiusUsage: Record<string, string[]> = ' +
     JSON.stringify(radiusUsage(), null, 2) +
@@ -1032,7 +1062,7 @@ write('public/llms-full.txt', buildLlmsTxt())
 write('public/foundations.md', buildFoundationsDoc())
 write(
   'public/guidance.md',
-  `${provenance()}\n\n# Inspera Design System — Composition & rules\n\n` +
+  `${provenance()}\n\n# Inspera Design System - Composition & rules\n\n` +
     `Version ${VERSION}. How to assemble the canonical components into screens.\n\n` +
     `## Rules\n\n${RULES}\n\n${buildGuidance()}\n`,
 )

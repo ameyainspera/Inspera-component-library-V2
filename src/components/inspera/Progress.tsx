@@ -7,7 +7,7 @@ export type ProgressIntent = 'Primary' | 'Success' | 'Warning' | 'Error'
 export interface ProgressProps {
   /** Bar or ring. */
   variant?: ProgressVariant
-  /** Completion percentage 0–100. Ignored when indeterminate. */
+  /** Completion percentage 0-100. Ignored when indeterminate. */
   value?: number
   /** Unknown-duration animation. */
   indeterminate?: boolean

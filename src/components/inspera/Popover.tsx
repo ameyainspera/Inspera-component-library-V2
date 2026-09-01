@@ -15,7 +15,7 @@ export interface PopoverProps {
   open?: boolean
   /** Open on mount. */
   defaultOpen?: boolean
-  /** Keep the panel visible regardless of state — used for documentation. */
+  /** Keep the panel visible regardless of state - used for documentation. */
   forceVisible?: boolean
   /** Fired when the popover opens or closes. */
   onOpenChange?: (open: boolean) => void

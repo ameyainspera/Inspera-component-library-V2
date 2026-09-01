@@ -24,9 +24,9 @@ export interface ListProps {
 }
 
 const defaultItems: ListItem[] = [
-  { primary: 'Algebra Quiz', secondary: '24 questions · 45 minutes' },
-  { primary: 'Reading Comprehension', secondary: '18 questions · 60 minutes' },
-  { primary: 'Chemistry Lab Report', secondary: 'Essay · Due 20 Mar' },
+  { primary: 'Algebra Quiz', secondary: '24 questions | 45 minutes' },
+  { primary: 'Reading Comprehension', secondary: '18 questions | 60 minutes' },
+  { primary: 'Chemistry Lab Report', secondary: 'Essay | Due 20 Mar' },
 ]
 
 export default function List({
@@ -71,7 +71,7 @@ export default function List({
 
   // Every border side is set as a longhand on purpose. This used to declare
   // `borderBottom` and then `border: 'none'` for the interactive case, and the
-  // later shorthand reset the divider — so `divided` silently did nothing the
+  // later shorthand reset the divider - so `divided` silently did nothing the
   // moment a list became clickable. Hover is CSS (.inspera-row in runtime.css),
   // which is also why no background is set here.
   const rowStyle = (i: number): CSSProperties => ({

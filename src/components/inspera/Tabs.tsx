@@ -17,7 +17,7 @@ export interface TabsProps {
   size?: TabsSize
   /** Stretch tabs to fill the row. */
   fullWidth?: boolean
-  /** Index of the active tab. Controlled — pair with onChange. */
+  /** Index of the active tab. Controlled - pair with onChange. */
   value?: number
   /** Fired with the index of the newly selected tab. */
   onChange?: (index: number) => void

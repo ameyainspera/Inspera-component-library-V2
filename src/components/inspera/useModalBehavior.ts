@@ -10,7 +10,7 @@ const FOCUSABLE = [
  * Drawer cannot drift apart:
  *
  *   1. Focus moves into the panel when it opens, and back to whatever opened it
- *      when it closes — otherwise Tab resumes at the top of the document and
+ *      when it closes - otherwise Tab resumes at the top of the document and
  *      the user has to walk the whole page to get back.
  *   2. Tab and Shift-Tab wrap inside the panel. Without this, focus walks out
  *      into the page behind the scrim, which is still there and still clickable.

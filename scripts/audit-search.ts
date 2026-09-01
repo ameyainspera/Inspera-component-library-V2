@@ -2,7 +2,7 @@
  * Search quality check.
  *
  * The point of sidebar search is that you do NOT have to know the canonical
- * name — so the thing worth testing is the vocabulary people actually type.
+ * name - so the thing worth testing is the vocabulary people actually type.
  * Each case asserts the expected component is the top hit; a case that merely
  * ranks is reported as a near-miss, not a pass.
  */
@@ -21,7 +21,7 @@ const items: Searchable[] = componentList.map((c) => ({
 
 /** [query, expected top hit] */
 const CASES: [string, string][] = [
-  // Synonyms — the main reason this exists.
+  // Synonyms - the main reason this exists.
   ['modal', 'Dialog'], ['popup', 'Dialog'], ['toast', 'Snackbar'],
   ['dropdown', 'Select'], ['combobox', 'Select'], ['switch', 'Toggle'],
   ['wizard', 'Stepper'], ['chip', 'Badge'], ['datagrid', 'Table'],
@@ -52,7 +52,7 @@ for (const [query, expected] of CASES) {
     failures++
     const got = hits[0]?.item.name ?? '(nothing)'
     console.log(
-      `  ✗ "${query}" → ${got}; expected ${expected}` +
+      `  ✗ "${query}" -> ${got}; expected ${expected}` +
         (rank >= 0 ? ` (ranked #${rank + 1})` : ' (absent from results)'),
     )
   }

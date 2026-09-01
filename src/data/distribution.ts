@@ -1,5 +1,5 @@
 /**
- * SOURCE OF TRUTH for how the library is distributed, and — importantly —
+ * SOURCE OF TRUTH for how the library is distributed, and - importantly -
  * whether each channel actually works yet.
  *
  * The Integrate page and every generated spec used to print
@@ -13,7 +13,7 @@
 export interface PackageStatus {
   name: string
   published: boolean
-  /** Registry URL once published — npm, GitHub Packages, Artifactory. */
+  /** Registry URL once published - npm, GitHub Packages, Artifactory. */
   registry: string | null
   /** Shown wherever the install instruction appears. */
   status: string
@@ -29,7 +29,7 @@ export const componentsPackage: PackageStatus = {
     'The package builds from this repo, but the @inspera scope is unclaimed, so ' +
     '`npm i @inspera/components` currently fails with a 404.',
   insteadUse:
-    'Use the portable spec below — llms.txt and the per-component files. Once a ' +
+    'Use the portable spec below - llms.txt and the per-component files. Once a ' +
     'registry is chosen the package becomes the strictest option, but it will need ' +
     'authentication, which most AI builders cannot do.',
 }
@@ -42,8 +42,8 @@ export const installCommand = (p: PackageStatus): string | null =>
  * What each published artifact should be called once it lands on someone's
  * disk, and how it is meant to be used.
  *
- * The served names follow conventions — `llms.txt` and `llms-full.txt` are the
- * llms.txt spec, `tokens.w3c.json` names its format — which is right for a
+ * The served names follow conventions - `llms.txt` and `llms-full.txt` are the
+ * llms.txt spec, `tokens.w3c.json` names its format - which is right for a
  * fetching agent and useless to a person. A file called `llms-full.txt` in a
  * Downloads folder three weeks later says nothing about what it is or which
  * design system it belongs to. The `download` attribute renames on save, so
@@ -67,14 +67,14 @@ export const artifacts: Artifact[] = [
   {
     file: 'llms-full.txt',
     saveAs: 'inspera-design-system.md',
-    note: 'The complete guide — foundations, and every component with its HTML and CSS.',
-    size: '~67k tokens · upload as a context file, too large to paste',
+    note: 'The complete guide - foundations, and every component with its HTML and CSS.',
+    size: '~67k tokens | upload as a context file, too large to paste',
   },
   {
     file: 'llms.txt',
     saveAs: 'inspera-design-system-index.md',
     note: 'Short index linking a spec per component.',
-    size: '~5k tokens · paste this into a one-off chat',
+    size: '~5k tokens | paste this into a one-off chat',
   },
   {
     file: 'foundations.md',
@@ -92,7 +92,7 @@ export const artifacts: Artifact[] = [
   { file: 'tokens.css', saveAs: 'inspera-tokens.css', note: 'Token custom properties + icon/keyframe runtime.' },
   { file: 'inspera.theme.css', saveAs: 'inspera.theme.css', note: 'Tailwind v4 @theme block.' },
   { file: 'tokens.w3c.json', saveAs: 'inspera-tokens.w3c.json', note: 'W3C Design Tokens format.' },
-  { file: 'aliases.json', saveAs: 'inspera-aliases.json', note: 'Deprecated name → canonical component.' },
+  { file: 'aliases.json', saveAs: 'inspera-aliases.json', note: 'Deprecated name -> canonical component.' },
 ]
 
 /** The one file to hand someone who asks for "the spec". */

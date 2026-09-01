@@ -1,18 +1,18 @@
-<!-- Inspera Design System v1.0.0 — generated file, do not edit. -->
+<!-- Inspera Design System v1.0.0 - generated file, do not edit. -->
 
-# Inspera — Card
+# Inspera - Card
 
 1. Do not invent design decisions. Never invent a colour, spacing value, radius, shadow, font size, weight, icon library, focus style, breakpoint, or component variant that this document defines.
 2. Use a canonical component before building a lookalike. If one exists for the job, use it.
 3. Never rename a canonical component or prop. A deprecated alias may be understood as input, but output must use the canonical name.
 4. Consume tokens, not literals. Raw values here define what a token resolves to; application code references `var(--token)`.
 5. Do not introduce another design system. No Material UI, Bootstrap, Ant, Chakra, shadcn default styling, Tailwind default palette, or Radix Themes look. Headless behaviour libraries are fine if restyled entirely to this spec.
-6. No arbitrary Tailwind values where a token exists. Never `bg-[#004080]` — use the token.
+6. No arbitrary Tailwind values where a token exists. Never `bg-[#004080]` - use the token.
 7. Inter for product UI. Noto Sans Mono only for code, identifiers and technical values; Noto Serif only for long-form content.
 8. Material Symbols Outlined only. Do not mix in Lucide, Heroicons, or Font Awesome.
 9. Accessibility is part of the component contract, not an enhancement. Keyboard operation, visible focus, labels, roles, names, and states are required.
 10. Never use colour alone to carry meaning. Pair it with text, an icon, or shape.
-11. Respect `prefers-reduced-motion: reduce` — drop non-essential motion.
+11. Respect `prefers-reduced-motion: reduce` - drop non-essential motion.
 12. Compose rather than invent. If a pattern is not a canonical component, build it from canonical components using the patterns below.
 13. Do not silently add a component. If the system genuinely cannot express something, emit `DESIGN_SYSTEM_GAP` in your output and use the closest documented composition.
 14. No decoration that competes with hierarchy: no gradients, glassmorphism, oversized radii, decorative shadows, or animated backgrounds.
@@ -42,10 +42,10 @@ variant with no error at all. Variant *values* are Capitalised
 
 ### Card
 
-Group related content in a contained surface. — category: `data-display`.
+Group related content in a contained surface. - category: `data-display`.
 
 > `@inspera/components` is **not published yet**. If you cannot resolve that import, do
-> not swap in another UI library — build the markup from the HTML and CSS under
+> not swap in another UI library - build the markup from the HTML and CSS under
 > **Without the package** below, which is this component exactly.
 
 ```tsx
@@ -66,15 +66,15 @@ import { Card } from '@inspera/components'
 | `elevation` | `'Flat' \| 'Raised' \| 'Outlined'` | `'Raised'` | Surface treatment. |
 | `padding` | `'Compact' \| 'Default' \| 'Spacious'` | `'Default'` | Internal padding (12 / 16 / 24). |
 | `interactive` | `boolean` | `false` | Renders as a focusable button with hover elevation. |
-| `children` | `ReactNode` | — | Card contents. Takes precedence over title and body. |
-| `onClick` | `() => void` | — | Fired when an interactive card is activated. Set interactive as well, or there is no affordance. |
+| `children` | `ReactNode` | - | Card contents. Takes precedence over title and body. |
+| `onClick` | `() => void` | - | Fired when an interactive card is activated. Set interactive as well, or there is no affordance. |
 
-**Accessibility** — role `article`, keyboard operable. Interactive cards should use role="button" or be wrapped in an anchor; Non-interactive cards use role="article" or a semantic section.
+**Accessibility** - role `article`, keyboard operable. Interactive cards should use role="button" or be wrapped in an anchor; Non-interactive cards use role="article" or a semantic section.
 
 **Do:** Use to group related content; Maintain consistent padding within a view; Use raised elevation for primary content cards.
 **Don't:** Do not nest cards inside other cards; Do not use cards for layout-only purposes without content.
 
-#### Without the package — exact HTML and CSS
+#### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
@@ -84,7 +84,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 - Flat has neither border nor shadow, Raised adds `--shadow-200`, Outlined adds a 1px `--border-strong`. Never both a shadow and a strong border.
 - The transparent 1px border at rest is deliberate: without it, Outlined would be 2px wider than Flat.
 - An interactive card is a `<button>`. A `<div>` with a click handler is not keyboard operable and will fail review.
-- Title 16px/500, body 16px/1.4 in `--gray-700` — the body is not smaller than the title.
+- Title 16px/500, body 16px/1.4 in `--gray-700` - the body is not smaller than the title.
 
 ```css
 /* Tokens this component needs. Paste once, at `:root`. */
@@ -156,7 +156,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 ```html
 <article class="inspera-card inspera-card--raised">
   <h3 class="inspera-card__title">Algebra Quiz</h3>
-  <p class="inspera-card__body">24 questions · 45 minutes.</p>
+  <p class="inspera-card__body">24 questions | 45 minutes.</p>
 </article>
 
 <!-- Interactive: a real button, never a div with a click handler. -->
@@ -169,4 +169,4 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 ---
 
-Tokens: ./tokens.css · Full system: ./llms.txt
+Tokens: ./tokens.css | Full system: ./llms.txt

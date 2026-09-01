@@ -10,7 +10,7 @@ export interface ToggleProps {
   checked?: boolean
   /**
    * Freezes a visual state so documentation can show it without a pointer.
-   * `Hover` and `Focused` are presentation-only — leave them unset in
+   * `Hover` and `Focused` are presentation-only - leave them unset in
    * application code, where CSS drives them from the real pointer and
    * keyboard. `Disabled` is real application state and belongs in your code.
    */
@@ -40,7 +40,7 @@ export default function Toggle({
   const trackH = size === 'Small' ? 20 : 24
   const thumb = size === 'Small' ? 16 : 20
 
-  // The track fill is the same on and off the pointer — only the thumb lifts —
+  // The track fill is the same on and off the pointer - only the thumb lifts -
   // so both hover properties resolve to the resting value. Hover and focus are
   // CSS (.inspera-control in runtime.css).
   const fill = isOn ? 'var(--primary)' : 'var(--border-control)'

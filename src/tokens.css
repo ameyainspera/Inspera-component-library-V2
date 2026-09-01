@@ -1,4 +1,4 @@
-/* Inspera Design System — GENERATED FILE, DO NOT EDIT.
+/* Inspera Design System - GENERATED FILE, DO NOT EDIT.
    Source: src/data/tokens.ts. Regenerate with `pnpm generate`. */
 
 :root {
@@ -20,7 +20,7 @@
   /* Base */
   --white: #ffffff;
 
-  /* Palette — gray */
+  /* Palette - gray */
   --gray-100: #F7F7F7;
   --gray-200: #EDEDED;
   --gray-300: #D9D9D9;
@@ -31,7 +31,7 @@
   --gray-800: #404040;
   --gray-900: #272727;
 
-  /* Palette — blue */
+  /* Palette - blue */
   --blue-100: #F0F7FF;
   --blue-200: #DBEDFF;
   --blue-300: #B3D9FF;
@@ -42,7 +42,7 @@
   --blue-800: #004080;
   --blue-900: #002E5C;
 
-  /* Palette — green */
+  /* Palette - green */
   --green-100: #F2FDF8;
   --green-200: #E0FAEF;
   --green-300: #BDF4DD;
@@ -53,7 +53,7 @@
   --green-800: #106542;
   --green-900: #0D4F33;
 
-  /* Palette — red */
+  /* Palette - red */
   --red-100: #FEF1F1;
   --red-200: #FCDEDE;
   --red-300: #F9B8B8;
@@ -64,7 +64,7 @@
   --red-800: #760A0A;
   --red-900: #550707;
 
-  /* Palette — yellow */
+  /* Palette - yellow */
   --yellow-100: #FFFCF0;
   --yellow-200: #FFF8DC;
   --yellow-300: #FEF0B3;
@@ -75,7 +75,7 @@
   --yellow-800: #7E6701;
   --yellow-900: #5B4A01;
 
-  /* Palette — orange */
+  /* Palette - orange */
   --orange-100: #FFFAF0;
   --orange-200: #FFF3DC;
   --orange-300: #FEE5B3;
@@ -86,7 +86,7 @@
   --orange-800: #7E5501;
   --orange-900: #5B3D01;
 
-  /* Palette — purple */
+  /* Palette - purple */
   --purple-100: #F6F4FB;
   --purple-200: #E9E4F6;
   --purple-300: #D0C6EC;
@@ -97,7 +97,7 @@
   --purple-800: #322060;
   --purple-900: #241745;
 
-  /* Palette — pink */
+  /* Palette - pink */
   --pink-100: #FEF1F5;
   --pink-200: #FCDFE8;
   --pink-300: #F8B9CE;
@@ -197,13 +197,13 @@
   --focus-ring-offset: 2px;
   --focus-ring-color: var(--primary);
 
-  /* Motion — duration */
+  /* Motion - duration */
   --duration-instant: 0ms;   /* No transition */
   --duration-fast: 100ms;    /* Hover and focus */
   --duration-normal: 200ms;  /* Menus, popovers */
   --duration-slow: 300ms;    /* Dialogs, drawers */
 
-  /* Motion — easing */
+  /* Motion - easing */
   --easing-standard: cubic-bezier(0.2, 0, 0, 1); /* Default */
   --easing-enter: cubic-bezier(0, 0, 0.2, 1); /* Entering the screen */
   --easing-exit: cubic-bezier(0.4, 0, 1, 1); /* Leaving the screen */
@@ -225,12 +225,12 @@
   --breakpoint-xl: 1280px;
   --breakpoint-2xl: 1440px;
 
-  /* Typography — family */
+  /* Typography - family */
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif; /* All UI text */
   --font-mono: 'Noto Sans Mono', ui-monospace, SFMono-Regular, monospace; /* Code, identifiers, token values */
   --font-serif: 'Noto Serif', Georgia, serif; /* Long-form or editorial content */
 
-  /* Typography — scale */
+  /* Typography - scale */
   --default-16-regular-size: 16px;
   --default-16-regular-weight: 400;
   --default-16-regular-line-height: 1.25;
@@ -319,7 +319,7 @@
   --documentation-line-height: 1.4;
 }
 
-/* Type styles — one class per Figma style (28 total). */
+/* Type styles - one class per Figma style (28 total). */
 
 .inspera-default-16-regular {
   font-family: var(--font-sans);

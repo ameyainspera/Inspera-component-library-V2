@@ -7,7 +7,7 @@ export type ButtonState = 'Default' | 'Hover' | 'Focused' | 'Pressed' | 'Disable
 export type ButtonContent = 'Text' | 'Icon + Text' | 'Text + Icon' | 'Text + Disclosure'
 
 export interface ButtonProps {
-  /** The button text. Start with a verb — "Save", not "OK". */
+  /** The button text. Start with a verb - "Save", not "OK". */
   label?: string
   /** Visual role / semantic weight. */
   intent?: ButtonIntent
@@ -15,7 +15,7 @@ export interface ButtonProps {
   size?: ButtonSize
   /**
    * Freezes a visual state so documentation can show it without a pointer.
-   * Leave unset in application code — hover, focus and active are handled in
+   * Leave unset in application code - hover, focus and active are handled in
    * CSS and work on their own.
    */
   state?: ButtonState
@@ -122,7 +122,7 @@ export default function Button({
       {/* The label only needs its own element when it sits beside an icon.
           A text-only button wrapped its label in a span that carried nothing,
           which made the rendered DOM differ from the HTML the spec publishes
-          for the same button — for no visual gain. */}
+          for the same button - for no visual gain. */}
       {content === 'Text' ? label : <span>{label}</span>}
       {(content === 'Text + Icon' || content === 'Text + Disclosure') && iconEl}
     </button>

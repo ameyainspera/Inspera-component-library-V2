@@ -39,7 +39,7 @@ const defaultRows: Record<string, ReactNode>[] = [
   { candidate: 'Amelia Hart', score: '92%', status: 'Submitted', date: '12 Mar 2026' },
   { candidate: 'Noah Bennett', score: '78%', status: 'In progress', date: '12 Mar 2026' },
   { candidate: 'Olivia Chen', score: '85%', status: 'Submitted', date: '11 Mar 2026' },
-  { candidate: 'Liam Foster', score: '—', status: 'Not started', date: '—' },
+  { candidate: 'Liam Foster', score: '-', status: 'Not started', date: '-' },
 ]
 
 export default function Table({

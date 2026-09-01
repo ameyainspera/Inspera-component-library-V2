@@ -1,18 +1,18 @@
-<!-- Inspera Design System v1.0.0 — generated file, do not edit. -->
+<!-- Inspera Design System v1.0.0 - generated file, do not edit. -->
 
-# Inspera — Link
+# Inspera - Link
 
 1. Do not invent design decisions. Never invent a colour, spacing value, radius, shadow, font size, weight, icon library, focus style, breakpoint, or component variant that this document defines.
 2. Use a canonical component before building a lookalike. If one exists for the job, use it.
 3. Never rename a canonical component or prop. A deprecated alias may be understood as input, but output must use the canonical name.
 4. Consume tokens, not literals. Raw values here define what a token resolves to; application code references `var(--token)`.
 5. Do not introduce another design system. No Material UI, Bootstrap, Ant, Chakra, shadcn default styling, Tailwind default palette, or Radix Themes look. Headless behaviour libraries are fine if restyled entirely to this spec.
-6. No arbitrary Tailwind values where a token exists. Never `bg-[#004080]` — use the token.
+6. No arbitrary Tailwind values where a token exists. Never `bg-[#004080]` - use the token.
 7. Inter for product UI. Noto Sans Mono only for code, identifiers and technical values; Noto Serif only for long-form content.
 8. Material Symbols Outlined only. Do not mix in Lucide, Heroicons, or Font Awesome.
 9. Accessibility is part of the component contract, not an enhancement. Keyboard operation, visible focus, labels, roles, names, and states are required.
 10. Never use colour alone to carry meaning. Pair it with text, an icon, or shape.
-11. Respect `prefers-reduced-motion: reduce` — drop non-essential motion.
+11. Respect `prefers-reduced-motion: reduce` - drop non-essential motion.
 12. Compose rather than invent. If a pattern is not a canonical component, build it from canonical components using the patterns below.
 13. Do not silently add a component. If the system genuinely cannot express something, emit `DESIGN_SYSTEM_GAP` in your output and use the closest documented composition.
 14. No decoration that competes with hierarchy: no gradients, glassmorphism, oversized radii, decorative shadows, or animated backgrounds.
@@ -42,10 +42,10 @@ variant with no error at all. Variant *values* are Capitalised
 
 ### Link
 
-Navigate to another location or resource. — category: `navigation`.
+Navigate to another location or resource. - category: `navigation`.
 
 > `@inspera/components` is **not published yet**. If you cannot resolve that import, do
-> not swap in another UI library — build the markup from the HTML and CSS under
+> not swap in another UI library - build the markup from the HTML and CSS under
 > **Without the package** below, which is this component exactly.
 
 ```tsx
@@ -63,7 +63,7 @@ import { Link } from '@inspera/components'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `children` | `ReactNode` | — | Link text. Takes precedence over label. |
+| `children` | `ReactNode` | - | Link text. Takes precedence over label. |
 | `label` | `string` | `'Learn more'` | Link text, when not passing children. |
 | `href` | `string` | `'#'` | Destination URL. Always provide a real one. |
 | `intent` | `'Default' \| 'Muted'` | `'Default'` | Color emphasis. |
@@ -71,28 +71,28 @@ import { Link } from '@inspera/components'
 | `underline` | `'Always' \| 'Hover' \| 'None'` | `'Hover'` | Underline behavior. |
 | `external` | `boolean` | `false` | Open in a new tab with an icon. |
 | `disabled` | `boolean` | `false` | Non-interactive state. |
-| `leadingIcon` | `string` | — | Material Symbols name shown before the text. |
-| `trailingIcon` | `string` | — | Material Symbols name shown after the text. |
-| `onClick` | `(e: React.MouseEvent) => void` | — | Fired on activation. Use for routing, not to replace href. |
+| `leadingIcon` | `string` | - | Material Symbols name shown before the text. |
+| `trailingIcon` | `string` | - | Material Symbols name shown after the text. |
+| `onClick` | `(e: React.MouseEvent) => void` | - | Fired on activation. Use for routing, not to replace href. |
 
-**Accessibility** — role `link`, keyboard operable. Use a real anchor with a valid href; External links set target="_blank" and rel="noreferrer"; Disabled links set aria-disabled and prevent navigation; Focus ring is visible on keyboard focus.
+**Accessibility** - role `link`, keyboard operable. Use a real anchor with a valid href; External links set target="_blank" and rel="noreferrer"; Disabled links set aria-disabled and prevent navigation; Focus ring is visible on keyboard focus.
 
 **Do:** Use for navigation, not actions; Signal external links with an icon; Keep link text descriptive.
-**Don't:** Do not use links to trigger actions — use Button; Do not use "click here" as link text.
+**Don't:** Do not use links to trigger actions - use Button; Do not use "click here" as link text.
 
 **Deprecated aliases** (do not use): `Hyperlink`, `Text link`, `Anchor`
 
-#### Without the package — exact HTML and CSS
+#### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
 font weight of your own, and do not restyle it with a UI kit's defaults.
 
-- The default is underline **on hover only** — not always, and not never.
+- The default is underline **on hover only** - not always, and not never.
 - Colour is `--primary` at 16px/500 (14px when small), with `text-underline-offset: 2px` so the rule clears the descenders.
 - An external link gets `target="_blank"`, `rel="noreferrer"`, and the `open_in_new` icon. All three, not one.
 - A disabled link carries no `href` and sets `aria-disabled="true"`. Do not leave the href and swallow the click.
-- The focus ring is `--primary-focus-ring` at 2px with a 2px offset — different from the solid `--primary` ring buttons use.
+- The focus ring is `--primary-focus-ring` at 2px with a 2px offset - different from the solid `--primary` ring buttons use.
 
 ```css
 /* Tokens this component needs. Paste once, at `:root`. */
@@ -167,4 +167,4 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 ---
 
-Tokens: ./tokens.css · Full system: ./llms.txt
+Tokens: ./tokens.css | Full system: ./llms.txt

@@ -1,5 +1,5 @@
 {
-  "$description": "Inspera Design System tokens (W3C Design Tokens format). Generated — do not edit.",
+  "$description": "Inspera Design System tokens (W3C Design Tokens format). Generated - do not edit.",
   "color": {
     "primary": {
       "$type": "color",

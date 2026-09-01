@@ -1,18 +1,18 @@
-<!-- Inspera Design System v1.0.0 — generated file, do not edit. -->
+<!-- Inspera Design System v1.0.0 - generated file, do not edit. -->
 
-# Inspera — Tabs
+# Inspera - Tabs
 
 1. Do not invent design decisions. Never invent a colour, spacing value, radius, shadow, font size, weight, icon library, focus style, breakpoint, or component variant that this document defines.
 2. Use a canonical component before building a lookalike. If one exists for the job, use it.
 3. Never rename a canonical component or prop. A deprecated alias may be understood as input, but output must use the canonical name.
 4. Consume tokens, not literals. Raw values here define what a token resolves to; application code references `var(--token)`.
 5. Do not introduce another design system. No Material UI, Bootstrap, Ant, Chakra, shadcn default styling, Tailwind default palette, or Radix Themes look. Headless behaviour libraries are fine if restyled entirely to this spec.
-6. No arbitrary Tailwind values where a token exists. Never `bg-[#004080]` — use the token.
+6. No arbitrary Tailwind values where a token exists. Never `bg-[#004080]` - use the token.
 7. Inter for product UI. Noto Sans Mono only for code, identifiers and technical values; Noto Serif only for long-form content.
 8. Material Symbols Outlined only. Do not mix in Lucide, Heroicons, or Font Awesome.
 9. Accessibility is part of the component contract, not an enhancement. Keyboard operation, visible focus, labels, roles, names, and states are required.
 10. Never use colour alone to carry meaning. Pair it with text, an icon, or shape.
-11. Respect `prefers-reduced-motion: reduce` — drop non-essential motion.
+11. Respect `prefers-reduced-motion: reduce` - drop non-essential motion.
 12. Compose rather than invent. If a pattern is not a canonical component, build it from canonical components using the patterns below.
 13. Do not silently add a component. If the system genuinely cannot express something, emit `DESIGN_SYSTEM_GAP` in your output and use the closest documented composition.
 14. No decoration that competes with hierarchy: no gradients, glassmorphism, oversized radii, decorative shadows, or animated backgrounds.
@@ -42,10 +42,10 @@ variant with no error at all. Variant *values* are Capitalised
 
 ### Tabs
 
-Organize content into switchable panels. — category: `navigation`.
+Organize content into switchable panels. - category: `navigation`.
 
 > `@inspera/components` is **not published yet**. If you cannot resolve that import, do
-> not swap in another UI library — build the markup from the HTML and CSS under
+> not swap in another UI library - build the markup from the HTML and CSS under
 > **Without the package** below, which is this component exactly.
 
 ```tsx
@@ -65,8 +65,8 @@ import { Tabs } from '@inspera/components'
 | `style` | `'Underline' \| 'Contained'` | `'Underline'` | Visual treatment. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Tab height 40 / 48. |
 | `fullWidth` | `boolean` | `false` | Stretch tabs to fill the row. |
-| `value` | `number` | — | Index of the active tab. Controlled — pair with onChange. |
-| `onChange` | `(index: number) => void` | — | Fired with the index of the newly selected tab. |
+| `value` | `number` | - | Index of the active tab. Controlled - pair with onChange. |
+| `onChange` | `(index: number) => void` | - | Fired with the index of the newly selected tab. |
 
 ```ts
 export interface TabItem {
@@ -75,21 +75,21 @@ export interface TabItem {
 }
 ```
 
-**Accessibility** — role `tablist`, keyboard operable. Use role="tablist" on the tab container; Each tab uses role="tab" with aria-selected; Tab panels use role="tabpanel" linked by aria-labelledby; Arrow keys navigate between tabs.
+**Accessibility** - role `tablist`, keyboard operable. Use role="tablist" on the tab container; Each tab uses role="tab" with aria-selected; Tab panels use role="tabpanel" linked by aria-labelledby; Arrow keys navigate between tabs.
 
 **Do:** Use to organize related content sections; Label tabs clearly and concisely; Use a maximum of 6 tabs per set.
-**Don't:** Do not use tabs for sequential steps — use a stepper instead; Do not nest tab sets inside other tab sets.
+**Don't:** Do not use tabs for sequential steps - use a stepper instead; Do not nest tab sets inside other tab sets.
 
 **Deprecated aliases** (do not use): `Tab bar`, `Tab navigation`
 
-#### Without the package — exact HTML and CSS
+#### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
 font weight of your own, and do not restyle it with a UI kit's defaults.
 
 - Underline tabs are 48px tall (40px small) on a 1px `--border-strong` rail, with `margin-bottom: -1px` so the selected 2px `--primary` underline covers the rail.
-- The resting bottom border is a transparent 2px, not none — otherwise selecting a tab shifts the whole row by two pixels.
+- The resting bottom border is a transparent 2px, not none - otherwise selecting a tab shifts the whole row by two pixels.
 - Contained tabs drop the rail entirely and become a pill group on `--gray-100`, with the selected tab a white `--shadow-100` card.
 - `role="tablist"` / `role="tab"` / `role="tabpanel"`, each tab pointing at its panel with `aria-controls` and each panel back with `aria-labelledby`.
 - Roving tabindex: only the selected tab is a tab stop; Left/Right move between them.
@@ -189,11 +189,11 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
           id="tab-questions" aria-controls="panel-questions" tabindex="-1">Questions</button>
 </div>
 
-<div id="panel-overview" role="tabpanel" aria-labelledby="tab-overview" tabindex="0">…</div>
-<div id="panel-questions" role="tabpanel" aria-labelledby="tab-questions" tabindex="0" hidden>…</div>
+<div id="panel-overview" role="tabpanel" aria-labelledby="tab-overview" tabindex="0">...</div>
+<div id="panel-questions" role="tabpanel" aria-labelledby="tab-questions" tabindex="0" hidden>...</div>
 ```
 
 
 ---
 
-Tokens: ./tokens.css · Full system: ./llms.txt
+Tokens: ./tokens.css | Full system: ./llms.txt

@@ -1,5 +1,5 @@
 /*
-  Inspera Design System — runtime CSS.
+  Inspera Design System - runtime CSS.
 
   Everything a consumer needs beyond the token custom properties: the Material
   Symbols helper classes and the keyframes the feedback components animate with.
@@ -67,7 +67,7 @@
    Interaction states.
 
    Inline styles cannot express :hover or :focus-visible, so the components
-   carried a `state` prop that froze a look instead — which meant a Button
+   carried a `state` prop that froze a look instead - which meant a Button
    never responded to the mouse in a real application, only in the docs.
 
    Behaviour lives here. Every rule pairs a real pseudo-class with a
@@ -95,7 +95,7 @@
 /* --- Button -------------------------------------------------------------
    The resting values live here, not inline. An inline `background` outranks
    any class selector, so setting it on the element silently defeated the
-   :hover rule below — the component looked wired up and did nothing. */
+   :hover rule below - the component looked wired up and did nothing. */
 
 .inspera-button {
   background: var(--inspera-bg);
@@ -141,14 +141,14 @@
 }
 
 /* A field draws its ring as a box-shadow, so on the ones that are themselves
-   focusable — Select's trigger, the date picker's button, an OTP box — the
+   focusable - Select's trigger, the date picker's button, an OTP box - the
    generic .inspera-interactive outline would sit outside it and ring twice.
    The box-shadow replaces the outline rather than removing it. */
 .inspera-field:focus-visible {
   outline: none;
 }
 
-/* Invalid wins over hover and focus — the error must stay legible. */
+/* Invalid wins over hover and focus - the error must stay legible. */
 .inspera-field[data-invalid='true'],
 .inspera-field[data-invalid='true']:hover,
 .inspera-field[data-invalid='true']:focus-within {
@@ -176,8 +176,8 @@
 
 /* The real control is a visually hidden input, so the ring has to be drawn on
    the indicator standing in for it. Without this, keyboard focus on a
-   checkbox, radio or toggle was invisible — the only thing the browser had to
-   ring was a 0×0 element. */
+   checkbox, radio or toggle was invisible - the only thing the browser had to
+   ring was a 0x0 element. */
 .inspera-control:has(:focus-visible) .inspera-control-indicator,
 .inspera-control[data-force-state='Focused'] .inspera-control-indicator {
   outline: var(--focus-ring-width) solid var(--focus-ring-color);
@@ -205,7 +205,7 @@
 /* --- Rows and items that respond to the pointer -------------------------
    The resting fill lives here too. A row is often a <button>, whose UA
    background would otherwise show through, and setting `transparent` inline to
-   cover that would outrank the hover rule below — the same trap as Button. */
+   cover that would outrank the hover rule below - the same trap as Button. */
 
 .inspera-row {
   background: var(--inspera-row-bg, transparent);

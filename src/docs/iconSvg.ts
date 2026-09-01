@@ -2,7 +2,7 @@
  * Fetch real SVG path data for a Material Symbol.
  *
  * Material Symbols ships as a variable font, so there is no SVG in the page to
- * copy — the glyph is drawn by the font. Google publishes the same icons as SVG
+ * copy - the glyph is drawn by the font. Google publishes the same icons as SVG
  * in the material-design-icons repo, one file per axis combination, and serves
  * them with `access-control-allow-origin: *`, so the browser can fetch them
  * directly.

@@ -17,7 +17,7 @@ export interface DrawerProps {
   hasCloseButton?: boolean
   /** Panel contents. */
   children?: ReactNode
-  /** Render just the panel inline (no overlay/scrim) — used for documentation previews. */
+  /** Render just the panel inline (no overlay/scrim) - used for documentation previews. */
   embedded?: boolean
   /** Fired on the close button, the scrim, and Escape. */
   onClose?: () => void

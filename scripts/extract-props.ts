@@ -1,11 +1,11 @@
 /**
- * extract-props.ts — derive each component's real prop API from its TypeScript
+ * extract-props.ts - derive each component's real prop API from its TypeScript
  * types, using the compiler API.
  *
  * Why this exists: the prop tables used to be hand-transcribed into
- * src/data/components.ts from a Figma variant sheet. They drifted badly — 24 of
+ * src/data/components.ts from a Figma variant sheet. They drifted badly - 24 of
  * 42 components documented Capitalized names (`Intent`, `WithLabel`) that React
- * silently ignores, and 99 real props (label, children, items, onChange, …)
+ * silently ignores, and 99 real props (label, children, items, onChange, ...)
  * were absent entirely, so the published spec could not describe a working
  * screen. Reading the types means the documentation cannot disagree with the
  * component.
@@ -37,8 +37,8 @@ export interface PropDoc {
  * Render a prop's type the way a reader needs it.
  *
  * Deliberately *not* the compiler's fully-resolved type. Resolving `ReactNode`
- * expands to a ~10-member union containing an absolute `import("/Users/…")`
- * path — which is machine-specific (so generated files differed between a
+ * expands to a ~10-member union containing an absolute `import("/Users/...")`
+ * path - which is machine-specific (so generated files differed between a
  * laptop and CI) and tells a model nothing. Instead:
  *
  *   - a named alias that is a union of string literals is expanded to those
@@ -73,7 +73,7 @@ function renderType(checker: ts.TypeChecker, member: ts.PropertySignature, sourc
 }
 
 /**
- * Shapes referenced by props and declared alongside the component — TabItem,
+ * Shapes referenced by props and declared alongside the component - TabItem,
  * MenuItem, TableColumn. Without these, `items: TabItem[]` is a dead end for
  * anyone (or anything) trying to call the component.
  */

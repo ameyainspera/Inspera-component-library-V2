@@ -1,18 +1,18 @@
-<!-- Inspera Design System v1.0.0 — generated file, do not edit. -->
+<!-- Inspera Design System v1.0.0 - generated file, do not edit. -->
 
-# Inspera — Text Input
+# Inspera - Text Input
 
 1. Do not invent design decisions. Never invent a colour, spacing value, radius, shadow, font size, weight, icon library, focus style, breakpoint, or component variant that this document defines.
 2. Use a canonical component before building a lookalike. If one exists for the job, use it.
 3. Never rename a canonical component or prop. A deprecated alias may be understood as input, but output must use the canonical name.
 4. Consume tokens, not literals. Raw values here define what a token resolves to; application code references `var(--token)`.
 5. Do not introduce another design system. No Material UI, Bootstrap, Ant, Chakra, shadcn default styling, Tailwind default palette, or Radix Themes look. Headless behaviour libraries are fine if restyled entirely to this spec.
-6. No arbitrary Tailwind values where a token exists. Never `bg-[#004080]` — use the token.
+6. No arbitrary Tailwind values where a token exists. Never `bg-[#004080]` - use the token.
 7. Inter for product UI. Noto Sans Mono only for code, identifiers and technical values; Noto Serif only for long-form content.
 8. Material Symbols Outlined only. Do not mix in Lucide, Heroicons, or Font Awesome.
 9. Accessibility is part of the component contract, not an enhancement. Keyboard operation, visible focus, labels, roles, names, and states are required.
 10. Never use colour alone to carry meaning. Pair it with text, an icon, or shape.
-11. Respect `prefers-reduced-motion: reduce` — drop non-essential motion.
+11. Respect `prefers-reduced-motion: reduce` - drop non-essential motion.
 12. Compose rather than invent. If a pattern is not a canonical component, build it from canonical components using the patterns below.
 13. Do not silently add a component. If the system genuinely cannot express something, emit `DESIGN_SYSTEM_GAP` in your output and use the closest documented composition.
 14. No decoration that competes with hierarchy: no gradients, glassmorphism, oversized radii, decorative shadows, or animated backgrounds.
@@ -42,10 +42,10 @@ variant with no error at all. Variant *values* are Capitalised
 
 ### Text Input
 
-Collect single-line text input. — category: `input-controls`.
+Collect single-line text input. - category: `input-controls`.
 
 > `@inspera/components` is **not published yet**. If you cannot resolve that import, do
-> not swap in another UI library — build the markup from the HTML and CSS under
+> not swap in another UI library - build the markup from the HTML and CSS under
 > **Without the package** below, which is this component exactly.
 
 ```tsx
@@ -62,30 +62,30 @@ import { TextInput } from '@inspera/components'
 | --- | --- | --- | --- |
 | `label` | `string` | `'Label'` | Show the field label. |
 | `placeholder` | `string` | `'Placeholder text'` | Hint shown when empty. Not a substitute for the label. |
-| `value` | `string` | — | Current value. Controlled — pair with onChange. |
-| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Disabled' \| 'Error' \| 'Filled' \| 'ReadOnly'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Filled` are presentation-only — leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Error`, `Disabled` and `ReadOnly` are real application state and belong in your code. |
+| `value` | `string` | - | Current value. Controlled - pair with onChange. |
+| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Disabled' \| 'Error' \| 'Filled' \| 'ReadOnly'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Filled` are presentation-only - leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Error`, `Disabled` and `ReadOnly` are real application state and belong in your code. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Control height. |
-| `leadingIcon` | `string` | — | Show a leading icon. |
-| `trailingIcon` | `string` | — | Show a trailing icon. |
+| `leadingIcon` | `string` | - | Show a leading icon. |
+| `trailingIcon` | `string` | - | Show a trailing icon. |
 | `showLabel` | `boolean` | `true` | Render the visible label. Hiding it still requires an accessible name. |
-| `helpText` | `string` | — | Show helper text. |
-| `errorText` | `string` | — | Show error message. |
-| `onChange` | `(value: string) => void` | — | Fired with the new value on every keystroke. |
+| `helpText` | `string` | - | Show helper text. |
+| `errorText` | `string` | - | Show error message. |
+| `onChange` | `(value: string) => void` | - | Fired with the new value on every keystroke. |
 
-**Accessibility** — role `textbox`, keyboard operable. Always associate label with input using htmlFor/id; Error text must be linked via aria-describedby; Required fields must use aria-required.
+**Accessibility** - role `textbox`, keyboard operable. Always associate label with input using htmlFor/id; Error text must be linked via aria-describedby; Required fields must use aria-required.
 
 **Do:** Always include a visible label; Provide clear placeholder text as a hint; Show error messages below the input.
 **Don't:** Do not use placeholder as the only label; Do not disable inputs without explanation.
 
 **Deprecated aliases** (do not use): `Text inputs`, `Content`, `Content (small)`
 
-#### Without the package — exact HTML and CSS
+#### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
 font weight of your own, and do not restyle it with a UI kit's defaults.
 
-- The border belongs to the wrapper, not the `<input>`. The input itself has no border, no outline and no background — otherwise icons cannot sit inside the field.
+- The border belongs to the wrapper, not the `<input>`. The input itself has no border, no outline and no background - otherwise icons cannot sit inside the field.
 - Focus is `:focus-within` on the wrapper, drawn as `--effect-state-focus` (a 3px box-shadow) plus a `--primary` border. Fields ring with a shadow; buttons ring with an outline.
 - Height is 40px (32px small), radius `--radius-md`, resting border `--border-control` #C4C4C4 going to `--border-control-strong` on hover.
 - Help and error text are 12px. Only one shows at a time, and `aria-describedby` points at whichever it is.
@@ -150,7 +150,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 .inspera-input__field:hover { border-color: var(--border-control-strong); }
 
-/* :focus-within, not :focus — the focusable element is the <input> inside. */
+/* :focus-within, not :focus - the focusable element is the <input> inside. */
 .inspera-input__field:focus-within {
   border-color: var(--primary);
   box-shadow: var(--effect-state-focus);
@@ -184,7 +184,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   color: var(--error);
 }
 
-/* Invalid outranks hover and focus — the error has to stay legible. */
+/* Invalid outranks hover and focus - the error has to stay legible. */
 .inspera-input__field[data-invalid='true'],
 .inspera-input__field[data-invalid='true']:hover,
 .inspera-input__field[data-invalid='true']:focus-within {
@@ -228,4 +228,4 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 ---
 
-Tokens: ./tokens.css · Full system: ./llms.txt
+Tokens: ./tokens.css | Full system: ./llms.txt

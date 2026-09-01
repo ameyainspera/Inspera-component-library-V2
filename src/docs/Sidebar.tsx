@@ -19,7 +19,7 @@ const INTEGRATE = {
 }
 
 /** Iconography is a foundation, so Icons lives in that group. */
-// Counted, not guessed — the badge used to claim "3k+" against ~1.2k icons.
+// Counted, not guessed - the badge used to claim "3k+" against ~1.2k icons.
 const ICONS = {
   hash: '#/icons',
   label: 'Icons',
@@ -115,7 +115,7 @@ export default function Sidebar({ route, onNavigate }: SidebarProps) {
     listRef.current?.querySelector('[data-active="true"]')?.scrollIntoView({ block: 'nearest' })
   }, [cursor])
 
-  // Headings were 11px in gray-500 with 20px above — too quiet to break the
+  // Headings were 11px in gray-500 with 20px above - too quiet to break the
   // list up, so every group ran together as one scroll.
   const groupHeading: React.CSSProperties = {
     padding: '0 12px 10px',
@@ -182,7 +182,7 @@ export default function Sidebar({ route, onNavigate }: SidebarProps) {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={onInputKey}
-          placeholder="Search components…"
+          placeholder="Search components..."
           aria-label="Search components"
           role="combobox"
           aria-expanded={searching}
@@ -221,7 +221,7 @@ export default function Sidebar({ route, onNavigate }: SidebarProps) {
         <div id="sidebar-search-results" role="listbox" aria-label="Search results" ref={listRef}>
           {hits.length === 0 ? (
             <p style={{ margin: '12px 4px', fontSize: 13, color: 'var(--muted-foreground)', lineHeight: 1.5 }}>
-              Nothing matches “{query}”. Try a related word — “modal”, “dropdown”, “toast”.
+              Nothing matches "{query}". Try a related word - "modal", "dropdown", "toast".
             </p>
           ) : (
             <>
@@ -254,11 +254,11 @@ export default function Sidebar({ route, onNavigate }: SidebarProps) {
                         {hit.item.group}
                       </span>
                     </span>
-                    {/* Say *why* this matched when it wasn't the name — otherwise
-                        "toast → Snackbar" looks like the search misfired. */}
+                    {/* Say *why* this matched when it wasn't the name - otherwise
+                        "toast -> Snackbar" looks like the search misfired. */}
                     {hit.via ? (
                       <span style={{ fontSize: 11, color: 'var(--muted-foreground)' }}>
-                        matches “{hit.via}”
+                        matches "{hit.via}"
                       </span>
                     ) : (
                       <span

@@ -31,7 +31,7 @@ const b = (v: string) => v === 'true'
 
 /**
  * Render a JSX attribute only when it departs from the component's own
- * default, in idiomatic form — bare for a true flag, `={false}` to switch one
+ * default, in idiomatic form - bare for a true flag, `={false}` to switch one
  * off. These snippets are the copyable example an AI learns the API from, so
  * they should read like code someone would write, not like an exhaustive dump
  * of every prop at its default value.
@@ -45,8 +45,8 @@ const fill = { width: '100%', display: 'flex', justifyContent: 'center' } as con
 /**
  * How each component's state gallery should be laid out.
  *
- * Components size to their container, so the gallery grid — not the component
- * — decides how much room each state gets. A Stepper or Table needs far more
+ * Components size to their container, so the gallery grid - not the component
+ * - decides how much room each state gets. A Stepper or Table needs far more
  * than a Badge, and a single track width for all 42 either crams the wide ones
  * or strands the narrow ones in white space.
  *
@@ -58,7 +58,7 @@ export interface GalleryLayout {
   minWidth?: number
   /**
    * `minHeight` reserves room for the panel. `align: 'start'` pins the trigger
-   * to the top of the cell for panels that open downward — centred, the
+   * to the top of the cell for panels that open downward - centred, the
    * trigger sits mid-cell and the panel hangs out of the bottom.
    */
   floating?: { minHeight: number; align?: 'start' | 'center' }
@@ -101,7 +101,7 @@ export const galleryLayout: Record<string, GalleryLayout> = {
   pagination: { minWidth: 360 },
 
   // Floating panels: never clip, and reserve room below the trigger.
-  tooltip: { minWidth: 300, floating: { minHeight: 150 } }, // opens either way — stay centred
+  tooltip: { minWidth: 300, floating: { minHeight: 150 } }, // opens either way - stay centred
   popover: { minWidth: 340, floating: { minHeight: 220, align: 'start' } },
   menu: { minWidth: 300, floating: { minHeight: 280, align: 'start' } },
 
@@ -182,7 +182,7 @@ export const registry: Record<string, RegistryEntry> = {
     },
     defaults: { state: 'Default', size: 'Medium', indeterminate: 'false', withLabel: 'true' },
     // No `checked` control on purpose. Supplying it made the box fully
-    // controlled, so clicking the preview did nothing at all — while the panel
+    // controlled, so clicking the preview did nothing at all - while the panel
     // above it promised a live component. The gallery already shows both
     // states; the playground's job is to be the one you can actually use.
     render: (v) => (
@@ -291,7 +291,7 @@ export const registry: Record<string, RegistryEntry> = {
     render: (v) => (
       <Card
         title="Algebra Quiz"
-        body="24 questions · 45 minutes. Group related content in a contained surface."
+        body="24 questions | 45 minutes. Group related content in a contained surface."
         elevation={v.elevation as never}
         padding={v.padding as never}
         interactive={b(v.interactive)}
@@ -359,7 +359,7 @@ export const registry: Record<string, RegistryEntry> = {
       node: <Alert intent={i} title={i} message="Contextual inline feedback." layout="With Close" />,
     })),
     snippet: (v) =>
-      `<Alert\n  intent="${v.intent}"\n  title="Heads up"\n  message="…"\n  layout="${v.layout}"\n  background={${v.background}}\n/>`,
+      `<Alert\n  intent="${v.intent}"\n  title="Heads up"\n  message="..."\n  layout="${v.layout}"\n  background={${v.background}}\n/>`,
   },
 
   dialog: {
@@ -481,7 +481,7 @@ export const registry: Record<string, RegistryEntry> = {
     render: (v) => (
       <Textarea
         label="Feedback"
-        placeholder="Share your thoughts…"
+        placeholder="Share your thoughts..."
         state={v.state as never}
         size={v.size as never}
         showCount={b(v.showCount)}
@@ -492,10 +492,10 @@ export const registry: Record<string, RegistryEntry> = {
     ),
     gallery: (['Default', 'Focused', 'Filled', 'Error', 'Disabled', 'ReadOnly'] as const).map((s) => ({
       label: s,
-      node: <Textarea label="Feedback" placeholder="Share your thoughts…" state={s} showLabel={false} rows={3} />,
+      node: <Textarea label="Feedback" placeholder="Share your thoughts..." state={s} showLabel={false} rows={3} />,
     })),
     snippet: (v) =>
-      `<Textarea\n  label="Feedback"\n  placeholder="Share your thoughts…"\n  size="${v.size}"\n  showCount={${v.showCount}}\n  maxLength={280}${b(v.showHelp) ? '\n  helpText="Keep it constructive."' : ''}\n/>`,
+      `<Textarea\n  label="Feedback"\n  placeholder="Share your thoughts..."\n  size="${v.size}"\n  showCount={${v.showCount}}\n  maxLength={280}${b(v.showHelp) ? '\n  helpText="Keep it constructive."' : ''}\n/>`,
   },
 
   'form-field': {
@@ -734,7 +734,7 @@ export const registry: Record<string, RegistryEntry> = {
         items={[
           { title: 'What is Inspera?', content: 'A digital assessment platform for education and certification.' },
           { title: 'How are results scored?', content: 'Automatically for objective items, with manual grading for essays.' },
-          { title: 'Is it accessible?', content: 'Yes — components follow WCAG 2.1 AA guidance.' },
+          { title: 'Is it accessible?', content: 'Yes - components follow WCAG 2.1 AA guidance.' },
         ]}
       />
     ),
@@ -742,7 +742,7 @@ export const registry: Record<string, RegistryEntry> = {
       { label: 'Single', node: <Accordion items={[{ title: 'Section one', content: 'Body copy.' }, { title: 'Section two', content: 'Body copy.' }]} /> },
     ],
     snippet: (v) =>
-      `<Accordion\n  type="${v.type}"\n  iconPosition="${v.iconPosition}"\n  items={[{ title: 'What is Inspera?', content: '…' }]}\n/>`,
+      `<Accordion\n  type="${v.type}"\n  iconPosition="${v.iconPosition}"\n  items={[{ title: 'What is Inspera?', content: '...' }]}\n/>`,
   },
 
   tag: {
@@ -890,7 +890,7 @@ export const registry: Record<string, RegistryEntry> = {
       { label: 'Interactive', node: <List interactive items={[{ primary: 'Item one', trailing: 'chevron_right' }, { primary: 'Item two', trailing: 'chevron_right' }]} /> },
     ],
     snippet: (v) =>
-      `<List\n  size="${v.size}"\n  divided={${v.divided}}\n  interactive={${v.interactive}}\n  items={[{ primary: 'General settings', secondary: '…', leading: 'settings' }]}\n/>`,
+      `<List\n  size="${v.size}"\n  divided={${v.divided}}\n  interactive={${v.interactive}}\n  items={[{ primary: 'General settings', secondary: '...', leading: 'settings' }]}\n/>`,
   },
 
   progress: {

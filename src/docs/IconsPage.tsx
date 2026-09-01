@@ -103,12 +103,12 @@ export default function IconsPage() {
             Material Symbols
           </h1>
           <p style={{ margin: 0, fontSize: 15, color: 'var(--muted-foreground)', maxWidth: 640 }}>
-            {totalIconCount.toLocaleString()} icons across {ICON_CATEGORIES.length - 1} categories — three styles, variable weight, fill, grade, and optical size. Click any icon to copy its name.
+            {totalIconCount.toLocaleString()} icons across {ICON_CATEGORIES.length - 1} categories - three styles, variable weight, fill, grade, and optical size. Click any icon to copy its name.
           </p>
         </div>
       </div>
 
-      {/* ── Static controls (no sticky — sits above its own scroll zone) ── */}
+      {/* ── Static controls (no sticky - sits above its own scroll zone) ── */}
       <div style={{ flexShrink: 0, background: 'var(--background)', borderBottom: '1px solid var(--border)' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', padding: '12px 40px 16px' }}>
         <div
@@ -127,7 +127,7 @@ export default function IconsPage() {
             >search</span>
             <input
               type="search"
-              placeholder="Search icons…"
+              placeholder="Search icons..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               style={{
@@ -288,7 +288,7 @@ export default function IconsPage() {
           {category !== 'All' ? ` in ${category}` : ''}
         </span>
         <span style={{ marginLeft: 'auto', fontSize: 12, color: 'var(--muted-foreground)', fontFamily: 'var(--font-mono)' }}>
-          {iconStyle} · fill={fill} · wght={weight} · opsz={opsz}
+          {iconStyle} | fill={fill} | wght={weight} | opsz={opsz}
         </span>
       </div>
 
@@ -351,14 +351,14 @@ export default function IconsPage() {
             <pre style={{
               margin: 0, padding: '10px 12px', background: 'var(--gray-100)', borderRadius: 'var(--radius-sm)',
               fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--gray-800)', overflowX: 'auto',
-            }}>{`/* Google Fonts CSS2 — all 3 styles */\n@import url(\n  'fonts.googleapis.com/css2?\n  family=Material+Symbols+Outlined:\n  opsz,wght,FILL,GRAD\n  @20..48,100..700,0..1,-25..200'\n);`}</pre>
+            }}>{`/* Google Fonts CSS2 - all 3 styles */\n@import url(\n  'fonts.googleapis.com/css2?\n  family=Material+Symbols+Outlined:\n  opsz,wght,FILL,GRAD\n  @20..48,100..700,0..1,-25..200'\n);`}</pre>
           </div>
         </div>
 
         {/* Live preview strip */}
         <div>
           <div style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--muted-foreground)', marginBottom: 10 }}>
-            Live preview — current settings across all three styles
+            Live preview - current settings across all three styles
           </div>
           <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
             {(['outlined', 'rounded', 'sharp'] as IconStyle[]).map((s) => (

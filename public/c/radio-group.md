@@ -1,18 +1,18 @@
-<!-- Inspera Design System v1.0.0 — generated file, do not edit. -->
+<!-- Inspera Design System v1.0.0 - generated file, do not edit. -->
 
-# Inspera — Radio Group
+# Inspera - Radio Group
 
 1. Do not invent design decisions. Never invent a colour, spacing value, radius, shadow, font size, weight, icon library, focus style, breakpoint, or component variant that this document defines.
 2. Use a canonical component before building a lookalike. If one exists for the job, use it.
 3. Never rename a canonical component or prop. A deprecated alias may be understood as input, but output must use the canonical name.
 4. Consume tokens, not literals. Raw values here define what a token resolves to; application code references `var(--token)`.
 5. Do not introduce another design system. No Material UI, Bootstrap, Ant, Chakra, shadcn default styling, Tailwind default palette, or Radix Themes look. Headless behaviour libraries are fine if restyled entirely to this spec.
-6. No arbitrary Tailwind values where a token exists. Never `bg-[#004080]` — use the token.
+6. No arbitrary Tailwind values where a token exists. Never `bg-[#004080]` - use the token.
 7. Inter for product UI. Noto Sans Mono only for code, identifiers and technical values; Noto Serif only for long-form content.
 8. Material Symbols Outlined only. Do not mix in Lucide, Heroicons, or Font Awesome.
 9. Accessibility is part of the component contract, not an enhancement. Keyboard operation, visible focus, labels, roles, names, and states are required.
 10. Never use colour alone to carry meaning. Pair it with text, an icon, or shape.
-11. Respect `prefers-reduced-motion: reduce` — drop non-essential motion.
+11. Respect `prefers-reduced-motion: reduce` - drop non-essential motion.
 12. Compose rather than invent. If a pattern is not a canonical component, build it from canonical components using the patterns below.
 13. Do not silently add a component. If the system genuinely cannot express something, emit `DESIGN_SYSTEM_GAP` in your output and use the closest documented composition.
 14. No decoration that competes with hierarchy: no gradients, glassmorphism, oversized radii, decorative shadows, or animated backgrounds.
@@ -42,10 +42,10 @@ variant with no error at all. Variant *values* are Capitalised
 
 ### Radio Group
 
-Group mutually exclusive radio options. — category: `input-controls`.
+Group mutually exclusive radio options. - category: `input-controls`.
 
 > `@inspera/components` is **not published yet**. If you cannot resolve that import, do
-> not swap in another UI library — build the markup from the HTML and CSS under
+> not swap in another UI library - build the markup from the HTML and CSS under
 > **Without the package** below, which is this component exactly.
 
 ```tsx
@@ -62,13 +62,13 @@ import { RadioGroup } from '@inspera/components'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | — | Group label, announced as the radiogroup name. |
-| `name` | `string` | — | Shared input name for the group. |
+| `label` | `string` | - | Group label, announced as the radiogroup name. |
+| `name` | `string` | - | Shared input name for the group. |
 | `options` | `RadioOption[]` | `DEFAULT_OPTIONS` | Radio options. |
-| `value` | `string` | — | Selected option value. |
+| `value` | `string` | - | Selected option value. |
 | `orientation` | `'Vertical' \| 'Horizontal'` | `'Vertical'` | Layout direction. |
 | `state` | `'Default' \| 'Disabled' \| 'Error'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
-| `onChange` | `(value: string) => void` | — | Fired with the newly selected value. |
+| `onChange` | `(value: string) => void` | - | Fired with the newly selected value. |
 
 ```ts
 export interface RadioOption {
@@ -77,14 +77,14 @@ export interface RadioOption {
 }
 ```
 
-**Accessibility** — role `radiogroup`, keyboard operable. Container uses role="radiogroup" with an accessible label; Each option is a radio with aria-checked; Arrow keys navigate between options.
+**Accessibility** - role `radiogroup`, keyboard operable. Container uses role="radiogroup" with an accessible label; Each option is a radio with aria-checked; Arrow keys navigate between options.
 
-**Do:** Use for single selection among 2–6 options; Provide a group label; Pre-select a sensible default.
-**Don't:** Do not use for multi-select — use Checkbox Group; Do not use a single radio alone.
+**Do:** Use for single selection among 2-6 options; Provide a group label; Pre-select a sensible default.
+**Don't:** Do not use for multi-select - use Checkbox Group; Do not use a single radio alone.
 
 **Deprecated aliases** (do not use): `Radio list`, `Option group`
 
-#### Without the package — exact HTML and CSS
+#### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
@@ -92,7 +92,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 - The group label is a `<span>` with an id, linked by `aria-labelledby` on the `role="radiogroup"` element. A bare `<label>` cannot name a group.
 - Every option shares one `name`, and no other question on the page may reuse it.
-- Vertical options have no gap — each row carries its own 8px vertical padding. Horizontal adds a 24px gap.
+- Vertical options have no gap - each row carries its own 8px vertical padding. Horizontal adds a 24px gap.
 - Group-level state (error, disabled) is applied to each option, not drawn once on the wrapper.
 
 ```css
@@ -141,7 +141,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   transition: all 120ms ease;
 }
 
-/* The dot is a child element, not a background — it has to stay centred as the
+/* The dot is a child element, not a background - it has to stay centred as the
    circle scales on press. */
 .inspera-radio__dot {
   width: 10px;
@@ -214,4 +214,4 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 ---
 
-Tokens: ./tokens.css · Full system: ./llms.txt
+Tokens: ./tokens.css | Full system: ./llms.txt

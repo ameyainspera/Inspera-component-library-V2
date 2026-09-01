@@ -1,18 +1,18 @@
-<!-- Inspera Design System v1.0.0 — generated file, do not edit. -->
+<!-- Inspera Design System v1.0.0 - generated file, do not edit. -->
 
-# Inspera — List
+# Inspera - List
 
 1. Do not invent design decisions. Never invent a colour, spacing value, radius, shadow, font size, weight, icon library, focus style, breakpoint, or component variant that this document defines.
 2. Use a canonical component before building a lookalike. If one exists for the job, use it.
 3. Never rename a canonical component or prop. A deprecated alias may be understood as input, but output must use the canonical name.
 4. Consume tokens, not literals. Raw values here define what a token resolves to; application code references `var(--token)`.
 5. Do not introduce another design system. No Material UI, Bootstrap, Ant, Chakra, shadcn default styling, Tailwind default palette, or Radix Themes look. Headless behaviour libraries are fine if restyled entirely to this spec.
-6. No arbitrary Tailwind values where a token exists. Never `bg-[#004080]` — use the token.
+6. No arbitrary Tailwind values where a token exists. Never `bg-[#004080]` - use the token.
 7. Inter for product UI. Noto Sans Mono only for code, identifiers and technical values; Noto Serif only for long-form content.
 8. Material Symbols Outlined only. Do not mix in Lucide, Heroicons, or Font Awesome.
 9. Accessibility is part of the component contract, not an enhancement. Keyboard operation, visible focus, labels, roles, names, and states are required.
 10. Never use colour alone to carry meaning. Pair it with text, an icon, or shape.
-11. Respect `prefers-reduced-motion: reduce` — drop non-essential motion.
+11. Respect `prefers-reduced-motion: reduce` - drop non-essential motion.
 12. Compose rather than invent. If a pattern is not a canonical component, build it from canonical components using the patterns below.
 13. Do not silently add a component. If the system genuinely cannot express something, emit `DESIGN_SYSTEM_GAP` in your output and use the closest documented composition.
 14. No decoration that competes with hierarchy: no gradients, glassmorphism, oversized radii, decorative shadows, or animated backgrounds.
@@ -42,10 +42,10 @@ variant with no error at all. Variant *values* are Capitalised
 
 ### List
 
-Present a vertical series of related items. — category: `data-display`.
+Present a vertical series of related items. - category: `data-display`.
 
 > `@inspera/components` is **not published yet**. If you cannot resolve that import, do
-> not swap in another UI library — build the markup from the HTML and CSS under
+> not swap in another UI library - build the markup from the HTML and CSS under
 > **Without the package** below, which is this component exactly.
 
 ```tsx
@@ -55,7 +55,7 @@ import { List } from '@inspera/components'
   size="Default"
   divided={true}
   interactive={false}
-  items={[{ primary: 'General settings', secondary: '…', leading: 'settings' }]}
+  items={[{ primary: 'General settings', secondary: '...', leading: 'settings' }]}
 />
 ```
 
@@ -65,7 +65,7 @@ import { List } from '@inspera/components'
 | `divided` | `boolean` | `true` | Show dividers between rows. |
 | `interactive` | `boolean` | `false` | Make rows clickable. |
 | `size` | `'Compact' \| 'Default'` | `'Default'` | Row density. |
-| `onItemClick` | `(item: ListItem, index: number) => void` | — | Fired with the item and its index. Set interactive as well. |
+| `onItemClick` | `(item: ListItem, index: number) => void` | - | Fired with the item and its index. Set interactive as well. |
 
 ```ts
 export interface ListItem {
@@ -76,24 +76,24 @@ export interface ListItem {
 }
 ```
 
-**Accessibility** — role `list`, keyboard operable. Use semantic list markup (ul / li); Interactive rows are buttons and keyboard focusable; Provide meaningful text for each item.
+**Accessibility** - role `list`, keyboard operable. Use semantic list markup (ul / li); Interactive rows are buttons and keyboard focusable; Provide meaningful text for each item.
 
 **Do:** Use for settings, results, and simple records; Keep primary text scannable; Use secondary text for supporting detail.
-**Don't:** Do not use for comparable tabular data — use Table; Do not make only part of a row clickable.
+**Don't:** Do not use for comparable tabular data - use Table; Do not make only part of a row clickable.
 
 **Deprecated aliases** (do not use): `List view`, `Item list`
 
-#### Without the package — exact HTML and CSS
+#### Without the package - exact HTML and CSS
 
 Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
 font weight of your own, and do not restyle it with a UI kit's defaults.
 
-- Set the four border longhands, never the `border` shorthand. A shorthand on the row wipes the bottom border that draws the divider — the exact bug this component shipped with.
+- Set the four border longhands, never the `border` shorthand. A shorthand on the row wipes the bottom border that draws the divider - the exact bug this component shipped with.
 - Interactive rows are `<button>` inside the `<li>`, so focus and Enter/Space work without a keydown handler.
 - Row padding is 12px (8px compact) vertical, 16px horizontal; primary text 14px/500, secondary 13px `--muted-foreground`.
 - The divider is on every row but the last, drawn by `li:not(:last-child)` rather than by counting in script.
-- Leading and trailing icons are 20px (18px compact) and always `aria-hidden` — the row’s text is the label.
+- Leading and trailing icons are 20px (18px compact) and always `aria-hidden` - the row's text is the label.
 
 ```css
 /* Tokens this component needs. Paste once, at `:root`. */
@@ -221,4 +221,4 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 ---
 
-Tokens: ./tokens.css · Full system: ./llms.txt
+Tokens: ./tokens.css | Full system: ./llms.txt

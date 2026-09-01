@@ -40,6 +40,12 @@ jobs:
       - name: Playground JSX matches its controls
         run: pnpm audit:snippets
 
+      # Shipped files are served as text/plain and text/markdown, which carry
+      # no charset. Anything outside ASCII gets decoded as windows-1252 and
+      # renders as mojibake, so the spec stays ASCII-only.
+      - name: Shipped files are ASCII
+        run: pnpm audit:ascii
+
       - name: Build site
         run: pnpm build
 

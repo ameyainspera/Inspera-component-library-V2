@@ -68,13 +68,13 @@ export const spacing = [
  * Corner radius. The system is deliberately restrained: small-to-medium radii
  * everywhere, and pills reserved for controls that are conceptually round.
  * `usage` says when to reach for each; which components actually use it is
- * derived from the code, not asserted here — see radius-usage.generated.ts.
+ * derived from the code, not asserted here - see radius-usage.generated.ts.
  */
 export const radius = [
-  { token: 'none', value: 0, usage: 'Flush edges — table cells, full-bleed surfaces, anything that meets another edge.' },
+  { token: 'none', value: 0, usage: 'Flush edges - table cells, full-bleed surfaces, anything that meets another edge.' },
   { token: 'xs', value: 2, usage: 'The smallest indicators, where 4px would read as a visible curve.' },
   { token: 'sm', value: 4, usage: 'Controls: buttons, tags, segments, menu items.' },
-  { token: 'md', value: 8, usage: 'Inputs, alerts and floating panels — the system default.' },
+  { token: 'md', value: 8, usage: 'Inputs, alerts and floating panels - the system default.' },
   { token: 'lg', value: 12, usage: 'Large surfaces that contain other components: cards, dialogs, drawers.' },
   { token: 'xl', value: 16, usage: 'Reserved for oversized surfaces. Nothing uses it today; prefer lg.' },
   { token: 'pill', value: 9999, usage: 'Only for shapes that are conceptually round: toggles, badges, radios, avatars.' },
@@ -90,11 +90,11 @@ export const shadows = [
 ]
 
 /**
- * Type scale — the real Figma text styles, exported from the library.
+ * Type scale - the real Figma text styles, exported from the library.
  *
  * Sizes are exact, straight from Figma (28.83 and 22.78 arrive as float32:
  * 28.829999923706055). Weights are read from the style names, which state them
- * literally — "Regular", "Medium", "Semi Bold".
+ * literally - "Regular", "Medium", "Semi Bold".
  *
  * Figma's CSS export carries font-size ONLY. Line height, letter spacing and a
  * few weights are therefore taken from the V3 spec where it covers the style,
@@ -122,8 +122,8 @@ export interface TypeToken {
   note?: string
 }
 
-const HEADING_LH = 1.12 // V3 §4.5: 112%
-const RAMP_LH = 1.4 // not in the export — see PENDING_TYPE_FIELDS
+const HEADING_LH = 1.12 // V3 section 4.5: 112%
+const RAMP_LH = 1.4 // not in the export - see PENDING_TYPE_FIELDS
 
 const ramp = (group: 'Regular' | 'Medium', weight: number): TypeToken[] =>
   [14, 18, 20, 22, 26].map((size) => ({
@@ -137,9 +137,9 @@ const ramp = (group: 'Regular' | 'Medium', weight: number): TypeToken[] =>
   }))
 
 export const typeScale: TypeToken[] = [
-  // Default — the 16px workhorses.
-  { token: 'Default/Default 16 px/Regular', name: 'default-16-regular', group: 'Default', size: 16, weight: 400, lineHeight: 20 / 16, note: 'V3 body.mdRegular — line height fixed at 20px' },
-  { token: 'Default/16 px/Medium', name: 'default-16-medium', group: 'Default', size: 16, weight: 500, lineHeight: 20 / 16, note: 'V3 body.mdMedium — line height fixed at 20px' },
+  // Default - the 16px workhorses.
+  { token: 'Default/Default 16 px/Regular', name: 'default-16-regular', group: 'Default', size: 16, weight: 400, lineHeight: 20 / 16, note: 'V3 body.mdRegular - line height fixed at 20px' },
+  { token: 'Default/16 px/Medium', name: 'default-16-medium', group: 'Default', size: 16, weight: 500, lineHeight: 20 / 16, note: 'V3 body.mdMedium - line height fixed at 20px' },
   { token: 'Default/Link 16 px', name: 'link-16', group: 'Default', size: 16, weight: 500, lineHeight: 20 / 16, decoration: 'underline', pending: ['weight', 'lineHeight'] },
 
   ...ramp('Regular', 400),
@@ -155,9 +155,9 @@ export const typeScale: TypeToken[] = [
   { token: 'Extended/Semi Bold 16 px', name: 'semibold-16', group: 'Extended', size: 16, weight: 600, lineHeight: 20 / 16, pending: ['lineHeight'] },
   { token: 'Extended/Inter Semi Bold 12 px/ALL CAPS', name: 'allcaps-12', group: 'Extended', size: 12, weight: 600, lineHeight: HEADING_LH, tracking: 1.6, transform: 'uppercase', pending: ['lineHeight', 'tracking'] },
 
-  { token: 'Paragraph/Default', name: 'paragraph-default', group: 'Paragraph', size: 16, weight: 400, lineHeight: 1.5, note: 'V3 body.paragraph — 150%' },
+  { token: 'Paragraph/Default', name: 'paragraph-default', group: 'Paragraph', size: 16, weight: 400, lineHeight: 1.5, note: 'V3 body.paragraph - 150%' },
   { token: 'Paragraph/Content', name: 'paragraph-content', group: 'Paragraph', size: 16, weight: 400, lineHeight: 1.5, pending: ['lineHeight'] },
-  { token: 'Paragraph/Captions', name: 'paragraph-captions', group: 'Paragraph', size: 12, weight: 400, lineHeight: 1.2, note: 'V3 body.caption — 120%' },
+  { token: 'Paragraph/Captions', name: 'paragraph-captions', group: 'Paragraph', size: 12, weight: 400, lineHeight: 1.2, note: 'V3 body.caption - 120%' },
   { token: 'Paragraph/Heading', name: 'paragraph-heading', group: 'Paragraph', size: 20.25, weight: 500, lineHeight: HEADING_LH, pending: ['weight', 'lineHeight'] },
 
   { token: 'Extra/Noto Sans Mono', name: 'mono-16', group: 'Extra', size: 16, weight: 400, lineHeight: 1.5, fontFamily: 'var(--font-mono)', pending: ['lineHeight'] },
@@ -177,7 +177,7 @@ export const PENDING_TYPE_FIELDS = typeScale
 
 /**
  * Sizes the components render that the scale still has no token for. The ramp
- * now covers 14/18/20/22/26, so only 13px remains — five uses, all of which
+ * now covers 14/18/20/22/26, so only 13px remains - five uses, all of which
  * should probably become 14px, but that is a Figma decision, not a guess.
  */
 export const TYPE_SCALE_GAPS = [
@@ -188,7 +188,7 @@ export const TYPE_SCALE_GAPS = [
 export const fontWeights = [300, 400, 500, 600]
 
 // ---------------------------------------------------------------------------
-// System tokens — the derived / semantic layer. These are not part of the raw
+// System tokens - the derived / semantic layer. These are not part of the raw
 // palette; they name a *role* and point at a palette value. Components should
 // prefer these over raw palette shades wherever a role exists.
 // ---------------------------------------------------------------------------
@@ -205,7 +205,7 @@ export interface SystemToken {
 // These values are rendered by the components today but were never defined as
 // tokens, so the spec told AI "never hardcode an off-palette colour" while the
 // reference components used ten of them. They are a second neutral ramp,
-// distinct from palette.gray — #C4C4C4 borders, not #BCBCBC.
+// distinct from palette.gray - #C4C4C4 borders, not #BCBCBC.
 //
 // VALUES ARE AS-SHIPPED, NOT YET CONFIRMED AGAINST FIGMA. They are named and
 // centralised so that confirming them is a one-line edit here rather than a
@@ -231,15 +231,15 @@ export const controlTokens: SystemToken[] = [
 ]
 
 // ---------------------------------------------------------------------------
-// Non-colour tokens. Without these an AI invents its own — z-index 99999,
+// Non-colour tokens. Without these an AI invents its own - z-index 99999,
 // a one-off 350ms transition, a breakpoint nobody else uses.
 // ---------------------------------------------------------------------------
 /**
  * Effect styles, exported from the Figma library.
  *
  * The five `state-*` rings are focus and validation indicators. Figma's CSS
- * export drops the spread radius — every one arrives as `0px 0px 0px`, which
- * paints nothing — so the spread here is the value the components already
+ * export drops the spread radius - every one arrives as `0px 0px 0px`, which
+ * paints nothing - so the spread here is the value the components already
  * render (3px), marked pending until the Figma panel confirms it.
  *
  * Their colours are palette colours: focus is blue-300, error red-300,
