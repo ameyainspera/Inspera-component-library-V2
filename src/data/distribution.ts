@@ -38,6 +38,8 @@ export const componentsPackage: PackageStatus = {
 export const installCommand = (p: PackageStatus): string | null =>
   p.published ? `npm i ${p.name}` : null
 
+import { artifactSizes } from './artifact-sizes.generated'
+
 /**
  * What each published artifact should be called once it lands on someone's
  * disk, and how it is meant to be used.
@@ -59,8 +61,8 @@ export interface Artifact {
   saveAs: string
   /** What it is. */
   note: string
-  /** Rough context cost, to steer paste vs upload. */
-  size?: string
+  /** How to feed it to a tool. The size itself is measured, not typed. */
+  advice?: string
 }
 
 export const artifacts: Artifact[] = [
@@ -68,25 +70,23 @@ export const artifacts: Artifact[] = [
     file: 'llms-full.txt',
     saveAs: 'inspera-design-system.md',
     note: 'The complete guide - foundations, and every component with its HTML and CSS.',
-    size: '~67k tokens | upload as a context file, too large to paste',
+    advice: 'upload as a context file, too large to paste',
   },
   {
     file: 'llms.txt',
     saveAs: 'inspera-design-system-index.md',
     note: 'Short index linking a spec per component.',
-    size: '~5k tokens | paste this into a one-off chat',
+    advice: 'paste this into a one-off chat',
   },
   {
     file: 'foundations.md',
     saveAs: 'inspera-foundations.md',
     note: 'Colour, typography, spacing, radius, depth on their own.',
-    size: '~4k tokens',
   },
   {
     file: 'guidance.md',
     saveAs: 'inspera-guidance.md',
     note: 'Composition patterns, form/table rules, the done checklist.',
-    size: '~2k tokens',
   },
   { file: 'api.json', saveAs: 'inspera-api.json', note: 'Prop API, derived from the TypeScript types.' },
   { file: 'tokens.css', saveAs: 'inspera-tokens.css', note: 'Token custom properties + icon/keyframe runtime.' },
@@ -97,3 +97,15 @@ export const artifacts: Artifact[] = [
 
 /** The one file to hand someone who asks for "the spec". */
 export const fullSpec = artifacts[0]
+
+/**
+ * "~72k tokens, upload as a context file" - the measured size plus the advice.
+ * Both pages that show a size use this, so they cannot describe the same file
+ * two different ways.
+ */
+export function artifactSize(file: string, advice?: string): string {
+  const m = artifactSizes[file]
+  if (!m) return advice ?? ''
+  const tokens = m.tokens >= 1000 ? `~${Math.round(m.tokens / 1000)}k tokens` : `~${m.tokens} tokens`
+  return advice ? `${tokens}, ${advice}` : tokens
+}

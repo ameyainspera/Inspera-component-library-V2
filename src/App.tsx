@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
 import { componentList } from './data/components'
-import { fullSpec } from './data/distribution'
+import { artifactSize, fullSpec } from './data/distribution'
 import Sidebar from './docs/Sidebar'
 import FoundationsPage from './docs/FoundationsPage'
 import ComponentPage from './docs/ComponentPage'
 import IconsPage from './docs/IconsPage'
 import IntegratePage from './docs/IntegratePage'
+import SpecPage from './docs/SpecPage'
 
 // Lightweight hash routing keeps the docs shareable (deep links to a component)
 // without pulling in a router dependency.
@@ -31,6 +32,7 @@ export default function App() {
   const foundationsMatch = hash.match(/^#\/foundations(?:\/(.+))?$/)
   const isIcons = hash === '#/icons'
   const isIntegrate = hash === '#/integrate'
+  const isSpec = hash === '#/spec'
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', background: 'var(--background)' }}>
@@ -77,22 +79,22 @@ export default function App() {
               single control cannot do both without one of them being a
               surprise. Joined into one group so they still read as a pair. */}
           <div style={{ display: 'inline-flex' }}>
-            <a
-              href={`/${fullSpec.file}`}
-              target="_blank"
-              rel="noreferrer"
+            <button
+              type="button"
+              onClick={() => navigate('#/spec')}
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: 6, height: 32, padding: '0 12px',
                 borderRadius: 'var(--radius-sm) 0 0 var(--radius-sm)',
                 border: '1px solid var(--border-strong)', borderRight: 'none',
-                background: 'var(--surface)', color: 'var(--gray-800)', textDecoration: 'none',
-                fontSize: 13, fontWeight: 500,
+                background: isSpec ? 'var(--blue-100)' : 'var(--surface)',
+                color: 'var(--gray-800)', fontFamily: 'var(--font-sans)',
+                fontSize: 13, fontWeight: 500, cursor: 'pointer',
               }}
-              title={`Open the complete AI build guide - foundations + all ${componentList.length} components`}
+              title={`The complete AI build guide - foundations + all ${componentList.length} components`}
             >
               <span className="material-symbols-outlined" style={{ fontSize: 18 }} aria-hidden>description</span>
               AI spec
-            </a>
+            </button>
             <a
               href={`/${fullSpec.file}`}
               download={fullSpec.saveAs}
@@ -103,7 +105,7 @@ export default function App() {
                 border: '1px solid var(--border-strong)',
                 background: 'var(--surface)', color: 'var(--gray-800)', textDecoration: 'none',
               }}
-              title={`Download as ${fullSpec.saveAs} - ${fullSpec.size}`}
+              title={`Download as ${fullSpec.saveAs} - ${artifactSize(fullSpec.file, fullSpec.advice)}`}
               aria-label={`Download the AI spec as ${fullSpec.saveAs}`}
             >
               <span className="material-symbols-outlined" style={{ fontSize: 18 }} aria-hidden>download</span>
@@ -146,7 +148,9 @@ export default function App() {
             alignItems: isIcons ? 'stretch' : 'center',
           }}
         >
-          {isIntegrate
+          {isSpec
+            ? <SpecPage />
+            : isIntegrate
             ? <IntegratePage />
             : isIcons
               ? <IconsPage />

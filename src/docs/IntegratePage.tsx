@@ -1,6 +1,6 @@
 import { type ReactNode, useState } from 'react'
 import { componentList } from '../data/components'
-import { componentsPackage, artifacts, type Artifact } from '../data/distribution'
+import { componentsPackage, artifacts, artifactSize, type Artifact } from '../data/distribution'
 import { Panel, SectionTitle, CodeBlock, CopyButton, SegmentedControl } from './primitives'
 
 // ---------------------------------------------------------------------------
@@ -147,7 +147,7 @@ const TOOL_SETUPS: ToolSetup[] = [
 ]
 
 
-function ArtifactLink({ file, saveAs, note, size }: Artifact) {
+function ArtifactLink({ file, saveAs, note, advice }: Artifact) {
   return (
     <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, padding: '7px 0', borderBottom: '1px solid var(--border)' }}>
       <a
@@ -160,7 +160,7 @@ function ArtifactLink({ file, saveAs, note, size }: Artifact) {
       </a>
       <span style={{ fontSize: 13, color: 'var(--muted-foreground)', flex: 1, minWidth: 0 }}>
         {note}
-        {size && <span style={{ display: 'block', fontSize: 12, color: 'var(--gray-500)' }}>{size}</span>}
+        <span style={{ display: 'block', fontSize: 12, color: 'var(--gray-500)' }}>{artifactSize(file, advice)}</span>
       </span>
       {/* Every row was view-only, so getting one of these into another tool's
           context meant Save-As and living with the served name. */}
