@@ -1,79 +1,76 @@
-import { type CSSProperties, useEffect, useId, useState } from 'react'
+import { type CSSProperties } from 'react'
+import { FieldMessage, labelStyle, useFieldA11y } from './FormField'
+import { cx, type ForceState, type NativeAttrs } from './types'
+import { useControllableState } from './useControllableState'
 
-export type TextareaState =
-  | 'Default' | 'Hover' | 'Focused' | 'Filled' | 'Error' | 'Disabled' | 'ReadOnly'
 export type TextareaSize = 'Small' | 'Medium'
 
 export interface TextareaProps {
-  /** Field label. */
-  label?: string
+  /** Field label. Always required: it is the accessible name even when hidden. */
+  label: string
   /** Hint shown when empty. Not a substitute for the label. */
   placeholder?: string
   /** Current value. Controlled - pair with onChange. */
   value?: string
+  /** Starting value when uncontrolled. */
+  defaultValue?: string
+  /** Fired with the new value on every keystroke. */
+  onChange?: (value: string) => void
   /** Visible text rows. */
   rows?: number
   /** Vertical padding density. */
   size?: TextareaSize
-  /**
-   * Freezes a visual state so documentation can show it without a pointer.
-   * `Hover`, `Focused` and `Filled` are presentation-only - leave them unset in
-   * application code, where CSS drives them from the real pointer and keyboard.
-   * `Error`, `Disabled` and `ReadOnly` are real application state and belong in
-   * your code.
-   */
-  state?: TextareaState
-  /** Show the field label. */
+  /** Render the visible label. When false, the label becomes `aria-label`. */
   showLabel?: boolean
-  /** Guidance shown below the field. Replaced by errorText when invalid. */
+  /** Guidance shown below the field. Replaced by errorText when `error` is set. */
   helpText?: string
-  /** Validation message. Linked to the control via aria-describedby. */
+  /** Validation message, shown while `error` is true. */
   errorText?: string
+  /** Marks the field invalid: red border, `aria-invalid`, errorText shown. */
+  error?: boolean
+  /** Blocks editing and dims the field. */
+  disabled?: boolean
+  /** Shows the value without allowing edits. */
+  readOnly?: boolean
   /** Maximum character length. */
   maxLength?: number
-  /** Show character counter. */
+  /** Show a character counter. */
   showCount?: boolean
-  /** Fired with the new value on every keystroke. */
-  onChange?: (value: string) => void
+  /** @internal Freezes a hover or focus look for the docs gallery. */
+  forceState?: ForceState
 }
 
 export default function Textarea({
-  label = 'Description',
-  placeholder = 'Placeholder text',
+  label,
+  placeholder,
   value,
+  defaultValue = '',
+  onChange,
   rows = 4,
   size = 'Medium',
-  state = 'Default',
   showLabel = true,
   helpText,
   errorText,
+  error = false,
+  disabled = false,
+  readOnly = false,
   maxLength,
   showCount = false,
-  onChange,
-}: TextareaProps) {
-  const id = useId()
-  const [internal, setInternal] = useState(state === 'Filled' ? 'The quick brown fox jumps over the lazy dog.' : '')
-  const current = value ?? internal
+  forceState,
+  className,
+  style,
+  id,
+  required,
+  ...rest
+}: TextareaProps & NativeAttrs<'textarea', TextareaProps>) {
+  const [current, setCurrent] = useControllableState(value, defaultValue, onChange)
+  const field = useFieldA11y({ id, label, showLabel, helpText, errorText, error, required })
+  const countId = `${field.id}-count`
 
-  // `state="Filled"` has to be an effect, not just a useState initializer: the
-  // docs playground swaps the prop on a live instance rather than remounting
-  // it, and an initializer only ever runs once - so the control showed an
-  // empty field. Only seeds the sample text; typing still wins afterwards.
-  useEffect(() => {
-    if (state === 'Filled') setInternal('The quick brown fox jumps over the lazy dog.')
-  }, [state])
-
-  const disabled = state === 'Disabled'
-  const readOnly = state === 'ReadOnly'
-  const isError = state === 'Error'
-
-
-  const padY = size === 'Small' ? 6 : 8
-
-  const field: CSSProperties = {
+  const box: CSSProperties = {
     display: 'flex',
     flexDirection: 'column',
-    padding: `${padY}px 12px`,
+    padding: `${size === 'Small' ? 6 : 8}px 12px`,
     borderRadius: 'var(--radius-md)',
     borderWidth: 'var(--border-width-default)',
     borderStyle: 'solid',
@@ -81,35 +78,39 @@ export default function Textarea({
     opacity: disabled ? 0.6 : 1,
   }
 
+  const describedBy = [field.describedBy, showCount ? countId : undefined].filter(Boolean).join(' ') || undefined
+
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 6, width: '100%', fontFamily: 'var(--font-sans)' }}>
-      {showLabel && (
-        <label htmlFor={id} style={{ fontSize: 16, fontWeight: 500, color: 'var(--text-primary)' }}>
+    <div
+      className={cx('inspera', className)}
+      style={{ display: 'flex', flexDirection: 'column', gap: 6, width: '100%', fontFamily: 'var(--font-sans)', ...style }}
+    >
+      {field.ownLabel && (
+        <label id={field.labelId} htmlFor={field.id} style={labelStyle}>
           {label}
         </label>
       )}
       <div
         className="inspera-interactive inspera-field"
-        data-force-state={state && state !== 'Default' ? state : undefined}
-        data-invalid={isError || undefined}
+        data-force-state={forceState}
+        data-invalid={field.invalid || undefined}
         data-disabled={disabled || undefined}
         data-readonly={readOnly || undefined}
-        style={field}
+        style={box}
       >
         <textarea
-          id={id}
+          id={field.id}
           value={current}
           rows={rows}
           placeholder={placeholder}
           disabled={disabled}
           readOnly={readOnly}
           maxLength={maxLength}
-          aria-invalid={isError || undefined}
-          aria-describedby={errorText ? `${id}-err` : helpText ? `${id}-help` : undefined}
-          onChange={(e) => {
-            setInternal(e.target.value)
-            onChange?.(e.target.value)
-          }}
+          required={field.required || undefined}
+          aria-label={field.ariaLabel}
+          aria-invalid={field.invalid || undefined}
+          aria-describedby={describedBy}
+          onChange={(e) => setCurrent(e.target.value)}
           style={{
             border: 'none',
             outline: 'none',
@@ -121,19 +122,15 @@ export default function Textarea({
             minWidth: 0,
             width: '100%',
           }}
+          {...rest}
         />
         {showCount && (
-          <span style={{ alignSelf: 'flex-end', fontSize: 12, color: 'var(--muted-foreground)', marginTop: 4 }}>
+          <span id={countId} style={{ alignSelf: 'flex-end', fontSize: 12, color: 'var(--muted-foreground)', marginTop: 4 }}>
             {current.length}{maxLength ? `/${maxLength}` : ''}
           </span>
         )}
       </div>
-      {isError && errorText && (
-        <span id={`${id}-err`} style={{ fontSize: 12, color: 'var(--error)' }}>{errorText}</span>
-      )}
-      {!isError && helpText && (
-        <span id={`${id}-help`} style={{ fontSize: 12, color: 'var(--muted-foreground)' }}>{helpText}</span>
-      )}
+      <FieldMessage field={field} />
     </div>
   )
 }

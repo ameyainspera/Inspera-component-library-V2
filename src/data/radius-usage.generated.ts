@@ -15,16 +15,15 @@ export const radiusUsage: Record<string, string[]> = {
     "CommandPalette",
     "DatePicker",
     "DateRangePicker",
-    "Dialog",
     "List",
     "Menu",
     "NumberInput",
-    "Popover",
     "SegmentedControl",
     "Select",
     "Skeleton",
     "Tabs",
-    "Tooltip"
+    "Tooltip",
+    "calendar"
   ],
   "md": [
     "Accordion",
@@ -59,15 +58,16 @@ export const radiusUsage: Record<string, string[]> = {
   "xl": [],
   "pill": [
     "Avatar",
+    "AvatarGroup",
     "Badge",
     "Dialog",
+    "EmptyState",
     "Progress",
     "RadioButton",
     "Skeleton",
     "Slider",
     "Stepper",
     "Tag",
-    "Toggle",
-    "Tooltip"
+    "Toggle"
   ]
 }

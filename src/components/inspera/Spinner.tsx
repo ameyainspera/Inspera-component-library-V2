@@ -1,4 +1,4 @@
-import { type CSSProperties } from 'react'
+import { cx, srOnly, type NativeAttrs } from './types'
 
 export type SpinnerSize = 'Small' | 'Medium' | 'Large'
 export type SpinnerIntent = 'Primary' | 'Neutral' | 'Inverse'
@@ -8,7 +8,7 @@ export interface SpinnerProps {
   size?: SpinnerSize
   /** Arc color. */
   intent?: SpinnerIntent
-  /** Accessible label. */
+  /** What is loading, announced to screen readers. */
   label?: string
 }
 
@@ -19,20 +19,14 @@ const intentMap: Record<SpinnerIntent, string> = {
   Inverse: 'var(--white)',
 }
 
-const srOnly: CSSProperties = {
-  position: 'absolute',
-  width: 1,
-  height: 1,
-  padding: 0,
-  margin: -1,
-  overflow: 'hidden',
-  clip: 'rect(0 0 0 0)',
-  whiteSpace: 'nowrap',
-  border: 0,
-  fontFamily: 'var(--font-sans)',
-}
-
-export default function Spinner({ size = 'Medium', intent = 'Primary', label = 'Loading' }: SpinnerProps) {
+export default function Spinner({
+  size = 'Medium',
+  intent = 'Primary',
+  label = 'Loading',
+  className,
+  style,
+  ...rest
+}: SpinnerProps & NativeAttrs<'span', SpinnerProps>) {
   const d = sizeMap[size]
   const stroke = size === 'Small' ? 2 : size === 'Medium' ? 3 : 4
   const r = (d - stroke) / 2
@@ -40,7 +34,9 @@ export default function Spinner({ size = 'Medium', intent = 'Primary', label = '
   const color = intentMap[intent]
 
   return (
-    <span role="status" aria-label={label} style={{ display: 'inline-flex', width: d, height: d }}>
+    // Named once, by the hidden text. It also carried aria-label, so some
+    // screen readers read the label twice.
+    <span role="status" className={cx('inspera', className)} style={{ position: 'relative', display: 'inline-flex', width: d, height: d, fontFamily: 'var(--font-sans)', ...style }} {...rest}>
       <svg
         width={d}
         height={d}

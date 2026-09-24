@@ -53,31 +53,35 @@ import { NumberInput } from '@inspera/components'
 
 <NumberInput
   label="Duration"
-  value={value}
-  onChange={setValue}
+  defaultValue={45}
   min={0}
   max={240}
   step={5}
-  size="Medium"
   suffix="min"
+  helpText="Between 0 and 240."
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | `'Amount'` | Field label. |
-| `placeholder` | `string` | `'0'` | Hint shown when empty. |
+| `label` **(required)** | `string` | - | Field label. Always required: it is the accessible name even when hidden. |
+| `placeholder` | `string` | - | Hint shown when empty. |
 | `value` | `number` | - | Current value. Controlled - pair with onChange. |
+| `defaultValue` | `number` | - | Starting value when uncontrolled. |
+| `onChange` | `(value: number) => void` | - | Fired with each committed value - valid, and within min/max. |
 | `min` | `number` | - | Minimum allowed value. |
 | `max` | `number` | - | Maximum allowed value. |
 | `step` | `number` | `1` | Increment applied by the steppers and arrow keys. |
-| `state` | `'Default' \| 'Focused' \| 'Disabled' \| 'Error' \| 'ReadOnly'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Focused` is presentation-only. `Error`, `Disabled` and `ReadOnly` are real application state. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Control height. |
-| `showLabel` | `boolean` | `true` | Render the field label. |
+| `showLabel` | `boolean` | `true` | Render the visible label. When false, the label becomes `aria-label`. |
 | `suffix` | `string` | - | Unit suffix shown inside the field, e.g. "min" or "%". |
-| `helpText` | `string` | - | Helper text. |
-| `errorText` | `string` | - | Error message, shown when state is Error. |
-| `onChange` | `(value: number) => void` | - | Fired with the new numeric value. |
+| `helpText` | `string` | - | Guidance shown below the field. Replaced by errorText when `error` is set. |
+| `errorText` | `string` | - | Validation message, shown while `error` is true. |
+| `error` | `boolean` | `false` | Marks the field invalid: red border, `aria-invalid`, errorText shown. |
+| `disabled` | `boolean` | `false` | Blocks editing and dims the field. |
+| `readOnly` | `boolean` | `false` | Shows the value without allowing edits. |
+
+Also accepts any native `<input>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<input>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `spinbutton`, keyboard operable. Input carries aria-invalid in the error state; Up / Down arrows increment and decrement by step; Stepper buttons have aria-labels and are disabled at min / max.
 
@@ -129,18 +133,23 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 /* Tokens this component needs. Paste once, at `:root`. */
 :root {
   --primary:                #004080;
+  --error:                  #D32F2F;
   --white:                  #ffffff;
+  --gray-100:               #F7F7F7;
   --gray-600:               #7A7A7A;
   --blue-300:               #B3D9FF;
+  --red-300:                #F9B8B8;
   --action-active:          rgba(0, 0, 0, 0.56);
   --action-disabled:        rgba(0, 0, 0, 0.38);
   --text-primary:           rgba(0, 0, 0, 0.87);
   --border-control:         #C4C4C4;
   --border-control-strong:  #8C8C8C;
+  --surface-disabled:       #F5F5F5;
   --muted-foreground:       var(--gray-600);
   --radius-sm:              4px;
   --radius-md:              8px;
   --effect-state-focus:     0px 0px 0px 3px var(--blue-300);
+  --effect-state-error:     0px 0px 0px 3px var(--red-300);
   --border-width-default:   1px;
   --font-sans:              'Inter', system-ui, -apple-system, sans-serif;
 }
@@ -217,6 +226,23 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 }
 .inspera-number__step:disabled { color: var(--action-disabled); cursor: not-allowed; }
 .inspera-number__step .material-symbols-outlined { font-size: 20px; }
+
+.inspera-number__help  { font-size: 12px; color: var(--muted-foreground); }
+.inspera-number__error { font-size: 12px; color: var(--error); }
+
+/* Invalid outranks hover and focus - the error has to stay legible. */
+.inspera-number__field[data-invalid='true'],
+.inspera-number__field[data-invalid='true']:hover,
+.inspera-number__field[data-invalid='true']:focus-within {
+  border-color: var(--error);
+  box-shadow: var(--effect-state-error);
+}
+.inspera-number__field[data-disabled='true'] {
+  background: var(--surface-disabled);
+  opacity: 0.6;
+}
+.inspera-number__field[data-readonly='true'] { background: var(--gray-100); }
+.inspera-number__field[data-readonly='true']:hover { border-color: var(--border-control); }
 ```
 
 ```html

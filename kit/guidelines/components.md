@@ -18,21 +18,22 @@ import { Button } from '@inspera/kit'
 
 <Button
   label="Button"
-  intent="Primary"
-  size="Medium"
-  content="Text"
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | `'Button'` | The button text. Start with a verb - "Save", not "OK". |
+| `label` **(required)** | `string` | - | The button text. Start with a verb - "Save", not "OK". With `iconOnly` it is not shown but becomes the accessible name, so it is still required. |
 | `intent` | `'Primary' \| 'Secondary' \| 'Outline' \| 'Text' \| 'Success' \| 'Warning' \| 'Destructive'` | `'Primary'` | Visual role / semantic weight. |
 | `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Height 32 / 40 / 48. |
-| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Pressed' \| 'Disabled'` | - | Freezes a visual state so documentation can show it without a pointer. Leave unset in application code - hover, focus and active are handled in CSS and work on their own. |
-| `content` | `'Text' \| 'Icon + Text' \| 'Text + Icon' \| 'Text + Disclosure'` | `'Text'` | Label / icon composition. |
-| `icon` | `string` | `'add'` | Material Symbols name. Only rendered by the icon-bearing content variants. |
-| `onClick` | `() => void` | - | Fired on click and on Enter or Space. |
+| `leadingIcon` | `string` | - | Material Symbols name shown before the label. |
+| `trailingIcon` | `string` | - | Material Symbols name shown after the label. Use `expand_more` for a menu trigger. |
+| `iconOnly` | `boolean` | `false` | Show only the icon (`leadingIcon`, else `trailingIcon`); `label` becomes the accessible name. |
+| `disabled` | `boolean` | `false` | Blocks interaction and dims the button. |
+| `type` | `'button' \| 'submit' \| 'reset'` | `'button'` | Native button type. Defaults to `button`, so a Button never submits a form by accident. |
+| `onClick` | `MouseEventHandler<HTMLButtonElement>` | - | Fired on click and on Enter or Space. |
+
+Also accepts any native `<button>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<button>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `button`, keyboard operable. Icon-only buttons must have an accessible label.
 
@@ -143,6 +144,11 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 .inspera-btn--small { height: 32px; padding: 0 12px; gap: 6px; }
 .inspera-btn--large { height: 48px; padding: 0 24px; gap: 10px; }
 
+/* Icon only: a square the height of the button. It still needs aria-label. */
+.inspera-btn--icon-only { width: 40px; min-width: 0; padding: 0; }
+.inspera-btn--small.inspera-btn--icon-only { width: 32px; }
+.inspera-btn--large.inspera-btn--icon-only { width: 48px; }
+
 /* Solid intents differ only in fill; hover and pressed derive from it. */
 .inspera-btn--primary     { --btn-bg: var(--primary); }
 .inspera-btn--success     { --btn-bg: var(--success); }
@@ -219,23 +225,28 @@ import { TextInput } from '@inspera/kit'
 <TextInput
   label="Email address"
   placeholder="jane@inspera.com"
-  size="Medium"
+  helpText="We'll never share your email."
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | `'Label'` | Show the field label. |
-| `placeholder` | `string` | `'Placeholder text'` | Hint shown when empty. Not a substitute for the label. |
+| `label` **(required)** | `string` | - | Field label. Always required: it is the accessible name even when hidden. |
+| `placeholder` | `string` | - | Hint shown when empty. Not a substitute for the label. |
 | `value` | `string` | - | Current value. Controlled - pair with onChange. |
-| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Disabled' \| 'Error' \| 'Filled' \| 'ReadOnly'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Filled` are presentation-only - leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Error`, `Disabled` and `ReadOnly` are real application state and belong in your code. |
-| `size` | `'Small' \| 'Medium'` | `'Medium'` | Control height. |
-| `leadingIcon` | `string` | - | Show a leading icon. |
-| `trailingIcon` | `string` | - | Show a trailing icon. |
-| `showLabel` | `boolean` | `true` | Render the visible label. Hiding it still requires an accessible name. |
-| `helpText` | `string` | - | Show helper text. |
-| `errorText` | `string` | - | Show error message. |
+| `defaultValue` | `string` | `''` | Starting value when uncontrolled. |
 | `onChange` | `(value: string) => void` | - | Fired with the new value on every keystroke. |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Control height. |
+| `leadingIcon` | `string` | - | Material Symbols name shown before the text. |
+| `trailingIcon` | `string` | - | Material Symbols name shown after the text. Decorative only. |
+| `showLabel` | `boolean` | `true` | Render the visible label. When false, the label becomes `aria-label`. |
+| `helpText` | `string` | - | Guidance shown below the field. Replaced by errorText when `error` is set. |
+| `errorText` | `string` | - | Validation message, shown while `error` is true. |
+| `error` | `boolean` | `false` | Marks the field invalid: red border, `aria-invalid`, errorText shown. |
+| `disabled` | `boolean` | `false` | Blocks editing and dims the field. |
+| `readOnly` | `boolean` | `false` | Shows the value without allowing edits. |
+
+Also accepts any native `<input>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<input>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `textbox`, keyboard operable. Always associate label with input using htmlFor/id; Error text must be linked via aria-describedby; Required fields must use aria-required.
 
@@ -431,21 +442,22 @@ import { Checkbox } from '@inspera/kit'
 
 <Checkbox
   label="Send me product updates"
-  checked={checked}
-  onChange={setChecked}
-  size="Medium"
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | `'Checkbox label'` | Text beside the box. Always provide one. |
-| `checked` | `boolean` | - | Checked state. |
-| `indeterminate` | `boolean` | `false` | Partially-selected state, for a parent whose children are mixed. Wins over `checked` visually and announces as `aria-checked="mixed"`. |
-| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Pressed' \| 'Disabled' \| 'Error'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Pressed` are presentation-only - leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Error` and `Disabled` are real application state and belong in your code. |
-| `withLabel` | `boolean` | `true` | Render the label. |
-| `size` | `'Small' \| 'Medium'` | `'Medium'` | Indicator size. |
+| `label` **(required)** | `string` | - | Text beside the box. Required: it is the accessible name even when hidden. |
+| `checked` | `boolean` | - | Checked state. Controlled - pair with onChange. |
+| `defaultChecked` | `boolean` | `false` | Starting checked state when uncontrolled. |
 | `onChange` | `(checked: boolean) => void` | - | Fired with the new checked state. |
+| `indeterminate` | `boolean` | `false` | Partially-selected state, for a parent whose children are mixed. Wins over `checked` visually and announces as mixed. |
+| `withLabel` | `boolean` | `true` | Render the label text. When false, the label becomes `aria-label`. |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Indicator size. |
+| `disabled` | `boolean` | `false` | Blocks interaction and dims the control. |
+| `error` | `boolean` | `false` | Marks the control invalid: red border and `aria-invalid`. |
+
+Also accepts any native `<input>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<input>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `checkbox`, keyboard operable. Use aria-checked to reflect state; Group related checkboxes with fieldset and legend.
 
@@ -490,7 +502,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 - Keep the native `<input type="checkbox">` in the DOM, visually hidden with `position: absolute; opacity: 0; width: 0; height: 0`. `display: none` removes it from the tab order and from form submission.
 - Draw the focus ring on the box via `:focus-visible + .box`. A ring on a 0x0 input is invisible - this is the detail custom checkboxes miss most often.
 - The box is 20px (16px small) with a 2px border and `--radius-xs`. Unchecked is `--border-control-strong`; checked fills with `--primary`.
-- Indeterminate is a DOM property (`el.indeterminate = true`), not an HTML attribute, and it announces as `aria-checked="mixed"`. Its glyph is `remove`, not a tick. Static markup that cannot run script uses the `inspera-checkbox--mixed` class instead.
+- Indeterminate is a DOM property (`el.indeterminate = true`), not an HTML attribute; a native checkbox then announces as mixed by itself, so do not add `aria-checked`. Its glyph is `remove`, not a tick. Static markup that cannot run script uses the `inspera-checkbox--mixed` class instead.
 - The whole row is the `<label>`, so the text is part of the hit target.
 
 ```css
@@ -601,9 +613,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 </label>
 
 <!-- Indeterminate is a DOM property, not an attribute. Set it in script:
-     document.getElementById('all').indeterminate = true -->
-<label class="inspera-checkbox" for="all">
-  <input class="inspera-checkbox__input" id="all" type="checkbox" aria-checked="mixed" />
+     document.getElementById('all').indeterminate = true
+     A native checkbox then announces "mixed" on its own - no aria-checked. -->
+<label class="inspera-checkbox inspera-checkbox--mixed" for="all">
+  <input class="inspera-checkbox__input" id="all" type="checkbox" />
   <span class="inspera-checkbox__box" aria-hidden="true">
     <span class="material-symbols-outlined">remove</span>
   </span>
@@ -626,19 +639,21 @@ import { RadioButton } from '@inspera/kit'
 <RadioButton
   label="Standard delivery"
   name="delivery"
-  selected={value === 'standard'}
-  onChange={() => setValue('standard')}
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | `'Radio option'` | Text beside the control. Always provide one. |
-| `selected` | `boolean` | - | Selected state. |
-| `name` | `string` | - | Shared form name. Every radio in a group must use the same value. Left unset, each radio gets its own generated name and stands alone - this used to default to the literal `"radio"`, which silently put every unrelated RadioButton on a page into one mutually exclusive group. |
-| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Pressed' \| 'Disabled' \| 'Error'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Pressed` are presentation-only - leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Error` and `Disabled` are real application state and belong in your code. |
-| `withLabel` | `boolean` | `true` | Render the label. |
+| `label` **(required)** | `string` | - | Text beside the control. Required: it is the accessible name even when hidden. |
+| `selected` | `boolean` | - | Selected state. Controlled - pair with onChange. |
+| `defaultSelected` | `boolean` | `false` | Starting selected state when uncontrolled. |
 | `onChange` | `(selected: boolean) => void` | - | Fired when this option becomes selected. |
+| `name` | `string` | - | Shared form name. Every radio in a group must use the same value. Left unset, each radio gets its own generated name and stands alone. |
+| `withLabel` | `boolean` | `true` | Render the label text. When false, the label becomes `aria-label`. |
+| `disabled` | `boolean` | `false` | Blocks interaction and dims the control. |
+| `error` | `boolean` | `false` | Marks the control invalid: red ring and `aria-invalid`. |
+
+Also accepts any native `<input>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<input>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `radio`, keyboard operable. Use role="radiogroup" for the group container; Use aria-checked to indicate selected state; Arrow keys navigate between options in the group.
 
@@ -789,23 +804,35 @@ import { Select } from '@inspera/kit'
 
 <Select
   label="Country"
-  widthMode="Fixed"
-  search={false}
-  options={['Norway', 'Sweden', 'Denmark']}
+  options={['Norway', 'Sweden', 'Denmark', 'Finland', 'Iceland']}
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | `'Country'` | Render the label. |
+| `label` **(required)** | `string` | - | Field label. Always required: it is the accessible name even when hidden. |
+| `options` **(required)** | `(string \| SelectOption)[]` | - | The choices, in display order. Plain strings when value and label match. |
 | `placeholder` | `string` | `'Select an option'` | Shown when nothing is selected. Not a substitute for the label. |
-| `options` | `string[]` | `defaultOptions` | The selectable values, in the order they should appear. |
 | `value` | `string` | - | Selected value. Controlled - pair with onChange. |
-| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Disabled' \| 'Error' \| 'Open'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Open` are presentation-only - leave them unset in application code, where CSS and the component's own state drive them. `Error` and `Disabled` are real application state and belong in your code. |
-| `widthMode` | `'Fixed' \| 'Content Adaptable'` | `'Fixed'` | Trigger sizing. |
-| `showLabel` | `boolean` | `true` | Render the visible label. Hiding it still requires an accessible name. |
-| `search` | `boolean` | `false` | Filterable option list. |
+| `defaultValue` | `string` | - | Starting value when uncontrolled. |
 | `onChange` | `(value: string) => void` | - | Fired with the selected value. |
+| `widthMode` | `'Fixed' \| 'Hug'` | `'Fixed'` | `Fixed` is 220px wide; `Hug` fits the selected text. |
+| `showLabel` | `boolean` | `true` | Render the visible label. When false, the label becomes `aria-label`. |
+| `search` | `boolean` | `false` | Adds a filter box at the top of the list. |
+| `helpText` | `string` | - | Guidance shown below the field. Replaced by errorText when `error` is set. |
+| `errorText` | `string` | - | Validation message, shown while `error` is true. |
+| `error` | `boolean` | `false` | Marks the field invalid: red border, `aria-invalid`, errorText shown. |
+| `disabled` | `boolean` | `false` | Blocks interaction and dims the field. |
+
+Also accepts any native `<div>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<div>`. `className` and `style` go on the outermost element.
+
+```ts
+export interface SelectOption {
+  value: string
+  /** Shown text. Defaults to `value`. */
+  label?: string
+}
+```
 
 **Accessibility** - role `combobox`, keyboard operable. Use aria-expanded to indicate open state; Use aria-activedescendant for highlighted option; Support arrow key navigation through options.
 
@@ -858,20 +885,24 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 /* Tokens this component needs. Paste once, at `:root`. */
 :root {
   --primary:                #004080;
+  --error:                  #D32F2F;
   --white:                  #ffffff;
   --gray-300:               #D9D9D9;
   --gray-600:               #7A7A7A;
   --blue-100:               #F0F7FF;
   --blue-300:               #B3D9FF;
+  --red-300:                #F9B8B8;
   --text-primary:           rgba(0, 0, 0, 0.87);
   --border-control:         #C4C4C4;
   --border-control-strong:  #8C8C8C;
+  --surface-disabled:       #F5F5F5;
   --border-strong:          var(--gray-300);
   --muted-foreground:       var(--gray-600);
   --radius-sm:              4px;
   --radius-md:              8px;
   --shadow-200:             0px 8px 8px rgba(39, 39, 39, 0.08), 0px 4px 6px rgba(39, 39, 39, 0.12);
   --effect-state-focus:     0px 0px 0px 3px var(--blue-300);
+  --effect-state-error:     0px 0px 0px 3px var(--red-300);
   --border-width-default:   1px;
   --duration-fast:          100ms;
   --easing-standard:        cubic-bezier(0.2, 0, 0, 1);
@@ -894,6 +925,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 .inspera-select__label {
   font-size: 16px;
   font-weight: 500;
+  color: var(--text-primary);
 }
 
 .inspera-select__anchor { position: relative; }
@@ -939,6 +971,22 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 }
 .inspera-select__trigger[aria-expanded='true'] .material-symbols-outlined { transform: rotate(180deg); }
 
+/* Invalid outranks hover and focus - the error has to stay legible. */
+.inspera-select__trigger[aria-invalid='true'],
+.inspera-select__trigger[aria-invalid='true']:hover {
+  border-color: var(--error);
+  box-shadow: var(--effect-state-error);
+}
+/* A div cannot be :disabled, so the state is read from aria-disabled. */
+.inspera-select__trigger[aria-disabled='true'] {
+  background: var(--surface-disabled);
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.inspera-select__trigger[aria-disabled='true']:hover { border-color: var(--border-control); }
+
+.inspera-select__error { font-size: 12px; color: var(--error); }
+
 /* The list is anchored to the trigger, not appended to the body. */
 .inspera-select__list {
   position: absolute;
@@ -982,10 +1030,11 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 ```html
 <div class="inspera-select">
-  <label class="inspera-select__label" for="country">Country</label>
+  <!-- A <label for> cannot name a div, so the trigger points at the label's id. -->
+  <span class="inspera-select__label" id="country-label">Country</span>
   <div class="inspera-select__anchor">
     <div class="inspera-select__trigger" id="country" role="combobox" tabindex="0"
-         aria-expanded="false" aria-haspopup="listbox" aria-controls="country-list">
+         aria-labelledby="country-label" aria-expanded="false" aria-haspopup="listbox">
       <span>Select an option</span>
       <span class="material-symbols-outlined" aria-hidden="true">expand_more</span>
     </div>
@@ -1012,20 +1061,20 @@ import { Toggle } from '@inspera/kit'
 
 <Toggle
   label="Enable notifications"
-  checked={enabled}
-  onChange={setEnabled}
-  size="Medium"
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | `'Toggle setting'` | Text beside the switch describing the setting. |
-| `checked` | `boolean` | - | On / off state. |
-| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Disabled'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Hover` and `Focused` are presentation-only - leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Disabled` is real application state and belongs in your code. |
-| `size` | `'Small' \| 'Medium'` | `'Medium'` | Track / thumb size. |
-| `withLabel` | `boolean` | `true` | Render the label. |
+| `label` **(required)** | `string` | - | Text describing the setting. Required: it is the accessible name even when hidden. |
+| `checked` | `boolean` | - | On / off state. Controlled - pair with onChange. |
+| `defaultChecked` | `boolean` | `false` | Starting state when uncontrolled. |
 | `onChange` | `(checked: boolean) => void` | - | Fired with the new on/off state. |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Track / thumb size. |
+| `withLabel` | `boolean` | `true` | Render the label text. When false, the label becomes `aria-label`. |
+| `disabled` | `boolean` | `false` | Blocks interaction and dims the control. |
+
+Also accepts any native `<input>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<input>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `switch`, keyboard operable. Use role="switch" for the toggle; Use aria-checked to reflect on/off state; Space key toggles the switch.
 
@@ -1175,27 +1224,30 @@ import { Textarea } from '@inspera/kit'
 <Textarea
   label="Feedback"
   placeholder="Share your thoughts..."
-  size="Medium"
-  showCount={false}
-  maxLength={280}
+  rows={3}
   helpText="Keep it constructive."
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | `'Description'` | Field label. |
-| `placeholder` | `string` | `'Placeholder text'` | Hint shown when empty. Not a substitute for the label. |
+| `label` **(required)** | `string` | - | Field label. Always required: it is the accessible name even when hidden. |
+| `placeholder` | `string` | - | Hint shown when empty. Not a substitute for the label. |
 | `value` | `string` | - | Current value. Controlled - pair with onChange. |
+| `defaultValue` | `string` | `''` | Starting value when uncontrolled. |
+| `onChange` | `(value: string) => void` | - | Fired with the new value on every keystroke. |
 | `rows` | `number` | `4` | Visible text rows. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Vertical padding density. |
-| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Filled' \| 'Error' \| 'Disabled' \| 'ReadOnly'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Filled` are presentation-only - leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Error`, `Disabled` and `ReadOnly` are real application state and belong in your code. |
-| `showLabel` | `boolean` | `true` | Show the field label. |
-| `helpText` | `string` | - | Guidance shown below the field. Replaced by errorText when invalid. |
-| `errorText` | `string` | - | Validation message. Linked to the control via aria-describedby. |
+| `showLabel` | `boolean` | `true` | Render the visible label. When false, the label becomes `aria-label`. |
+| `helpText` | `string` | - | Guidance shown below the field. Replaced by errorText when `error` is set. |
+| `errorText` | `string` | - | Validation message, shown while `error` is true. |
+| `error` | `boolean` | `false` | Marks the field invalid: red border, `aria-invalid`, errorText shown. |
+| `disabled` | `boolean` | `false` | Blocks editing and dims the field. |
+| `readOnly` | `boolean` | `false` | Shows the value without allowing edits. |
 | `maxLength` | `number` | - | Maximum character length. |
-| `showCount` | `boolean` | `false` | Show character counter. |
-| `onChange` | `(value: string) => void` | - | Fired with the new value on every keystroke. |
+| `showCount` | `boolean` | `false` | Show a character counter. |
+
+Also accepts any native `<textarea>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<textarea>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `textbox`, keyboard operable. Always associate label with textarea using htmlFor/id; Error text must be linked via aria-describedby; aria-invalid reflects the error state.
 
@@ -1248,6 +1300,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   --primary:                #004080;
   --error:                  #D32F2F;
   --white:                  #ffffff;
+  --gray-100:               #F7F7F7;
   --gray-600:               #7A7A7A;
   --blue-300:               #B3D9FF;
   --red-300:                #F9B8B8;
@@ -1335,6 +1388,9 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   background: var(--surface-disabled);
   opacity: 0.6;
 }
+
+.inspera-textarea__field[data-readonly='true'] { background: var(--gray-100); }
+.inspera-textarea__field[data-readonly='true']:hover { border-color: var(--border-control); }
 ```
 
 ```html
@@ -1364,22 +1420,22 @@ import { FormField } from '@inspera/kit'
 
 <FormField
   label="Email address"
-  htmlFor="email"
-  required={false}
   helpText="We'll never share your email."
 >
-  <TextInput id="email" showLabel={false} />
+  <TextInput label="Email address" placeholder="jane@inspera.com" />
 </FormField>
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | - | Field label text. |
-| `htmlFor` | `string` | - | id of the wrapped control for label association. |
-| `required` | `boolean` | `false` | Show a required asterisk. |
+| `label` **(required)** | `string` | - | Field label text. |
+| `htmlFor` | `string` | - | Only needed to wrap a control that is not from this library. Inspera controls pick up the field's id, description and error state on their own. |
+| `required` | `boolean` | `false` | Show a required asterisk and mark the control required. |
 | `helpText` | `string` | - | Helper text shown below the control. |
-| `errorText` | `string` | - | Error message; replaces help text when present. |
+| `errorText` | `string` | - | Error message; replaces help text and marks the control invalid. |
 | `children` **(required)** | `ReactNode` | - | The control this field wraps. Exactly one. |
+
+Also accepts any native `<div>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<div>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `group`, keyboard operable. Associate the label with the control via htmlFor/id; Link error and help text with aria-describedby on the control; Required fields should set aria-required on the control.
 
@@ -1592,25 +1648,25 @@ import { Slider } from '@inspera/kit'
 
 <Slider
   label="Volume"
-  min={0}
-  max={100}
-  value={volume}
-  onChange={setVolume}
-  showValue={true}
+  defaultValue={40}
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | `'Value'` | Field label describing what is being adjusted. |
+| `label` **(required)** | `string` | - | What is being adjusted. Required: it is the accessible name even when hidden. |
 | `min` | `number` | `0` | Minimum value. |
 | `max` | `number` | `100` | Maximum value. |
-| `value` | `number` | - | Current value. Controlled - pair with onChange. |
 | `step` | `number` | `1` | Increment granularity. |
-| `state` | `'Default' \| 'Focused' \| 'Disabled'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Focused` is presentation-only - leave it unset in application code, where CSS drives it from the real pointer and keyboard. `Disabled` is real application state and belongs in your code. |
-| `showValue` | `boolean` | `true` | Show the current value. |
-| `showLabel` | `boolean` | `true` | Show the field label. |
+| `value` | `number` | - | Current value. Controlled - pair with onChange. |
+| `defaultValue` | `number` | - | Starting value when uncontrolled. Defaults to the midpoint. |
 | `onChange` | `(value: number) => void` | - | Fired as the value changes, by drag or arrow key. |
+| `formatValue` | `(value: number) => string` | - | Formats the shown value and what assistive tech announces, e.g. `(v) => `${v}%``. |
+| `showValue` | `boolean` | `true` | Show the current value. |
+| `showLabel` | `boolean` | `true` | Render the visible label. When false, the label becomes `aria-label`. |
+| `disabled` | `boolean` | `false` | Blocks interaction and dims the control. |
+
+Also accepts any native `<input>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<input>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `slider`, keyboard operable. Use role="slider" with aria-valuemin / aria-valuemax / aria-valuenow; Provide an accessible label via aria-label; Arrow keys adjust the value.
 
@@ -1792,21 +1848,32 @@ Choose one option from a small set of mutually exclusive segments. - category: `
 import { SegmentedControl } from '@inspera/kit'
 
 <SegmentedControl
+  label="Date range"
   items={['Day', 'Week', 'Month']}
-  value={range}
-  onChange={setRange}
-  size="Medium"
-  fullWidth={false}
+  defaultValue="Week"
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `items` | `string[]` | `['Day', 'Week', 'Month']` | Segment labels. |
-| `value` | `number` | - | Active segment index. |
+| `label` **(required)** | `string` | - | Names the group for assistive tech, e.g. "Date range". Not shown. |
+| `items` **(required)** | `(string \| SegmentedControlItem)[]` | - | Segments, in order. Plain strings when value and label match. |
+| `value` | `string` | - | Selected segment value. Controlled - pair with onChange. |
+| `defaultValue` | `string` | - | Starting segment when uncontrolled. Defaults to the first. |
+| `onChange` | `(value: string) => void` | - | Fired with the chosen segment's value. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Segment height. |
 | `fullWidth` | `boolean` | `false` | Stretch to fill the row. |
-| `onChange` | `(index: number) => void` | - | Fired with the index of the chosen segment. |
+| `disabled` | `boolean` | `false` | Blocks interaction and dims the control. |
+
+Also accepts any native `<div>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<div>`. `className` and `style` go on the outermost element.
+
+```ts
+export interface SegmentedControlItem {
+  value: string
+  /** Shown text. Defaults to `value`. */
+  label?: string
+}
+```
 
 **Accessibility** - role `radiogroup`, keyboard operable. Container uses role="radiogroup"; Each segment uses role="radio" with aria-checked; Arrow keys move between segments.
 
@@ -1857,16 +1924,19 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 ```css
 /* Tokens this component needs. Paste once, at `:root`. */
 :root {
-  --primary:           #004080;
-  --white:             #ffffff;
-  --gray-100:          #F7F7F7;
-  --gray-600:          #7A7A7A;
-  --surface:           var(--white);
-  --muted-foreground:  var(--gray-600);
-  --radius-sm:         4px;
-  --radius-md:         8px;
-  --shadow-100:        0px 4px 4px rgba(39, 39, 39, 0.08), 0px 2px 4px rgba(39, 39, 39, 0.12);
-  --font-sans:         'Inter', system-ui, -apple-system, sans-serif;
+  --primary:            #004080;
+  --white:              #ffffff;
+  --gray-100:           #F7F7F7;
+  --gray-600:           #7A7A7A;
+  --surface:            var(--white);
+  --muted-foreground:   var(--gray-600);
+  --radius-sm:          4px;
+  --radius-md:          8px;
+  --shadow-100:         0px 4px 4px rgba(39, 39, 39, 0.08), 0px 2px 4px rgba(39, 39, 39, 0.12);
+  --focus-ring-width:   2px;
+  --focus-ring-offset:  2px;
+  --focus-ring-color:   var(--primary);
+  --font-sans:          'Inter', system-ui, -apple-system, sans-serif;
 }
 
 .inspera-segmented {
@@ -1896,6 +1966,14 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 .inspera-segmented--small .inspera-segmented__item { height: 32px; }
 .inspera-segmented--full .inspera-segmented__item { flex: 1; }
+
+.inspera-segmented__item:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.inspera-segmented--disabled { opacity: 0.38; }
+.inspera-segmented--disabled .inspera-segmented__item { cursor: not-allowed; }
 
 /* Selected: a raised white card on the tinted track. Colour alone is not
    enough separation at 14px. */
@@ -1930,20 +2008,26 @@ import { DatePicker } from '@inspera/kit'
 
 <DatePicker
   label="Due date"
-  value="2026-08-19"
-  onChange={setDate}
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | `'Date'` | Field label. |
-| `value` | `string` | - | Selected date (YYYY-MM-DD). |
-| `placeholder` | `string` | `'Select date'` | Trigger placeholder. |
-| `state` | `'Default' \| 'Focused' \| 'Disabled' \| 'Error'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Focused` is presentation-only - leave it unset in application code, where CSS drives it from the real pointer and keyboard. `Error` and `Disabled` are real application state and belong in your code. |
-| `showLabel` | `boolean` | `true` | Show the field label. |
-| `defaultOpen` | `boolean` | `false` | Open the calendar initially. |
+| `label` **(required)** | `string` | - | Field label. Always required: it is the accessible name even when hidden. |
+| `value` | `string` | - | Selected date (YYYY-MM-DD). Controlled - pair with onChange. |
+| `defaultValue` | `string` | - | Starting date when uncontrolled (YYYY-MM-DD). |
 | `onChange` | `(iso: string) => void` | - | Fired with the selected date as an ISO string (YYYY-MM-DD). |
+| `open` | `boolean` | - | Calendar open state. Controlled - pair with onOpenChange. |
+| `defaultOpen` | `boolean` | `false` | Open the calendar initially, when uncontrolled. |
+| `onOpenChange` | `(open: boolean) => void` | - | Fired when the calendar opens or closes. |
+| `placeholder` | `string` | `'Select date'` | Trigger text when no date is chosen. |
+| `showLabel` | `boolean` | `true` | Render the visible label. When false, the label becomes `aria-label`. |
+| `helpText` | `string` | - | Guidance shown below the field. Replaced by errorText when `error` is set. |
+| `errorText` | `string` | - | Validation message, shown while `error` is true. |
+| `error` | `boolean` | `false` | Marks the field invalid: red border and errorText shown. |
+| `disabled` | `boolean` | `false` | Blocks interaction and dims the field. |
+
+Also accepts any native `<button>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<button>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `dialog`, keyboard operable. Trigger uses aria-haspopup="dialog" and aria-expanded; Popover uses role="dialog" with a label; Day cells are buttons with descriptive aria-labels; Escape closes the popover.
 
@@ -1996,15 +2080,18 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 /* Tokens this component needs. Paste once, at `:root`. */
 :root {
   --primary:                #004080;
+  --error:                  #D32F2F;
   --white:                  #ffffff;
   --gray-200:               #EDEDED;
   --gray-600:               #7A7A7A;
   --blue-300:               #B3D9FF;
+  --red-300:                #F9B8B8;
   --action-active:          rgba(0, 0, 0, 0.56);
   --text-primary:           rgba(0, 0, 0, 0.87);
   --border-control:         #C4C4C4;
   --border-control-strong:  #8C8C8C;
   --text-placeholder:       #8C8C8C;
+  --surface-disabled:       #F5F5F5;
   --surface:                var(--white);
   --border:                 var(--gray-200);
   --muted-foreground:       var(--gray-600);
@@ -2012,6 +2099,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   --radius-md:              8px;
   --shadow-200:             0px 8px 8px rgba(39, 39, 39, 0.08), 0px 4px 6px rgba(39, 39, 39, 0.12);
   --effect-state-focus:     0px 0px 0px 3px var(--blue-300);
+  --effect-state-error:     0px 0px 0px 3px var(--red-300);
   --border-width-default:   1px;
   --duration-fast:          100ms;
   --easing-standard:        cubic-bezier(0.2, 0, 0, 1);
@@ -2035,6 +2123,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 }
 
 .inspera-datepicker__trigger {
+  width: 100%;
   height: 40px;
   display: flex;
   align-items: center;
@@ -2067,6 +2156,24 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 }
 .inspera-datepicker__value--set { color: var(--text-primary); }
 
+/* The trigger and its panel share an anchor, so the calendar opens directly
+   under the field whether or not a label sits above it. */
+.inspera-datepicker__anchor { position: relative; }
+
+.inspera-datepicker__trigger[data-invalid='true'],
+.inspera-datepicker__trigger[data-invalid='true']:hover {
+  border-color: var(--error);
+  box-shadow: var(--effect-state-error);
+}
+.inspera-datepicker__trigger:disabled {
+  background: var(--surface-disabled);
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.inspera-datepicker__trigger:disabled:hover { border-color: var(--border-control); }
+
+.inspera-datepicker__error { font-size: 12px; color: var(--error); }
+
 .inspera-datepicker__trigger .material-symbols-outlined {
   font-size: 20px;
   color: var(--action-active);
@@ -2074,9 +2181,9 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 .inspera-datepicker__panel {
   position: absolute;
-  top: 74px;
+  top: calc(100% + 4px);
   left: 0;
-  z-index: var(--z-dropdown, 20);
+  z-index: var(--z-dropdown);
   width: 280px;
   padding: 12px;
   background: var(--surface);
@@ -2194,19 +2301,23 @@ import { FileUpload } from '@inspera/kit'
 <FileUpload
   label="Attachments"
   accept="image/*,.pdf"
-  multiple={false}
+  helpText="PNG, JPG or PDF up to 10MB"
   onFiles={handleFiles}
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | `'Upload files'` | Field label describing what to upload. |
-| `accept` | `string` | - | Accepted MIME types / extensions. |
-| `multiple` | `boolean` | `false` | Allow multiple files. |
-| `state` | `'Default' \| 'Dragging' \| 'Disabled' \| 'Error'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
-| `helpText` | `string` | `'PNG, JPG or PDF up to 10MB'` | Constraint hint text. |
+| `label` **(required)** | `string` | - | What to upload, e.g. "Attachments". The file input's accessible name. |
+| `accept` | `string` | - | Accepted MIME types / extensions, e.g. "image/*,.pdf". Applies to drops too. |
+| `multiple` | `boolean` | `false` | Allow more than one file. A drop of several is cut to the first when false. |
+| `helpText` | `string` | - | Constraint hint, e.g. "PNG, JPG or PDF up to 10MB". Replaced by errorText when `error` is set. |
+| `errorText` | `string` | - | Validation message, shown while `error` is true. |
+| `error` | `boolean` | `false` | Marks the zone invalid: red border and `aria-invalid`. |
+| `disabled` | `boolean` | `false` | Blocks interaction and dims the zone. |
 | `onFiles` | `(files: File[]) => void` | - | Fired with the selected files, from both drop and browse. |
+
+Also accepts any native `<input>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<input>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `button`, keyboard operable. Dropzone uses role="button" and is keyboard focusable; Enter / Space open the file browser; Provide an accessible label describing the action.
 
@@ -2248,8 +2359,8 @@ Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
 font weight of your own, and do not restyle it with a UI kit's defaults.
 
-- The zone carries `role="button"`, `tabindex="0"` and an Enter/Space handler that clicks the hidden input. Drag and drop alone is not an accessible way to upload.
-- Keep the native `<input type="file">` in the DOM, visually hidden - the zone triggers it with `.click()`.
+- The zone is a `<label>` around a visually hidden `<input type="file">`. Clicking the zone opens the picker natively, and the input is the one focusable control, named by `aria-label` and described by the help text. Do not use a `<div role="button">` with the input inside it - that nests one control in another.
+- Filter dropped files by the same `accept` and `multiple` rules as the picker, and reset the input value after each choice so picking the same file twice still fires.
 - Border is 2px dashed `--gray-400`; a 1px dash reads as a table rule at this size.
 - The drag state and hover share one look: `--primary` border on a `--blue-100` wash. Handle `dragover`, `dragleave` and `drop`, and `preventDefault` on dragover or the browser opens the file instead.
 - Always state the constraint ("PNG, JPG or PDF up to 10MB") - a bare drop zone gives no way to know what will be rejected.
@@ -2270,10 +2381,14 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   --focus-ring-width:   2px;
   --focus-ring-offset:  2px;
   --focus-ring-color:   var(--primary);
+  --duration-fast:      100ms;
+  --easing-standard:    cubic-bezier(0.2, 0, 0, 1);
   --font-sans:          'Inter', system-ui, -apple-system, sans-serif;
 }
 
 .inspera-upload {
+  /* Anchors the visually hidden input, so focusing it never scrolls the page. */
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -2288,7 +2403,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   cursor: pointer;
   text-align: center;
   font-family: var(--font-sans);
-  transition: all 120ms ease;
+  transition: all var(--duration-fast) var(--easing-standard);
 }
 
 /* Both the real drag state and the pointer share one look. */
@@ -2298,7 +2413,8 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   background: var(--blue-100);
 }
 
-.inspera-upload:focus-visible {
+/* The input inside has the focus; the zone draws the ring for it. */
+.inspera-upload:has(.inspera-upload__input:focus-visible) {
   outline: var(--focus-ring-width) solid var(--focus-ring-color);
   outline-offset: var(--focus-ring-offset);
 }
@@ -2323,12 +2439,14 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   color: var(--muted-foreground);
 }
 
-/* The native input stays in the DOM so the zone can click() it. */
+/* The native input is the real control: visually hidden but focusable, and
+   named by aria-label. A 0x0 input is skipped by some browsers' Tab order. */
 .inspera-upload__input {
   position: absolute;
   opacity: 0;
-  width: 0;
-  height: 0;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
 }
 
 .inspera-upload--error {
@@ -2344,16 +2462,17 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 ```
 
 ```html
-<!-- role="button" + tabindex + a key handler, because a div is not focusable
-     and Enter/Space do not activate it on their own. -->
-<div class="inspera-upload" role="button" tabindex="0" aria-label="Attachments">
+<!-- A <label> around the file input: clicking anywhere opens the picker
+     natively, and the input stays the one focusable, named control. -->
+<label class="inspera-upload" for="attachments">
   <span class="material-symbols-outlined inspera-upload__icon" aria-hidden="true">upload_file</span>
-  <div class="inspera-upload__prompt">
+  <span class="inspera-upload__prompt" aria-hidden="true">
     Drag &amp; drop or <span class="inspera-upload__browse">browse</span>
-  </div>
-  <span class="inspera-upload__help">PNG, JPG or PDF up to 10MB</span>
-  <input class="inspera-upload__input" type="file" accept="image/*,.pdf" multiple />
-</div>
+  </span>
+  <span class="inspera-upload__help" id="attachments-help">PNG, JPG or PDF up to 10MB</span>
+  <input class="inspera-upload__input" id="attachments" type="file" accept="image/*,.pdf" multiple
+         aria-label="Attachments" aria-describedby="attachments-help" />
+</label>
 ```
 
 
@@ -2370,22 +2489,30 @@ import { RadioGroup } from '@inspera/kit'
 
 <RadioGroup
   label="Delivery speed"
-  name="delivery"
-  value="standard"
-  orientation="Vertical"
-  options={[{ label: 'Standard', value: 'standard' }]}
+  options={[
+    { label: 'Standard', value: 'standard' },
+    { label: 'Express', value: 'express' },
+    { label: 'Overnight', value: 'overnight' },
+  ]}
+  defaultValue="standard"
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | - | Group label, announced as the radiogroup name. |
-| `name` | `string` | - | Shared input name for the group. |
-| `options` | `RadioOption[]` | `DEFAULT_OPTIONS` | Radio options. |
-| `value` | `string` | - | Selected option value. |
-| `orientation` | `'Vertical' \| 'Horizontal'` | `'Vertical'` | Layout direction. |
-| `state` | `'Default' \| 'Disabled' \| 'Error'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
+| `label` **(required)** | `string` | - | Group label, announced as the radiogroup name. |
+| `options` **(required)** | `RadioOption[]` | - | Radio options. |
+| `value` | `string` | - | Selected option value. Controlled - pair with onChange. |
+| `defaultValue` | `string` | - | Starting selection when uncontrolled. |
 | `onChange` | `(value: string) => void` | - | Fired with the newly selected value. |
+| `name` | `string` | - | Shared input name for the group. Generated when unset. |
+| `orientation` | `'Vertical' \| 'Horizontal'` | `'Vertical'` | Layout direction. |
+| `helpText` | `string` | - | Guidance shown below the options. Replaced by errorText when `error` is set. |
+| `errorText` | `string` | - | Validation message, shown while `error` is true. |
+| `error` | `boolean` | `false` | Marks the group invalid and shows errorText. |
+| `disabled` | `boolean` | `false` | Disables every option. |
+
+Also accepts any native `<div>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<div>`. `className` and `style` go on the outermost element.
 
 ```ts
 export interface RadioOption {
@@ -2526,15 +2653,19 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 .inspera-radio-group__options {
   display: flex;
   flex-direction: column;
-  gap: 0;
+  /* Horizontal options wrap onto a new line rather than overflow. */
+  flex-wrap: wrap;
+  column-gap: 24px;
+  row-gap: 0;
 }
 
 /* Horizontal needs real separation; the vertical stack relies on each row's
    own 8px padding instead. */
 .inspera-radio-group--horizontal .inspera-radio-group__options {
   flex-direction: row;
-  gap: 24px;
 }
+
+.inspera-radio-group__error { font-size: 12px; color: var(--error); }
 ```
 
 ```html
@@ -2569,20 +2700,30 @@ import { CheckboxGroup } from '@inspera/kit'
 
 <CheckboxGroup
   label="Notifications"
-  value={['email']}
-  orientation="Vertical"
-  options={[{ label: 'Email', value: 'email' }]}
+  options={[
+    { label: 'Email', value: 'email' },
+    { label: 'SMS', value: 'sms' },
+    { label: 'Push', value: 'push' },
+  ]}
+  defaultValue={['email']}
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | - | Group label, announced as the fieldset legend. |
-| `options` | `CheckboxOption[]` | `DEFAULT_OPTIONS` | Checkbox options. |
-| `value` | `string[]` | - | Selected option values. |
-| `orientation` | `'Vertical' \| 'Horizontal'` | `'Vertical'` | Layout direction. |
-| `state` | `'Default' \| 'Disabled' \| 'Error'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
+| `label` **(required)** | `string` | - | Group label, announced as the group's name. |
+| `options` **(required)** | `CheckboxOption[]` | - | Checkbox options. |
+| `value` | `string[]` | - | Selected option values. Controlled - pair with onChange. |
+| `defaultValue` | `string[]` | `[]` | Starting selection when uncontrolled. |
 | `onChange` | `(value: string[]) => void` | - | Fired with the full array of selected values. |
+| `orientation` | `'Vertical' \| 'Horizontal'` | `'Vertical'` | Layout direction. |
+| `size` | `CheckboxSize` | `'Medium'` | Size of every checkbox in the group. |
+| `helpText` | `string` | - | Guidance shown below the options. Replaced by errorText when `error` is set. |
+| `errorText` | `string` | - | Validation message, shown while `error` is true. |
+| `error` | `boolean` | `false` | Marks every option invalid and shows errorText. |
+| `disabled` | `boolean` | `false` | Disables every option. |
+
+Also accepts any native `<div>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<div>`. `className` and `style` go on the outermost element.
 
 ```ts
 export interface CheckboxOption {
@@ -2749,13 +2890,17 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 .inspera-checkbox-group__options {
   display: flex;
   flex-direction: column;
-  gap: 0;
+  /* Horizontal options wrap onto a new line rather than overflow. */
+  flex-wrap: wrap;
+  column-gap: 24px;
+  row-gap: 0;
 }
 
 .inspera-checkbox-group--horizontal .inspera-checkbox-group__options {
   flex-direction: row;
-  gap: 24px;
 }
+
+.inspera-checkbox-group__error { font-size: 12px; color: var(--error); }
 ```
 
 ```html
@@ -2789,22 +2934,23 @@ Capture or display a star rating. - category: `input-controls`.
 import { Rating } from '@inspera/kit'
 
 <Rating
-  value={score}
-  onChange={setScore}
-  max={5}
-  size="Medium"
-  readOnly={false}
+  label="Question difficulty"
+  defaultValue={3}
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `value` | `number` | - | Current rating. Controlled - pair with onChange. Omit it and the component tracks its own, the same contract Checkbox and Toggle use. |
+| `label` **(required)** | `string` | - | What is being rated, e.g. "Question difficulty". The accessible name; not shown. |
+| `value` | `number` | - | Current rating. Controlled - pair with onChange. |
+| `defaultValue` | `number` | `0` | Starting rating when uncontrolled. |
+| `onChange` | `(value: number) => void` | - | Fired with the chosen rating; 0 when cleared. Not fired when readOnly. |
 | `max` | `number` | `5` | Number of stars. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Star size. |
-| `readOnly` | `boolean` | `false` | Display-only mode. |
-| `showValue` | `boolean` | `false` | Show numeric value. |
-| `onChange` | `(value: number) => void` | - | Fired with the chosen rating. Not fired when readOnly. |
+| `readOnly` | `boolean` | `false` | Display-only: announced as "4 of 5 stars", not as a set of choices. |
+| `showValue` | `boolean` | `false` | Show the numeric value beside the stars. |
+
+Also accepts any native `<div>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<div>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `radiogroup`, keyboard operable. Container uses role="radiogroup" with an accessible label; Each star is a radio with aria-checked and an aria-label; Arrow keys adjust the rating.
 
@@ -2941,18 +3087,23 @@ Enter a one-time verification code. - category: `input-controls`.
 import { OtpInput } from '@inspera/kit'
 
 <OtpInput
-  length={6}
-  value={code}
-  onChange={setCode}
+  label="Verification code"
+  defaultValue="123"
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
+| `label` **(required)** | `string` | - | Names the code, e.g. "Verification code". Required: it labels the group. |
 | `length` | `number` | `6` | Number of digit boxes. |
-| `value` | `string` | - | Current code value. |
-| `state` | `'Default' \| 'Focused' \| 'Error' \| 'Disabled'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Focused` is presentation-only - leave it unset in application code, where CSS drives it from the real pointer and keyboard. `Error` and `Disabled` are real application state and belong in your code. |
-| `onChange` | `(value: string) => void` | - | Fired with the full code as digits are entered or pasted. |
+| `value` | `string` | - | Current code. Controlled - pair with onChange. |
+| `defaultValue` | `string` | `''` | Starting code when uncontrolled. |
+| `onChange` | `(value: string) => void` | - | Fired with the digits entered so far; complete when its length equals `length`. |
+| `showLabel` | `boolean` | `false` | Render the visible label above the boxes. |
+| `error` | `boolean` | `false` | Marks every box invalid: red border and `aria-invalid`. |
+| `disabled` | `boolean` | `false` | Blocks input and dims the boxes. |
+
+Also accepts any native `<div>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<div>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `textbox`, keyboard operable. Each box has an aria-label "Digit N"; aria-invalid reflects the error state; Backspace moves focus to the previous box; paste distributes digits.
 
@@ -2996,7 +3147,8 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 - One `<input>` per digit, 44x48, `--radius-md`, in `--font-mono` at 20px so the digits do not shift as they are typed.
 - `autocomplete="one-time-code"` goes on the first box only, and `off` on the rest. On every box the platform offers the code once per field.
-- Each box needs `aria-label="Digit N"` and `inputmode="numeric"`, plus `maxlength="1"`.
+- Wrap the boxes in `role="group"` named for the code ("Verification code"); each box is `aria-label="Digit N of 6"` with `inputmode="numeric"`.
+- Keep one slot per box: a digit typed into box 3 stays in box 3, and Backspace clears only its own box. Storing the code as one string collapses the gaps.
 - Wire the behaviour: typing advances focus, Backspace on an empty box moves back and clears, arrows move between boxes, and a paste on any box fills the rest.
 - Focus is per box - do not ring the whole row.
 
@@ -3088,31 +3240,35 @@ import { NumberInput } from '@inspera/kit'
 
 <NumberInput
   label="Duration"
-  value={value}
-  onChange={setValue}
+  defaultValue={45}
   min={0}
   max={240}
   step={5}
-  size="Medium"
   suffix="min"
+  helpText="Between 0 and 240."
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | `'Amount'` | Field label. |
-| `placeholder` | `string` | `'0'` | Hint shown when empty. |
+| `label` **(required)** | `string` | - | Field label. Always required: it is the accessible name even when hidden. |
+| `placeholder` | `string` | - | Hint shown when empty. |
 | `value` | `number` | - | Current value. Controlled - pair with onChange. |
+| `defaultValue` | `number` | - | Starting value when uncontrolled. |
+| `onChange` | `(value: number) => void` | - | Fired with each committed value - valid, and within min/max. |
 | `min` | `number` | - | Minimum allowed value. |
 | `max` | `number` | - | Maximum allowed value. |
 | `step` | `number` | `1` | Increment applied by the steppers and arrow keys. |
-| `state` | `'Default' \| 'Focused' \| 'Disabled' \| 'Error' \| 'ReadOnly'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Focused` is presentation-only. `Error`, `Disabled` and `ReadOnly` are real application state. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Control height. |
-| `showLabel` | `boolean` | `true` | Render the field label. |
+| `showLabel` | `boolean` | `true` | Render the visible label. When false, the label becomes `aria-label`. |
 | `suffix` | `string` | - | Unit suffix shown inside the field, e.g. "min" or "%". |
-| `helpText` | `string` | - | Helper text. |
-| `errorText` | `string` | - | Error message, shown when state is Error. |
-| `onChange` | `(value: number) => void` | - | Fired with the new numeric value. |
+| `helpText` | `string` | - | Guidance shown below the field. Replaced by errorText when `error` is set. |
+| `errorText` | `string` | - | Validation message, shown while `error` is true. |
+| `error` | `boolean` | `false` | Marks the field invalid: red border, `aria-invalid`, errorText shown. |
+| `disabled` | `boolean` | `false` | Blocks editing and dims the field. |
+| `readOnly` | `boolean` | `false` | Shows the value without allowing edits. |
+
+Also accepts any native `<input>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<input>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `spinbutton`, keyboard operable. Input carries aria-invalid in the error state; Up / Down arrows increment and decrement by step; Stepper buttons have aria-labels and are disabled at min / max.
 
@@ -3164,18 +3320,23 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 /* Tokens this component needs. Paste once, at `:root`. */
 :root {
   --primary:                #004080;
+  --error:                  #D32F2F;
   --white:                  #ffffff;
+  --gray-100:               #F7F7F7;
   --gray-600:               #7A7A7A;
   --blue-300:               #B3D9FF;
+  --red-300:                #F9B8B8;
   --action-active:          rgba(0, 0, 0, 0.56);
   --action-disabled:        rgba(0, 0, 0, 0.38);
   --text-primary:           rgba(0, 0, 0, 0.87);
   --border-control:         #C4C4C4;
   --border-control-strong:  #8C8C8C;
+  --surface-disabled:       #F5F5F5;
   --muted-foreground:       var(--gray-600);
   --radius-sm:              4px;
   --radius-md:              8px;
   --effect-state-focus:     0px 0px 0px 3px var(--blue-300);
+  --effect-state-error:     0px 0px 0px 3px var(--red-300);
   --border-width-default:   1px;
   --font-sans:              'Inter', system-ui, -apple-system, sans-serif;
 }
@@ -3252,6 +3413,23 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 }
 .inspera-number__step:disabled { color: var(--action-disabled); cursor: not-allowed; }
 .inspera-number__step .material-symbols-outlined { font-size: 20px; }
+
+.inspera-number__help  { font-size: 12px; color: var(--muted-foreground); }
+.inspera-number__error { font-size: 12px; color: var(--error); }
+
+/* Invalid outranks hover and focus - the error has to stay legible. */
+.inspera-number__field[data-invalid='true'],
+.inspera-number__field[data-invalid='true']:hover,
+.inspera-number__field[data-invalid='true']:focus-within {
+  border-color: var(--error);
+  box-shadow: var(--effect-state-error);
+}
+.inspera-number__field[data-disabled='true'] {
+  background: var(--surface-disabled);
+  opacity: 0.6;
+}
+.inspera-number__field[data-readonly='true'] { background: var(--gray-100); }
+.inspera-number__field[data-readonly='true']:hover { border-color: var(--border-control); }
 ```
 
 ```html
@@ -3287,26 +3465,33 @@ import { Combobox } from '@inspera/kit'
 
 <Combobox
   label="Assessment"
-  value={value}
-  onChange={setValue}
   options={[
     { value: 'algebra', label: 'Algebra Quiz', icon: 'quiz' },
     { value: 'biology', label: 'Biology Final', icon: 'science' },
+    { value: 'history', label: 'History Midterm', icon: 'history_edu' },
+    { value: 'physics', label: 'Physics Lab', icon: 'experiment' },
   ]}
+  placeholder="Search assessments..."
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | `'Assessment'` | Field label. |
-| `placeholder` | `string` | `'Search assessments...'` | Shown when nothing is typed or selected. |
-| `options` | `ComboboxOption[]` | `defaultOptions` | The full option list. Filtered as the user types. |
+| `label` **(required)** | `string` | - | Field label. Always required: it is the accessible name even when hidden. |
+| `options` **(required)** | `ComboboxOption[]` | - | The full option list. Filtered as the user types. |
+| `placeholder` | `string` | `'Search...'` | Shown when nothing is typed or selected. |
 | `value` | `string` | - | Selected value. Controlled - pair with onChange. |
-| `state` | `'Default' \| 'Focused' \| 'Disabled' \| 'Error'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Focused` is presentation-only. `Error` and `Disabled` are real state. |
-| `showLabel` | `boolean` | `true` | Render the field label. |
+| `defaultValue` | `string` | - | Starting value when uncontrolled. |
+| `onChange` | `(value: string) => void` | - | Fired with the chosen value (or the free text, with allowCustomValue). |
+| `showLabel` | `boolean` | `true` | Render the visible label. When false, the label becomes `aria-label`. |
 | `allowCustomValue` | `boolean` | `false` | Allow a typed value that matches no option to be committed. |
 | `emptyText` | `string` | `'No matches'` | Text shown when no option matches the query. |
-| `onChange` | `(value: string) => void` | - | Fired with the chosen value (or free text when allowCustomValue). |
+| `helpText` | `string` | - | Guidance shown below the field. Replaced by errorText when `error` is set. |
+| `errorText` | `string` | - | Validation message, shown while `error` is true. |
+| `error` | `boolean` | `false` | Marks the field invalid: red border, `aria-invalid`, errorText shown. |
+| `disabled` | `boolean` | `false` | Blocks interaction and dims the field. |
+
+Also accepts any native `<input>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<input>`. `className` and `style` go on the outermost element.
 
 ```ts
 export interface ComboboxOption {
@@ -3369,20 +3554,24 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 /* Tokens this component needs. Paste once, at `:root`. */
 :root {
   --primary:                #004080;
+  --error:                  #D32F2F;
   --white:                  #ffffff;
   --gray-200:               #EDEDED;
   --blue-100:               #F0F7FF;
   --blue-300:               #B3D9FF;
+  --red-300:                #F9B8B8;
   --action-active:          rgba(0, 0, 0, 0.56);
   --text-primary:           rgba(0, 0, 0, 0.87);
   --border-control:         #C4C4C4;
   --border-control-strong:  #8C8C8C;
+  --surface-disabled:       #F5F5F5;
   --surface:                var(--white);
   --border:                 var(--gray-200);
   --radius-sm:              4px;
   --radius-md:              8px;
   --shadow-200:             0px 8px 8px rgba(39, 39, 39, 0.08), 0px 4px 6px rgba(39, 39, 39, 0.12);
   --effect-state-focus:     0px 0px 0px 3px var(--blue-300);
+  --effect-state-error:     0px 0px 0px 3px var(--red-300);
   --border-width-default:   1px;
   --z-dropdown:             300;
   --font-sans:              'Inter', system-ui, -apple-system, sans-serif;
@@ -3404,6 +3593,8 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 }
 
 .inspera-combobox__field {
+  /* Anchors the option list, which opens directly below the field. */
+  position: relative;
   height: 40px;
   display: flex;
   align-items: center;
@@ -3441,10 +3632,11 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 /* Rendered only while open, anchored under the field. */
 .inspera-combobox__list {
+  /* Inside the field, so it lines up with the field's outer border. */
   position: absolute;
-  top: 74px;
-  left: 0;
-  right: 0;
+  top: calc(100% + 4px);
+  left: -1px;
+  right: -1px;
   z-index: var(--z-dropdown, 20);
   margin: 0;
   padding: 6px;
@@ -3463,6 +3655,19 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   cursor: pointer;
 }
 .inspera-combobox__option[aria-selected='true'] { background: var(--blue-100); }
+
+.inspera-combobox__field[data-invalid='true'],
+.inspera-combobox__field[data-invalid='true']:hover,
+.inspera-combobox__field[data-invalid='true']:focus-within {
+  border-color: var(--error);
+  box-shadow: var(--effect-state-error);
+}
+.inspera-combobox__field[data-disabled='true'] {
+  background: var(--surface-disabled);
+  opacity: 0.6;
+}
+.inspera-combobox__field[data-disabled='true'] .inspera-combobox__chevron { cursor: not-allowed; }
+.inspera-combobox__error { font-size: 12px; color: var(--error); }
 ```
 
 ```html
@@ -3474,13 +3679,12 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
            aria-expanded="false" aria-controls="country-list" aria-autocomplete="list"
            placeholder="Search countries" />
     <span class="material-symbols-outlined inspera-combobox__icon inspera-combobox__chevron" aria-hidden="true">expand_more</span>
+    <!-- Rendered only while open, inside the field so it sits right under it. -->
+    <ul class="inspera-combobox__list" id="country-list" role="listbox">
+      <li class="inspera-combobox__option" role="option" aria-selected="true">Norway</li>
+      <li class="inspera-combobox__option" role="option" aria-selected="false">Sweden</li>
+    </ul>
   </div>
-
-  <!-- Rendered only while open. -->
-  <ul class="inspera-combobox__list" id="country-list" role="listbox">
-    <li class="inspera-combobox__option" role="option" aria-selected="true">Norway</li>
-    <li class="inspera-combobox__option" role="option" aria-selected="false">Sweden</li>
-  </ul>
 </div>
 ```
 
@@ -3498,27 +3702,33 @@ import { DateRangePicker } from '@inspera/kit'
 
 <DateRangePicker
   label="Test window"
-  value={range}
-  onChange={setRange}
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | `'Date range'` | Field label. |
+| `label` **(required)** | `string` | - | Field label. Always required: it is the accessible name even when hidden. |
 | `value` | `DateRange` | - | Selected range. Controlled - pair with onChange. |
-| `placeholder` | `string` | `'Select a range'` | Trigger placeholder. |
-| `state` | `'Default' \| 'Focused' \| 'Disabled' \| 'Error'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Focused` is presentation-only. `Error` and `Disabled` are real state. |
-| `showLabel` | `boolean` | `true` | Show the field label. |
-| `defaultOpen` | `boolean` | `false` | Open the calendar initially. |
+| `defaultValue` | `DateRange` | - | Starting range when uncontrolled. |
 | `onChange` | `(range: DateRange) => void` | - | Fired with the range once both ends are chosen. |
+| `open` | `boolean` | - | Calendar open state. Controlled - pair with onOpenChange. |
+| `defaultOpen` | `boolean` | `false` | Open the calendar initially, when uncontrolled. |
+| `onOpenChange` | `(open: boolean) => void` | - | Fired when the calendar opens or closes. |
+| `placeholder` | `string` | `'Select a range'` | Trigger text when no range is chosen. |
+| `showLabel` | `boolean` | `true` | Render the visible label. When false, the label becomes `aria-label`. |
+| `helpText` | `string` | - | Guidance shown below the field. Replaced by errorText when `error` is set. |
+| `errorText` | `string` | - | Validation message, shown while `error` is true. |
+| `error` | `boolean` | `false` | Marks the field invalid: red border and errorText shown. |
+| `disabled` | `boolean` | `false` | Blocks interaction and dims the field. |
+
+Also accepts any native `<button>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<button>`. `className` and `style` go on the outermost element.
 
 ```ts
 export interface DateRange {
-  /** Range start (YYYY-MM-DD) or null. */
-  start: string | null
-  /** Range end (YYYY-MM-DD) or null. */
-  end: string | null
+  /** Range start (YYYY-MM-DD). */
+  start: string
+  /** Range end (YYYY-MM-DD), on or after start. */
+  end: string
 }
 ```
 
@@ -3572,15 +3782,19 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 /* Tokens this component needs. Paste once, at `:root`. */
 :root {
   --primary:                #004080;
+  --error:                  #D32F2F;
   --white:                  #ffffff;
   --blue-300:               #B3D9FF;
+  --red-300:                #F9B8B8;
   --action-active:          rgba(0, 0, 0, 0.56);
   --text-primary:           rgba(0, 0, 0, 0.87);
   --border-control:         #C4C4C4;
   --border-control-strong:  #8C8C8C;
   --text-placeholder:       #8C8C8C;
+  --surface-disabled:       #F5F5F5;
   --radius-md:              8px;
   --effect-state-focus:     0px 0px 0px 3px var(--blue-300);
+  --effect-state-error:     0px 0px 0px 3px var(--red-300);
   --border-width-default:   1px;
   --font-sans:              'Inter', system-ui, -apple-system, sans-serif;
 }
@@ -3601,6 +3815,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 }
 
 .inspera-daterange__trigger {
+  width: 100%;
   height: 40px;
   display: flex;
   align-items: center;
@@ -3628,6 +3843,24 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   color: var(--text-placeholder);
 }
 .inspera-daterange__value--set { color: var(--text-primary); }
+
+/* The trigger and its panel share an anchor, so the calendar opens directly
+   under the field whether or not a label sits above it. */
+.inspera-daterange__anchor { position: relative; }
+
+.inspera-daterange__trigger[data-invalid='true'],
+.inspera-daterange__trigger[data-invalid='true']:hover {
+  border-color: var(--error);
+  box-shadow: var(--effect-state-error);
+}
+.inspera-daterange__trigger:disabled {
+  background: var(--surface-disabled);
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.inspera-daterange__trigger:disabled:hover { border-color: var(--border-control); }
+
+.inspera-daterange__error { font-size: 12px; color: var(--error); }
 
 .inspera-daterange__trigger .material-symbols-outlined {
   font-size: 20px;
@@ -3662,21 +3895,21 @@ import { Card } from '@inspera/kit'
 
 <Card
   title="Algebra Quiz"
-  elevation="Raised"
-  padding="Default"
-  interactive={false}
+  body="24 questions | 45 minutes. Group related content in a contained surface."
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `title` | `string` | `'Card title'` | Optional heading for the card. |
-| `body` | `string` | `'Group related content in a contained surface using consistent padding and elevation.'` | Short body copy. For anything richer, pass children instead. |
+| `title` | `string` | - | Heading for the card. Also the accessible name of an interactive card. |
+| `body` | `string` | - | Short body copy. For anything richer, pass children instead. |
 | `elevation` | `'Flat' \| 'Raised' \| 'Outlined'` | `'Raised'` | Surface treatment. |
 | `padding` | `'Compact' \| 'Default' \| 'Spacious'` | `'Default'` | Internal padding (12 / 16 / 24). |
-| `interactive` | `boolean` | `false` | Renders as a focusable button with hover elevation. |
-| `children` | `ReactNode` | - | Card contents. Takes precedence over title and body. |
-| `onClick` | `() => void` | - | Fired when an interactive card is activated. Set interactive as well, or there is no affordance. |
+| `interactive` | `boolean` | `false` | The whole card becomes one click target, with hover elevation and a focus ring. |
+| `children` | `ReactNode` | - | Card contents. Replaces title and body. |
+| `onClick` | `MouseEventHandler<HTMLButtonElement>` | - | Fired when an interactive card is activated. |
+
+Also accepts any native `<article>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<article>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `article`, keyboard operable. Interactive cards should use role="button" or be wrapped in an anchor; Non-interactive cards use role="article" or a semantic section.
 
@@ -3719,7 +3952,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 - Radius is `--radius-lg`. Padding is 12 / 16 / 24 for Compact / Default / Spacious.
 - Flat has neither border nor shadow, Raised adds `--shadow-200`, Outlined adds a 1px `--border-strong`. Never both a shadow and a strong border.
 - The transparent 1px border at rest is deliberate: without it, Outlined would be 2px wider than Flat.
-- An interactive card is a `<button>`. A `<div>` with a click handler is not keyboard operable and will fail review.
+- An interactive card stays an `<article>` with one transparent `<button class="inspera-card__link">` stretched over it, named by the title. Never wrap the card in a `<button>` (headings inside a button are invalid) and never put a click handler on a `<div>`.
 - Title 16px/500, body 16px/1.4 in `--gray-700` - the body is not smaller than the title.
 
 ```css
@@ -3741,6 +3974,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 }
 
 .inspera-card {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -3766,14 +4000,28 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 .inspera-card--raised   { box-shadow: var(--shadow-200); }
 .inspera-card--outlined { border-color: var(--border-strong); }
 
-/* Interactive cards are <button>, so they are focusable and operable by
-   keyboard for free. A div with onclick is not. */
-.inspera-card--interactive { cursor: pointer; }
-.inspera-card--interactive:hover { box-shadow: var(--shadow-300); }
-.inspera-card--interactive:focus-visible {
+/* Interactive: one transparent button stretched over the whole card. The
+   card stays an <article>, so its heading is still a heading - wrapping it all
+   in a <button> flattened title and body into one long button name. */
+.inspera-card__link {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: inherit;
+  background: transparent;
+  cursor: pointer;
+}
+.inspera-card__link:focus-visible {
   outline: var(--focus-ring-width) solid var(--focus-ring-color);
   outline-offset: var(--focus-ring-offset);
 }
+.inspera-card--interactive:hover,
+.inspera-card--interactive:has(:focus-visible) { box-shadow: var(--shadow-300); }
+
+/* Interactive cards are <button>, so they are focusable and operable by
+   keyboard for free. A div with onclick is not. */
 
 .inspera-card__title {
   margin: 0;
@@ -3816,19 +4064,18 @@ import { Badge } from '@inspera/kit'
 
 <Badge
   label="Neutral"
-  intent="Neutral"
-  size="Medium"
-  withIcon={false}
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | `'Badge'` | The badge text. One or two words. |
+| `label` **(required)** | `string` | - | The badge text. One or two words. |
 | `intent` | `'Neutral' \| 'Info' \| 'Success' \| 'Warning' \| 'Error'` | `'Neutral'` | Semantic color. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Height 20 / 24. |
 | `withIcon` | `boolean` | `false` | Show a leading status icon. |
 | `icon` | `string` | - | Material Symbols name shown before the label when withIcon is set. |
+
+Also accepts any native `<span>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<span>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `status`. Use aria-label for icon-only badges; Use role="status" for dynamic count badges.
 
@@ -3957,21 +4204,19 @@ Represent a user or entity with an image or initials. - category: `data-display`
 import { Avatar } from '@inspera/kit'
 
 <Avatar
-  size="Medium"
-  content="Initials"
-  status="None"
+  name="Jane Cooper"
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
+| `name` **(required)** | `string` | - | The person's name. Gives the initials and the accessible name. |
+| `src` | `string` | - | Photo URL. Without one - or if it fails to load - the initials show. |
+| `icon` | `string` | - | Material Symbols name shown instead of initials, e.g. for a guest. |
 | `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Diameter 32 / 40 / 56. |
-| `content` | `'Image' \| 'Initials' \| 'Icon'` | `'Initials'` | What fills the avatar. |
-| `status` | `'None' \| 'Online' \| 'Offline' \| 'Busy'` | `'None'` | Presence indicator dot. |
-| `initials` | `string` | `'JC'` | One or two letters, used when content is Initials. Derive from the name rather than asking for them. |
-| `imageSrc` | `string` | `'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=112&h=112&fit=crop&auto=format'` | Image URL, used when content is Image. Falls back to initials if it fails to load. |
-| `alt` | `string` | `'User avatar'` | Alternative text for the image. Required whenever an image is shown. |
-| `icon` | `string` | `'person'` | Material Symbols name, used when content is Icon. |
+| `status` | `'None' \| 'Online' \| 'Offline' \| 'Busy'` | `'None'` | Presence indicator dot. Announced with the name. |
+
+Also accepts any native `<span>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<span>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `img`. Provide alt text for image avatars; Use aria-label for initials and icon variants.
 
@@ -4122,23 +4367,48 @@ Display structured data in rows and columns. - category: `data-display`.
 import { Table } from '@inspera/kit'
 
 <Table
-  size="Default"
-  striped={false}
-  columns={[{ key: 'name', header: 'Assessment' }]}
-  rows={[{ name: 'Algebra Quiz' }]}
+  caption="Assessments"
+  columns={[
+    { key: 'name', header: 'Assessment' },
+    { key: 'items', header: 'Items', align: 'right' },
+    { key: 'status', header: 'Status' },
+  ]}
+  rows={[
+    {
+      name: 'Algebra Quiz',
+      items: 24,
+      status: <Badge label="Live" intent="Success" />,
+    },
+    {
+      name: 'History Midterm',
+      items: 40,
+      status: <Badge label="Draft" intent="Neutral" />,
+    },
+    {
+      name: 'Biology Final',
+      items: 60,
+      status: <Badge label="Scheduled" intent="Info" />,
+    },
+  ]}
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `columns` | `TableColumn[]` | `defaultColumns` | Column definitions. |
-| `rows` | `Record<string, ReactNode>[]` | `defaultRows` | Row data keyed by column. |
+| `columns` **(required)** | `TableColumn[]` | - | Column definitions. |
+| `rows` **(required)** | `TableRow[]` | - | Row data keyed by column. |
+| `getRowId` | `(row: TableRow, index: number) => string` | - | Stable id per row, for selection and keys. Defaults to the row's position. |
 | `size` | `'Compact' \| 'Default'` | `'Default'` | Row height density. |
 | `striped` | `boolean` | `false` | Zebra-stripe rows. |
 | `hoverable` | `boolean` | `true` | Highlight rows on hover. |
-| `selectable` | `boolean` | `false` | Add a row selection column. |
+| `selectable` | `boolean` | `false` | Add a selection column with a select-all box. |
+| `selectedIds` | `string[]` | - | Selected row ids. Controlled - pair with onSelectionChange. |
+| `defaultSelectedIds` | `string[]` | `[]` | Starting selection when uncontrolled. |
+| `onSelectionChange` | `(ids: string[]) => void` | - | Fired with every selected id after any change. |
 | `caption` | `string` | - | Describes the table for screen readers. Provide one unless a heading already names it. |
-| `onRowClick` | `(row: Record<string, ReactNode>, index: number) => void` | - | Fired with the row data and its index. |
+| `onRowClick` | `(row: TableRow, index: number) => void` | - | Makes rows clickable and keyboard-operable (Enter / Space). |
+
+Also accepts any native `<table>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<table>`. `className` and `style` go on the outermost element.
 
 ```ts
 export interface TableColumn {
@@ -4147,6 +4417,8 @@ export interface TableColumn {
   align?: 'left' | 'right' | 'center'
   width?: string | number
 }
+
+export type TableRow = Record<string, ReactNode>
 ```
 
 **Accessibility** - role `table`, keyboard operable. Use semantic table / thead / tbody markup; Header cells use scope="col"; Provide a caption or aria-label describing the table.
@@ -4265,7 +4537,9 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 .inspera-badge--small .material-symbols-outlined { font-size: 14px; }
 
 .inspera-table {
-  border-collapse: collapse;
+  /* separate, not collapse: browsers ignore border-radius on a collapsed table. */
+  border-collapse: separate;
+  border-spacing: 0;
   width: 100%;
   font-family: var(--font-sans);
   background: var(--white);
@@ -4296,6 +4570,9 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   font-weight: 600;
   color: var(--gray-700);
 }
+
+/* The table's own border closes the last row. */
+.inspera-table tbody tr:last-child td { border-bottom: none; }
 
 .inspera-table thead tr {
   background: var(--gray-100);
@@ -4332,6 +4609,8 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 .inspera-table__select input {
   width: 16px;
   height: 16px;
+  margin: 0;
+  vertical-align: middle;
   accent-color: var(--primary);
   cursor: pointer;
 }
@@ -4370,50 +4649,91 @@ Display large datasets with sorting, selection and paging. - category: `data-dis
 import { DataGrid } from '@inspera/kit'
 
 <DataGrid
-  size="Default"
-  selectable
-  footer
+  caption="Tests"
   columns={[
     { key: 'name', header: 'Test', sortable: true },
+    {
+      key: 'candidates',
+      header: 'Candidates',
+      align: 'right',
+      sortable: true,
+    },
     { key: 'status', header: 'Status' },
+    { key: 'edited', header: 'Last edited', align: 'right', sortable: true },
   ]}
-  rows={rows}
+  rows={[
+    {
+      id: 'algebra',
+      name: 'Algebra Quiz',
+      candidates: 128,
+      status: <Badge label="Live" intent="Success" />,
+      edited: '12 Mar 2026',
+    },
+    {
+      id: 'history',
+      name: 'History Midterm',
+      candidates: 96,
+      status: <Badge label="Draft" intent="Neutral" />,
+      edited: '11 Mar 2026',
+    },
+    {
+      id: 'biology',
+      name: 'Biology Final',
+      candidates: 210,
+      status: <Badge label="Scheduled" intent="Info" />,
+      edited: '09 Mar 2026',
+    },
+  ]}
   getRowId={(row) => row.id}
-  onSelectionChange={setSelected}
+  selectable
+  rowActions={(row) => (
+    <Menu
+      label="Actions"
+      aria-label={`Actions for ${row.name}`}
+      items={[{ label: 'Edit', icon: 'edit' }, { label: 'Delete', icon: 'delete', danger: true }]}
+    />
+  )}
+  footer
   total={242}
-  page={page}
   pageCount={13}
-  onPageChange={setPage}
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `columns` | `DataGridColumn[]` | `defaultColumns` | Column definitions. |
-| `rows` | `Record<string, ReactNode>[]` | `defaultRows` | Row data keyed by column. |
-| `getRowId` | `(row: Record<string, ReactNode>, index: number) => string` | - | Stable id per row. Defaults to the row index. |
+| `columns` **(required)** | `DataGridColumn[]` | - | Column definitions. |
+| `rows` **(required)** | `DataGridRow[]` | - | Row data keyed by column. |
+| `getRowId` | `(row: DataGridRow, index: number) => string` | - | Stable id per row. Defaults to the row's position in `rows` - its position as given, not as sorted, so a selection stays on the row it was made on. |
 | `size` | `'Compact' \| 'Default'` | `'Default'` | Row height density. |
 | `striped` | `boolean` | `false` | Zebra-stripe rows. |
-| `hoverable` | `boolean` | `true` | Highlight rows on hover. |
+| `hoverable` | `boolean` | `true` | Highlight rows on hover and reveal row actions on hover. |
 | `caption` | `string` | - | Describes the grid for screen readers. |
 | `selectable` | `boolean` | `false` | Add a leading selection column with a select-all header box. |
-| `selectedIds` | `string[]` | - | Controlled set of selected row ids. Pair with onSelectionChange. |
-| `onSelectionChange` | `(ids: string[]) => void` | - | Fired with the full set of selected ids after any change. |
-| `sortBy` | `string` | - | Controlled sort column key. Pair with onSortChange for server sorting. |
-| `sortDirection` | `'Ascending' \| 'Descending'` | - | Controlled sort direction. |
-| `onSortChange` | `(key: string, direction: DataGridSortDirection) => void` | - | Fired when a sortable header is activated. Enables controlled sorting. |
-| `rowActions` | `(row: Record<string, ReactNode>, index: number) => ReactNode` | - | Trailing per-row actions, revealed on row hover. |
-| `onRowClick` | `(row: Record<string, ReactNode>, index: number) => void` | - | Fired with the row data and its index. |
+| `selectedIds` | `string[]` | - | Selected row ids. Controlled - pair with onSelectionChange. |
+| `defaultSelectedIds` | `string[]` | `[]` | Starting selection when uncontrolled. |
+| `onSelectionChange` | `(ids: string[]) => void` | - | Fired with every selected id after any change. |
+| `sort` | `DataGridSort` | - | Active sort. Controlled - pair with onSortChange. |
+| `defaultSort` | `DataGridSort` | - | Starting sort when uncontrolled. |
+| `onSortChange` | `(sort: DataGridSort) => void` | - | Fired when a sortable header is activated. |
+| `manualSorting` | `boolean` | `false` | Rows arrive already sorted (server-side), so the grid only shows the state. |
+| `rowActions` | `(row: DataGridRow, index: number) => ReactNode` | - | Trailing per-row actions. Revealed on hover and focus when `hoverable`. |
+| `onRowClick` | `(row: DataGridRow, index: number) => void` | - | Makes rows clickable and keyboard-operable (Enter / Space). |
 | `footer` | `boolean` | `false` | Show the footer with the range summary, pager and page-size select. |
 | `total` | `number` | - | Total row count across all pages. Defaults to the rendered row count. |
-| `page` | `number` | `1` | Current page (1-based). |
 | `pageCount` | `number` | `1` | Total number of pages. |
-| `pageSize` | `number` | `20` | Rows shown per page, used for the range summary and the size select. |
-| `pageSizeOptions` | `number[]` | `[10, 20, 50, 100]` | Selectable page sizes. |
+| `page` | `number` | - | Current page (1-based). Controlled - pair with onPageChange. |
+| `defaultPage` | `number` | `1` | Starting page when uncontrolled. |
 | `onPageChange` | `(page: number) => void` | - | Fired with the requested page. |
+| `pageSize` | `number` | - | Rows per page. Controlled - pair with onPageSizeChange. |
+| `defaultPageSize` | `number` | `20` | Starting page size when uncontrolled. |
 | `onPageSizeChange` | `(size: number) => void` | - | Fired with the requested page size. |
+| `pageSizeOptions` | `number[]` | `[10, 20, 50, 100]` | Selectable page sizes. |
+
+Also accepts any native `<div>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<div>`. `className` and `style` go on the outermost element.
 
 ```ts
+export type DataGridRow = Record<string, ReactNode>
+
 export interface DataGridColumn {
   /** Key into each row's data object. */
   key: string
@@ -4426,10 +4746,15 @@ export interface DataGridColumn {
   /** Allow the column to sort. A caret appears in the header. */
   sortable?: boolean
   /**
-   * Value used for sorting when the cell renders a non-primitive node. Return a
-   * string or number; without it a sortable column falls back to `row[key]`.
+   * Value used for sorting when the cell renders a non-primitive node (a
+   * Badge, say). Without it such a column cannot sort.
    */
-  sortValue?: (row: Record<string, ReactNode>) => string | number
+  sortValue?: (row: DataGridRow) => string | number
+}
+
+export interface DataGridSort {
+  key: string
+  direction: DataGridSortDirection
 }
 ```
 
@@ -4473,10 +4798,10 @@ Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
 font weight of your own, and do not restyle it with a UI kit's defaults.
 
-- A data grid is a Table plus three things: a leading selection column, sortable headers, and a footer pager. Each is a documented component - Checkbox, Pagination and Select - so reach for those rather than rebuilding them.
-- The header row is `--gray-100`; cells are 52px tall (40px compact), 14px, with a `--border` bottom rule. Right-align numeric columns.
-- A sortable header is a bare `<button>` carrying the label and an arrow; it sets `aria-sort` on the `<th>` and tints `--primary` when active. The arrow sits at 0.35 opacity until then.
-- Selected rows fill `--blue-100`; zebra striping fills alternate rows `--gray-100`. A row cannot be both - selection wins.
+- A data grid is a Table plus four things: a leading selection column, sortable headers, per-row actions, and a footer pager. Each is a documented component - Checkbox, Menu, Pagination and Select - so reach for those rather than rebuilding them.
+- Sortable headers are buttons inside the `<th>`; the `<th>` carries `aria-sort` (`ascending` / `descending` / `none`). The active column is `--primary` with a solid arrow.
+- Selection keys on a stable row id, never the row position - sort the table and the selection must stay on the same rows. Select-all acts on the rows on screen and is mixed when only some are selected.
+- Every row-action trigger needs its own name ("Actions for Ada Lovelace"): a column of identical "Actions" buttons is indistinguishable to a screen reader. Actions reveal on row hover and on keyboard focus, and are always visible on touch screens.
 - The footer shows "start - end of total", the pager, and a rows-per-page Select. Page long datasets rather than rendering every row.
 
 ```css
@@ -4487,95 +4812,37 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   --white:                  #ffffff;
   --gray-100:               #F7F7F7;
   --gray-200:               #EDEDED;
+  --gray-300:               #D9D9D9;
   --gray-600:               #7A7A7A;
   --gray-700:               #595959;
   --blue-100:               #F0F7FF;
+  --blue-300:               #B3D9FF;
+  --red-300:                #F9B8B8;
+  --primary-focus-ring:     rgba(0, 64, 128, 0.3);
   --action-hover:           rgba(0, 0, 0, 0.04);
   --action-disabled:        rgba(0, 0, 0, 0.38);
   --text-primary:           rgba(0, 0, 0, 0.87);
+  --border-control:         #C4C4C4;
   --border-control-strong:  #8C8C8C;
+  --surface-disabled:       #F5F5F5;
+  --surface:                var(--white);
   --border:                 var(--gray-200);
+  --border-strong:          var(--gray-300);
   --muted-foreground:       var(--gray-600);
   --radius-xs:              2px;
+  --radius-sm:              4px;
   --radius-md:              8px;
+  --shadow-200:             0px 8px 8px rgba(39, 39, 39, 0.08), 0px 4px 6px rgba(39, 39, 39, 0.12);
+  --effect-state-focus:     0px 0px 0px 3px var(--blue-300);
+  --effect-state-error:     0px 0px 0px 3px var(--red-300);
+  --border-width-default:   1px;
   --focus-ring-width:       2px;
   --focus-ring-offset:      2px;
   --focus-ring-color:       var(--primary);
   --duration-fast:          100ms;
   --easing-standard:        cubic-bezier(0.2, 0, 0, 1);
+  --z-dropdown:             300;
   --font-sans:              'Inter', system-ui, -apple-system, sans-serif;
-}
-
-.inspera-table {
-  border-collapse: collapse;
-  width: 100%;
-  font-family: var(--font-sans);
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  overflow: hidden;
-}
-
-.inspera-table caption {
-  caption-side: top;
-  text-align: left;
-  padding: 0 0 8px;
-  font-size: 13px;
-  color: var(--muted-foreground);
-}
-
-.inspera-table th,
-.inspera-table td {
-  padding: 0 16px;
-  font-size: 14px;
-  color: var(--text-primary);
-  border-bottom: 1px solid var(--border);
-  white-space: nowrap;
-  text-align: left;
-}
-
-.inspera-table th {
-  font-weight: 600;
-  color: var(--gray-700);
-}
-
-.inspera-table thead tr {
-  background: var(--gray-100);
-  height: 52px;
-}
-
-.inspera-table tbody tr {
-  height: 52px;
-  cursor: default;
-  /* The stripe is the row's resting fill, passed as a variable. Setting it as
-     a plain background would outrank the hover rule below. */
-  background: var(--inspera-row-bg, var(--white));
-  transition: background var(--duration-fast) var(--easing-standard);
-}
-
-.inspera-table--compact thead tr,
-.inspera-table--compact tbody tr { height: 40px; }
-
-.inspera-table--striped tbody tr:nth-child(even) { --inspera-row-bg: var(--gray-100); }
-
-.inspera-table--hoverable tbody tr:hover { background: var(--action-hover); }
-
-/* Numbers right-align so the digits line up; text never does. Scoped through
-   the table so it outranks the "th, td" rule above, which is more specific
-   than a bare class on its own. */
-.inspera-table th.inspera-table__cell--right,
-.inspera-table td.inspera-table__cell--right { text-align: right; }
-
-.inspera-table th.inspera-table__select,
-.inspera-table td.inspera-table__select {
-  width: 44px;
-  text-align: center;
-}
-.inspera-table__select input {
-  width: 16px;
-  height: 16px;
-  accent-color: var(--primary);
-  cursor: pointer;
 }
 
 .inspera-checkbox {
@@ -4720,11 +4987,221 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   color: var(--muted-foreground);
 }
 
+.inspera-select {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 220px;
+  font-family: var(--font-sans);
+}
+
+/* Content-adaptable: the trigger grows with the longest value instead of
+   holding a fixed 220px. */
+.inspera-select--auto { width: auto; }
+
+.inspera-select__label {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.inspera-select__anchor { position: relative; }
+
+.inspera-select__trigger {
+  height: 40px;
+  width: 220px;
+  min-width: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0 12px;
+  border-radius: var(--radius-md);
+  border: var(--border-width-default) solid var(--border-control);
+  background: var(--white);
+  /* Muted while showing the placeholder; --text-primary once a value is set. */
+  color: var(--muted-foreground);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  cursor: pointer;
+  transition:
+    border-color var(--duration-fast) var(--easing-standard),
+    box-shadow var(--duration-fast) var(--easing-standard);
+}
+
+.inspera-select--auto .inspera-select__trigger { width: auto; }
+
+.inspera-select__trigger--filled { color: var(--text-primary); }
+
+.inspera-select__trigger:hover { border-color: var(--border-control-strong); }
+
+.inspera-select__trigger:focus-visible,
+.inspera-select__trigger[aria-expanded='true'] {
+  border-color: var(--primary);
+  box-shadow: var(--effect-state-focus);
+  outline: none;
+}
+
+.inspera-select__trigger .material-symbols-outlined {
+  font-size: 20px;
+  transition: transform 140ms ease;
+}
+.inspera-select__trigger[aria-expanded='true'] .material-symbols-outlined { transform: rotate(180deg); }
+
+/* Invalid outranks hover and focus - the error has to stay legible. */
+.inspera-select__trigger[aria-invalid='true'],
+.inspera-select__trigger[aria-invalid='true']:hover {
+  border-color: var(--error);
+  box-shadow: var(--effect-state-error);
+}
+/* A div cannot be :disabled, so the state is read from aria-disabled. */
+.inspera-select__trigger[aria-disabled='true'] {
+  background: var(--surface-disabled);
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.inspera-select__trigger[aria-disabled='true']:hover { border-color: var(--border-control); }
+
+.inspera-select__error { font-size: 12px; color: var(--error); }
+
+/* The list is anchored to the trigger, not appended to the body. */
+.inspera-select__list {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  margin: 0;
+  padding: 4px;
+  list-style: none;
+  background: var(--white);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-200);
+  z-index: var(--z-dropdown, 20);
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.inspera-select__option {
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 16px;
+  cursor: pointer;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Two different things: --active is the keyboard cursor, [aria-selected] is
+   the committed value. Collapsing them loses the arrow-key position. */
+.inspera-select__option--active { background: var(--blue-100); }
+.inspera-select__option[aria-selected='true'] { color: var(--primary); font-weight: 500; }
+
+.inspera-select__empty {
+  padding: 8px 12px;
+  color: var(--muted-foreground);
+  font-size: 14px;
+}
+
+.inspera-menu {
+  position: relative;
+  display: inline-block;
+  font-family: var(--font-sans);
+}
+
+.inspera-menu__trigger {
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 12px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-strong);
+  background: var(--white);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: none;
+  transition: box-shadow 120ms ease;
+}
+
+.inspera-menu__trigger[aria-expanded='true'] {
+  box-shadow: 0 0 0 3px var(--primary-focus-ring);
+}
+
+.inspera-menu__trigger .material-symbols-outlined {
+  font-size: 20px;
+  transition: transform 140ms ease;
+}
+.inspera-menu__trigger[aria-expanded='true'] .material-symbols-outlined { transform: rotate(180deg); }
+
+.inspera-menu__list {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: auto;
+  min-width: 180px;
+  padding: 4px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-200);
+  z-index: var(--z-dropdown, 20);
+}
+
+/* Bottom End aligns the panel's right edge to the trigger's, for a menu near
+   the right edge of the viewport. */
+.inspera-menu__list--end { left: auto; right: 0; }
+
+.inspera-menu__item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  text-align: left;
+  cursor: pointer;
+  opacity: 1;
+  transition: background 120ms ease;
+}
+
+/* The highlight follows the keyboard cursor, so hover and arrow keys have to
+   drive the same state. */
+.inspera-menu__item--active,
+.inspera-menu__item:hover:not(:disabled) { background: var(--action-hover); }
+
+.inspera-menu__item--danger { color: var(--error); }
+
+.inspera-menu__item:disabled {
+  color: var(--action-disabled);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.inspera-menu__item .material-symbols-outlined { font-size: 20px; }
+
+.inspera-menu__separator {
+  height: 1px;
+  background: var(--border);
+  margin: 4px 0;
+}
+
 .inspera-datagrid { width: 100%; font-family: var(--font-sans); }
 
 .inspera-datagrid__table {
   width: 100%;
-  border-collapse: collapse;
+  /* separate, not collapse: browsers ignore border-radius on a collapsed table. */
+  border-collapse: separate;
+  border-spacing: 0;
   background: var(--white);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
@@ -4743,6 +5220,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   white-space: nowrap;
   text-align: left;
 }
+.inspera-datagrid__row:last-child .inspera-datagrid__td { border-bottom: none; }
 .inspera-datagrid--compact .inspera-datagrid__th,
 .inspera-datagrid--compact .inspera-datagrid__td { height: 40px; }
 
@@ -4751,6 +5229,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   color: var(--gray-700);
 }
 .inspera-datagrid__select { width: 44px; text-align: center; }
+.inspera-datagrid__actions { width: 96px; text-align: right; }
 
 /* The sortable header is a bare button carrying the arrow. */
 .inspera-datagrid__sort {
@@ -4765,12 +5244,23 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   color: var(--gray-700);
   cursor: pointer;
 }
-.inspera-datagrid__sort[aria-pressed='true'] { color: var(--primary); }
+.inspera-datagrid__sort--active { color: var(--primary); }
 .inspera-datagrid__sort .material-symbols-outlined { font-size: 18px; opacity: 0.35; }
-.inspera-datagrid__sort[aria-pressed='true'] .material-symbols-outlined { opacity: 1; }
+.inspera-datagrid__sort--active .material-symbols-outlined { opacity: 1; }
 
-.inspera-datagrid__row--selected { background: var(--blue-100); }
+.inspera-datagrid__row { background: var(--white); }
 .inspera-datagrid__row--striped { background: var(--gray-100); }
+.inspera-datagrid__row--selected { background: var(--blue-100); }
+.inspera-datagrid__row:hover { background: var(--action-hover); }
+
+/* Row actions wait for hover or keyboard focus, but stay in the tab order -
+   and are always shown where there is no hover to reveal them. */
+.inspera-datagrid__actions > * { opacity: 0; transition: opacity var(--duration-fast) var(--easing-standard); }
+.inspera-datagrid__row:hover .inspera-datagrid__actions > *,
+.inspera-datagrid__row:focus-within .inspera-datagrid__actions > * { opacity: 1; }
+@media (hover: none) {
+  .inspera-datagrid__actions > * { opacity: 1; }
+}
 
 .inspera-datagrid__footer {
   display: flex;
@@ -4783,6 +5273,18 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 .inspera-datagrid__range,
 .inspera-datagrid__pagesize-label { font-size: 14px; color: var(--muted-foreground); }
 .inspera-datagrid__pagesize { display: flex; align-items: center; gap: 8px; }
+
+.inspera-datagrid__visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
 ```
 
 ```html
@@ -4790,33 +5292,73 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   <table class="inspera-datagrid__table">
     <thead>
       <tr class="inspera-datagrid__head-row">
-        <th class="inspera-datagrid__th inspera-datagrid__select" scope="col">
-          <!-- select-all checkbox, see the Checkbox recipe -->
-        </th>
+        <th class="inspera-datagrid__th inspera-datagrid__select" scope="col"><label class="inspera-checkbox inspera-checkbox--mixed" for="dg-all"><input class="inspera-checkbox__input" id="dg-all" type="checkbox" aria-label="Select all rows" /><span class="inspera-checkbox__box" aria-hidden="true"><span class="material-symbols-outlined">remove</span></span></label></th>
         <th class="inspera-datagrid__th" scope="col" aria-sort="ascending">
-          <button type="button" class="inspera-datagrid__sort" aria-pressed="true">
+          <button type="button" class="inspera-datagrid__sort inspera-datagrid__sort--active">
             Candidate
             <span class="material-symbols-outlined" aria-hidden="true">arrow_upward</span>
           </button>
         </th>
         <th class="inspera-datagrid__th" scope="col">Status</th>
+        <th class="inspera-datagrid__th inspera-datagrid__actions" scope="col"><span class="inspera-datagrid__visually-hidden">Actions</span></th>
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td class="inspera-datagrid__td inspera-datagrid__select"><!-- row checkbox --></td>
-        <td class="inspera-datagrid__td">Ada Lovelace</td>
-        <td class="inspera-datagrid__td">Submitted</td>
-      </tr>
+        <tr class="inspera-datagrid__row inspera-datagrid__row--selected">
+          <td class="inspera-datagrid__td inspera-datagrid__select"><label class="inspera-checkbox" for="dg-row-0"><input class="inspera-checkbox__input" id="dg-row-0" type="checkbox" aria-label="Select Ada Lovelace" checked /><span class="inspera-checkbox__box" aria-hidden="true"><span class="material-symbols-outlined">check</span></span></label></td>
+          <td class="inspera-datagrid__td">Ada Lovelace</td>
+          <td class="inspera-datagrid__td">Submitted</td>
+          <td class="inspera-datagrid__td inspera-datagrid__actions">
+            <div class="inspera-menu">
+              <button type="button" class="inspera-menu__trigger" aria-haspopup="menu" aria-expanded="false" aria-label="Actions for Ada Lovelace">
+                Actions
+                <span class="material-symbols-outlined" aria-hidden="true">expand_more</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+        <tr class="inspera-datagrid__row">
+          <td class="inspera-datagrid__td inspera-datagrid__select"><label class="inspera-checkbox" for="dg-row-1"><input class="inspera-checkbox__input" id="dg-row-1" type="checkbox" aria-label="Select Grace Hopper" /><span class="inspera-checkbox__box" aria-hidden="true"></span></label></td>
+          <td class="inspera-datagrid__td">Grace Hopper</td>
+          <td class="inspera-datagrid__td">In progress</td>
+          <td class="inspera-datagrid__td inspera-datagrid__actions">
+            <div class="inspera-menu">
+              <button type="button" class="inspera-menu__trigger" aria-haspopup="menu" aria-expanded="false" aria-label="Actions for Grace Hopper">
+                Actions
+                <span class="material-symbols-outlined" aria-hidden="true">expand_more</span>
+              </button>
+            </div>
+          </td>
+        </tr>
     </tbody>
   </table>
-
   <div class="inspera-datagrid__footer">
-    <span class="inspera-datagrid__range">1 - 10 of 42</span>
-    <!-- Pagination, see the Pagination recipe -->
+    <span class="inspera-datagrid__range">61 - 62 of 242</span>
+    <nav class="inspera-pagination inspera-pagination--small" aria-label="Pagination">
+      <ul class="inspera-pagination__list">
+        <li><button type="button" class="inspera-pagination__item" aria-label="First page"><span class="material-symbols-outlined" aria-hidden="true">first_page</span></button></li>
+        <li><button type="button" class="inspera-pagination__item" aria-label="Previous page"><span class="material-symbols-outlined" aria-hidden="true">chevron_left</span></button></li>
+        <li><button type="button" class="inspera-pagination__item" aria-label="Page 1">1</button></li>
+        <li><span class="inspera-pagination__item inspera-pagination__ellipsis" aria-hidden="true">...</span></li>
+        <li><button type="button" class="inspera-pagination__item" aria-label="Page 3">3</button></li>
+        <li><button type="button" class="inspera-pagination__item" aria-label="Page 4" aria-current="page">4</button></li>
+        <li><button type="button" class="inspera-pagination__item" aria-label="Page 5">5</button></li>
+        <li><span class="inspera-pagination__item inspera-pagination__ellipsis" aria-hidden="true">...</span></li>
+        <li><button type="button" class="inspera-pagination__item" aria-label="Page 12">12</button></li>
+        <li><button type="button" class="inspera-pagination__item" aria-label="Next page"><span class="material-symbols-outlined" aria-hidden="true">chevron_right</span></button></li>
+        <li><button type="button" class="inspera-pagination__item" aria-label="Last page"><span class="material-symbols-outlined" aria-hidden="true">last_page</span></button></li>
+      </ul>
+    </nav>
     <div class="inspera-datagrid__pagesize">
-      <span class="inspera-datagrid__pagesize-label">Rows per page</span>
-      <!-- Select, see the Select recipe -->
+      <span class="inspera-datagrid__pagesize-label" aria-hidden="true">Rows per page</span>
+      <div class="inspera-select inspera-select--auto">
+        <div class="inspera-select__anchor">
+          <div class="inspera-select__trigger inspera-select__trigger--filled" role="combobox" tabindex="0" aria-label="Rows per page" aria-expanded="false" aria-haspopup="listbox">
+            <span>20</span>
+            <span class="material-symbols-outlined" aria-hidden="true">expand_more</span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -4835,22 +5377,40 @@ Show and hide sections of related content. - category: `data-display`.
 import { Accordion } from '@inspera/kit'
 
 <Accordion
-  type="Single"
-  iconPosition="Right"
-  items={[{ title: 'What is Inspera?', content: '...' }]}
+  items={[
+    {
+      title: 'What is Inspera?',
+      content: 'A digital assessment platform for education and certification.',
+    },
+    {
+      title: 'How are results scored?',
+      content: 'Automatically for objective items, with manual grading for essays.',
+    },
+    {
+      title: 'Is it accessible?',
+      content: 'Yes - components follow WCAG 2.1 AA guidance.',
+    },
+  ]}
+  defaultValue={[0]}
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `items` | `AccordionItem[]` | `defaultItems` | Accordion sections. |
-| `type` | `'Single' \| 'Multiple'` | `'Single'` | Allow one or many open at once. |
-| `defaultOpenIndex` | `number` | `0` | Initially open section. |
-| `defaultOpenIndexes` | `number[]` | - | Initially open sections, for `type="Multiple"`. Wins over defaultOpenIndex. |
+| `items` **(required)** | `AccordionItem[]` | - | Accordion sections. |
+| `selection` | `'Single' \| 'Multiple'` | `'Single'` | Whether one or several sections can be open at once. |
+| `value` | `number[]` | - | Open section indexes. Controlled - pair with onChange. |
+| `defaultValue` | `number[]` | `[]` | Sections open at first, when uncontrolled. All closed by default. |
+| `onChange` | `(open: number[]) => void` | - | Fired with the open section indexes after a toggle. |
 | `iconPosition` | `'Left' \| 'Right'` | `'Right'` | Chevron placement. |
+| `headingLevel` | `2 \| 3 \| 4 \| 5 \| 6` | `3` | Heading level wrapping each trigger, to fit the page outline. |
+
+Also accepts any native `<div>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<div>`. `className` and `style` go on the outermost element.
 
 ```ts
 export interface AccordionItem {
+  /** Stable key. Defaults to the title. */
+  id?: string
   title: string
   content: ReactNode
 }
@@ -5023,9 +5583,7 @@ import { Tag } from '@inspera/kit'
 
 <Tag
   label="Neutral"
-  intent="Neutral"
-  size="Medium"
-  removable={false}
+  leadingIcon="label"
 />
 ```
 
@@ -5034,10 +5592,12 @@ import { Tag } from '@inspera/kit'
 | `label` **(required)** | `string` | - | Tag text. |
 | `intent` | `'Neutral' \| 'Info' \| 'Success' \| 'Warning' \| 'Error'` | `'Neutral'` | Semantic color. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Tag height. |
-| `removable` | `boolean` | `false` | Show a remove affordance. |
+| `removable` | `boolean` | `false` | Show a remove button. Pair with onRemove. |
 | `leadingIcon` | `string` | - | Optional leading icon. |
-| `onRemove` | `() => void` | - | Fired when the remove control is activated. Set removable as well. |
-| `onClick` | `() => void` | - | Fired when the tag itself is activated. |
+| `onRemove` | `() => void` | - | Fired when the remove button is activated. |
+| `onClick` | `MouseEventHandler<HTMLButtonElement>` | - | Makes the tag text itself a button. |
+
+Also accepts any native `<span>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<span>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `status`, keyboard operable. Removable tags expose a button with aria-label "Remove {label}"; Interactive tags must be keyboard focusable; Use aria-label for icon-only tags.
 
@@ -5144,6 +5704,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  font: inherit;
   width: 18px;
   height: 18px;
   margin-left: 2px;
@@ -5187,17 +5748,16 @@ Separate content with a thin rule. - category: `data-display`.
 ```tsx
 import { Divider } from '@inspera/kit'
 
-<Divider
-  orientation="Horizontal"
-  spacing="Default"
-/>
+<Divider />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `orientation` | `'Horizontal' \| 'Vertical'` | `'Horizontal'` | Divider direction. |
+| `orientation` | `'Horizontal' \| 'Vertical'` | `'Horizontal'` | Divider direction. A vertical divider needs a flex row around it. |
 | `label` | `string` | - | Optional centered label (horizontal only). |
 | `spacing` | `'Compact' \| 'Default' \| 'Spacious'` | `'Default'` | Surrounding margin. |
+
+Also accepts any native `<div>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<div>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `separator`. Use role="separator" with aria-orientation; Purely decorative dividers may be aria-hidden.
 
@@ -5334,22 +5894,23 @@ Communicate the absence of content and offer a next step. - category: `data-disp
 import { EmptyState } from '@inspera/kit'
 
 <EmptyState
-  icon="inbox"
   title="No assessments yet"
-  description="Create your first assessment."
+  description="Create your first assessment to get started."
   actionLabel="New assessment"
-  size="Medium"
+  onAction={createAssessment}
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
+| `title` **(required)** | `string` | - | Primary message, e.g. "No assessments yet". |
+| `description` | `string` | - | Supporting explanation: why it is empty, or what to do next. |
 | `icon` | `string` | `'inbox'` | Material Symbols icon name. |
-| `title` | `string` | `'No results found'` | Primary message. |
-| `description` | `string` | `'Try adjusting your filters or search terms.'` | Supporting explanation. |
 | `actionLabel` | `string` | - | Optional primary action label. |
 | `onAction` | `() => void` | - | Fired when the action is activated. Only rendered when actionLabel is set. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Overall scale. |
+
+Also accepts any native `<div>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<div>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `status`, keyboard operable. Announce dynamically-appearing empty states with role="status"; The action must be a real focusable button; The illustration/icon is decorative (aria-hidden).
 
@@ -5460,6 +6021,11 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 /* Sizes change height, padding and gap only - never the 16px type. */
 .inspera-btn--small { height: 32px; padding: 0 12px; gap: 6px; }
 .inspera-btn--large { height: 48px; padding: 0 24px; gap: 10px; }
+
+/* Icon only: a square the height of the button. It still needs aria-label. */
+.inspera-btn--icon-only { width: 40px; min-width: 0; padding: 0; }
+.inspera-btn--small.inspera-btn--icon-only { width: 32px; }
+.inspera-btn--large.inspera-btn--icon-only { width: 48px; }
 
 /* Solid intents differ only in fill; hover and pressed derive from it. */
 .inspera-btn--primary     { --btn-bg: var(--primary); }
@@ -5579,22 +6145,33 @@ Show a set of users as overlapping avatars with an overflow count. - category: `
 import { AvatarGroup } from '@inspera/kit'
 
 <AvatarGroup
-  size="Medium"
-  max={4}
-  avatars={[{ name: 'Ada Lovelace' }, { name: 'Linus Torvalds' }]}
+  avatars={[
+    { name: 'Ada Lovelace' },
+    { name: 'Linus Torvalds' },
+    { name: 'Grace Hopper' },
+    { name: 'Alan Turing' },
+    { name: 'Katherine Johnson' },
+    { name: 'Edsger Dijkstra' },
+  ]}
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `avatars` | `AvatarGroupItem[]` | `defaultAvatars` | Avatars to display. |
-| `max` | `number` | `4` | Maximum shown before overflow. |
+| `avatars` **(required)** | `AvatarGroupItem[]` | - | People to show, in order. |
+| `max` | `number` | `4` | How many to show before collapsing the rest into "+N". |
 | `size` | `AvatarSize` | `'Medium'` | Avatar diameter. |
+
+Also accepts any native `<div>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<div>`. `className` and `style` go on the outermost element.
 
 ```ts
 export interface AvatarGroupItem {
-  content?: AvatarContent
-  name?: string
+  /** The person's name: initials and accessible name. */
+  name: string
+  /** Photo URL. */
+  src?: string
+  /** Material Symbols name shown instead of initials. */
+  icon?: string
 }
 ```
 
@@ -5786,19 +6363,21 @@ import { Stat } from '@inspera/kit'
   label="Active candidates"
   value="12,480"
   delta="+8.2% vs last week"
-  deltaIntent="up"
+  deltaIntent="Up"
   icon="group"
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` **(required)** | `string` | `'Average score'` | Metric name. |
-| `value` **(required)** | `string \| number` | `'84%'` | Metric value. |
-| `delta` | `string` | `'+4.2%'` | Change indicator text. |
-| `deltaIntent` | `'up' \| 'down' \| 'neutral'` | `'up'` | Trend direction / color. |
+| `label` **(required)** | `string` | - | Metric name. |
+| `value` **(required)** | `string \| number` | - | Metric value. |
+| `delta` | `string` | - | Change indicator text, e.g. "+8.2% vs last week". Omit when there is no comparison. |
+| `deltaIntent` | `'Up' \| 'Down' \| 'Neutral'` | `'Neutral'` | Trend direction: sets the arrow, the colour and what is announced. |
 | `icon` | `string` | - | Optional leading icon. |
 | `helpText` | `string` | - | Optional context below the value, such as the comparison period. |
+
+Also accepts any native `<div>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<div>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `group`. Associate the value with its label for screen readers; Convey trend with text, not color alone; Use aria-label to summarize the metric and change.
 
@@ -5903,6 +6482,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 /* The delta carries the trend colour; the arrow is not decorative repetition,
    it is the direction for anyone who cannot rely on the colour alone. */
 .inspera-stat__delta {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -5910,6 +6490,19 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   font-weight: 500;
 }
 .inspera-stat__delta .material-symbols-outlined { font-size: 18px; }
+
+/* The arrow and colour carry direction for sighted users; this says it aloud. */
+.inspera-stat__trend {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
 
 .inspera-stat__delta--up      { color: var(--success); }
 .inspera-stat__delta--down    { color: var(--error); }
@@ -5943,26 +6536,52 @@ Present a vertical series of related items. - category: `data-display`.
 import { List } from '@inspera/kit'
 
 <List
-  size="Default"
-  divided={true}
-  interactive={false}
-  items={[{ primary: 'General settings', secondary: '...', leading: 'settings' }]}
+  items={[
+    {
+      primary: 'General settings',
+      secondary: 'Language, timezone, theme',
+      leadingIcon: 'settings',
+      trailingIcon: 'chevron_right',
+    },
+    {
+      primary: 'Notifications',
+      secondary: 'Email and push preferences',
+      leadingIcon: 'notifications',
+      trailingIcon: 'chevron_right',
+    },
+    {
+      primary: 'Security',
+      secondary: 'Password and two-factor auth',
+      leadingIcon: 'lock',
+      trailingIcon: 'chevron_right',
+    },
+  ]}
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `items` | `ListItem[]` | `defaultItems` | List rows. |
+| `items` **(required)** | `ListItem[]` | - | List rows. |
 | `divided` | `boolean` | `true` | Show dividers between rows. |
 | `interactive` | `boolean` | `false` | Make rows clickable. |
 | `size` | `'Compact' \| 'Default'` | `'Default'` | Row density. |
 | `onItemClick` | `(item: ListItem, index: number) => void` | - | Fired with the item and its index. Set interactive as well. |
 
+Also accepts any native `<ul>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<ul>`. `className` and `style` go on the outermost element.
+
 ```ts
 export interface ListItem {
+  /** Stable key. Defaults to the row position. */
+  id?: string
   primary: string
   secondary?: string
+  /** Material Symbols name shown before the text. */
+  leadingIcon?: string
+  /** Material Symbols name shown after the text, e.g. `chevron_right`. */
+  trailingIcon?: string
+  /** Any element before the text - an Avatar, a Checkbox. */
   leading?: ReactNode
+  /** Any element after the text - a Badge, a count. Strings render as text. */
   trailing?: ReactNode
 }
 ```
@@ -6151,24 +6770,23 @@ Display semantic inline feedback. - category: `feedback`.
 import { Alert } from '@inspera/kit'
 
 <Alert
-  intent="Info"
-  title="Heads up"
-  message="..."
-  layout="Simple"
-  background={true}
+  title="Grading in progress"
+  message="Results will be released once every essay is marked."
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `title` | `string` | `'Heads up'` | Short headline stating what happened. |
-| `message` | `string` | `'This is a contextual inline message that matches the intent severity.'` | Supporting detail. Keep it to one or two sentences. |
-| `intent` | `'Info' \| 'Success' \| 'Warning' \| 'Error'` | `'Info'` | Severity / color. |
-| `layout` | `'Simple' \| 'With CTA' \| 'With Close' \| 'With CTA + Close'` | `'Simple'` | Action affordances. |
-| `background` | `boolean` | `true` | Tinted fill vs. left-accent only. |
-| `ctaLabel` | `string` | `'View details'` | Label for the inline action. Only rendered by the "With CTA" layouts. |
-| `onCta` | `() => void` | - | Fired when the inline action is activated. |
-| `onClose` | `() => void` | - | Fired when the alert is dismissed. Only rendered by the "With Close" layouts. |
+| `message` **(required)** | `string` | - | Supporting detail. Keep it to one or two sentences. |
+| `title` | `string` | - | Short headline stating what happened. Optional. |
+| `intent` | `'Info' \| 'Success' \| 'Warning' \| 'Error'` | `'Info'` | Severity / color. Warning and Error interrupt screen readers; Info and Success wait. |
+| `background` | `boolean` | `true` | Tinted fill; false draws a left accent bar on a clear background. |
+| `actionLabel` | `string` | - | Label for an inline action link, e.g. "View details". Shown when set. |
+| `onAction` | `() => void` | - | Fired when the inline action is activated. |
+| `dismissible` | `boolean` | `false` | Show a close button. Pair with onClose. |
+| `onClose` | `() => void` | - | Fired when the close button is activated. |
+
+Also accepts any native `<div>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<div>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `alert`, keyboard operable. Error and Warning announce as role="alert"; Info and Success as a polite role="status" - never both on one element, since role="alert" already implies assertive; Close button must have aria-label="Close alert".
 
@@ -6347,28 +6965,29 @@ import { Dialog } from '@inspera/kit'
 
 <Dialog
   open={open}
-  size="Medium"
-  title="Dialog title"
-  hasCloseButton={true}
-  hasActions={true}
+  title="Publish assessment?"
+  confirmLabel="Publish"
   onClose={() => setOpen(false)}
-  onConfirm={handleConfirm}
-/>
+  onConfirm={handlePublish}
+>
+  Candidates will be able to start it at the scheduled time.
+</Dialog>
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `title` | `string` | `'Dialog title'` | Dialog heading. Also the accessible name. |
-| `body` | `ReactNode` | `'This is the dialog body. Provide context or a clear description of the action the user is about to take.'` | Dialog content. |
+| `open` **(required)** | `boolean` | - | Whether the dialog is shown. Controlled - pair with onClose. |
+| `title` **(required)** | `string` | - | Dialog heading. Also the accessible name. |
+| `children` | `ReactNode` | - | Dialog content. |
 | `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Panel width 400 / 480 / 560. |
-| `hasCloseButton` | `boolean` | `true` | Show the header close affordance. |
+| `hasCloseButton` | `boolean` | `true` | Show the header close button. |
 | `hasActions` | `boolean` | `true` | Show the footer action buttons. |
 | `confirmLabel` | `string` | `'Continue'` | Label for the confirming action. Name the action - "Delete", not "OK". |
 | `cancelLabel` | `string` | `'Cancel'` | Label for the dismissing action. |
-| `open` | `boolean` | `true` | Whether the dialog is shown. Controlled - pair with onClose. |
-| `embedded` | `boolean` | `false` | Render just the panel (no overlay) - used for documentation previews. |
-| `onClose` | `() => void` | - | Fired on the close button, the overlay, and Escape. |
+| `onClose` | `() => void` | - | Fired on the close button, Cancel, the scrim, and Escape. |
 | `onConfirm` | `() => void` | - | Fired when the confirming action is activated. |
+
+Also accepts any native `<div>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<div>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `dialog`, keyboard operable. Use role="dialog" with aria-modal="true"; Set aria-labelledby to the dialog title; Trap focus inside the dialog when open; Return focus to trigger element on close; Escape key closes the dialog.
 
@@ -6411,44 +7030,149 @@ component, and it is complete: do not substitute a radius, colour, spacing or
 font weight of your own, and do not restyle it with a UI kit's defaults.
 
 - Widths are exactly 400 / 480 / 560 with `max-width: 100%`, `--radius-lg` and `--shadow-500`.
-- Wrap the panel in the scrim. `rgba(39,39,39,0.48)`, fixed, full-viewport, at `--z-modal`. Without it the page behind stays clickable and this is a floating card, not a modal.
+- Wrap the panel in the scrim: `--scrim`, fixed, full-viewport, at `--z-modal`. Without it the page behind stays clickable and this is a floating card, not a modal.
+- The footer actions are the canonical Button - `inspera-btn--text` to cancel, `inspera-btn--primary` (or `--destructive`) to confirm. Do not style dialog buttons separately.
 - `role="dialog"` with `aria-modal="true"` and `aria-labelledby` pointing at the title id. Generate a unique id - a hardcoded one collides the moment two dialogs exist on a page.
 - Behaviour the markup cannot express, and that you must add: move focus into the panel on open, trap Tab inside it, return focus to the trigger on close, close on Escape and on a scrim click, and lock body scroll while open.
-- The title is 22.78px/500 - an exact export from Figma, not a rounded 24.
+- The title uses the `--h2-*` type tokens (22.78px/500) - an exact export from Figma, not a rounded 24.
 - Name the confirming action for what it does ("Delete"), never "OK".
 
 ```css
 /* Tokens this component needs. Paste once, at `:root`. */
 :root {
-  --primary:       #004080;
-  --white:         #ffffff;
-  --gray-200:      #EDEDED;
-  --gray-900:      #272727;
-  --text-primary:  rgba(0, 0, 0, 0.87);
-  --border:        var(--gray-200);
-  --radius-sm:     4px;
-  --radius-lg:     12px;
-  --radius-pill:   9999px;
-  --shadow-500:    0px 10px 32px rgba(39, 39, 39, 0.1), 0px 6px 14px rgba(39, 39, 39, 0.12);
-  --z-modal:       600;
-  --font-sans:     'Inter', system-ui, -apple-system, sans-serif;
+  --primary:               #004080;
+  --error:                 #D32F2F;
+  --warning:               #EF6C00;
+  --success:               #2E7D32;
+  --white:                 #ffffff;
+  --gray-100:              #F7F7F7;
+  --gray-200:              #EDEDED;
+  --gray-700:              #595959;
+  --gray-900:              #272727;
+  --text-primary:          rgba(0, 0, 0, 0.87);
+  --border:                var(--gray-200);
+  --scrim:                 rgba(39, 39, 39, 0.48);
+  --radius-sm:             4px;
+  --radius-lg:             12px;
+  --radius-pill:           9999px;
+  --shadow-500:            0px 10px 32px rgba(39, 39, 39, 0.1), 0px 6px 14px rgba(39, 39, 39, 0.12);
+  --effect-button-shadow:  inset 0px -1px 0px rgba(0, 0, 0, 0.2), 0px 1px 0px rgba(0, 0, 0, 0.08);
+  --border-width-default:  1px;
+  --focus-ring-width:      2px;
+  --focus-ring-offset:     2px;
+  --focus-ring-color:      var(--primary);
+  --duration-fast:         100ms;
+  --easing-standard:       cubic-bezier(0.2, 0, 0, 1);
+  --z-modal:               600;
+  --font-sans:             'Inter', system-ui, -apple-system, sans-serif;
+  --h2-size:               22.78px;
+  --h2-weight:             500;
+  --h2-line-height:        1.12;
 }
+
+.inspera-btn {
+  /* Fill, text and border come from the intent modifier below. */
+  --btn-bg: var(--primary);
+  --btn-fg: var(--white);
+  --btn-border: transparent;
+  --btn-shadow: var(--effect-button-shadow);
+  --btn-bg-hover: color-mix(in srgb, var(--btn-bg) 90%, black);
+  --btn-bg-active: color-mix(in srgb, var(--btn-bg) 82%, black);
+  --btn-shadow-hover: inset 0 -1px 0 rgba(0, 0, 0, 0.2), 0 2px 6px rgba(0, 64, 128, 0.24);
+  --btn-shadow-active: inset 0 1px 2px rgba(0, 0, 0, 0.24);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 40px;
+  min-width: 80px;
+  padding: 0 16px;
+  border-radius: var(--radius-sm);
+  border: var(--border-width-default) solid var(--btn-border);
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  box-shadow: var(--btn-shadow);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background var(--duration-fast) var(--easing-standard),
+    border-color var(--duration-fast) var(--easing-standard),
+    box-shadow var(--duration-fast) var(--easing-standard),
+    transform var(--duration-fast) var(--easing-standard);
+}
+
+/* Sizes change height, padding and gap only - never the 16px type. */
+.inspera-btn--small { height: 32px; padding: 0 12px; gap: 6px; }
+.inspera-btn--large { height: 48px; padding: 0 24px; gap: 10px; }
+
+/* Icon only: a square the height of the button. It still needs aria-label. */
+.inspera-btn--icon-only { width: 40px; min-width: 0; padding: 0; }
+.inspera-btn--small.inspera-btn--icon-only { width: 32px; }
+.inspera-btn--large.inspera-btn--icon-only { width: 48px; }
+
+/* Solid intents differ only in fill; hover and pressed derive from it. */
+.inspera-btn--primary     { --btn-bg: var(--primary); }
+.inspera-btn--success     { --btn-bg: var(--success); }
+.inspera-btn--warning     { --btn-bg: var(--warning); }
+.inspera-btn--destructive { --btn-bg: var(--error); }
+.inspera-btn--secondary {
+  --btn-bg: var(--gray-100);
+  --btn-fg: var(--gray-900);
+  --btn-border: var(--gray-700);
+}
+
+/* Outline and Text carry no fill and no shadow; they tint on interaction. */
+.inspera-btn--outline,
+.inspera-btn--text {
+  --btn-bg: transparent;
+  --btn-fg: var(--primary);
+  --btn-shadow: none;
+  --btn-shadow-hover: none;
+  --btn-shadow-active: none;
+  --btn-bg-hover: color-mix(in srgb, var(--primary) 8%, transparent);
+  --btn-bg-active: color-mix(in srgb, var(--primary) 12%, transparent);
+}
+.inspera-btn--outline { --btn-border: var(--primary); }
+
+.inspera-btn:hover:not(:disabled) {
+  background: var(--btn-bg-hover);
+  box-shadow: var(--btn-shadow-hover);
+}
+.inspera-btn:active:not(:disabled) {
+  background: var(--btn-bg-active);
+  box-shadow: var(--btn-shadow-active);
+  transform: translateY(1px);
+}
+.inspera-btn:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+.inspera-btn:disabled { opacity: 0.38; cursor: not-allowed; }
+
+.inspera-btn .material-symbols-outlined { font-size: 20px; }
 
 /* The scrim. Fixed, full-viewport, and it closes the dialog when clicked. */
 .inspera-dialog-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(39, 39, 39, 0.48);
+  background: var(--scrim);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 16px;
-  z-index: var(--z-modal, 1000);
+  z-index: var(--z-modal);
 }
 
 .inspera-dialog {
   width: 480px;
   max-width: 100%;
+  /* A long dialog scrolls its body; header and actions stay put. */
+  max-height: calc(100vh - 32px);
   display: flex;
   flex-direction: column;
   border-radius: var(--radius-lg);
@@ -6469,13 +7193,14 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   padding: 12px 24px;
   border-bottom: 1px solid var(--border);
   min-height: 64px;
+  flex-shrink: 0;
 }
 
 .inspera-dialog__title {
   margin: 0;
-  font-size: 22.78px;
-  font-weight: 500;
-  line-height: 1.12;
+  font-size: var(--h2-size);
+  font-weight: var(--h2-weight);
+  line-height: var(--h2-line-height);
   color: var(--gray-900);
   letter-spacing: -0.2px;
 }
@@ -6492,41 +7217,30 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   line-height: 0;
 }
 .inspera-dialog__close .material-symbols-outlined { font-size: 24px; }
+.inspera-dialog__close:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
 
 .inspera-dialog__body {
   padding: 32px;
   font-size: 16px;
   line-height: 20px;
   color: var(--gray-900);
+  overflow-y: auto;
 }
 
+/* The actions are the canonical Button - Text for cancel, Primary to confirm -
+   so a dialog's buttons match every other button in the product. */
 .inspera-dialog__footer {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   padding: 16px 24px;
   border-top: 1px solid var(--border);
   flex-wrap: wrap;
-}
-
-.inspera-dialog__action {
-  padding: 12px;
-  border-radius: var(--radius-sm);
-  border: none;
-  background: transparent;
-  color: var(--primary);
-  font-family: var(--font-sans);
-  font-weight: 500;
-  font-size: 16px;
-  line-height: 20px;
-  cursor: pointer;
-}
-
-.inspera-dialog__action--confirm {
-  background: var(--primary);
-  color: var(--white);
-  box-shadow: 0px 1px 0px 0px rgba(0, 0, 0, 0.08), inset 0px -1px 0px 0px rgba(0, 0, 0, 0.2);
+  flex-shrink: 0;
 }
 ```
 
@@ -6544,8 +7258,8 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
     </div>
     <div class="inspera-dialog__body">This cannot be undone.</div>
     <div class="inspera-dialog__footer">
-      <button type="button" class="inspera-dialog__action">Cancel</button>
-      <button type="button" class="inspera-dialog__action inspera-dialog__action--confirm">Delete</button>
+      <button type="button" class="inspera-btn inspera-btn--text">Cancel</button>
+      <button type="button" class="inspera-btn inspera-btn--destructive">Delete</button>
     </div>
   </div>
 </div>
@@ -6564,22 +7278,22 @@ Show brief, non-blocking feedback at the bottom of the screen. - category: `feed
 import { Snackbar } from '@inspera/kit'
 
 <Snackbar
-  intent="Neutral"
   message="Assessment saved."
-  hasAction={false}
-  hasClose={true}
+  dismissible
+  onClose={handleClose}
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `message` | `string` | `'Assessment saved successfully.'` | What happened. One short sentence. |
+| `message` **(required)** | `string` | - | What happened. One short sentence. |
 | `intent` | `'Neutral' \| 'Info' \| 'Success' \| 'Warning' \| 'Error'` | `'Neutral'` | Accent icon color. |
-| `hasAction` | `boolean` | `false` | Show an inline action (e.g. Undo). |
-| `hasClose` | `boolean` | `true` | Show the dismiss button. |
-| `actionLabel` | `string` | `'Undo'` | Label for the inline action, typically "Undo". |
+| `actionLabel` | `string` | - | Label for an inline action, typically "Undo". Shown when set. |
 | `onAction` | `() => void` | - | Fired when the inline action is activated. |
-| `onClose` | `() => void` | - | Fired when dismissed. |
+| `dismissible` | `boolean` | `false` | Show a close button. Pair with onClose. |
+| `onClose` | `() => void` | - | Fired when the close button is activated. |
+
+Also accepts any native `<div>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<div>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `status`, keyboard operable. Use role="status" with aria-live="polite"; Action button must be focusable; Auto-dismiss timing must be generous (5s minimum).
 
@@ -6647,10 +7361,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   display: inline-flex;
   align-items: center;
   gap: 12px;
-  min-width: 300px;
+  min-width: min(300px, 100%);
   max-width: 480px;
-  height: 48px;
-  padding: 0 8px 0 16px;
+  min-height: 48px;
+  padding: 8px 8px 8px 16px;
   border-radius: var(--radius-md);
   background: var(--gray-900);
   color: var(--white);
@@ -6691,7 +7405,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   padding: 4px;
   border: none;
   background: none;
-  color: rgba(255, 255, 255, 0.7);
+  color: color-mix(in srgb, var(--white) 70%, transparent);
   display: inline-flex;
   cursor: pointer;
 }
@@ -6722,18 +7436,18 @@ Fire transient notifications imperatively from anywhere. - category: `feedback`.
 import { ToastProvider } from '@inspera/kit'
 
 // Mount once near your app root:
-<ToastProvider position="bottom-right" />
+<ToastProvider />
 
 // Then call from anywhere:
-toast("Assessment saved.", {
-  intent: "Success",
+toast('Assessment saved.', {
+  intent: 'Success',
 })
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `position` | `'top-left' \| 'top-center' \| 'top-right' \| 'bottom-left' \| 'bottom-center' \| 'bottom-right'` | `'bottom-right'` | Where the stack anchors on screen. |
-| `max` | `number` | `4` | Cap on simultaneously visible toasts. Oldest is dropped past the limit. |
+| `position` | `'TopLeft' \| 'TopCenter' \| 'TopRight' \| 'BottomLeft' \| 'BottomCenter' \| 'BottomRight'` | `'BottomRight'` | Where the stack anchors on screen. |
+| `max` | `number` | `4` | Most toasts on screen at once. Past it, the oldest is dismissed. |
 
 **Accessibility** - role `region`, keyboard operable. The stack is a role="region" labelled "Notifications" with aria-live; Each toast is announced when it appears; Action and dismiss buttons are focusable.
 
@@ -6777,7 +7491,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 - A toast is a Snackbar: `--gray-900` bar, white text, the intent tinting only the icon and the action. See the Snackbar recipe for the bar itself.
 - Mount one `ToastProvider` near the app root; it owns the fixed stack. Call `toast(message, { intent, actionLabel, onAction })` from anywhere - the point is firing them imperatively, not rendering them in place.
-- `position` (bottom-right, bottom-center, top-right, top-center) sets where the stack anchors; new toasts push on and old ones auto-dismiss on a timer, so give errors a longer or manual timeout.
+- `position` (BottomRight, BottomCenter, TopRight, TopCenter, and the Left variants) sets where the stack anchors; new toasts push on and old ones auto-dismiss on a timer, so give errors a longer or manual timeout.
 - Each toast is announced through the stack `role="region"` labelled "Notifications"; the bar itself stays `role="status"` / `aria-live="polite"` so it never interrupts.
 
 ```css
@@ -6801,10 +7515,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   display: inline-flex;
   align-items: center;
   gap: 12px;
-  min-width: 300px;
+  min-width: min(300px, 100%);
   max-width: 480px;
-  height: 48px;
-  padding: 0 8px 0 16px;
+  min-height: 48px;
+  padding: 8px 8px 8px 16px;
   border-radius: var(--radius-md);
   background: var(--gray-900);
   color: var(--white);
@@ -6845,7 +7559,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   padding: 4px;
   border: none;
   background: none;
-  color: rgba(255, 255, 255, 0.7);
+  color: color-mix(in srgb, var(--white) 70%, transparent);
   display: inline-flex;
   cursor: pointer;
 }
@@ -6879,7 +7593,6 @@ Search and run commands from a keyboard-driven overlay. - category: `feedback`.
 import { CommandPalette } from '@inspera/kit'
 
 <CommandPalette
-  hotkey={true}
   open={open}
   onOpenChange={setOpen}
   commands={[
@@ -6891,15 +7604,16 @@ import { CommandPalette } from '@inspera/kit'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `commands` | `Command[]` | `defaultCommands` | The commands to search. |
-| `open` | `boolean` | - | Controlled open state. Omit to let the component manage its own. |
-| `defaultOpen` | `boolean` | `false` | Open initially (uncontrolled). |
-| `hotkey` | `boolean` | `true` | Bind Cmd/Ctrl+K to toggle the palette. |
-| `embedded` | `boolean` | `false` | Render the panel inline without the portal or dimmed overlay. Used by the docs to show the palette on the page (and by the recipe audit, which cannot see through a portal). Mirrors the `embedded` prop on Dialog and Drawer. |
-| `placeholder` | `string` | `'Type a command or search...'` | Search field placeholder. |
-| `emptyText` | `string` | `'No matching commands'` | Shown when nothing matches. |
+| `commands` **(required)** | `Command[]` | - | The commands to search. |
+| `open` | `boolean` | - | Open state. Controlled - pair with onOpenChange. |
+| `defaultOpen` | `boolean` | `false` | Open initially, when uncontrolled. |
 | `onOpenChange` | `(open: boolean) => void` | - | Fired when the open state should change. |
 | `onSelect` | `(command: Command) => void` | - | Fired with the chosen command. |
+| `hotkey` | `boolean` | `true` | Bind Cmd/Ctrl+K to toggle the palette. Mount one palette with this per page. Ignored while focus is in a textarea or rich-text editor, which often use the same shortcut. |
+| `placeholder` | `string` | `'Type a command or search...'` | Search field placeholder. |
+| `emptyText` | `string` | `'No matching commands'` | Shown when nothing matches. |
+
+Also accepts any native `<div>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<div>`. `className` and `style` go on the outermost element.
 
 ```ts
 export interface Command {
@@ -6909,7 +7623,7 @@ export interface Command {
   label: string
   /** Optional Material Symbols icon. */
   icon?: string
-  /** Optional grouping heading. */
+  /** Optional grouping heading. Commands with the same group should be adjacent. */
   group?: string
   /** Right-aligned hint, e.g. a shortcut or section name. */
   hint?: string
@@ -6962,9 +7676,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 - On the page the panel sits inside a fixed, dimmed overlay (`position: fixed; inset: 0`) centred horizontally and pushed down ~12vh. `embedded` renders just the panel for documentation.
 - The panel is `--radius-lg` on `--white` with `--shadow-300`; the 52px search row is divided from the list by a `--border` rule.
-- Commands group under uppercase 12px headings; the heading renders inline as the list is walked so grouped and ungrouped commands share one keyboard index.
+- Commands group under uppercase 12px headings. Each group is a `role="group"` inside the listbox, labelled by its heading; the options keep one keyboard index across groups.
 - The active option is filled `--blue-100` and starts on the first row. Up / Down move it, Enter runs it, Escape closes; Cmd/Ctrl+K toggles the whole palette.
-- It is a `role="dialog"` with `aria-modal`; the input is `role="combobox"` over a `role="listbox"`. Return focus to the trigger when it closes.
+- It is a `role="dialog"` with `aria-modal`; the input is `role="combobox"` over a `role="listbox"`, with `aria-activedescendant` on the active option. Trap Tab inside while open, and return focus to the trigger when it closes.
+- Cmd/Ctrl+K toggles it - but not while focus is in a textarea or rich-text editor, which use that shortcut themselves.
 
 ```css
 /* Tokens this component needs. Paste once, at `:root`. */
@@ -7065,27 +7780,29 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   <div class="inspera-cmdk__search">
     <span class="material-symbols-outlined inspera-cmdk__search-icon" aria-hidden="true">search</span>
     <input class="inspera-cmdk__input" role="combobox" aria-expanded="true"
-           aria-controls="cmdk-list" aria-autocomplete="list"
-           placeholder="Type a command or search..." />
+           aria-label="Search commands" aria-controls="cmdk-list" aria-autocomplete="list"
+           aria-activedescendant="cmdk-opt-0" placeholder="Type a command or search..." />
     <kbd class="inspera-cmdk__kbd">Esc</kbd>
   </div>
-  <ul class="inspera-cmdk__list" id="cmdk-list" role="listbox">
-    <li>
-      <div class="inspera-cmdk__group">Actions</div>
-      <div class="inspera-cmdk__option" role="option" aria-selected="true">
+  <!-- Groups are real role="group"s inside the listbox, each named by its
+       heading; options carry ids so the input can point at the active one. -->
+  <div class="inspera-cmdk__list" id="cmdk-list" role="listbox" aria-label="Commands">
+    <div role="group" aria-labelledby="cmdk-g0">
+      <div class="inspera-cmdk__group" id="cmdk-g0" role="presentation">Actions</div>
+      <div class="inspera-cmdk__option" id="cmdk-opt-0" role="option" aria-selected="true">
         <span class="material-symbols-outlined inspera-cmdk__option-icon" aria-hidden="true">add_circle</span>
         <span class="inspera-cmdk__option-label">Create new test</span>
         <span class="inspera-cmdk__option-hint">C then T</span>
       </div>
-    </li>
-    <li>
-      <div class="inspera-cmdk__group">Navigate</div>
-      <div class="inspera-cmdk__option" role="option" aria-selected="false">
+    </div>
+    <div role="group" aria-labelledby="cmdk-g1">
+      <div class="inspera-cmdk__group" id="cmdk-g1" role="presentation">Navigate</div>
+      <div class="inspera-cmdk__option" id="cmdk-opt-1" role="option" aria-selected="false">
         <span class="material-symbols-outlined inspera-cmdk__option-icon" aria-hidden="true">send</span>
         <span class="inspera-cmdk__option-label">Go to Deliver</span>
       </div>
-    </li>
-  </ul>
+    </div>
+  </div>
 </div>
 ```
 
@@ -7102,23 +7819,21 @@ Provide contextual help on hover or focus. - category: `feedback`.
 import { Tooltip } from '@inspera/kit'
 
 <Tooltip
-  content="Supplementary help text"
-  placement="Top"
-  theme="Dark"
-  type="Default"
+  content="Supplementary help text shown on hover or focus."
 >
-  <IconButton icon="help" />
+  <Button label="Help" intent="Outline" leadingIcon="help" iconOnly />
 </Tooltip>
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `content` | `string` | `'Supplementary help text'` | The hint text. Keep it short; never put essential information here alone. |
-| `placement` | `'Top' \| 'Bottom' \| 'Left' \| 'Right'` | `'Top'` | Position relative to the trigger. |
+| `content` **(required)** | `string` | - | The hint text. Keep it short; never put essential information here alone. |
+| `children` **(required)** | `ReactElement` | - | The element the tooltip describes: one focusable element, e.g. an icon-only Button. It receives `aria-describedby` pointing at the tooltip. |
+| `placement` | `'Top' \| 'Bottom' \| 'Left' \| 'Right'` | `'Top'` | Preferred side. It flips when there is no room. |
 | `theme` | `'Light' \| 'Dark'` | `'Dark'` | Surface color. |
-| `type` | `'Default' \| 'Accessibility'` | `'Default'` | Accessibility type uses larger text. |
-| `children` | `ReactNode` | - | The element the tooltip describes. |
-| `forceVisible` | `boolean` | `false` | Keep the tooltip visible regardless of hover - used for documentation. |
+| `variant` | `'Default' \| 'Accessibility'` | `'Default'` | Accessibility uses larger text and more padding. |
+
+Also accepts any native `<span>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<span>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `tooltip`, keyboard operable. Use role="tooltip" on the tooltip element; Link trigger and tooltip with aria-describedby; Escape key dismisses the tooltip; Tooltip must not contain interactive content.
 
@@ -7170,18 +7885,115 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 ```css
 /* Tokens this component needs. Paste once, at `:root`. */
 :root {
-  --white:          #ffffff;
-  --gray-300:       #D9D9D9;
-  --gray-900:       #272727;
-  --action-active:  rgba(0, 0, 0, 0.56);
-  --text-primary:   rgba(0, 0, 0, 0.87);
-  --border-strong:  var(--gray-300);
-  --radius-sm:      4px;
-  --radius-pill:    9999px;
-  --shadow-100:     0px 4px 4px rgba(39, 39, 39, 0.08), 0px 2px 4px rgba(39, 39, 39, 0.12);
-  --z-tooltip:      800;
-  --font-sans:      'Inter', system-ui, -apple-system, sans-serif;
+  --primary:               #004080;
+  --error:                 #D32F2F;
+  --warning:               #EF6C00;
+  --success:               #2E7D32;
+  --white:                 #ffffff;
+  --gray-100:              #F7F7F7;
+  --gray-300:              #D9D9D9;
+  --gray-700:              #595959;
+  --gray-900:              #272727;
+  --text-primary:          rgba(0, 0, 0, 0.87);
+  --border-strong:         var(--gray-300);
+  --radius-sm:             4px;
+  --shadow-100:            0px 4px 4px rgba(39, 39, 39, 0.08), 0px 2px 4px rgba(39, 39, 39, 0.12);
+  --effect-button-shadow:  inset 0px -1px 0px rgba(0, 0, 0, 0.2), 0px 1px 0px rgba(0, 0, 0, 0.08);
+  --border-width-default:  1px;
+  --focus-ring-width:      2px;
+  --focus-ring-offset:     2px;
+  --focus-ring-color:      var(--primary);
+  --duration-fast:         100ms;
+  --easing-standard:       cubic-bezier(0.2, 0, 0, 1);
+  --z-tooltip:             800;
+  --font-sans:             'Inter', system-ui, -apple-system, sans-serif;
 }
+
+.inspera-btn {
+  /* Fill, text and border come from the intent modifier below. */
+  --btn-bg: var(--primary);
+  --btn-fg: var(--white);
+  --btn-border: transparent;
+  --btn-shadow: var(--effect-button-shadow);
+  --btn-bg-hover: color-mix(in srgb, var(--btn-bg) 90%, black);
+  --btn-bg-active: color-mix(in srgb, var(--btn-bg) 82%, black);
+  --btn-shadow-hover: inset 0 -1px 0 rgba(0, 0, 0, 0.2), 0 2px 6px rgba(0, 64, 128, 0.24);
+  --btn-shadow-active: inset 0 1px 2px rgba(0, 0, 0, 0.24);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 40px;
+  min-width: 80px;
+  padding: 0 16px;
+  border-radius: var(--radius-sm);
+  border: var(--border-width-default) solid var(--btn-border);
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  box-shadow: var(--btn-shadow);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background var(--duration-fast) var(--easing-standard),
+    border-color var(--duration-fast) var(--easing-standard),
+    box-shadow var(--duration-fast) var(--easing-standard),
+    transform var(--duration-fast) var(--easing-standard);
+}
+
+/* Sizes change height, padding and gap only - never the 16px type. */
+.inspera-btn--small { height: 32px; padding: 0 12px; gap: 6px; }
+.inspera-btn--large { height: 48px; padding: 0 24px; gap: 10px; }
+
+/* Icon only: a square the height of the button. It still needs aria-label. */
+.inspera-btn--icon-only { width: 40px; min-width: 0; padding: 0; }
+.inspera-btn--small.inspera-btn--icon-only { width: 32px; }
+.inspera-btn--large.inspera-btn--icon-only { width: 48px; }
+
+/* Solid intents differ only in fill; hover and pressed derive from it. */
+.inspera-btn--primary     { --btn-bg: var(--primary); }
+.inspera-btn--success     { --btn-bg: var(--success); }
+.inspera-btn--warning     { --btn-bg: var(--warning); }
+.inspera-btn--destructive { --btn-bg: var(--error); }
+.inspera-btn--secondary {
+  --btn-bg: var(--gray-100);
+  --btn-fg: var(--gray-900);
+  --btn-border: var(--gray-700);
+}
+
+/* Outline and Text carry no fill and no shadow; they tint on interaction. */
+.inspera-btn--outline,
+.inspera-btn--text {
+  --btn-bg: transparent;
+  --btn-fg: var(--primary);
+  --btn-shadow: none;
+  --btn-shadow-hover: none;
+  --btn-shadow-active: none;
+  --btn-bg-hover: color-mix(in srgb, var(--primary) 8%, transparent);
+  --btn-bg-active: color-mix(in srgb, var(--primary) 12%, transparent);
+}
+.inspera-btn--outline { --btn-border: var(--primary); }
+
+.inspera-btn:hover:not(:disabled) {
+  background: var(--btn-bg-hover);
+  box-shadow: var(--btn-shadow-hover);
+}
+.inspera-btn:active:not(:disabled) {
+  background: var(--btn-bg-active);
+  box-shadow: var(--btn-shadow-active);
+  transform: translateY(1px);
+}
+.inspera-btn:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+.inspera-btn:disabled { opacity: 0.38; cursor: not-allowed; }
+
+.inspera-btn .material-symbols-outlined { font-size: 20px; }
 
 .inspera-tooltip {
   position: relative;
@@ -7269,27 +8081,14 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   border-left-color: var(--border-strong); border-bottom-color: var(--border-strong);
 }
 
-.inspera-tooltip__default-trigger {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: var(--radius-pill);
-  border: 1px solid var(--border-strong);
-  background: var(--white);
-  font-family: var(--font-sans);
-  cursor: help;
-}
-.inspera-tooltip__default-trigger .material-symbols-outlined {
-  font-size: 20px;
-  color: var(--action-active);
-}
+
 ```
 
 ```html
 <span class="inspera-tooltip">
-  <button type="button" class="inspera-tooltip__default-trigger" aria-describedby="tip-1">
+  <!-- Any focusable trigger works; it must name itself and point at the bubble. -->
+  <button type="button" class="inspera-btn inspera-btn--outline inspera-btn--icon-only"
+          aria-label="Help" aria-describedby="tip-1">
     <span class="material-symbols-outlined" aria-hidden="true">help</span>
   </button>
   <span class="inspera-tooltip__bubble inspera-tooltip__bubble--top" id="tip-1" role="tooltip">
@@ -7312,25 +8111,22 @@ Show completion of an ongoing task. - category: `feedback`.
 import { Progress } from '@inspera/kit'
 
 <Progress
-  variant="Linear"
-  value={60}
-  intent="Primary"
-  size="Medium"
   label="Uploading attachments"
-  indeterminate={false}
-  showValue={false}
+  value={60}
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
+| `label` **(required)** | `string` | - | What is progressing, e.g. "Uploading attachments". The accessible name. |
 | `variant` | `'Linear' \| 'Circular'` | `'Linear'` | Bar or ring. |
-| `value` | `number` | `60` | Completion percentage 0-100. Ignored when indeterminate. |
+| `value` | `number` | `0` | Completion percentage 0-100. Required unless indeterminate. |
 | `indeterminate` | `boolean` | `false` | Unknown-duration animation. |
 | `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Bar height / ring diameter. |
 | `intent` | `'Primary' \| 'Success' \| 'Warning' \| 'Error'` | `'Primary'` | Fill color. |
 | `showValue` | `boolean` | `false` | Render the percentage. |
-| `label` | `string` | `'Progress'` | Accessible name. Say what is progressing, not just "Progress". |
+
+Also accepts any native `<span>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<span>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `progressbar`. Use role="progressbar" with aria-valuenow / min / max; Omit aria-valuenow when indeterminate; Provide an accessible label for the task.
 
@@ -7497,8 +8293,6 @@ Indicate an indeterminate loading state. - category: `feedback`.
 import { Spinner } from '@inspera/kit'
 
 <Spinner
-  size="Medium"
-  intent="Primary"
   label="Loading assessments"
 />
 ```
@@ -7507,7 +8301,9 @@ import { Spinner } from '@inspera/kit'
 | --- | --- | --- | --- |
 | `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Diameter 16 / 24 / 40. |
 | `intent` | `'Primary' \| 'Neutral' \| 'Inverse'` | `'Primary'` | Arc color. |
-| `label` | `string` | `'Loading'` | Accessible label. |
+| `label` | `string` | `'Loading'` | What is loading, announced to screen readers. |
+
+Also accepts any native `<span>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<span>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `status`. Use role="status" with aria-live="polite"; Provide an accessible label via aria-label; Include visually-hidden loading text.
 
@@ -7564,7 +8360,9 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 }
 
 .inspera-spinner {
+  position: relative;
   display: inline-flex;
+  font-family: var(--font-sans);
   width: 24px;
   height: 24px;
 }
@@ -7621,7 +8419,6 @@ Show placeholder shapes while content loads. - category: `feedback`.
 import { Skeleton } from '@inspera/kit'
 
 <Skeleton
-  variant="Text"
   lines={3}
 />
 ```
@@ -7633,6 +8430,8 @@ import { Skeleton } from '@inspera/kit'
 | `height` | `string \| number` | - | Explicit height. |
 | `lines` | `number` | `1` | Number of text lines. Only applies to the Text variant. |
 | `radius` | `string \| number` | - | Corner radius override. Match the shape being stood in for. |
+
+Also accepts any native `<span>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<span>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `presentation`. Skeletons are decorative and aria-hidden; Announce the real content once loaded; Mirror the layout of the content being loaded.
 
@@ -7761,23 +8560,23 @@ Show interactive content anchored to a trigger. - category: `feedback`.
 import { Popover } from '@inspera/kit'
 
 <Popover
-  placement="Bottom"
+  trigger={<Button label="Filters" intent="Outline" trailingIcon="expand_more" />}
   title="Filter results"
-  trigger={<Button label="Filters" />}
   content={<FilterForm />}
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `trigger` | `ReactNode` | - | Element that toggles the popover. |
-| `title` | `string` | `'Popover title'` | Optional panel heading. |
-| `content` | `ReactNode` | `'Popover content with interactive elements.'` | Popover body content. |
-| `placement` | `'Top' \| 'Bottom' \| 'Left' \| 'Right'` | `'Bottom'` | Position relative to the trigger. |
-| `open` | `boolean` | - | Controlled open state. Leave unset to let the popover manage itself. |
-| `defaultOpen` | `boolean` | `false` | Open on mount. |
-| `forceVisible` | `boolean` | `false` | Keep the panel visible regardless of state - used for documentation. |
+| `trigger` **(required)** | `ReactElement` | - | The element that toggles the popover - usually a Button. |
+| `content` **(required)** | `ReactNode` | - | Popover body. May hold interactive content. |
+| `title` | `string` | - | Optional panel heading; also the panel's accessible name. |
+| `placement` | `'Top' \| 'Bottom' \| 'Left' \| 'Right'` | `'Bottom'` | Preferred side. It flips when there is no room. |
+| `open` | `boolean` | - | Open state. Controlled - pair with onOpenChange. |
+| `defaultOpen` | `boolean` | `false` | Open on mount, when uncontrolled. |
 | `onOpenChange` | `(open: boolean) => void` | - | Fired when the popover opens or closes. |
+
+Also accepts any native `<div>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<div>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `dialog`, keyboard operable. Trigger uses aria-haspopup and aria-expanded; Panel uses role="dialog"; Escape and outside-click close the popover; May contain interactive content (unlike Tooltip).
 
@@ -7829,21 +8628,119 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 ```css
 /* Tokens this component needs. Paste once, at `:root`. */
 :root {
-  --white:             #ffffff;
-  --gray-200:          #EDEDED;
-  --gray-300:          #D9D9D9;
-  --gray-600:          #7A7A7A;
-  --text-primary:      rgba(0, 0, 0, 0.87);
-  --surface:           var(--white);
-  --border:            var(--gray-200);
-  --border-strong:     var(--gray-300);
-  --muted-foreground:  var(--gray-600);
-  --radius-sm:         4px;
-  --radius-md:         8px;
-  --shadow-300:        0px 8px 16px rgba(39, 39, 39, 0.08), 0px 6px 8px rgba(39, 39, 39, 0.12);
-  --z-popover:         400;
-  --font-sans:         'Inter', system-ui, -apple-system, sans-serif;
+  --primary:               #004080;
+  --error:                 #D32F2F;
+  --warning:               #EF6C00;
+  --success:               #2E7D32;
+  --white:                 #ffffff;
+  --gray-100:              #F7F7F7;
+  --gray-200:              #EDEDED;
+  --gray-600:              #7A7A7A;
+  --gray-700:              #595959;
+  --gray-900:              #272727;
+  --text-primary:          rgba(0, 0, 0, 0.87);
+  --surface:               var(--white);
+  --border:                var(--gray-200);
+  --muted-foreground:      var(--gray-600);
+  --radius-sm:             4px;
+  --radius-md:             8px;
+  --shadow-300:            0px 8px 16px rgba(39, 39, 39, 0.08), 0px 6px 8px rgba(39, 39, 39, 0.12);
+  --effect-button-shadow:  inset 0px -1px 0px rgba(0, 0, 0, 0.2), 0px 1px 0px rgba(0, 0, 0, 0.08);
+  --border-width-default:  1px;
+  --focus-ring-width:      2px;
+  --focus-ring-offset:     2px;
+  --focus-ring-color:      var(--primary);
+  --duration-fast:         100ms;
+  --easing-standard:       cubic-bezier(0.2, 0, 0, 1);
+  --z-popover:             400;
+  --font-sans:             'Inter', system-ui, -apple-system, sans-serif;
 }
+
+.inspera-btn {
+  /* Fill, text and border come from the intent modifier below. */
+  --btn-bg: var(--primary);
+  --btn-fg: var(--white);
+  --btn-border: transparent;
+  --btn-shadow: var(--effect-button-shadow);
+  --btn-bg-hover: color-mix(in srgb, var(--btn-bg) 90%, black);
+  --btn-bg-active: color-mix(in srgb, var(--btn-bg) 82%, black);
+  --btn-shadow-hover: inset 0 -1px 0 rgba(0, 0, 0, 0.2), 0 2px 6px rgba(0, 64, 128, 0.24);
+  --btn-shadow-active: inset 0 1px 2px rgba(0, 0, 0, 0.24);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 40px;
+  min-width: 80px;
+  padding: 0 16px;
+  border-radius: var(--radius-sm);
+  border: var(--border-width-default) solid var(--btn-border);
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  box-shadow: var(--btn-shadow);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background var(--duration-fast) var(--easing-standard),
+    border-color var(--duration-fast) var(--easing-standard),
+    box-shadow var(--duration-fast) var(--easing-standard),
+    transform var(--duration-fast) var(--easing-standard);
+}
+
+/* Sizes change height, padding and gap only - never the 16px type. */
+.inspera-btn--small { height: 32px; padding: 0 12px; gap: 6px; }
+.inspera-btn--large { height: 48px; padding: 0 24px; gap: 10px; }
+
+/* Icon only: a square the height of the button. It still needs aria-label. */
+.inspera-btn--icon-only { width: 40px; min-width: 0; padding: 0; }
+.inspera-btn--small.inspera-btn--icon-only { width: 32px; }
+.inspera-btn--large.inspera-btn--icon-only { width: 48px; }
+
+/* Solid intents differ only in fill; hover and pressed derive from it. */
+.inspera-btn--primary     { --btn-bg: var(--primary); }
+.inspera-btn--success     { --btn-bg: var(--success); }
+.inspera-btn--warning     { --btn-bg: var(--warning); }
+.inspera-btn--destructive { --btn-bg: var(--error); }
+.inspera-btn--secondary {
+  --btn-bg: var(--gray-100);
+  --btn-fg: var(--gray-900);
+  --btn-border: var(--gray-700);
+}
+
+/* Outline and Text carry no fill and no shadow; they tint on interaction. */
+.inspera-btn--outline,
+.inspera-btn--text {
+  --btn-bg: transparent;
+  --btn-fg: var(--primary);
+  --btn-shadow: none;
+  --btn-shadow-hover: none;
+  --btn-shadow-active: none;
+  --btn-bg-hover: color-mix(in srgb, var(--primary) 8%, transparent);
+  --btn-bg-active: color-mix(in srgb, var(--primary) 12%, transparent);
+}
+.inspera-btn--outline { --btn-border: var(--primary); }
+
+.inspera-btn:hover:not(:disabled) {
+  background: var(--btn-bg-hover);
+  box-shadow: var(--btn-shadow-hover);
+}
+.inspera-btn:active:not(:disabled) {
+  background: var(--btn-bg-active);
+  box-shadow: var(--btn-shadow-active);
+  transform: translateY(1px);
+}
+.inspera-btn:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+.inspera-btn:disabled { opacity: 0.38; cursor: not-allowed; }
+
+.inspera-btn .material-symbols-outlined { font-size: 20px; }
 
 .inspera-popover {
   position: relative;
@@ -7916,26 +8813,15 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   color: var(--muted-foreground);
 }
 
-.inspera-popover__default-trigger {
-  height: 40px;
-  padding: 0 16px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border-strong);
-  background: var(--white);
-  color: var(--text-primary);
-  font-family: var(--font-sans);
-  font-weight: 600;
-  font-size: 16px;
-  cursor: pointer;
-}
+
 ```
 
 ```html
 <span class="inspera-popover">
-  <span class="inspera-popover__trigger" aria-expanded="true"
-        aria-haspopup="dialog" aria-controls="filters-popover">
-    <button type="button" class="inspera-popover__default-trigger">Filters</button>
-  </span>
+  <!-- The trigger is the canonical Button, and the ARIA state sits on it -
+       not on a wrapper, which is not focusable and announces nothing. -->
+  <button type="button" class="inspera-btn inspera-btn--outline"
+          aria-expanded="true" aria-haspopup="dialog" aria-controls="filters-popover">Filters</button>
   <div class="inspera-popover__panel inspera-popover__panel--bottom" id="filters-popover"
        role="dialog" aria-labelledby="filters-title">
     <span class="inspera-popover__arrow" aria-hidden="true"></span>
@@ -7959,10 +8845,7 @@ import { Drawer } from '@inspera/kit'
 
 <Drawer
   open={open}
-  side="Right"
-  size="Medium"
   title="Assessment details"
-  hasCloseButton={true}
   onClose={() => setOpen(false)}
 >
   {children}
@@ -7971,14 +8854,15 @@ import { Drawer } from '@inspera/kit'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `open` | `boolean` | `false` | Visibility. |
-| `side` | `'Right' \| 'Left' \| 'Bottom'` | `'Right'` | Edge it slides from. |
-| `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Panel width / height. |
-| `title` | `string` | `'Panel'` | Header title. |
-| `hasCloseButton` | `boolean` | `true` | Show the close affordance. |
+| `open` **(required)** | `boolean` | - | Whether the drawer is shown. Controlled - pair with onClose. |
+| `title` **(required)** | `string` | - | Header title. Also the accessible name. |
 | `children` | `ReactNode` | - | Panel contents. |
-| `embedded` | `boolean` | `false` | Render just the panel inline (no overlay/scrim) - used for documentation previews. |
+| `side` | `'Right' \| 'Left' \| 'Bottom'` | `'Right'` | Edge it slides from. |
+| `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Panel width 320 / 400 / 560 (height, for Bottom). |
+| `hasCloseButton` | `boolean` | `true` | Show the header close button. |
 | `onClose` | `() => void` | - | Fired on the close button, the scrim, and Escape. |
+
+Also accepts any native `<div>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<div>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `dialog`, keyboard operable. Use role="dialog" with aria-modal="true"; Set aria-labelledby to the drawer title; Trap focus while open and restore it on close; Escape closes the drawer.
 
@@ -8036,6 +8920,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   --text-primary:   rgba(0, 0, 0, 0.87);
   --surface:        var(--white);
   --border:         var(--gray-200);
+  --scrim:          rgba(39, 39, 39, 0.48);
   --shadow-500:     0px 10px 32px rgba(39, 39, 39, 0.1), 0px 6px 14px rgba(39, 39, 39, 0.12);
   --z-modal:        600;
   --font-sans:      'Inter', system-ui, -apple-system, sans-serif;
@@ -8044,8 +8929,8 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 .inspera-drawer-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(39, 39, 39, 0.48);
-  z-index: var(--z-modal, 1000);
+  background: var(--scrim);
+  z-index: var(--z-modal);
 }
 
 .inspera-drawer {
@@ -8146,26 +9031,37 @@ Organize content into switchable panels. - category: `navigation`.
 import { Tabs } from '@inspera/kit'
 
 <Tabs
-  items={[{ label: 'Overview' }, { label: 'Questions' }]}
-  style="Underline"
-  size="Medium"
-  fullWidth={false}
+  items={[
+    { label: 'Overview' },
+    { label: 'Questions' },
+    { label: 'Settings' },
+    { label: 'Results' },
+  ]}
+  label="Assessment sections"
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `items` | `TabItem[]` | `defaultItems` | The tabs, in order. |
-| `style` | `'Underline' \| 'Contained'` | `'Underline'` | Visual treatment. |
+| `items` **(required)** | `TabItem[]` | - | The tabs, in order. |
+| `variant` | `'Underline' \| 'Contained'` | `'Underline'` | Visual treatment. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Tab height 40 / 48. |
 | `fullWidth` | `boolean` | `false` | Stretch tabs to fill the row. |
-| `value` | `number` | - | Index of the active tab. Controlled - pair with onChange. |
-| `onChange` | `(index: number) => void` | - | Fired with the index of the newly selected tab. |
+| `value` | `string` | - | Active tab's value. Controlled - pair with onChange. |
+| `defaultValue` | `string` | - | Starting tab when uncontrolled. Defaults to the first. |
+| `onChange` | `(value: string) => void` | - | Fired with the newly selected tab's value. |
+| `label` | `string` | - | Names the tab list for assistive tech, when no heading does. |
+
+Also accepts any native `<div>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<div>`. `className` and `style` go on the outermost element.
 
 ```ts
 export interface TabItem {
   label: string
+  /** Identifies the tab in value/onChange. Defaults to the label. */
+  value?: string
   icon?: string
+  /** The tab's panel. When items carry content, Tabs renders the panels too. */
+  content?: ReactNode
 }
 ```
 
@@ -8327,18 +9223,32 @@ Show the user's current location in a hierarchy. - category: `navigation`.
 import { Breadcrumb } from '@inspera/kit'
 
 <Breadcrumb
-  items={['Home', 'Assessments', 'Algebra Quiz']}
-  separator="Chevron"
-  size="Medium"
+  items={[
+    { label: 'Home', href: '/' },
+    { label: 'Assessments', href: '/assessments' },
+    { label: 'Mathematics', href: '/assessments/mathematics' },
+    'Algebra Quiz',
+  ]}
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `items` | `string[]` | `defaultItems` | Trail from root to current page. The last entry is the current page and is not a link. |
+| `items` **(required)** | `(string \| BreadcrumbItem)[]` | - | Trail from root to current page. The last entry is the current page and is not a link. |
 | `separator` | `'Slash' \| 'Chevron'` | `'Chevron'` | Divider glyph between items. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Text size 14 / 16. |
-| `onNavigate` | `(index: number) => void` | - | Fired with the index of the crumb that was clicked. |
+| `onNavigate` | `(index: number) => void` | - | Fired with the index of a crumb without an href, for client-side routing. |
+| `label` | `string` | `'Breadcrumb'` | Names the navigation landmark. |
+
+Also accepts any native `<nav>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<nav>`. `className` and `style` go on the outermost element.
+
+```ts
+export interface BreadcrumbItem {
+  label: string
+  /** Link target. Crumbs with an href are real links - they open in a new tab and show their URL. */
+  href?: string
+}
+```
 
 **Accessibility** - role `navigation`, keyboard operable. Wrap in nav with aria-label="Breadcrumb"; Use an ordered list for semantic structure; Mark current page with aria-current="page".
 
@@ -8477,22 +9387,24 @@ Navigate between pages of content. - category: `navigation`.
 import { Pagination } from '@inspera/kit'
 
 <Pagination
-  page={page}
   pageCount={12}
-  size="Medium"
-  showEdges={true}
-  onChange={setPage}
+  defaultPage={4}
+  onChange={loadPage}
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `page` | `number` | `1` | Current page (1-based). |
-| `pageCount` | `number` | `10` | Total number of pages. |
+| `pageCount` **(required)** | `number` | - | Total number of pages. |
+| `page` | `number` | - | Current page (1-based). Controlled - pair with onChange. |
+| `defaultPage` | `number` | `1` | Starting page when uncontrolled. |
 | `siblingCount` | `number` | `1` | Pages shown either side of current. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Control height. |
 | `showEdges` | `boolean` | `true` | Show first / last controls. |
 | `onChange` | `(page: number) => void` | - | Fired with the requested page number, 1-based. |
+| `label` | `string` | `'Pagination'` | Names the navigation landmark. Give each pager on a page its own. |
+
+Also accepts any native `<nav>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<nav>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `navigation`, keyboard operable. Wrap in nav with aria-label="Pagination"; Mark the current page with aria-current="page"; Disable and aria-disable prev/next at the bounds.
 
@@ -8645,29 +9557,42 @@ import { Menu } from '@inspera/kit'
 
 <Menu
   label="Actions"
-  placement="Bottom Start"
-  items={[{ label: 'Edit', icon: 'edit' }, { label: 'Delete', icon: 'delete', danger: true }]}
+  items={[
+    { label: 'Edit', icon: 'edit' },
+    { label: 'Duplicate', icon: 'content_copy' },
+    { label: 'Share', icon: 'share' },
+    { label: '', divider: true },
+    { label: 'Delete', icon: 'delete', danger: true },
+  ]}
   onSelect={handleSelect}
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | `'Actions'` | Trigger label. |
-| `items` | `MenuItem[]` | `sampleItems` | Menu items. |
-| `placement` | `'Bottom Start' \| 'Bottom End'` | `'Bottom Start'` | Alignment to trigger. |
-| `open` | `boolean` | - | Controlled open state. Leave unset to let the menu manage itself. |
-| `defaultOpen` | `boolean` | `false` | Open on mount. |
-| `forceVisible` | `boolean` | `false` | Always render the open menu, for documentation. |
-| `onSelect` | `(label: string) => void` | - | Fired with the label of the chosen item. |
+| `label` **(required)** | `string` | - | Trigger text. Pass `aria-label` too when the text alone is ambiguous, e.g. per-row "Actions". |
+| `items` **(required)** | `MenuItem[]` | - | Menu items, in order. |
+| `placement` | `'BottomStart' \| 'BottomEnd'` | `'BottomStart'` | Aligns the menu to the trigger's start or end edge. |
+| `open` | `boolean` | - | Open state. Controlled - pair with onOpenChange. |
+| `defaultOpen` | `boolean` | `false` | Open on mount, when uncontrolled. |
+| `onOpenChange` | `(open: boolean) => void` | - | Fired when the menu opens or closes. |
+| `onSelect` | `(value: string, item: MenuItem) => void` | - | Fired with the chosen item's value (its label, unless set). |
+
+Also accepts any native `<button>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<button>`. `className` and `style` go on the outermost element.
 
 ```ts
 export interface MenuItem {
   label: string
+  /** Passed to onSelect. Defaults to the label. */
+  value?: string
   icon?: string
+  /** Red text, for destructive actions. Put these last, after a divider. */
   danger?: boolean
   disabled?: boolean
+  /** A separator line instead of an item; `label` is ignored. */
   divider?: boolean
+  /** Fired when this item is chosen, before the menu-level onSelect. */
+  onSelect?: () => void
 }
 ```
 
@@ -8863,19 +9788,24 @@ Show progress through a sequence of steps. - category: `navigation`.
 import { Stepper } from '@inspera/kit'
 
 <Stepper
-  steps={[{ label: 'Details' }, { label: 'Questions' }, { label: 'Review' }]}
+  steps={[
+    { label: 'Details', description: 'Assessment info' },
+    { label: 'Questions', description: 'Add content' },
+    { label: 'Settings', description: 'Rules & timing' },
+    { label: 'Review', description: 'Publish' },
+  ]}
   activeStep={1}
-  orientation="Horizontal"
-  size="Medium"
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `steps` | `Step[]` | `defaultSteps` | Ordered steps. |
-| `activeStep` | `number` | `1` | Zero-based index of the current step. |
+| `steps` **(required)** | `Step[]` | - | Ordered steps. |
+| `activeStep` | `number` | `0` | Zero-based index of the current step. Steps before it show as completed. |
 | `orientation` | `'Horizontal' \| 'Vertical'` | `'Horizontal'` | Layout direction. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Indicator size. |
+
+Also accepts any native `<ol>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<ol>`. `className` and `style` go on the outermost element.
 
 ```ts
 export interface Step {
@@ -9032,12 +9962,26 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 .inspera-stepper__indicator .material-symbols-outlined { font-size: 18px; }
 
 .inspera-stepper__text {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 2px;
   text-align: center;
 }
 .inspera-stepper--vertical .inspera-stepper__text { text-align: left; }
+
+/* The indicator is decorative, so each step's status is spoken here. */
+.inspera-stepper__status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
 
 .inspera-stepper__label {
   font-size: 14px;
@@ -9122,26 +10066,24 @@ import { Link } from '@inspera/kit'
 <Link
   href="/docs"
   label="Learn more"
-  intent="Default"
-  size="Medium"
-  underline="Hover"
-  external={false}
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `children` | `ReactNode` | - | Link text. Takes precedence over label. |
-| `label` | `string` | `'Learn more'` | Link text, when not passing children. |
-| `href` | `string` | `'#'` | Destination URL. Always provide a real one. |
+| `href` **(required)** | `string` | - | Destination URL. Always a real one - use a Button for actions. |
+| `children` | `ReactNode` | - | Link text. |
+| `label` | `string` | - | Link text, when not passing children. |
 | `intent` | `'Default' \| 'Muted'` | `'Default'` | Color emphasis. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Text size. |
 | `underline` | `'Always' \| 'Hover' \| 'None'` | `'Hover'` | Underline behavior. |
-| `external` | `boolean` | `false` | Open in a new tab with an icon. |
+| `external` | `boolean` | `false` | Open in a new tab, with an icon and a spoken "opens in a new tab". |
 | `disabled` | `boolean` | `false` | Non-interactive state. |
 | `leadingIcon` | `string` | - | Material Symbols name shown before the text. |
 | `trailingIcon` | `string` | - | Material Symbols name shown after the text. |
-| `onClick` | `(e: React.MouseEvent) => void` | - | Fired on activation. Use for routing, not to replace href. |
+| `onClick` | `(e: MouseEvent<HTMLAnchorElement>) => void` | - | Fired on activation. Use for client-side routing, not to replace href. |
+
+Also accepts any native `<a>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<a>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `link`, keyboard operable. Use a real anchor with a valid href; External links set target="_blank" and rel="noreferrer"; Disabled links set aria-disabled and prevent navigation; Focus ring is visible on keyboard focus.
 
@@ -9192,17 +10134,20 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 ```css
 /* Tokens this component needs. Paste once, at `:root`. */
 :root {
-  --primary:             #004080;
-  --gray-600:            #7A7A7A;
-  --primary-focus-ring:  rgba(0, 64, 128, 0.3);
-  --action-disabled:     rgba(0, 0, 0, 0.38);
-  --radius-xs:           2px;
-  --duration-fast:       100ms;
-  --easing-standard:     cubic-bezier(0.2, 0, 0, 1);
-  --font-sans:           'Inter', system-ui, -apple-system, sans-serif;
+  --primary:            #004080;
+  --gray-600:           #7A7A7A;
+  --action-disabled:    rgba(0, 0, 0, 0.38);
+  --radius-xs:          2px;
+  --focus-ring-width:   2px;
+  --focus-ring-offset:  2px;
+  --focus-ring-color:   var(--primary);
+  --duration-fast:      100ms;
+  --easing-standard:    cubic-bezier(0.2, 0, 0, 1);
+  --font-sans:          'Inter', system-ui, -apple-system, sans-serif;
 }
 
 .inspera-link {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -9227,8 +10172,21 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 .inspera-link--underline-none:hover { text-decoration: none; }
 
 .inspera-link:focus-visible {
-  outline: 2px solid var(--primary-focus-ring);
-  outline-offset: 2px;
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* "(opens in a new tab)" for screen readers - the icon alone says nothing. */
+.inspera-link__hint {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 /* Disabled: no href, announced with aria-disabled. A link with no href is not

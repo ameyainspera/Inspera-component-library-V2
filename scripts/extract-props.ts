@@ -22,6 +22,12 @@ const COMPONENT_DIR = join(root, 'src/components/inspera')
 export interface ComponentApi {
   props: PropDoc[]
   relatedTypes: Record<string, string>
+  /**
+   * The native element the component forwards other attributes to (`button`,
+   * `input`, `div`), read from its `NativeAttrs<'tag', ...>` annotation.
+   * Absent when the component forwards nothing.
+   */
+  native?: string
 }
 
 export interface PropDoc {
@@ -104,9 +110,13 @@ function collectRelatedTypes(
   return shapes
 }
 
-/** Default values, read from the destructuring pattern of the component function. */
-function collectDefaults(source: ts.SourceFile): Record<string, string> {
+/**
+ * Default values, read from the destructuring pattern of the component
+ * function, plus the element named in its `NativeAttrs<'tag', ...>` annotation.
+ */
+function collectDefaults(source: ts.SourceFile): { defaults: Record<string, string>; native?: string } {
   const defaults: Record<string, string> = {}
+  let native: string | undefined
 
   const visit = (node: ts.Node) => {
     const isDefaultExported =
@@ -115,6 +125,8 @@ function collectDefaults(source: ts.SourceFile): Record<string, string> {
 
     if (isDefaultExported && node.parameters.length > 0) {
       const [param] = node.parameters
+      const annotation = param?.type?.getText(source) ?? ''
+      native ??= annotation.match(/NativeAttrs<\s*'([a-z]+)'/)?.[1]
       if (param && ts.isObjectBindingPattern(param.name)) {
         for (const element of param.name.elements) {
           if (!element.initializer) continue
@@ -127,7 +139,16 @@ function collectDefaults(source: ts.SourceFile): Record<string, string> {
   }
 
   visit(source)
-  return defaults
+  return { defaults, native }
+}
+
+/**
+ * Props tagged `@internal` exist for the docs site - `forceState` freezes a
+ * hover look for the gallery - and must not reach the published API, where a
+ * model would read them as something to set.
+ */
+function isInternal(member: ts.PropertySignature): boolean {
+  return ts.getJSDocTags(member).some((t) => t.tagName.text === 'internal')
 }
 
 export function extractComponentProps(): Record<string, ComponentApi> {
@@ -152,7 +173,7 @@ export function extractComponentProps(): Record<string, ComponentApi> {
     if (!source) continue
 
     const componentName = basename(file, '.tsx')
-    const defaults = collectDefaults(source)
+    const { defaults, native } = collectDefaults(source)
     let api: ComponentApi | null = null
 
     ts.forEachChild(source, (node) => {
@@ -161,7 +182,7 @@ export function extractComponentProps(): Record<string, ComponentApi> {
       // The component's own props interface, not a nested item shape.
       if (node.name.text !== `${componentName}Props`) return
 
-      const members = node.members.filter(ts.isPropertySignature)
+      const members = node.members.filter(ts.isPropertySignature).filter((m) => !isInternal(m))
       const props = members.map((member) => {
         const name = member.name.getText(source).replace(/^'|'$/g, '')
         const symbol = checker.getSymbolAtLocation(member.name)
@@ -178,7 +199,11 @@ export function extractComponentProps(): Record<string, ComponentApi> {
         }
       })
 
-      api = { props, relatedTypes: collectRelatedTypes(source, members, node.name.text) }
+      api = {
+        props,
+        relatedTypes: collectRelatedTypes(source, members, node.name.text),
+        ...(native ? { native } : {}),
+      }
     })
 
     if (api) result[componentName] = api

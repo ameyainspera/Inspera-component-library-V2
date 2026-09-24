@@ -1,45 +1,67 @@
-import { type CSSProperties, useId, useState } from 'react'
+import { type CSSProperties, type KeyboardEvent, useRef } from 'react'
+import { cx, type NativeAttrs } from './types'
+import { useControllableState } from './useControllableState'
 
 export type SegmentedControlSize = 'Small' | 'Medium'
 
+export interface SegmentedControlItem {
+  value: string
+  /** Shown text. Defaults to `value`. */
+  label?: string
+}
+
 export interface SegmentedControlProps {
-  /** Segment labels. */
-  items?: string[]
-  /** Active segment index. */
-  value?: number
+  /** Names the group for assistive tech, e.g. "Date range". Not shown. */
+  label: string
+  /** Segments, in order. Plain strings when value and label match. */
+  items: (string | SegmentedControlItem)[]
+  /** Selected segment value. Controlled - pair with onChange. */
+  value?: string
+  /** Starting segment when uncontrolled. Defaults to the first. */
+  defaultValue?: string
+  /** Fired with the chosen segment's value. */
+  onChange?: (value: string) => void
   /** Segment height. */
   size?: SegmentedControlSize
   /** Stretch to fill the row. */
   fullWidth?: boolean
-  /** Fired with the index of the chosen segment. */
-  onChange?: (index: number) => void
+  /** Blocks interaction and dims the control. */
+  disabled?: boolean
 }
 
+const normalise = (o: string | SegmentedControlItem) =>
+  typeof o === 'string' ? { value: o, label: o } : { value: o.value, label: o.label ?? o.value }
+
 export default function SegmentedControl({
-  items = ['Day', 'Week', 'Month'],
+  label,
+  items,
   value,
+  defaultValue,
+  onChange,
   size = 'Medium',
   fullWidth = false,
-  onChange,
-}: SegmentedControlProps) {
-  const groupId = useId()
-  const [internal, setInternal] = useState(0)
-  const active = value ?? internal
+  disabled = false,
+  className,
+  style,
+  ...rest
+}: SegmentedControlProps & NativeAttrs<'div', SegmentedControlProps>) {
+  const segments = items.map(normalise)
+  const [active, setActive] = useControllableState(value, defaultValue ?? segments[0]?.value ?? '', onChange)
+  const buttons = useRef<(HTMLButtonElement | null)[]>([])
   const height = size === 'Small' ? 32 : 40
+  const index = Math.max(0, segments.findIndex((s) => s.value === active))
 
-  const select = (i: number) => {
-    setInternal(i)
-    onChange?.(i)
-  }
-
-  const onKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-      e.preventDefault()
-      select((active + 1) % items.length)
-    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-      e.preventDefault()
-      select((active - 1 + items.length) % items.length)
-    }
+  // Arrow keys move the selection *and* the focus. Moving only the selection
+  // left focus on a button that had just become tabIndex -1.
+  const onKeyDown = (e: KeyboardEvent) => {
+    if (disabled || segments.length === 0) return
+    const step = e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1
+      : e.key === 'ArrowLeft' || e.key === 'ArrowUp' ? -1 : 0
+    if (!step) return
+    e.preventDefault()
+    const next = (index + step + segments.length) % segments.length
+    setActive(segments[next].value)
+    buttons.current[next]?.focus()
   }
 
   const track: CSSProperties = {
@@ -49,12 +71,22 @@ export default function SegmentedControl({
     background: 'var(--gray-100)',
     borderRadius: 'var(--radius-md)',
     width: fullWidth ? '100%' : undefined,
+    opacity: disabled ? 0.38 : 1,
+    ...style,
   }
 
   return (
-    <div role="radiogroup" style={track} onKeyDown={onKeyDown}>
-      {items.map((item, i) => {
-        const isActive = i === active
+    <div
+      role="radiogroup"
+      aria-label={label}
+      aria-disabled={disabled || undefined}
+      className={cx('inspera', className)}
+      style={track}
+      onKeyDown={onKeyDown}
+      {...rest}
+    >
+      {segments.map((seg, i) => {
+        const isActive = i === index
         const segment: CSSProperties = {
           flex: fullWidth ? 1 : undefined,
           height,
@@ -67,21 +99,23 @@ export default function SegmentedControl({
           fontFamily: 'var(--font-sans)',
           fontSize: 14,
           fontWeight: isActive ? 600 : 500,
-          cursor: 'pointer',
-          transition: 'all 120ms ease',
+          cursor: disabled ? 'not-allowed' : 'pointer',
+          transition: 'all var(--duration-fast) var(--easing-standard)',
         }
         return (
           <button
-            key={item}
+            key={seg.value}
+            ref={(node) => { buttons.current[i] = node }}
             type="button"
             role="radio"
+            className="inspera-interactive"
             aria-checked={isActive}
             tabIndex={isActive ? 0 : -1}
-            id={`${groupId}-${i}`}
+            disabled={disabled}
             style={segment}
-            onClick={() => select(i)}
+            onClick={() => setActive(seg.value)}
           >
-            {item}
+            {seg.label}
           </button>
         )
       })}

@@ -52,23 +52,48 @@ Display structured data in rows and columns. - category: `data-display`.
 import { Table } from '@inspera/components'
 
 <Table
-  size="Default"
-  striped={false}
-  columns={[{ key: 'name', header: 'Assessment' }]}
-  rows={[{ name: 'Algebra Quiz' }]}
+  caption="Assessments"
+  columns={[
+    { key: 'name', header: 'Assessment' },
+    { key: 'items', header: 'Items', align: 'right' },
+    { key: 'status', header: 'Status' },
+  ]}
+  rows={[
+    {
+      name: 'Algebra Quiz',
+      items: 24,
+      status: <Badge label="Live" intent="Success" />,
+    },
+    {
+      name: 'History Midterm',
+      items: 40,
+      status: <Badge label="Draft" intent="Neutral" />,
+    },
+    {
+      name: 'Biology Final',
+      items: 60,
+      status: <Badge label="Scheduled" intent="Info" />,
+    },
+  ]}
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `columns` | `TableColumn[]` | `defaultColumns` | Column definitions. |
-| `rows` | `Record<string, ReactNode>[]` | `defaultRows` | Row data keyed by column. |
+| `columns` **(required)** | `TableColumn[]` | - | Column definitions. |
+| `rows` **(required)** | `TableRow[]` | - | Row data keyed by column. |
+| `getRowId` | `(row: TableRow, index: number) => string` | - | Stable id per row, for selection and keys. Defaults to the row's position. |
 | `size` | `'Compact' \| 'Default'` | `'Default'` | Row height density. |
 | `striped` | `boolean` | `false` | Zebra-stripe rows. |
 | `hoverable` | `boolean` | `true` | Highlight rows on hover. |
-| `selectable` | `boolean` | `false` | Add a row selection column. |
+| `selectable` | `boolean` | `false` | Add a selection column with a select-all box. |
+| `selectedIds` | `string[]` | - | Selected row ids. Controlled - pair with onSelectionChange. |
+| `defaultSelectedIds` | `string[]` | `[]` | Starting selection when uncontrolled. |
+| `onSelectionChange` | `(ids: string[]) => void` | - | Fired with every selected id after any change. |
 | `caption` | `string` | - | Describes the table for screen readers. Provide one unless a heading already names it. |
-| `onRowClick` | `(row: Record<string, ReactNode>, index: number) => void` | - | Fired with the row data and its index. |
+| `onRowClick` | `(row: TableRow, index: number) => void` | - | Makes rows clickable and keyboard-operable (Enter / Space). |
+
+Also accepts any native `<table>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<table>`. `className` and `style` go on the outermost element.
 
 ```ts
 export interface TableColumn {
@@ -77,6 +102,8 @@ export interface TableColumn {
   align?: 'left' | 'right' | 'center'
   width?: string | number
 }
+
+export type TableRow = Record<string, ReactNode>
 ```
 
 **Accessibility** - role `table`, keyboard operable. Use semantic table / thead / tbody markup; Header cells use scope="col"; Provide a caption or aria-label describing the table.
@@ -195,7 +222,9 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 .inspera-badge--small .material-symbols-outlined { font-size: 14px; }
 
 .inspera-table {
-  border-collapse: collapse;
+  /* separate, not collapse: browsers ignore border-radius on a collapsed table. */
+  border-collapse: separate;
+  border-spacing: 0;
   width: 100%;
   font-family: var(--font-sans);
   background: var(--white);
@@ -226,6 +255,9 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   font-weight: 600;
   color: var(--gray-700);
 }
+
+/* The table's own border closes the last row. */
+.inspera-table tbody tr:last-child td { border-bottom: none; }
 
 .inspera-table thead tr {
   background: var(--gray-100);
@@ -262,6 +294,8 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 .inspera-table__select input {
   width: 16px;
   height: 16px;
+  margin: 0;
+  vertical-align: middle;
   accent-color: var(--primary);
   cursor: pointer;
 }

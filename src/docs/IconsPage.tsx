@@ -2,18 +2,19 @@ import { useState, useMemo, useCallback } from 'react'
 import { iconsByCategory, allIcons, ICON_CATEGORIES, totalIconCount } from '../data/icons'
 import IconDetailPanel from './IconDetailPanel'
 import type { IconCategory } from '../data/icons'
-import type { IconStyle } from '../components/inspera/Icon'
 
 type Fill = 0 | 1
 type Weight = 100 | 200 | 300 | 400 | 500 | 600 | 700
 
 const WEIGHTS: Weight[] = [100, 200, 300, 400, 500, 600, 700]
 
-const styleClass: Record<IconStyle, string> = {
-  outlined: 'material-symbols-outlined',
-  rounded: 'material-symbols-rounded',
-  sharp: 'material-symbols-sharp',
-}
+/**
+ * Outlined is the only face the system approves and loads. Rounded and Sharp
+ * used to be offered here, and anything copied in them rendered as plain text
+ * wherever that font was not loaded - which was everywhere the spec went.
+ */
+const ICON_CLASS = 'material-symbols-outlined'
+const GRADE = 0
 
 interface IconCardProps {
   name: string
@@ -37,6 +38,7 @@ function IconCard({ name, iconClass, fill, weight, grade, opsz, onSelect }: Icon
       onClick={() => onSelect(name)}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      aria-label={`${name} - show details`}
       style={{
         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
         gap: 8, padding: '14px 8px 12px', border: 'none', cursor: 'pointer',
@@ -66,10 +68,8 @@ function IconCard({ name, iconClass, fill, weight, grade, opsz, onSelect }: Icon
 }
 
 export default function IconsPage() {
-  const [iconStyle, setIconStyle] = useState<IconStyle>('outlined')
   const [fill, setFill] = useState<Fill>(0)
   const [weight, setWeight] = useState<Weight>(400)
-  const [grade] = useState(0)
   const [opsz, setOpsz] = useState(24)
   const [search, setSearch] = useState('')
   const [category, setCategory] = useState<IconCategory>('All')
@@ -89,7 +89,7 @@ export default function IconsPage() {
     return pool.filter((n) => n.includes(q))
   }, [category, search])
 
-  const iconClass = styleClass[iconStyle]
+  const iconClass = ICON_CLASS
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
@@ -103,7 +103,7 @@ export default function IconsPage() {
             Material Symbols
           </h1>
           <p style={{ margin: 0, fontSize: 15, color: 'var(--muted-foreground)', maxWidth: 640 }}>
-            {totalIconCount.toLocaleString()} icons across {ICON_CATEGORIES.length - 1} categories - three styles, variable weight, fill, grade, and optical size. Click any icon to copy its name.
+            {totalIconCount.toLocaleString()} icons across {ICON_CATEGORIES.length - 1} categories - Material Symbols Outlined, with variable weight, fill and optical size. Select any icon for its details, SVG and copyable markup.
           </p>
         </div>
       </div>
@@ -116,7 +116,7 @@ export default function IconsPage() {
           display: 'flex', flexDirection: 'column', gap: 12,
         }}
       >
-        {/* Row 1: search + style switcher */}
+        {/* Row 1: search + axes */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
           {/* Search */}
           <div style={{ position: 'relative', flex: '1 1 220px', minWidth: 180, maxWidth: 340 }}>
@@ -127,6 +127,7 @@ export default function IconsPage() {
             >search</span>
             <input
               type="search"
+              aria-label="Search icons"
               placeholder="Search icons..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -134,35 +135,15 @@ export default function IconsPage() {
                 width: '100%', height: 36, padding: '0 12px 0 36px', boxSizing: 'border-box',
                 border: '1px solid var(--border-strong)', borderRadius: 'var(--radius-sm)',
                 fontSize: 14, fontFamily: 'var(--font-sans)', background: 'var(--surface)',
-                color: 'var(--text-primary)', outline: 'none',
+                color: 'var(--text-primary)',
               }}
             />
-          </div>
-
-          {/* Style switcher */}
-          <div style={{ display: 'flex', border: '1px solid var(--border-strong)', borderRadius: 'var(--radius-sm)', overflow: 'hidden', flexShrink: 0 }}>
-            {(['outlined', 'rounded', 'sharp'] as IconStyle[]).map((s) => (
-              <button
-                key={s}
-                type="button"
-                onClick={() => setIconStyle(s)}
-                style={{
-                  height: 36, padding: '0 14px', border: 'none', cursor: 'pointer', fontSize: 13,
-                  fontWeight: 500, fontFamily: 'var(--font-sans)', textTransform: 'capitalize',
-                  background: iconStyle === s ? 'var(--primary)' : 'var(--surface)',
-                  color: iconStyle === s ? '#fff' : 'var(--gray-700)',
-                  borderRight: s !== 'sharp' ? '1px solid var(--border-strong)' : 'none',
-                  transition: 'background 0.1s, color 0.1s',
-                }}
-              >
-                {s}
-              </button>
-            ))}
           </div>
 
           {/* FILL toggle */}
           <button
             type="button"
+            aria-pressed={fill === 1}
             onClick={() => setFill(fill === 0 ? 1 : 0)}
             style={{
               height: 36, padding: '0 14px', border: '1px solid var(--border-strong)',
@@ -191,13 +172,15 @@ export default function IconsPage() {
                 <button
                   key={w}
                   type="button"
+                  aria-pressed={weight === w}
+                  aria-label={`Weight ${w}`}
                   onClick={() => setWeight(w)}
                   style={{
                     height: 28, padding: '0 8px', border: 'none', cursor: 'pointer',
                     fontSize: 11, fontWeight: 500, fontFamily: 'var(--font-sans)',
                     borderRight: w !== 700 ? '1px solid var(--border)' : 'none',
                     background: weight === w ? 'var(--primary)' : 'var(--surface)',
-                    color: weight === w ? '#fff' : 'var(--gray-600)',
+                    color: weight === w ? 'var(--white)' : 'var(--gray-600)',
                     transition: 'background 0.1s, color 0.1s',
                   }}
                 >
@@ -215,13 +198,15 @@ export default function IconsPage() {
                 <button
                   key={o}
                   type="button"
+                  aria-pressed={opsz === o}
+                  aria-label={`Optical size ${o}`}
                   onClick={() => setOpsz(o)}
                   style={{
                     height: 28, padding: '0 10px', border: 'none', cursor: 'pointer',
                     fontSize: 11, fontWeight: 500, fontFamily: 'var(--font-sans)',
                     borderRight: i < arr.length - 1 ? '1px solid var(--border)' : 'none',
                     background: opsz === o ? 'var(--primary)' : 'var(--surface)',
-                    color: opsz === o ? '#fff' : 'var(--gray-600)',
+                    color: opsz === o ? 'var(--white)' : 'var(--gray-600)',
                     transition: 'background 0.1s, color 0.1s',
                   }}
                 >
@@ -243,6 +228,7 @@ export default function IconsPage() {
               <button
                 key={cat}
                 type="button"
+                aria-pressed={active}
                 onClick={() => setCategory(cat)}
                 style={{
                   height: 28, padding: '0 12px', border: '1px solid', cursor: 'pointer',
@@ -250,15 +236,15 @@ export default function IconsPage() {
                   fontFamily: 'var(--font-sans)', whiteSpace: 'nowrap', flexShrink: 0,
                   borderColor: active ? 'var(--primary)' : 'var(--border-strong)',
                   background: active ? 'var(--primary)' : 'var(--surface)',
-                  color: active ? '#fff' : 'var(--gray-700)',
+                  color: active ? 'var(--white)' : 'var(--gray-700)',
                   transition: 'background 0.1s, color 0.1s, border-color 0.1s',
                   display: 'flex', alignItems: 'center', gap: 5,
                 }}
               >
                 {cat}
                 <span style={{
-                  background: active ? 'rgba(255,255,255,0.25)' : 'var(--gray-200)',
-                  color: active ? '#fff' : 'var(--gray-600)',
+                  background: active ? 'color-mix(in srgb, var(--white) 25%, transparent)' : 'var(--gray-200)',
+                  color: active ? 'var(--white)' : 'var(--gray-600)',
                   borderRadius: 'var(--radius-pill)', padding: '0 5px', fontSize: 10, fontWeight: 600,
                   lineHeight: '16px', display: 'inline-block', minWidth: 20, textAlign: 'center',
                 }}>
@@ -288,7 +274,7 @@ export default function IconsPage() {
           {category !== 'All' ? ` in ${category}` : ''}
         </span>
         <span style={{ marginLeft: 'auto', fontSize: 12, color: 'var(--muted-foreground)', fontFamily: 'var(--font-mono)' }}>
-          {iconStyle} | fill={fill} | wght={weight} | opsz={opsz}
+          fill={fill} | wght={weight} | opsz={opsz}
         </span>
       </div>
 
@@ -314,7 +300,7 @@ export default function IconsPage() {
               iconClass={iconClass}
               fill={fill}
               weight={weight}
-              grade={grade}
+              grade={GRADE}
               opsz={opsz}
               onSelect={selectIcon}
             />
@@ -333,54 +319,43 @@ export default function IconsPage() {
         <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--gray-800)' }}>Usage reference</div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 20 }}>
           <div>
-            <div style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--muted-foreground)', marginBottom: 8 }}>HTML / JSX</div>
+            <div style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--muted-foreground)', marginBottom: 8 }}>HTML</div>
             <pre style={{
               margin: 0, padding: '10px 12px', background: 'var(--gray-100)', borderRadius: 'var(--radius-sm)',
               fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--gray-800)', overflowX: 'auto',
-            }}>{`<span class="material-symbols-${iconStyle}"\n  style="font-variation-settings:\n    'FILL' ${fill},'wght' ${weight},\n    'GRAD' 0,'opsz' ${opsz}">\n  icon_name\n</span>`}</pre>
+            }}>{`<span class="material-symbols-outlined"\n  aria-hidden="true"\n  style="font-variation-settings:\n    'FILL' ${fill}, 'wght' ${weight},\n    'GRAD' 0, 'opsz' ${opsz}">\n  icon_name\n</span>`}</pre>
           </div>
           <div>
             <div style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--muted-foreground)', marginBottom: 8 }}>Inspera Icon component</div>
             <pre style={{
               margin: 0, padding: '10px 12px', background: 'var(--gray-100)', borderRadius: 'var(--radius-sm)',
               fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--gray-800)', overflowX: 'auto',
-            }}>{`import Icon from '@/components/inspera/Icon'\n\n<Icon\n  name="icon_name"\n  style="${iconStyle}"\n  fill={${fill}}\n  weight={${weight}}\n  opticalSize={${opsz}}\n/>`}</pre>
+            }}>{`import { Icon } from '@inspera/components'\n\n<Icon\n  name="icon_name"${fill ? `\n  fill={1}` : ''}${weight !== 400 ? `\n  weight={${weight}}` : ''}\n  size={${opsz}}\n/>`}</pre>
           </div>
           <div>
             <div style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--muted-foreground)', marginBottom: 8 }}>CSS import</div>
             <pre style={{
               margin: 0, padding: '10px 12px', background: 'var(--gray-100)', borderRadius: 'var(--radius-sm)',
               fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--gray-800)', overflowX: 'auto',
-            }}>{`/* Google Fonts CSS2 - all 3 styles */\n@import url(\n  'fonts.googleapis.com/css2?\n  family=Material+Symbols+Outlined:\n  opsz,wght,FILL,GRAD\n  @20..48,100..700,0..1,-25..200'\n);`}</pre>
+            }}>{`/* Once, at the top of your stylesheet */\n@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-25..200&display=block');`}</pre>
           </div>
         </div>
 
         {/* Live preview strip */}
         <div>
           <div style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--muted-foreground)', marginBottom: 10 }}>
-            Live preview - current settings across all three styles
+            Live preview - current settings
           </div>
-          <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
-            {(['outlined', 'rounded', 'sharp'] as IconStyle[]).map((s) => (
-              <div key={s} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
-                <div style={{ display: 'flex', gap: 8 }}>
-                  {['home', 'settings', 'favorite', 'star', 'person', 'notifications', 'search', 'add'].map((n) => (
-                    <span
-                      key={n}
-                      className={styleClass[s]}
-                      aria-hidden
-                      style={{
-                        fontSize: 24,
-                        fontVariationSettings: `'FILL' ${fill}, 'wght' ${weight}, 'GRAD' ${grade}, 'opsz' ${opsz}`,
-                        color: s === iconStyle ? 'var(--primary)' : 'var(--gray-500)',
-                      }}
-                    >
-                      {n}
-                    </span>
-                  ))}
-                </div>
-                <span style={{ fontSize: 11, color: s === iconStyle ? 'var(--primary)' : 'var(--muted-foreground)', fontWeight: s === iconStyle ? 600 : 400 }}>{s}</span>
-              </div>
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+            {['home', 'settings', 'favorite', 'star', 'person', 'notifications', 'search', 'add'].map((n) => (
+              <span
+                key={n}
+                className={ICON_CLASS}
+                aria-hidden
+                style={{ fontSize: 24, fontVariationSettings: `'FILL' ${fill}, 'wght' ${weight}, 'GRAD' ${GRADE}, 'opsz' ${opsz}`, color: 'var(--primary)' }}
+              >
+                {n}
+              </span>
             ))}
           </div>
         </div>
@@ -393,7 +368,7 @@ export default function IconsPage() {
         <IconDetailPanel
           key={selected}
           name={selected}
-          iconStyle={iconStyle}
+          iconStyle="outlined"
           category={selectedCategory}
           onClose={() => setSelected(null)}
         />

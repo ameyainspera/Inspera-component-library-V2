@@ -1,18 +1,27 @@
 import { type CSSProperties, type ReactNode } from 'react'
 import Icon from './Icon'
+import { cx, type NativeAttrs } from './types'
 
 export type ListSize = 'Compact' | 'Default'
 
 export interface ListItem {
+  /** Stable key. Defaults to the row position. */
+  id?: string
   primary: string
   secondary?: string
+  /** Material Symbols name shown before the text. */
+  leadingIcon?: string
+  /** Material Symbols name shown after the text, e.g. `chevron_right`. */
+  trailingIcon?: string
+  /** Any element before the text - an Avatar, a Checkbox. */
   leading?: ReactNode
+  /** Any element after the text - a Badge, a count. Strings render as text. */
   trailing?: ReactNode
 }
 
 export interface ListProps {
   /** List rows. */
-  items?: ListItem[]
+  items: ListItem[]
   /** Show dividers between rows. */
   divided?: boolean
   /** Make rows clickable. */
@@ -23,57 +32,52 @@ export interface ListProps {
   onItemClick?: (item: ListItem, index: number) => void
 }
 
-const defaultItems: ListItem[] = [
-  { primary: 'Algebra Quiz', secondary: '24 questions | 45 minutes' },
-  { primary: 'Reading Comprehension', secondary: '18 questions | 60 minutes' },
-  { primary: 'Chemistry Lab Report', secondary: 'Essay | Due 20 Mar' },
-]
-
 export default function List({
-  items = defaultItems,
+  items,
   divided = true,
   interactive = false,
   size = 'Default',
   onItemClick,
-}: ListProps) {
+  className,
+  style,
+  ...rest
+}: ListProps & NativeAttrs<'ul', ListProps>) {
   const padY = size === 'Compact' ? 8 : 12
-
   const iconSize = size === 'Compact' ? 18 : 20
 
-  // A string slot is treated as a Material Symbols icon name so it stays
-  // consistent with the Icon component and icon library; any other ReactNode
-  // (custom element) is rendered as-is.
-  const renderSlot = (slot: ReactNode, color: string) =>
-    typeof slot === 'string'
-      ? <Icon name={slot} size={iconSize} color={color} />
-      : slot
+  // Icons are named explicitly. Treating every string in `leading`/`trailing`
+  // as an icon name turned `trailing="3 new"` into a broken glyph.
+  const slot = (icon: string | undefined, node: ReactNode, color: string) =>
+    icon || node ? (
+      <span
+        style={{
+          display: 'inline-flex',
+          flexShrink: 0,
+          // Text styling only when there is text; an icon-only slot is bare.
+          ...(node !== undefined ? { alignItems: 'center', gap: 8, fontSize: 13, color } : null),
+        }}
+      >
+        {node}
+        {icon && <Icon name={icon} size={iconSize} color={color} />}
+      </span>
+    ) : null
 
   const rowContent = (item: ListItem) => (
     <>
-      {item.leading && (
-        <span style={{ display: 'inline-flex', flexShrink: 0 }}>
-          {renderSlot(item.leading, 'var(--text-secondary, var(--gray-600))')}
-        </span>
-      )}
+      {slot(item.leadingIcon, item.leading, 'var(--text-secondary)')}
       <span style={{ display: 'flex', flexDirection: 'column', gap: 2, flex: 1, minWidth: 0, textAlign: 'left' }}>
         <span style={{ fontSize: 14, fontWeight: 500, color: 'var(--text-primary)' }}>{item.primary}</span>
         {item.secondary && (
           <span style={{ fontSize: 13, color: 'var(--muted-foreground)' }}>{item.secondary}</span>
         )}
       </span>
-      {item.trailing && (
-        <span style={{ display: 'inline-flex', flexShrink: 0 }}>
-          {renderSlot(item.trailing, 'var(--muted-foreground)')}
-        </span>
-      )}
+      {slot(item.trailingIcon, item.trailing, 'var(--muted-foreground)')}
     </>
   )
 
-  // Every border side is set as a longhand on purpose. This used to declare
-  // `borderBottom` and then `border: 'none'` for the interactive case, and the
-  // later shorthand reset the divider - so `divided` silently did nothing the
-  // moment a list became clickable. Hover is CSS (.inspera-row in runtime.css),
-  // which is also why no background is set here.
+  // Every border side is set as a longhand on purpose: a later `border`
+  // shorthand used to reset the divider, so `divided` did nothing on a
+  // clickable list. Hover is CSS (.inspera-row in runtime.css).
   const rowStyle = (i: number): CSSProperties => ({
     display: 'flex',
     alignItems: 'center',
@@ -83,7 +87,7 @@ export default function List({
     borderTop: 'none',
     borderRight: 'none',
     borderLeft: 'none',
-    borderBottom: divided && i < items.length - 1 ? '1px solid var(--border)' : 'none',
+    borderBottom: divided && i < items.length - 1 ? 'var(--border-width-default) solid var(--border)' : 'none',
     borderRadius: interactive ? 'var(--radius-sm)' : undefined,
     font: 'inherit',
     cursor: interactive ? 'pointer' : 'default',
@@ -92,6 +96,7 @@ export default function List({
   return (
     <ul
       role="list"
+      className={cx('inspera', className)}
       style={{
         listStyle: 'none',
         margin: 0,
@@ -99,13 +104,15 @@ export default function List({
         width: '100%',
         fontFamily: 'var(--font-sans)',
         background: 'var(--white)',
-        border: '1px solid var(--border)',
+        border: 'var(--border-width-default) solid var(--border)',
         borderRadius: 'var(--radius-md)',
         overflow: 'hidden',
+        ...style,
       }}
+      {...rest}
     >
       {items.map((item, i) => (
-        <li key={i}>
+        <li key={item.id ?? i}>
           {interactive ? (
             <button
               type="button"

@@ -51,17 +51,16 @@ Separate content with a thin rule. - category: `data-display`.
 ```tsx
 import { Divider } from '@inspera/components'
 
-<Divider
-  orientation="Horizontal"
-  spacing="Default"
-/>
+<Divider />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `orientation` | `'Horizontal' \| 'Vertical'` | `'Horizontal'` | Divider direction. |
+| `orientation` | `'Horizontal' \| 'Vertical'` | `'Horizontal'` | Divider direction. A vertical divider needs a flex row around it. |
 | `label` | `string` | - | Optional centered label (horizontal only). |
 | `spacing` | `'Compact' \| 'Default' \| 'Spacious'` | `'Default'` | Surrounding margin. |
+
+Also accepts any native `<div>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<div>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `separator`. Use role="separator" with aria-orientation; Purely decorative dividers may be aria-hidden.
 

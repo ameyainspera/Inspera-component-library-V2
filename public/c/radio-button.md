@@ -54,19 +54,21 @@ import { RadioButton } from '@inspera/components'
 <RadioButton
   label="Standard delivery"
   name="delivery"
-  selected={value === 'standard'}
-  onChange={() => setValue('standard')}
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | `'Radio option'` | Text beside the control. Always provide one. |
-| `selected` | `boolean` | - | Selected state. |
-| `name` | `string` | - | Shared form name. Every radio in a group must use the same value. Left unset, each radio gets its own generated name and stands alone - this used to default to the literal `"radio"`, which silently put every unrelated RadioButton on a page into one mutually exclusive group. |
-| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Pressed' \| 'Disabled' \| 'Error'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Pressed` are presentation-only - leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Error` and `Disabled` are real application state and belong in your code. |
-| `withLabel` | `boolean` | `true` | Render the label. |
+| `label` **(required)** | `string` | - | Text beside the control. Required: it is the accessible name even when hidden. |
+| `selected` | `boolean` | - | Selected state. Controlled - pair with onChange. |
+| `defaultSelected` | `boolean` | `false` | Starting selected state when uncontrolled. |
 | `onChange` | `(selected: boolean) => void` | - | Fired when this option becomes selected. |
+| `name` | `string` | - | Shared form name. Every radio in a group must use the same value. Left unset, each radio gets its own generated name and stands alone. |
+| `withLabel` | `boolean` | `true` | Render the label text. When false, the label becomes `aria-label`. |
+| `disabled` | `boolean` | `false` | Blocks interaction and dims the control. |
+| `error` | `boolean` | `false` | Marks the control invalid: red ring and `aria-invalid`. |
+
+Also accepts any native `<input>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<input>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `radio`, keyboard operable. Use role="radiogroup" for the group container; Use aria-checked to indicate selected state; Arrow keys navigate between options in the group.
 

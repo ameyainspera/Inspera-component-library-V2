@@ -52,22 +52,23 @@ Communicate the absence of content and offer a next step. - category: `data-disp
 import { EmptyState } from '@inspera/components'
 
 <EmptyState
-  icon="inbox"
   title="No assessments yet"
-  description="Create your first assessment."
+  description="Create your first assessment to get started."
   actionLabel="New assessment"
-  size="Medium"
+  onAction={createAssessment}
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
+| `title` **(required)** | `string` | - | Primary message, e.g. "No assessments yet". |
+| `description` | `string` | - | Supporting explanation: why it is empty, or what to do next. |
 | `icon` | `string` | `'inbox'` | Material Symbols icon name. |
-| `title` | `string` | `'No results found'` | Primary message. |
-| `description` | `string` | `'Try adjusting your filters or search terms.'` | Supporting explanation. |
 | `actionLabel` | `string` | - | Optional primary action label. |
 | `onAction` | `() => void` | - | Fired when the action is activated. Only rendered when actionLabel is set. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Overall scale. |
+
+Also accepts any native `<div>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<div>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `status`, keyboard operable. Announce dynamically-appearing empty states with role="status"; The action must be a real focusable button; The illustration/icon is decorative (aria-hidden).
 
@@ -178,6 +179,11 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 /* Sizes change height, padding and gap only - never the 16px type. */
 .inspera-btn--small { height: 32px; padding: 0 12px; gap: 6px; }
 .inspera-btn--large { height: 48px; padding: 0 24px; gap: 10px; }
+
+/* Icon only: a square the height of the button. It still needs aria-label. */
+.inspera-btn--icon-only { width: 40px; min-width: 0; padding: 0; }
+.inspera-btn--small.inspera-btn--icon-only { width: 32px; }
+.inspera-btn--large.inspera-btn--icon-only { width: 48px; }
 
 /* Solid intents differ only in fill; hover and pressed derive from it. */
 .inspera-btn--primary     { --btn-bg: var(--primary); }

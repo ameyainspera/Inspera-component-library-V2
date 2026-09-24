@@ -53,27 +53,33 @@ import { DateRangePicker } from '@inspera/components'
 
 <DateRangePicker
   label="Test window"
-  value={range}
-  onChange={setRange}
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | `'Date range'` | Field label. |
+| `label` **(required)** | `string` | - | Field label. Always required: it is the accessible name even when hidden. |
 | `value` | `DateRange` | - | Selected range. Controlled - pair with onChange. |
-| `placeholder` | `string` | `'Select a range'` | Trigger placeholder. |
-| `state` | `'Default' \| 'Focused' \| 'Disabled' \| 'Error'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Focused` is presentation-only. `Error` and `Disabled` are real state. |
-| `showLabel` | `boolean` | `true` | Show the field label. |
-| `defaultOpen` | `boolean` | `false` | Open the calendar initially. |
+| `defaultValue` | `DateRange` | - | Starting range when uncontrolled. |
 | `onChange` | `(range: DateRange) => void` | - | Fired with the range once both ends are chosen. |
+| `open` | `boolean` | - | Calendar open state. Controlled - pair with onOpenChange. |
+| `defaultOpen` | `boolean` | `false` | Open the calendar initially, when uncontrolled. |
+| `onOpenChange` | `(open: boolean) => void` | - | Fired when the calendar opens or closes. |
+| `placeholder` | `string` | `'Select a range'` | Trigger text when no range is chosen. |
+| `showLabel` | `boolean` | `true` | Render the visible label. When false, the label becomes `aria-label`. |
+| `helpText` | `string` | - | Guidance shown below the field. Replaced by errorText when `error` is set. |
+| `errorText` | `string` | - | Validation message, shown while `error` is true. |
+| `error` | `boolean` | `false` | Marks the field invalid: red border and errorText shown. |
+| `disabled` | `boolean` | `false` | Blocks interaction and dims the field. |
+
+Also accepts any native `<button>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<button>`. `className` and `style` go on the outermost element.
 
 ```ts
 export interface DateRange {
-  /** Range start (YYYY-MM-DD) or null. */
-  start: string | null
-  /** Range end (YYYY-MM-DD) or null. */
-  end: string | null
+  /** Range start (YYYY-MM-DD). */
+  start: string
+  /** Range end (YYYY-MM-DD), on or after start. */
+  end: string
 }
 ```
 
@@ -127,15 +133,19 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 /* Tokens this component needs. Paste once, at `:root`. */
 :root {
   --primary:                #004080;
+  --error:                  #D32F2F;
   --white:                  #ffffff;
   --blue-300:               #B3D9FF;
+  --red-300:                #F9B8B8;
   --action-active:          rgba(0, 0, 0, 0.56);
   --text-primary:           rgba(0, 0, 0, 0.87);
   --border-control:         #C4C4C4;
   --border-control-strong:  #8C8C8C;
   --text-placeholder:       #8C8C8C;
+  --surface-disabled:       #F5F5F5;
   --radius-md:              8px;
   --effect-state-focus:     0px 0px 0px 3px var(--blue-300);
+  --effect-state-error:     0px 0px 0px 3px var(--red-300);
   --border-width-default:   1px;
   --font-sans:              'Inter', system-ui, -apple-system, sans-serif;
 }
@@ -156,6 +166,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 }
 
 .inspera-daterange__trigger {
+  width: 100%;
   height: 40px;
   display: flex;
   align-items: center;
@@ -183,6 +194,24 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   color: var(--text-placeholder);
 }
 .inspera-daterange__value--set { color: var(--text-primary); }
+
+/* The trigger and its panel share an anchor, so the calendar opens directly
+   under the field whether or not a label sits above it. */
+.inspera-daterange__anchor { position: relative; }
+
+.inspera-daterange__trigger[data-invalid='true'],
+.inspera-daterange__trigger[data-invalid='true']:hover {
+  border-color: var(--error);
+  box-shadow: var(--effect-state-error);
+}
+.inspera-daterange__trigger:disabled {
+  background: var(--surface-disabled);
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.inspera-daterange__trigger:disabled:hover { border-color: var(--border-control); }
+
+.inspera-daterange__error { font-size: 12px; color: var(--error); }
 
 .inspera-daterange__trigger .material-symbols-outlined {
   font-size: 20px;

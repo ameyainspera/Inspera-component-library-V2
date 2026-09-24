@@ -1,9 +1,12 @@
-import { useEffect, useState } from 'react'
+import { type CSSProperties, type ReactNode, useRef, useState } from 'react'
 import { components } from '../data/components'
 import { componentApi } from '../data/component-api.generated'
 import { componentDocs } from '../data/component-docs.generated'
 import { recipes } from '../data/recipes'
-import { registry, galleryLayout, GALLERY_MIN_WIDTH_DEFAULT } from './registry'
+import { Select, Toggle } from '../components/inspera'
+import {
+  type ControlDef, type GalleryCell, registry, galleryFor, renderLive, renderStill, snippetFor,
+} from './registry'
 import {
   Panel, SectionTitle, SegmentedControl, PreviewCanvas, CodeBlock, CodeTabs,
 } from './primitives'
@@ -58,8 +61,7 @@ function recipeCss(slug: string): string {
   if (from === -1) return recipe.css
   // Both fences: the fonts and icon class first, then this component's tokens
   // and rules. Copying only the second produced correct colours with every
-  // icon rendered as its own name, because the class that makes Material
-  // Symbols a font was never part of what got copied.
+  // icon rendered as its own name.
   const fences = [...doc.slice(from).matchAll(/```css\n([\s\S]*?)```/g)].map((m) => m[1].trimEnd())
   return fences.length > 0 ? fences.join('\n\n') : recipe.css
 }
@@ -94,25 +96,163 @@ function BlockLabel({ badge, title, detail }: { badge?: string; title: string; d
   )
 }
 
+const isBool = (c: ControlDef) => c.options.length === 2 && c.options.includes('true') && c.options.includes('false')
+
+const groupLabel: CSSProperties = {
+  fontSize: 11,
+  fontWeight: 700,
+  letterSpacing: 0.8,
+  textTransform: 'uppercase',
+  color: 'var(--gray-600)',
+}
+
+/** One control, drawn to fit its type: a switch, a row of options, or a menu. */
+function Control({ def, value, dflt, onChange }: { def: ControlDef; value: string; dflt: string; onChange: (v: string) => void }) {
+  if (isBool(def)) {
+    return (
+      <Toggle
+        label={def.label}
+        size="Small"
+        checked={value === 'true'}
+        onChange={(on) => onChange(on ? 'true' : 'false')}
+      />
+    )
+  }
+  if (def.options.length > 5) {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <span style={{ fontSize: 12, fontWeight: 600, letterSpacing: 0.4, textTransform: 'uppercase', color: 'var(--muted-foreground)' }}>
+          {def.label}
+        </span>
+        <Select
+          label={def.label}
+          showLabel={false}
+          options={def.options.map((o) => ({ value: o, label: o === dflt ? `${o} (default)` : o }))}
+          value={value}
+          onChange={onChange}
+        />
+      </div>
+    )
+  }
+  return <SegmentedControl label={def.label} options={def.options} value={value} defaultValue={dflt} onChange={onChange} />
+}
+
+/** A gallery cell: the component, its label, and a way to open it in the playground. */
+function Cell({
+  slug, cell, minHeight, align, floating, onLoad, bare = false,
+}: {
+  slug: string
+  cell: GalleryCell
+  minHeight: number
+  align: 'start' | 'center'
+  /** Opens a panel (menu, list, calendar) that must not be clipped at the cell edge. */
+  floating: boolean
+  onLoad: (values: Record<string, string>) => void
+  bare?: boolean
+}) {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 8, minWidth: 0 }}>
+      <div
+        data-gallery-cell={cell.label}
+        style={{
+          minHeight,
+          display: 'flex',
+          alignItems: align === 'start' ? 'flex-start' : 'center',
+          justifyContent: 'center',
+          padding: 16,
+          border: '1px solid var(--border)',
+          borderRadius: 'var(--radius-md)',
+          background: 'var(--surface)',
+          // A non-visible overflow on one axis forces the other to auto, which
+          // cut open panels off at the cell edge; those cells stay visible.
+          ...(floating ? { overflow: 'visible' } : { overflowX: 'auto' }),
+        }}
+      >
+        {renderStill(slug, cell.values)}
+      </div>
+      {!bare && (
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, minHeight: 24 }}>
+          <span style={{ fontSize: 12, fontWeight: 500, color: 'var(--muted-foreground)' }}>{cell.label}</span>
+          {cell.simulated && <SimulatedTag />}
+          <LoadButton label={cell.label} onClick={() => onLoad(cell.values)} />
+        </div>
+      )}
+    </div>
+  )
+}
+
+function SimulatedTag() {
+  return (
+    <span
+      title="Frozen for display. In a real app this look comes from the pointer or keyboard; it is not a prop."
+      style={{ fontSize: 10, fontWeight: 600, letterSpacing: 0.4, textTransform: 'uppercase', color: 'var(--gray-600)', background: 'var(--gray-100)', borderRadius: 'var(--radius-xs)', padding: '1px 5px' }}
+    >
+      Simulated
+    </span>
+  )
+}
+
+function LoadButton({ label, onClick }: { label: string; onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={`Open ${label} in the playground`}
+      title="Open in the playground"
+      style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 24, height: 24, padding: 0, border: 'none', borderRadius: 'var(--radius-sm)', background: 'transparent', color: 'var(--primary)', cursor: 'pointer' }}
+    >
+      <span className="material-symbols-outlined" style={{ fontSize: 16 }} aria-hidden>tune</span>
+    </button>
+  )
+}
+
+function SubHeading({ children }: { children: ReactNode }) {
+  return <h3 style={{ margin: '0 0 12px', ...groupLabel }}>{children}</h3>
+}
+
 export default function ComponentPage({ slug }: { slug: string }) {
   const spec = components[slug]
   const entry = registry[slug]
-  const props = componentApi[spec?.exportName ?? spec?.name.replace(/\s+/g, '') ?? '']?.props ?? []
+  const api = componentApi[spec?.exportName ?? spec?.name.replace(/\s+/g, '') ?? '']
+  const props = api?.props ?? []
   const doc = componentDocs[slug] ?? ''
-  const gallery = galleryLayout[slug] ?? {}
+  const recipe = recipes[slug]
   const [values, setValues] = useState<Record<string, string>>(entry?.defaults ?? {})
   const [form, setForm] = useState<'jsx' | 'css'>('jsx')
-  const recipe = recipes[slug]
-
-  useEffect(() => {
-    setValues(entry?.defaults ?? {})
-  }, [slug, entry])
+  const playgroundRef = useRef<HTMLDivElement>(null)
 
   if (!spec || !entry) {
     return <div style={{ padding: 32 }}>Component not found.</div>
   }
 
+  const layout = entry.layout ?? {}
   const set = (k: string, v: string) => setValues((prev) => ({ ...prev, [k]: v }))
+  const changed = Object.keys(entry.defaults).some((k) => values[k] !== entry.defaults[k])
+  const load = (next: Record<string, string>) => {
+    setValues(next)
+    playgroundRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+
+  const controls = Object.entries(entry.controls)
+  const choices = controls.filter(([, c]) => c.group !== 'preview' && !isBool(c))
+  const switches = controls.filter(([, c]) => c.group !== 'preview' && isBool(c))
+  const previews = controls.filter(([, c]) => c.group === 'preview')
+
+  const gallery = galleryFor(slug)
+  const matrix = gallery.matrix
+  const cellWidth = layout.cell ?? 220
+  const cellHeight = layout.cellHeight ?? 80
+  // Entries that reserve height do so for a panel that opens inside the cell.
+  const floating = Boolean(layout.cellHeight || layout.openHeight)
+  const cellAlign = floating ? 'start' : 'center'
+  /** Room for an open panel only where one is drawn. */
+  const heightFor = (cell: GalleryCell) =>
+    cell.values.preview === 'Open' && layout.openHeight ? layout.openHeight : cellHeight
+  const grid: CSSProperties = {
+    display: 'grid',
+    gridTemplateColumns: `repeat(auto-fill, minmax(min(100%, ${cellWidth}px), 1fr))`,
+    gap: 16,
+  }
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 24, width: '100%', maxWidth: 960 }}>
@@ -125,89 +265,158 @@ export default function ComponentPage({ slug }: { slug: string }) {
         <p style={{ margin: 0, fontSize: 16, color: 'var(--muted-foreground)', maxWidth: 640 }}>{spec.purpose}</p>
       </header>
 
-      {/* Playground: live preview + variant controls */}
-      <Panel>
-        <SectionTitle sub="Switch variants and states, then interact with the live component.">Playground</SectionTitle>
-        <PreviewCanvas>{entry.render(values)}</PreviewCanvas>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 20, marginTop: 20 }}>
-          {Object.entries(entry.controls).map(([key, def]) => (
-            <SegmentedControl
-              key={key}
-              label={def.label}
-              options={def.options}
-              value={values[key]}
-              onChange={(v) => set(key, v)}
-            />
-          ))}
-        </div>
-        <div style={{ marginTop: 20 }}>
-          {recipe ? (
-            <>
-              <p style={{ margin: '0 0 8px', fontSize: 13, color: 'var(--muted-foreground)' }}>
-                {form === 'jsx'
-                  ? 'For the product codebase, once the package is available.'
-                  : 'For anywhere you cannot install the package - another stack, an AI builder, a plain HTML page.'}
-              </p>
-              {form === 'jsx' ? (
-                <CodeBlock
-                  code={entry.snippet(values)}
-                  language="tsx"
-                  copyLabel="Copy JSX"
-                  headerLeft={<CodeTabs value={form} onChange={(v) => setForm(v as 'jsx' | 'css')} options={CODE_FORMS} />}
-                />
-              ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+      {/* Playground: live preview + controls */}
+      <div ref={playgroundRef} style={{ scrollMarginTop: 16 }}>
+        <Panel>
+          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16 }}>
+            <SectionTitle sub="Change the props, then use the live component. The code below always builds exactly what is shown.">Playground</SectionTitle>
+            {changed && (
+              <button
+                type="button"
+                onClick={() => setValues(entry.defaults)}
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 4, height: 32, padding: '0 10px', border: '1px solid var(--border-strong)', borderRadius: 'var(--radius-sm)', background: 'var(--surface)', color: 'var(--gray-800)', fontSize: 13, cursor: 'pointer', flexShrink: 0 }}
+              >
+                <span className="material-symbols-outlined" style={{ fontSize: 16 }} aria-hidden>restart_alt</span>
+                Reset
+              </button>
+            )}
+          </div>
+          <PreviewCanvas contentWidth={layout.width} minHeight={layout.minHeight} align={layout.align} floating={Boolean(layout.minHeight)}>
+            {/* Remounted per combination, so starting values (defaultValue,
+                defaultOpen) apply every time a control moves. */}
+            <div key={JSON.stringify(values)} style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+              {renderLive(slug, values)}
+            </div>
+          </PreviewCanvas>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 20, marginTop: 20 }}>
+            {(choices.length > 0 || switches.length > 0) && (
+              <div>
+                <div style={{ ...groupLabel, marginBottom: 12 }}>Props</div>
+                {choices.length > 0 && (
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 20 }}>
+                    {choices.map(([key, def]) => (
+                      <Control key={key} def={def} value={values[key]} dflt={entry.defaults[key]} onChange={(v) => set(key, v)} />
+                    ))}
+                  </div>
+                )}
+                {switches.length > 0 && (
+                  <div style={{ display: 'flex', flexWrap: 'wrap', columnGap: 24, marginTop: choices.length > 0 ? 12 : 0 }}>
+                    {switches.map(([key, def]) => (
+                      <Control key={key} def={def} value={values[key]} dflt={entry.defaults[key]} onChange={(v) => set(key, v)} />
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+            {previews.length > 0 && (
+              <div style={{ paddingTop: 16, borderTop: '1px dashed var(--border-strong)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+                  <span style={groupLabel}>Preview only</span>
+                  <SimulatedTag />
+                </div>
+                <p style={{ margin: '0 0 12px', fontSize: 13, color: 'var(--muted-foreground)', maxWidth: 640 }}>
+                  Freezes a look that normally comes from the pointer or keyboard, so it can be inspected. It is not a prop and never appears in the code.
+                </p>
+                {previews.map(([key, def]) => (
+                  <Control key={key} def={{ ...def, label: 'State' }} value={values[key]} dflt={entry.defaults[key]} onChange={(v) => set(key, v)} />
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div style={{ marginTop: 20 }}>
+            {recipe ? (
+              <>
+                <p style={{ margin: '0 0 8px', fontSize: 13, color: 'var(--muted-foreground)' }}>
+                  {form === 'jsx'
+                    ? 'For the product codebase, once the package is available.'
+                    : 'For anywhere you cannot install the package - another stack, an AI builder, a plain HTML page.'}
+                </p>
+                {form === 'jsx' ? (
                   <CodeBlock
-                    code={recipe.markup(values)}
-                    language="html"
-                    copyLabel="Copy HTML"
-                    maxHeight={0}
+                    code={snippetFor(slug, values)}
+                    language="tsx"
+                    copyLabel="Copy JSX"
                     headerLeft={<CodeTabs value={form} onChange={(v) => setForm(v as 'jsx' | 'css')} options={CODE_FORMS} />}
                   />
-                  <CodeBlock code={recipeCss(slug)} language="css" copyLabel="Copy CSS" />
-                </div>
-              )}
-            </>
-          ) : (
-            <CodeBlock code={entry.snippet(values)} language="tsx" copyLabel="Copy JSX" />
-          )}
-        </div>
-      </Panel>
+                ) : (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                    <CodeBlock
+                      code={recipe.markup(values)}
+                      language="html"
+                      copyLabel="Copy HTML"
+                      maxHeight={0}
+                      headerLeft={<CodeTabs value={form} onChange={(v) => setForm(v as 'jsx' | 'css')} options={CODE_FORMS} />}
+                    />
+                    <CodeBlock code={recipeCss(slug)} language="css" copyLabel="Copy CSS" />
+                  </div>
+                )}
+              </>
+            ) : (
+              <CodeBlock code={snippetFor(slug, values)} language="tsx" copyLabel="Copy JSX" />
+            )}
+          </div>
+        </Panel>
+      </div>
 
-      {/* State gallery */}
+      {/* Variants & states */}
       <Panel>
-        <SectionTitle sub="Every canonical state at a glance.">States</SectionTitle>
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: `repeat(auto-fill, minmax(min(100%, ${gallery.minWidth ?? GALLERY_MIN_WIDTH_DEFAULT}px), 1fr))`,
-            gap: 16,
-          }}
-        >
-          {entry.gallery.map((g) => (
-            <div key={g.label} style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              <div
-                style={{
-                  minHeight: gallery.floating?.minHeight ?? 80,
-                  display: 'flex',
-                  alignItems: gallery.floating?.align === 'start' ? 'flex-start' : 'center',
-                  justifyContent: 'center',
-                  // A floating panel must never be clipped. Note `overflow-x`
-                  // alone is not safe here: a non-visible value on one axis
-                  // forces the other to compute to `auto`, so setting only
-                  // overflow-x silently cropped Popover and Menu vertically.
-                  ...(gallery.floating
-                    ? { overflow: 'visible' }
-                    : { overflowX: 'auto' as const, minWidth: 0 }),
-                  padding: 16,
-                  border: '1px solid var(--border)',
-                  borderRadius: 'var(--radius-md)',
-                  background: '#fff',
-                }}
-              >
-                {g.node}
+        <SectionTitle sub="Every variant and state, derived from the playground's controls. Open any of them in the playground to try it.">
+          Variants &amp; states
+        </SectionTitle>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
+          {matrix && (
+            <div>
+              <SubHeading>{entry.controls[matrix.rows].label} &times; state</SubHeading>
+              <div style={{ overflowX: 'auto' }}>
+                <div
+                  role="table"
+                  aria-label={`${entry.controls[matrix.rows].label} by state`}
+                  style={{ display: 'grid', gridTemplateColumns: `max-content repeat(${matrix.cols.length}, minmax(${cellWidth}px, 1fr))`, gap: 12, alignItems: 'center' }}
+                >
+                  <div role="row" style={{ display: 'contents' }}>
+                    <span role="columnheader" />
+                    {matrix.cols.map((c) => (
+                      <span role="columnheader" key={c.label} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, fontSize: 12, fontWeight: 600, color: 'var(--gray-700)' }}>
+                        {c.label}
+                        {c.simulated && <SimulatedTag />}
+                      </span>
+                    ))}
+                  </div>
+                  {matrix.rowOptions.map((row) => (
+                    <div role="row" key={row} style={{ display: 'contents' }}>
+                      <span role="rowheader" style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, fontWeight: 600, color: 'var(--gray-700)' }}>
+                        {row}
+                        <LoadButton label={row} onClick={() => load({ ...entry.defaults, [matrix.rows]: row })} />
+                      </span>
+                      {matrix.cols.map((col) => (
+                        <div role="cell" key={col.label}>
+                          <Cell
+                            bare
+                            floating={floating}
+                            slug={slug}
+                            cell={{ ...col, values: { ...col.values, [matrix.rows]: row } }}
+                            minHeight={heightFor(col)}
+                            align={cellAlign}
+                            onLoad={load}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+                </div>
               </div>
-              <span style={{ fontSize: 12, fontWeight: 500, textAlign: 'center', color: 'var(--muted-foreground)' }}>{g.label}</span>
+            </div>
+          )}
+          {gallery.sections.map((section) => (
+            <div key={section.title}>
+              <SubHeading>{section.title}</SubHeading>
+              <div style={grid}>
+                {section.cells.map((cell) => (
+                  <Cell key={cell.label} slug={slug} cell={cell} minHeight={heightFor(cell)} align={cellAlign} floating={floating} onLoad={load} />
+                ))}
+              </div>
             </div>
           ))}
         </div>
@@ -241,6 +450,11 @@ export default function ComponentPage({ slug }: { slug: string }) {
             </tbody>
           </table>
         </div>
+        {api?.native && (
+          <p style={{ margin: '12px 0 0', fontSize: 13, color: 'var(--muted-foreground)', maxWidth: 720 }}>
+            Also accepts any native <code style={{ fontFamily: 'var(--font-mono)' }}>&lt;{api.native}&gt;</code> attribute - <code style={{ fontFamily: 'var(--font-mono)' }}>id</code>, <code style={{ fontFamily: 'var(--font-mono)' }}>name</code>, <code style={{ fontFamily: 'var(--font-mono)' }}>aria-*</code>, event handlers, <code style={{ fontFamily: 'var(--font-mono)' }}>ref</code> - forwarded to it. <code style={{ fontFamily: 'var(--font-mono)' }}>className</code> and <code style={{ fontFamily: 'var(--font-mono)' }}>style</code> go on the outermost element.
+          </p>
+        )}
       </Panel>
 
       {/* Tokens + Accessibility side by side */}
@@ -256,9 +470,11 @@ export default function ComponentPage({ slug }: { slug: string }) {
 
         <Panel>
           <SectionTitle>Accessibility</SectionTitle>
-          <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 12 }}>
             <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, background: 'var(--blue-100)', color: 'var(--primary)', padding: '4px 8px', borderRadius: 'var(--radius-sm)' }}>role: {spec.accessibility.role}</span>
-            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, background: 'var(--blue-100)', color: 'var(--primary)', padding: '4px 8px', borderRadius: 'var(--radius-sm)' }}>keyboard: {String(spec.accessibility.keyboard)}</span>
+            <span style={{ fontSize: 12, fontWeight: 500, background: spec.accessibility.keyboard ? 'var(--success-surface)' : 'var(--gray-100)', color: spec.accessibility.keyboard ? 'var(--success)' : 'var(--gray-700)', padding: '4px 8px', borderRadius: 'var(--radius-sm)' }}>
+              {spec.accessibility.keyboard ? 'Keyboard operable' : 'Not interactive'}
+            </span>
           </div>
           <ul style={{ margin: 0, paddingLeft: 18, display: 'flex', flexDirection: 'column', gap: 6, fontSize: 14, color: 'var(--gray-700)' }}>
             {spec.accessibility.ariaNotes.map((n) => <li key={n}>{n}</li>)}
@@ -268,7 +484,7 @@ export default function ComponentPage({ slug }: { slug: string }) {
 
       {/* Do / Don't */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 24 }}>
-        <Panel style={{ borderColor: 'rgba(46,125,50,0.4)' }}>
+        <Panel style={{ borderColor: 'color-mix(in srgb, var(--success) 40%, transparent)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12, color: 'var(--success)', fontWeight: 600 }}>
             <span className="material-symbols-outlined" style={{ fontSize: 20 }} aria-hidden>check_circle</span> Do
           </div>
@@ -276,7 +492,7 @@ export default function ComponentPage({ slug }: { slug: string }) {
             {spec.usage.do.map((d) => <li key={d}>{d}</li>)}
           </ul>
         </Panel>
-        <Panel style={{ borderColor: 'rgba(211,47,47,0.35)' }}>
+        <Panel style={{ borderColor: 'color-mix(in srgb, var(--error) 35%, transparent)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12, color: 'var(--error)', fontWeight: 600 }}>
             <span className="material-symbols-outlined" style={{ fontSize: 20 }} aria-hidden>cancel</span> Don't
           </div>
@@ -286,9 +502,8 @@ export default function ComponentPage({ slug }: { slug: string }) {
         </Panel>
       </div>
 
-      {/* AI copy panel. Each block's copy affordance lives in the CodeBlock
-          header - no second button above it doing the same thing. */}
-      <Panel style={{ background: 'linear-gradient(180deg, #f8fbff, #ffffff)', borderColor: 'rgba(0,64,128,0.25)' }}>
+      {/* AI copy panel. Each block's copy affordance lives in the CodeBlock header. */}
+      <Panel style={{ background: 'linear-gradient(180deg, var(--canvas-bg), var(--surface))', borderColor: 'color-mix(in srgb, var(--primary) 25%, transparent)' }}>
         <SectionTitle sub="Two forms of the same content. If you are unsure, copy the first one.">AI copy blocks</SectionTitle>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
           <div>

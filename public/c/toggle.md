@@ -53,20 +53,20 @@ import { Toggle } from '@inspera/components'
 
 <Toggle
   label="Enable notifications"
-  checked={enabled}
-  onChange={setEnabled}
-  size="Medium"
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | `'Toggle setting'` | Text beside the switch describing the setting. |
-| `checked` | `boolean` | - | On / off state. |
-| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Disabled'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Hover` and `Focused` are presentation-only - leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Disabled` is real application state and belongs in your code. |
-| `size` | `'Small' \| 'Medium'` | `'Medium'` | Track / thumb size. |
-| `withLabel` | `boolean` | `true` | Render the label. |
+| `label` **(required)** | `string` | - | Text describing the setting. Required: it is the accessible name even when hidden. |
+| `checked` | `boolean` | - | On / off state. Controlled - pair with onChange. |
+| `defaultChecked` | `boolean` | `false` | Starting state when uncontrolled. |
 | `onChange` | `(checked: boolean) => void` | - | Fired with the new on/off state. |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Track / thumb size. |
+| `withLabel` | `boolean` | `true` | Render the label text. When false, the label becomes `aria-label`. |
+| `disabled` | `boolean` | `false` | Blocks interaction and dims the control. |
+
+Also accepts any native `<input>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<input>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `switch`, keyboard operable. Use role="switch" for the toggle; Use aria-checked to reflect on/off state; Space key toggles the switch.
 

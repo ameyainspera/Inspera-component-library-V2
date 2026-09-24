@@ -53,9 +53,7 @@ import { Tag } from '@inspera/components'
 
 <Tag
   label="Neutral"
-  intent="Neutral"
-  size="Medium"
-  removable={false}
+  leadingIcon="label"
 />
 ```
 
@@ -64,10 +62,12 @@ import { Tag } from '@inspera/components'
 | `label` **(required)** | `string` | - | Tag text. |
 | `intent` | `'Neutral' \| 'Info' \| 'Success' \| 'Warning' \| 'Error'` | `'Neutral'` | Semantic color. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Tag height. |
-| `removable` | `boolean` | `false` | Show a remove affordance. |
+| `removable` | `boolean` | `false` | Show a remove button. Pair with onRemove. |
 | `leadingIcon` | `string` | - | Optional leading icon. |
-| `onRemove` | `() => void` | - | Fired when the remove control is activated. Set removable as well. |
-| `onClick` | `() => void` | - | Fired when the tag itself is activated. |
+| `onRemove` | `() => void` | - | Fired when the remove button is activated. |
+| `onClick` | `MouseEventHandler<HTMLButtonElement>` | - | Makes the tag text itself a button. |
+
+Also accepts any native `<span>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<span>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `status`, keyboard operable. Removable tags expose a button with aria-label "Remove {label}"; Interactive tags must be keyboard focusable; Use aria-label for icon-only tags.
 
@@ -174,6 +174,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  font: inherit;
   width: 18px;
   height: 18px;
   margin-left: 2px;

@@ -65,17 +65,15 @@ for (const slug of slugs) {
     problems.push(`${slug} | playground preview overflows by ${playground.overflowX}px`)
   }
 
+  // Every cell of "Variants & states" - sections and the matrix alike - is
+  // tagged with data-gallery-cell, so the check does not depend on layout.
   const result = await page.evaluate(() => {
-    const heading = [...document.querySelectorAll('h2')].find((h) => h.textContent?.trim() === 'States')
-    const panel = heading?.closest('section')
-    if (!panel) return { found: false, cells: [] as any[] }
-    const grid = panel.querySelector('div[style*="grid"]')
-    if (!grid) return { found: false, cells: [] as any[] }
+    const boxes = [...document.querySelectorAll<HTMLElement>('[data-gallery-cell]')]
+    if (boxes.length === 0) return { found: false, cells: [] as any[] }
 
-    const cells = [...grid.children].map((col) => {
-      const box = col.firstElementChild as HTMLElement
-      const label = (col.lastElementChild as HTMLElement)?.textContent ?? '?'
-      const inner = box?.firstElementChild as HTMLElement | null
+    const cells = boxes.map((box) => {
+      const label = box.dataset.galleryCell ?? '?'
+      const inner = box.firstElementChild as HTMLElement | null
       return {
         label,
         overflowX: box ? box.scrollWidth - box.clientWidth : 0,
@@ -89,7 +87,7 @@ for (const slug of slugs) {
     return { found: true, cells }
   })
 
-  if (!result.found) { problems.push(`${slug}: no States gallery found`); continue }
+  if (!result.found) { problems.push(`${slug}: no Variants & states gallery found`); continue }
 
   for (const c of result.cells) {
     if (c.overflowX > 1) {

@@ -1,7 +1,9 @@
-import { useId, useState } from 'react'
-import Checkbox, { type CheckboxState } from './Checkbox'
+import { useId } from 'react'
+import Checkbox, { type CheckboxSize } from './Checkbox'
+import { labelStyle } from './FormField'
+import { cx, type NativeAttrs } from './types'
+import { useControllableState } from './useControllableState'
 
-export type CheckboxGroupState = 'Default' | 'Disabled' | 'Error'
 export type CheckboxGroupOrientation = 'Vertical' | 'Horizontal'
 
 export interface CheckboxOption {
@@ -10,79 +12,96 @@ export interface CheckboxOption {
 }
 
 export interface CheckboxGroupProps {
-  /** Group label, announced as the fieldset legend. */
-  label?: string
+  /** Group label, announced as the group's name. */
+  label: string
   /** Checkbox options. */
-  options?: CheckboxOption[]
-  /** Selected option values. */
+  options: CheckboxOption[]
+  /** Selected option values. Controlled - pair with onChange. */
   value?: string[]
-  /** Layout direction. */
-  orientation?: CheckboxGroupOrientation
-  /** Forces a visual state for documentation. Omit for real interactivity. */
-  state?: CheckboxGroupState
+  /** Starting selection when uncontrolled. */
+  defaultValue?: string[]
   /** Fired with the full array of selected values. */
   onChange?: (value: string[]) => void
+  /** Layout direction. */
+  orientation?: CheckboxGroupOrientation
+  /** Size of every checkbox in the group. */
+  size?: CheckboxSize
+  /** Guidance shown below the options. Replaced by errorText when `error` is set. */
+  helpText?: string
+  /** Validation message, shown while `error` is true. */
+  errorText?: string
+  /** Marks every option invalid and shows errorText. */
+  error?: boolean
+  /** Disables every option. */
+  disabled?: boolean
 }
-
-const DEFAULT_OPTIONS: CheckboxOption[] = [
-  { label: 'Email notifications', value: 'email' },
-  { label: 'SMS notifications', value: 'sms' },
-  { label: 'Push notifications', value: 'push' },
-]
 
 export default function CheckboxGroup({
   label,
-  options = DEFAULT_OPTIONS,
+  options,
   value,
-  orientation = 'Vertical',
-  state = 'Default',
+  defaultValue = [],
   onChange,
-}: CheckboxGroupProps) {
+  orientation = 'Vertical',
+  size = 'Medium',
+  helpText,
+  errorText,
+  error = false,
+  disabled = false,
+  className,
+  style,
+  ...rest
+}: CheckboxGroupProps & NativeAttrs<'div', CheckboxGroupProps>) {
   const groupId = useId()
-  const [internal, setInternal] = useState<string[]>([])
-  const selected = value ?? internal
-
-  const disabled = state === 'Disabled'
-  const isError = state === 'Error'
+  const [selected, setSelected] = useControllableState(value, defaultValue, onChange)
+  const message = error && errorText ? errorText : helpText
+  const messageId = `${groupId}-msg`
 
   const toggle = (v: string) => {
     if (disabled) return
-    const next = selected.includes(v) ? selected.filter((x) => x !== v) : [...selected, v]
-    setInternal(next)
-    onChange?.(next)
+    setSelected(selected.includes(v) ? selected.filter((x) => x !== v) : [...selected, v])
   }
 
+  // The same shape as RadioGroup: a labelled `role="group"`. A fieldset would
+  // work too, but one pattern for both groups is easier to get right.
   return (
     <div
-      role="group"
-      aria-labelledby={label ? `${groupId}-label` : undefined}
-      aria-label={label ? undefined : 'Checkbox group'}
-      style={{ display: 'flex', flexDirection: 'column', gap: 4, fontFamily: 'var(--font-sans)' }}
+      className={cx('inspera', className)}
+      style={{ display: 'flex', flexDirection: 'column', gap: 4, fontFamily: 'var(--font-sans)', ...style }}
+      {...rest}
     >
-      {label && (
-        <span id={`${groupId}-label`} style={{ fontSize: 16, fontWeight: 500, color: 'var(--text-primary)' }}>{label}</span>
-      )}
+      <span id={`${groupId}-label`} style={labelStyle}>{label}</span>
       <div
+        role="group"
+        aria-labelledby={`${groupId}-label`}
+        aria-describedby={message ? messageId : undefined}
+        aria-disabled={disabled || undefined}
         style={{
           display: 'flex',
           flexDirection: orientation === 'Vertical' ? 'column' : 'row',
-          gap: orientation === 'Vertical' ? 0 : 24,
+          flexWrap: 'wrap',
+          columnGap: 24,
+          rowGap: 0,
         }}
       >
-        {options.map((opt) => {
-          const checked = selected.includes(opt.value)
-          const itemState: CheckboxState = disabled ? 'Disabled' : isError ? 'Error' : 'Default'
-          return (
-            <Checkbox
-              key={opt.value}
-              label={opt.label}
-              checked={checked}
-              state={itemState}
-              onChange={() => toggle(opt.value)}
-            />
-          )
-        })}
+        {options.map((opt) => (
+          <Checkbox
+            key={opt.value}
+            label={opt.label}
+            value={opt.value}
+            size={size}
+            checked={selected.includes(opt.value)}
+            disabled={disabled}
+            error={error}
+            onChange={() => toggle(opt.value)}
+          />
+        ))}
       </div>
+      {message && (
+        <span id={messageId} style={{ fontSize: 12, color: error && errorText ? 'var(--error)' : 'var(--muted-foreground)' }}>
+          {message}
+        </span>
+      )}
     </div>
   )
 }

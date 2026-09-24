@@ -52,8 +52,6 @@ Indicate an indeterminate loading state. - category: `feedback`.
 import { Spinner } from '@inspera/components'
 
 <Spinner
-  size="Medium"
-  intent="Primary"
   label="Loading assessments"
 />
 ```
@@ -62,7 +60,9 @@ import { Spinner } from '@inspera/components'
 | --- | --- | --- | --- |
 | `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Diameter 16 / 24 / 40. |
 | `intent` | `'Primary' \| 'Neutral' \| 'Inverse'` | `'Primary'` | Arc color. |
-| `label` | `string` | `'Loading'` | Accessible label. |
+| `label` | `string` | `'Loading'` | What is loading, announced to screen readers. |
+
+Also accepts any native `<span>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<span>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `status`. Use role="status" with aria-live="polite"; Provide an accessible label via aria-label; Include visually-hidden loading text.
 
@@ -119,7 +119,9 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 }
 
 .inspera-spinner {
+  position: relative;
   display: inline-flex;
+  font-family: var(--font-sans);
   width: 24px;
   height: 24px;
 }

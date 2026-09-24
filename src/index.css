@@ -21,10 +21,23 @@
    Reference-site chrome only - not part of the distributed design system.
    --------------------------------------------------------------------------- */
 
+/* Docs-only colours: the playground canvas. Not design-system tokens. */
+:root {
+  --canvas-bg: #f8fbff;
+  --canvas-dot: rgba(157, 200, 255, 0.45);
+}
+
 html,
 body,
 #root {
   height: 100%;
+}
+
+/* A visible keyboard focus ring for the docs' own buttons and links. :where()
+   keeps this at zero specificity, so every component's own focus style wins. */
+:where(button, a, input, select, textarea, [tabindex]):focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
 }
 
 body {
@@ -42,17 +55,6 @@ input,
 select,
 textarea {
   font-family: inherit;
-}
-
-@keyframes toast-in {
-  from {
-    opacity: 0;
-    transform: translate(-50%, 8px);
-  }
-  to {
-    opacity: 1;
-    transform: translate(-50%, 0);
-  }
 }
 
 /* Scrollbars: hidden until scroll (aesthetic craft rule 11) */

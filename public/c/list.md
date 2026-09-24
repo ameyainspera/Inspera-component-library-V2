@@ -52,26 +52,52 @@ Present a vertical series of related items. - category: `data-display`.
 import { List } from '@inspera/components'
 
 <List
-  size="Default"
-  divided={true}
-  interactive={false}
-  items={[{ primary: 'General settings', secondary: '...', leading: 'settings' }]}
+  items={[
+    {
+      primary: 'General settings',
+      secondary: 'Language, timezone, theme',
+      leadingIcon: 'settings',
+      trailingIcon: 'chevron_right',
+    },
+    {
+      primary: 'Notifications',
+      secondary: 'Email and push preferences',
+      leadingIcon: 'notifications',
+      trailingIcon: 'chevron_right',
+    },
+    {
+      primary: 'Security',
+      secondary: 'Password and two-factor auth',
+      leadingIcon: 'lock',
+      trailingIcon: 'chevron_right',
+    },
+  ]}
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `items` | `ListItem[]` | `defaultItems` | List rows. |
+| `items` **(required)** | `ListItem[]` | - | List rows. |
 | `divided` | `boolean` | `true` | Show dividers between rows. |
 | `interactive` | `boolean` | `false` | Make rows clickable. |
 | `size` | `'Compact' \| 'Default'` | `'Default'` | Row density. |
 | `onItemClick` | `(item: ListItem, index: number) => void` | - | Fired with the item and its index. Set interactive as well. |
 
+Also accepts any native `<ul>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<ul>`. `className` and `style` go on the outermost element.
+
 ```ts
 export interface ListItem {
+  /** Stable key. Defaults to the row position. */
+  id?: string
   primary: string
   secondary?: string
+  /** Material Symbols name shown before the text. */
+  leadingIcon?: string
+  /** Material Symbols name shown after the text, e.g. `chevron_right`. */
+  trailingIcon?: string
+  /** Any element before the text - an Avatar, a Checkbox. */
   leading?: ReactNode
+  /** Any element after the text - a Badge, a count. Strings render as text. */
   trailing?: ReactNode
 }
 ```

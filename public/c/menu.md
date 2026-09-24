@@ -53,29 +53,42 @@ import { Menu } from '@inspera/components'
 
 <Menu
   label="Actions"
-  placement="Bottom Start"
-  items={[{ label: 'Edit', icon: 'edit' }, { label: 'Delete', icon: 'delete', danger: true }]}
+  items={[
+    { label: 'Edit', icon: 'edit' },
+    { label: 'Duplicate', icon: 'content_copy' },
+    { label: 'Share', icon: 'share' },
+    { label: '', divider: true },
+    { label: 'Delete', icon: 'delete', danger: true },
+  ]}
   onSelect={handleSelect}
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | `'Actions'` | Trigger label. |
-| `items` | `MenuItem[]` | `sampleItems` | Menu items. |
-| `placement` | `'Bottom Start' \| 'Bottom End'` | `'Bottom Start'` | Alignment to trigger. |
-| `open` | `boolean` | - | Controlled open state. Leave unset to let the menu manage itself. |
-| `defaultOpen` | `boolean` | `false` | Open on mount. |
-| `forceVisible` | `boolean` | `false` | Always render the open menu, for documentation. |
-| `onSelect` | `(label: string) => void` | - | Fired with the label of the chosen item. |
+| `label` **(required)** | `string` | - | Trigger text. Pass `aria-label` too when the text alone is ambiguous, e.g. per-row "Actions". |
+| `items` **(required)** | `MenuItem[]` | - | Menu items, in order. |
+| `placement` | `'BottomStart' \| 'BottomEnd'` | `'BottomStart'` | Aligns the menu to the trigger's start or end edge. |
+| `open` | `boolean` | - | Open state. Controlled - pair with onOpenChange. |
+| `defaultOpen` | `boolean` | `false` | Open on mount, when uncontrolled. |
+| `onOpenChange` | `(open: boolean) => void` | - | Fired when the menu opens or closes. |
+| `onSelect` | `(value: string, item: MenuItem) => void` | - | Fired with the chosen item's value (its label, unless set). |
+
+Also accepts any native `<button>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<button>`. `className` and `style` go on the outermost element.
 
 ```ts
 export interface MenuItem {
   label: string
+  /** Passed to onSelect. Defaults to the label. */
+  value?: string
   icon?: string
+  /** Red text, for destructive actions. Put these last, after a divider. */
   danger?: boolean
   disabled?: boolean
+  /** A separator line instead of an item; `label` is ignored. */
   divider?: boolean
+  /** Fired when this item is chosen, before the menu-level onSelect. */
+  onSelect?: () => void
 }
 ```
 

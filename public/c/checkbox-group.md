@@ -53,20 +53,30 @@ import { CheckboxGroup } from '@inspera/components'
 
 <CheckboxGroup
   label="Notifications"
-  value={['email']}
-  orientation="Vertical"
-  options={[{ label: 'Email', value: 'email' }]}
+  options={[
+    { label: 'Email', value: 'email' },
+    { label: 'SMS', value: 'sms' },
+    { label: 'Push', value: 'push' },
+  ]}
+  defaultValue={['email']}
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | - | Group label, announced as the fieldset legend. |
-| `options` | `CheckboxOption[]` | `DEFAULT_OPTIONS` | Checkbox options. |
-| `value` | `string[]` | - | Selected option values. |
-| `orientation` | `'Vertical' \| 'Horizontal'` | `'Vertical'` | Layout direction. |
-| `state` | `'Default' \| 'Disabled' \| 'Error'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
+| `label` **(required)** | `string` | - | Group label, announced as the group's name. |
+| `options` **(required)** | `CheckboxOption[]` | - | Checkbox options. |
+| `value` | `string[]` | - | Selected option values. Controlled - pair with onChange. |
+| `defaultValue` | `string[]` | `[]` | Starting selection when uncontrolled. |
 | `onChange` | `(value: string[]) => void` | - | Fired with the full array of selected values. |
+| `orientation` | `'Vertical' \| 'Horizontal'` | `'Vertical'` | Layout direction. |
+| `size` | `CheckboxSize` | `'Medium'` | Size of every checkbox in the group. |
+| `helpText` | `string` | - | Guidance shown below the options. Replaced by errorText when `error` is set. |
+| `errorText` | `string` | - | Validation message, shown while `error` is true. |
+| `error` | `boolean` | `false` | Marks every option invalid and shows errorText. |
+| `disabled` | `boolean` | `false` | Disables every option. |
+
+Also accepts any native `<div>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<div>`. `className` and `style` go on the outermost element.
 
 ```ts
 export interface CheckboxOption {
@@ -233,13 +243,17 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 .inspera-checkbox-group__options {
   display: flex;
   flex-direction: column;
-  gap: 0;
+  /* Horizontal options wrap onto a new line rather than overflow. */
+  flex-wrap: wrap;
+  column-gap: 24px;
+  row-gap: 0;
 }
 
 .inspera-checkbox-group--horizontal .inspera-checkbox-group__options {
   flex-direction: row;
-  gap: 24px;
 }
+
+.inspera-checkbox-group__error { font-size: 12px; color: var(--error); }
 ```
 
 ```html

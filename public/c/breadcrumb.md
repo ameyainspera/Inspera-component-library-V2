@@ -52,18 +52,32 @@ Show the user's current location in a hierarchy. - category: `navigation`.
 import { Breadcrumb } from '@inspera/components'
 
 <Breadcrumb
-  items={['Home', 'Assessments', 'Algebra Quiz']}
-  separator="Chevron"
-  size="Medium"
+  items={[
+    { label: 'Home', href: '/' },
+    { label: 'Assessments', href: '/assessments' },
+    { label: 'Mathematics', href: '/assessments/mathematics' },
+    'Algebra Quiz',
+  ]}
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `items` | `string[]` | `defaultItems` | Trail from root to current page. The last entry is the current page and is not a link. |
+| `items` **(required)** | `(string \| BreadcrumbItem)[]` | - | Trail from root to current page. The last entry is the current page and is not a link. |
 | `separator` | `'Slash' \| 'Chevron'` | `'Chevron'` | Divider glyph between items. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Text size 14 / 16. |
-| `onNavigate` | `(index: number) => void` | - | Fired with the index of the crumb that was clicked. |
+| `onNavigate` | `(index: number) => void` | - | Fired with the index of a crumb without an href, for client-side routing. |
+| `label` | `string` | `'Breadcrumb'` | Names the navigation landmark. |
+
+Also accepts any native `<nav>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<nav>`. `className` and `style` go on the outermost element.
+
+```ts
+export interface BreadcrumbItem {
+  label: string
+  /** Link target. Crumbs with an href are real links - they open in a new tab and show their URL. */
+  href?: string
+}
+```
 
 **Accessibility** - role `navigation`, keyboard operable. Wrap in nav with aria-label="Breadcrumb"; Use an ordered list for semantic structure; Mark current page with aria-current="page".
 

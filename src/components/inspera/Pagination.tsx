@@ -1,12 +1,16 @@
-import { type CSSProperties, useState } from 'react'
+import { type CSSProperties } from 'react'
+import { cx, type NativeAttrs } from './types'
+import { useControllableState } from './useControllableState'
 
 export type PaginationSize = 'Small' | 'Medium'
 
 export interface PaginationProps {
-  /** Current page (1-based). */
-  page?: number
   /** Total number of pages. */
-  pageCount?: number
+  pageCount: number
+  /** Current page (1-based). Controlled - pair with onChange. */
+  page?: number
+  /** Starting page when uncontrolled. */
+  defaultPage?: number
   /** Pages shown either side of current. */
   siblingCount?: number
   /** Control height. */
@@ -15,6 +19,8 @@ export interface PaginationProps {
   showEdges?: boolean
   /** Fired with the requested page number, 1-based. */
   onChange?: (page: number) => void
+  /** Names the navigation landmark. Give each pager on a page its own. */
+  label?: string
 }
 
 const ELLIPSIS = '...'
@@ -47,16 +53,21 @@ function buildRange(page: number, pageCount: number, siblingCount: number): (num
 }
 
 export default function Pagination({
-  page = 1,
-  pageCount = 10,
+  pageCount,
+  page,
+  defaultPage = 1,
   siblingCount = 1,
   size = 'Medium',
   showEdges = true,
   onChange,
-}: PaginationProps) {
-  const [internal, setInternal] = useState(page)
-  const isControlled = onChange !== undefined && page !== undefined
-  const current = isControlled ? page : internal
+  label = 'Pagination',
+  className,
+  style,
+  ...rest
+}: PaginationProps & NativeAttrs<'nav', PaginationProps>) {
+  // Controlled by `page`, not by whether onChange exists: passing onChange just
+  // to observe used to freeze the pager.
+  const [current, setCurrent] = useControllableState(page, defaultPage, onChange)
 
   const dim = size === 'Small' ? 32 : 40
   const iconSize = size === 'Small' ? 18 : 20
@@ -64,9 +75,7 @@ export default function Pagination({
 
   const go = (p: number) => {
     const next = Math.min(Math.max(p, 1), pageCount)
-    if (next === current) return
-    if (!isControlled) setInternal(next)
-    onChange?.(next)
+    if (next !== current) setCurrent(next)
   }
 
   const items = buildRange(current, pageCount, siblingCount)
@@ -80,13 +89,11 @@ export default function Pagination({
     justifyContent: 'center',
     borderRadius: 'var(--radius-md)',
     border: 'none',
-    background: 'transparent',
     color: 'var(--text-primary)',
     fontFamily: 'var(--font-sans)',
     fontSize,
     fontWeight: 500,
     cursor: 'pointer',
-    transition: 'background 120ms ease, color 120ms ease',
   }
 
   const arrow = (icon: string, label: string, target: number, disabled: boolean) => (
@@ -94,21 +101,22 @@ export default function Pagination({
       type="button"
       aria-label={label}
       disabled={disabled}
+      // Hover is CSS (.inspera-row), so keyboard focus and pointer agree.
+      className="inspera-interactive inspera-row"
+      data-disabled={disabled || undefined}
       onClick={() => go(target)}
       style={{
         ...cellBase,
         color: disabled ? 'var(--action-disabled)' : 'var(--text-primary)',
         cursor: disabled ? 'not-allowed' : 'pointer',
       }}
-      onMouseEnter={(e) => { if (!disabled) e.currentTarget.style.background = 'var(--action-hover)' }}
-      onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent' }}
     >
       <span className="material-symbols-outlined" style={{ fontSize: iconSize }} aria-hidden>{icon}</span>
     </button>
   )
 
   return (
-    <nav aria-label="Pagination">
+    <nav aria-label={label} className={cx('inspera', className)} style={style} {...rest}>
       <ul
         style={{
           display: 'flex',
@@ -128,20 +136,21 @@ export default function Pagination({
         {items.map((it, i) => (
           <li key={typeof it === 'number' ? `p${it}` : `e${i}`}>
             {typeof it === 'string' ? (
-              <span aria-hidden style={{ ...cellBase, cursor: 'default', color: 'var(--muted-foreground)' }}>{it}</span>
+              <span aria-hidden style={{ ...cellBase, background: 'transparent', cursor: 'default', color: 'var(--muted-foreground)' }}>{it}</span>
             ) : (
               <button
                 type="button"
                 aria-label={`Page ${it}`}
                 aria-current={it === current ? 'page' : undefined}
+                // The current page keeps its fill under the pointer, so it is
+                // not a hover row.
+                className={it === current ? 'inspera-interactive' : 'inspera-interactive inspera-row'}
                 onClick={() => go(it)}
                 style={{
                   ...cellBase,
-                  background: it === current ? 'var(--primary)' : 'transparent',
+                  ...(it === current ? { background: 'var(--primary)' } : null),
                   color: it === current ? 'var(--white)' : 'var(--text-primary)',
                 }}
-                onMouseEnter={(e) => { if (it !== current) e.currentTarget.style.background = 'var(--action-hover)' }}
-                onMouseLeave={(e) => { if (it !== current) e.currentTarget.style.background = 'transparent' }}
               >
                 {it}
               </button>

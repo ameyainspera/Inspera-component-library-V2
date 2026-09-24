@@ -1,44 +1,70 @@
-import { type CSSProperties, useId, useRef, useState } from 'react'
-
-export type FileUploadState = 'Default' | 'Dragging' | 'Disabled' | 'Error'
+import { type CSSProperties, type DragEvent, useId, useState } from 'react'
+import { cx, type NativeAttrs } from './types'
 
 export interface FileUploadProps {
-  /** Field label describing what to upload. */
-  label?: string
-  /** Accepted MIME types / extensions. */
+  /** What to upload, e.g. "Attachments". The file input's accessible name. */
+  label: string
+  /** Accepted MIME types / extensions, e.g. "image/*,.pdf". Applies to drops too. */
   accept?: string
-  /** Allow multiple files. */
+  /** Allow more than one file. A drop of several is cut to the first when false. */
   multiple?: boolean
-  /** Forces a visual state for documentation. Omit for real interactivity. */
-  state?: FileUploadState
-  /** Constraint hint text. */
+  /** Constraint hint, e.g. "PNG, JPG or PDF up to 10MB". Replaced by errorText when `error` is set. */
   helpText?: string
+  /** Validation message, shown while `error` is true. */
+  errorText?: string
+  /** Marks the zone invalid: red border and `aria-invalid`. */
+  error?: boolean
+  /** Blocks interaction and dims the zone. */
+  disabled?: boolean
   /** Fired with the selected files, from both drop and browse. */
   onFiles?: (files: File[]) => void
+  /** @internal Shows the drag-over look for the docs gallery. */
+  forceDragging?: boolean
+}
+
+/** Does a file match an `accept` string (".pdf", "image/*", "application/pdf")? */
+function accepts(file: File, accept?: string): boolean {
+  if (!accept) return true
+  return accept.split(',').map((a) => a.trim().toLowerCase()).some((rule) => {
+    if (!rule) return false
+    if (rule.startsWith('.')) return file.name.toLowerCase().endsWith(rule)
+    if (rule.endsWith('/*')) return file.type.toLowerCase().startsWith(rule.slice(0, -1))
+    return file.type.toLowerCase() === rule
+  })
 }
 
 export default function FileUpload({
-  label = 'Upload files',
+  label,
   accept,
   multiple = false,
-  state = 'Default',
-  helpText = 'PNG, JPG or PDF up to 10MB',
+  helpText,
+  errorText,
+  error = false,
+  disabled = false,
   onFiles,
-}: FileUploadProps) {
-  const id = useId()
-  const inputRef = useRef<HTMLInputElement>(null)
-  const [dragging, setDragging] = useState(false)
-
-  const disabled = state === 'Disabled'
-  const isError = state === 'Error'
-  const isDragging = dragging || state === 'Dragging'
+  forceDragging = false,
+  className,
+  style,
+  id,
+  ...rest
+}: FileUploadProps & NativeAttrs<'input', FileUploadProps>) {
+  const generated = useId()
+  const inputId = id ?? generated
+  const messageId = `${inputId}-msg`
+  // Counted, not a boolean: dragleave fires every time the pointer crosses
+  // into a child element, which made the highlight flicker.
+  const [depth, setDepth] = useState(0)
+  const isDragging = forceDragging || depth > 0
+  const message = error && errorText ? errorText : helpText
 
   let border = 'var(--gray-400)'
   let background = 'var(--surface)'
-  if (isError) border = 'var(--error)'
+  if (error) border = 'var(--error)'
   else if (isDragging) { border = 'var(--primary)'; background = 'var(--blue-100)' }
 
   const zone: CSSProperties = {
+    // Anchors the visually hidden input, so focusing it never scrolls the page.
+    position: 'relative',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -53,53 +79,66 @@ export default function FileUpload({
     opacity: disabled ? 0.6 : 1,
     textAlign: 'center',
     fontFamily: 'var(--font-sans)',
-    transition: 'all 120ms ease',
+    transition: 'all var(--duration-fast) var(--easing-standard)',
+    ...style,
   }
 
   const emit = (list: FileList | null) => {
-    if (!list) return
-    onFiles?.(Array.from(list))
+    if (!list || list.length === 0) return
+    const files = Array.from(list).filter((f) => accepts(f, accept))
+    if (files.length > 0) onFiles?.(multiple ? files : files.slice(0, 1))
+  }
+
+  const drag = (delta: number) => (e: DragEvent) => {
+    if (disabled) return
+    e.preventDefault()
+    setDepth((d) => Math.max(0, d + delta))
   }
 
   return (
-    <div
-      role="button"
-      tabIndex={disabled ? -1 : 0}
-      aria-label={label}
-      aria-disabled={disabled || undefined}
+    // A <label> rather than a div with role="button": clicking it opens the
+    // picker natively, and the file input inside stays the one focusable,
+    // named control instead of an unnamed tab stop nested in a fake button.
+    <label
+      htmlFor={inputId}
+      className={cx('inspera inspera-dropzone', className)}
+      data-disabled={disabled || undefined}
       style={zone}
-      onClick={() => !disabled && inputRef.current?.click()}
-      onKeyDown={(e) => {
-        if (disabled) return
-        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); inputRef.current?.click() }
-      }}
-      onDragOver={(e) => { if (!disabled) { e.preventDefault(); setDragging(true) } }}
-      onDragLeave={() => setDragging(false)}
+      onDragEnter={drag(1)}
+      onDragOver={(e) => { if (!disabled) e.preventDefault() }}
+      onDragLeave={drag(-1)}
       onDrop={(e) => {
         if (disabled) return
         e.preventDefault()
-        setDragging(false)
+        setDepth(0)
         emit(e.dataTransfer.files)
       }}
     >
-      <span className="material-symbols-outlined" style={{ fontSize: 40, color: isError ? 'var(--error)' : 'var(--primary)' }} aria-hidden>upload_file</span>
-      <div style={{ fontSize: 16, color: 'var(--text-primary)' }}>
+      <span className="material-symbols-outlined" style={{ fontSize: 40, color: error ? 'var(--error)' : 'var(--primary)' }} aria-hidden>upload_file</span>
+      <span style={{ fontSize: 16, color: 'var(--text-primary)' }} aria-hidden>
         Drag &amp; drop or{' '}
         <span style={{ color: 'var(--primary)', fontWeight: 600 }}>browse</span>
-      </div>
-      {helpText && (
-        <span style={{ fontSize: 12, color: isError ? 'var(--error)' : 'var(--muted-foreground)' }}>{helpText}</span>
+      </span>
+      {message && (
+        <span id={messageId} style={{ fontSize: 12, color: error ? 'var(--error)' : 'var(--muted-foreground)' }}>{message}</span>
       )}
       <input
-        ref={inputRef}
-        id={id}
+        id={inputId}
         type="file"
         accept={accept}
         multiple={multiple}
         disabled={disabled}
-        onChange={(e) => emit(e.target.files)}
-        style={{ position: 'absolute', opacity: 0, width: 0, height: 0 }}
+        aria-label={label}
+        aria-describedby={message ? messageId : undefined}
+        aria-invalid={error || undefined}
+        onChange={(e) => {
+          emit(e.target.files)
+          // Reset, or choosing the same file again fires no change event.
+          e.target.value = ''
+        }}
+        style={{ position: 'absolute', opacity: 0, width: 1, height: 1, overflow: 'hidden' }}
+        {...rest}
       />
-    </div>
+    </label>
   )
 }

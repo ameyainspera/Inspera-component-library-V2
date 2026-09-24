@@ -1,4 +1,5 @@
-import { type CSSProperties } from 'react'
+import { type CSSProperties, type MouseEventHandler } from 'react'
+import { cx, type NativeAttrs } from './types'
 
 export type TagIntent = 'Neutral' | 'Info' | 'Success' | 'Warning' | 'Error'
 export type TagSize = 'Small' | 'Medium'
@@ -10,14 +11,14 @@ export interface TagProps {
   intent?: TagIntent
   /** Tag height. */
   size?: TagSize
-  /** Show a remove affordance. */
+  /** Show a remove button. Pair with onRemove. */
   removable?: boolean
   /** Optional leading icon. */
   leadingIcon?: string
-  /** Fired when the remove control is activated. Set removable as well. */
+  /** Fired when the remove button is activated. */
   onRemove?: () => void
-  /** Fired when the tag itself is activated. */
-  onClick?: () => void
+  /** Makes the tag text itself a button. */
+  onClick?: MouseEventHandler<HTMLButtonElement>
 }
 
 const intentMap: Record<TagIntent, { bg: string; fg: string }> = {
@@ -28,6 +29,21 @@ const intentMap: Record<TagIntent, { bg: string; fg: string }> = {
   Error: { bg: 'var(--error-surface)', fg: 'var(--error)' },
 }
 
+/** Strips the UA button look so a button inside the pill reads as the pill's text. */
+const bare: CSSProperties = {
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: 4,
+  margin: 0,
+  padding: 0,
+  border: 'none',
+  background: 'transparent',
+  color: 'inherit',
+  font: 'inherit',
+  cursor: 'pointer',
+  borderRadius: 'var(--radius-pill)',
+}
+
 export default function Tag({
   label,
   intent = 'Neutral',
@@ -36,12 +52,15 @@ export default function Tag({
   leadingIcon,
   onRemove,
   onClick,
-}: TagProps) {
+  className,
+  style,
+  ...rest
+}: TagProps & NativeAttrs<'span', TagProps>) {
   const c = intentMap[intent]
   const small = size === 'Small'
-  const clickable = !!onClick
+  const iconSize = small ? 14 : 16
 
-  const style: CSSProperties = {
+  const pill: CSSProperties = {
     display: 'inline-flex',
     alignItems: 'center',
     gap: 4,
@@ -55,13 +74,11 @@ export default function Tag({
     fontWeight: 500,
     lineHeight: 1,
     whiteSpace: 'nowrap',
-    border: 'none',
-    cursor: clickable ? 'pointer' : 'default',
+    cursor: 'default',
+    ...style,
   }
 
-  const iconSize = small ? 14 : 16
-
-  const inner = (
+  const text = (
     <>
       {leadingIcon && (
         <span className="material-symbols-outlined" style={{ fontSize: iconSize, fontVariationSettings: "'FILL' 1" }} aria-hidden>
@@ -69,28 +86,33 @@ export default function Tag({
         </span>
       )}
       {label}
+    </>
+  )
+
+  // The tag's own button and the remove button are siblings inside the pill.
+  // A clickable, removable tag used to put one <button> inside the other,
+  // which browsers and screen readers both handle unpredictably.
+  return (
+    <span className={cx('inspera', className)} style={pill} {...rest}>
+      {onClick ? (
+        <button type="button" className="inspera-interactive" onClick={onClick} style={bare}>{text}</button>
+      ) : (
+        text
+      )}
       {removable && (
         <button
           type="button"
+          className="inspera-interactive"
           aria-label={`Remove ${label}`}
-          onClick={(e) => {
-            e.stopPropagation()
-            onRemove?.()
-          }}
+          onClick={() => onRemove?.()}
           style={{
-            display: 'inline-flex',
-            alignItems: 'center',
+            ...bare,
+            gap: undefined,
             justifyContent: 'center',
             marginLeft: 2,
             marginRight: -2,
-            padding: 0,
             width: iconSize + 2,
             height: iconSize + 2,
-            border: 'none',
-            background: 'transparent',
-            color: 'inherit',
-            cursor: 'pointer',
-            borderRadius: 'var(--radius-pill)',
           }}
         >
           <span className="material-symbols-outlined" style={{ fontSize: iconSize }} aria-hidden>
@@ -98,16 +120,6 @@ export default function Tag({
           </span>
         </button>
       )}
-    </>
+    </span>
   )
-
-  if (clickable) {
-    return (
-      <button type="button" onClick={onClick} style={style}>
-        {inner}
-      </button>
-    )
-  }
-
-  return <span style={style}>{inner}</span>
 }

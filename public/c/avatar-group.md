@@ -52,22 +52,33 @@ Show a set of users as overlapping avatars with an overflow count. - category: `
 import { AvatarGroup } from '@inspera/components'
 
 <AvatarGroup
-  size="Medium"
-  max={4}
-  avatars={[{ name: 'Ada Lovelace' }, { name: 'Linus Torvalds' }]}
+  avatars={[
+    { name: 'Ada Lovelace' },
+    { name: 'Linus Torvalds' },
+    { name: 'Grace Hopper' },
+    { name: 'Alan Turing' },
+    { name: 'Katherine Johnson' },
+    { name: 'Edsger Dijkstra' },
+  ]}
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `avatars` | `AvatarGroupItem[]` | `defaultAvatars` | Avatars to display. |
-| `max` | `number` | `4` | Maximum shown before overflow. |
+| `avatars` **(required)** | `AvatarGroupItem[]` | - | People to show, in order. |
+| `max` | `number` | `4` | How many to show before collapsing the rest into "+N". |
 | `size` | `AvatarSize` | `'Medium'` | Avatar diameter. |
+
+Also accepts any native `<div>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<div>`. `className` and `style` go on the outermost element.
 
 ```ts
 export interface AvatarGroupItem {
-  content?: AvatarContent
-  name?: string
+  /** The person's name: initials and accessible name. */
+  name: string
+  /** Photo URL. */
+  src?: string
+  /** Material Symbols name shown instead of initials. */
+  icon?: string
 }
 ```
 

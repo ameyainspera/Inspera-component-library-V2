@@ -52,25 +52,22 @@ Show completion of an ongoing task. - category: `feedback`.
 import { Progress } from '@inspera/components'
 
 <Progress
-  variant="Linear"
-  value={60}
-  intent="Primary"
-  size="Medium"
   label="Uploading attachments"
-  indeterminate={false}
-  showValue={false}
+  value={60}
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
+| `label` **(required)** | `string` | - | What is progressing, e.g. "Uploading attachments". The accessible name. |
 | `variant` | `'Linear' \| 'Circular'` | `'Linear'` | Bar or ring. |
-| `value` | `number` | `60` | Completion percentage 0-100. Ignored when indeterminate. |
+| `value` | `number` | `0` | Completion percentage 0-100. Required unless indeterminate. |
 | `indeterminate` | `boolean` | `false` | Unknown-duration animation. |
 | `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Bar height / ring diameter. |
 | `intent` | `'Primary' \| 'Success' \| 'Warning' \| 'Error'` | `'Primary'` | Fill color. |
 | `showValue` | `boolean` | `false` | Render the percentage. |
-| `label` | `string` | `'Progress'` | Accessible name. Say what is progressing, not just "Progress". |
+
+Also accepts any native `<span>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<span>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `progressbar`. Use role="progressbar" with aria-valuenow / min / max; Omit aria-valuenow when indeterminate; Provide an accessible label for the task.
 

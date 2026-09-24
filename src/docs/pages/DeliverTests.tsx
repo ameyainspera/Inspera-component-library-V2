@@ -66,7 +66,7 @@ function Toolbar() {
       }}
     >
       <div style={{ flex: 1, minWidth: 240 }}>
-        <TextInput showLabel={false} placeholder="Search" leadingIcon="search" />
+        <TextInput label="Search tests" showLabel={false} placeholder="Search" leadingIcon="search" />
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
         {chips.map((c) => {

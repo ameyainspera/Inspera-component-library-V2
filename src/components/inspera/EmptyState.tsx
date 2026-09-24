@@ -1,15 +1,16 @@
 import { type CSSProperties } from 'react'
 import Button from './Button'
+import { cx, type NativeAttrs } from './types'
 
 export type EmptyStateSize = 'Small' | 'Medium'
 
 export interface EmptyStateProps {
+  /** Primary message, e.g. "No assessments yet". */
+  title: string
+  /** Supporting explanation: why it is empty, or what to do next. */
+  description?: string
   /** Material Symbols icon name. */
   icon?: string
-  /** Primary message. */
-  title?: string
-  /** Supporting explanation. */
-  description?: string
   /** Optional primary action label. */
   actionLabel?: string
   /** Fired when the action is activated. Only rendered when actionLabel is set. */
@@ -19,13 +20,16 @@ export interface EmptyStateProps {
 }
 
 export default function EmptyState({
+  title,
+  description,
   icon = 'inbox',
-  title = 'No results found',
-  description = 'Try adjusting your filters or search terms.',
   actionLabel,
   onAction,
   size = 'Medium',
-}: EmptyStateProps) {
+  className,
+  style,
+  ...rest
+}: EmptyStateProps & NativeAttrs<'div', EmptyStateProps>) {
   const small = size === 'Small'
   const circle = small ? 56 : 80
   const iconSize = small ? 28 : 40
@@ -39,10 +43,13 @@ export default function EmptyState({
     padding: small ? 16 : 32,
     fontFamily: 'var(--font-sans)',
     color: 'var(--text-primary)',
+    ...style,
   }
 
+  // Not a live region: an empty state is page content, and `role="status"`
+  // around it (action button included) made it announce itself on render.
   return (
-    <div style={container} role="status">
+    <div className={cx('inspera', className)} style={container} {...rest}>
       <span
         style={{
           display: 'inline-flex',
@@ -50,7 +57,7 @@ export default function EmptyState({
           justifyContent: 'center',
           width: circle,
           height: circle,
-          borderRadius: '9999px',
+          borderRadius: 'var(--radius-pill)',
           background: 'var(--gray-100)',
           marginBottom: 4,
         }}
@@ -60,9 +67,11 @@ export default function EmptyState({
         </span>
       </span>
       <h3 style={{ margin: 0, fontSize: small ? 16 : 18, fontWeight: 500 }}>{title}</h3>
-      <p style={{ margin: 0, fontSize: 14, lineHeight: 1.4, color: 'var(--muted-foreground)', maxWidth: 320 }}>
-        {description}
-      </p>
+      {description && (
+        <p style={{ margin: 0, fontSize: 14, lineHeight: 1.4, color: 'var(--muted-foreground)', maxWidth: 320 }}>
+          {description}
+        </p>
+      )}
       {actionLabel && (
         <div style={{ marginTop: 8 }}>
           <Button label={actionLabel} intent="Primary" size={small ? 'Small' : 'Medium'} onClick={onAction} />

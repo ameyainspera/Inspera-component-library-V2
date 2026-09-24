@@ -1,4 +1,5 @@
 import { type CSSProperties } from 'react'
+import { cx, type NativeAttrs } from './types'
 
 export type SkeletonVariant = 'Text' | 'Rect' | 'Circle'
 
@@ -27,19 +28,26 @@ export default function Skeleton({
   height,
   lines = 1,
   radius,
-}: SkeletonProps) {
+  className,
+  style,
+  ...rest
+}: SkeletonProps & NativeAttrs<'span', SkeletonProps>) {
+  // `.inspera-shimmer` lets the reduced-motion rule in runtime.css stop the
+  // animation; it is inline, so nothing else could.
   if (variant === 'Circle') {
     const size = width ?? height ?? 40
     return (
       <span
-        role="presentation"
         aria-hidden
+        className={cx('inspera inspera-shimmer', className)}
+        {...rest}
         style={{
           ...shimmer,
           display: 'inline-block',
           width: size,
           height: height ?? size,
           borderRadius: radius ?? 'var(--radius-pill)',
+          ...style,
         }}
       />
     )
@@ -48,14 +56,16 @@ export default function Skeleton({
   if (variant === 'Rect') {
     return (
       <span
-        role="presentation"
         aria-hidden
+        className={cx('inspera inspera-shimmer', className)}
+        {...rest}
         style={{
           ...shimmer,
           display: 'block',
           width: width ?? '100%',
           height: height ?? 120,
           borderRadius: radius ?? 'var(--radius-md)',
+          ...style,
         }}
       />
     )
@@ -63,10 +73,11 @@ export default function Skeleton({
 
   const count = Math.max(1, lines)
   return (
-    <span role="presentation" aria-hidden style={{ display: 'flex', flexDirection: 'column', gap: 8, width: width ?? '100%' }}>
+    <span aria-hidden className={cx('inspera', className)} {...rest} style={{ display: 'flex', flexDirection: 'column', gap: 8, width: width ?? '100%', ...style }}>
       {Array.from({ length: count }).map((_, i) => (
         <span
           key={i}
+          className="inspera-shimmer"
           style={{
             ...shimmer,
             display: 'block',

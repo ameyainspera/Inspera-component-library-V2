@@ -1,88 +1,85 @@
-import { type CSSProperties, useEffect, useId, useRef, useState } from 'react'
+import { type CSSProperties, useId } from 'react'
+import { assignRef, cx, type ForceState, type NativeAttrs } from './types'
+import { useControllableState } from './useControllableState'
 
-export type CheckboxState =
-  | 'Default' | 'Hover' | 'Focused' | 'Pressed' | 'Disabled' | 'Error'
 export type CheckboxSize = 'Small' | 'Medium'
 
 export interface CheckboxProps {
-  /** Text beside the box. Always provide one. */
-  label?: string
-  /** Checked state. */
+  /** Text beside the box. Required: it is the accessible name even when hidden. */
+  label: string
+  /** Checked state. Controlled - pair with onChange. */
   checked?: boolean
+  /** Starting checked state when uncontrolled. */
+  defaultChecked?: boolean
+  /** Fired with the new checked state. */
+  onChange?: (checked: boolean) => void
   /**
    * Partially-selected state, for a parent whose children are mixed. Wins over
-   * `checked` visually and announces as `aria-checked="mixed"`.
+   * `checked` visually and announces as mixed.
    */
   indeterminate?: boolean
-  /**
-   * Freezes a visual state so documentation can show it without a pointer.
-   * `Hover`, `Focused` and `Pressed` are presentation-only - leave them unset
-   * in application code, where CSS drives them from the real pointer and
-   * keyboard. `Error` and `Disabled` are real application state and belong in
-   * your code.
-   */
-  state?: CheckboxState
-  /** Render the label. */
+  /** Render the label text. When false, the label becomes `aria-label`. */
   withLabel?: boolean
   /** Indicator size. */
   size?: CheckboxSize
-  /** Fired with the new checked state. */
-  onChange?: (checked: boolean) => void
+  /** Blocks interaction and dims the control. */
+  disabled?: boolean
+  /** Marks the control invalid: red border and `aria-invalid`. */
+  error?: boolean
+  /** @internal Freezes a hover, focus or pressed look for the docs gallery. */
+  forceState?: ForceState
 }
 
 export default function Checkbox({
-  label = 'Checkbox label',
+  label,
   checked,
+  defaultChecked = false,
+  onChange,
   indeterminate = false,
-  state = 'Default',
   withLabel = true,
   size = 'Medium',
-  onChange,
-}: CheckboxProps) {
-  const id = useId()
-  const input = useRef<HTMLInputElement>(null)
-  const [internal, setInternal] = useState(false)
-  const isChecked = checked ?? internal
-
-  // `indeterminate` is a DOM property, not an attribute - React cannot set it
-  // from JSX, so it has to be written to the node directly.
-  useEffect(() => {
-    if (input.current) input.current.indeterminate = indeterminate
-  }, [indeterminate])
-
-  const disabled = state === 'Disabled'
-  const isError = state === 'Error'
+  disabled = false,
+  error = false,
+  forceState,
+  className,
+  style,
+  id,
+  ref,
+  ...rest
+}: CheckboxProps & NativeAttrs<'input', CheckboxProps>) {
+  const generated = useId()
+  const inputId = id ?? generated
+  const [isChecked, setChecked] = useControllableState(checked, defaultChecked, onChange)
   const dim = size === 'Small' ? 16 : 20
 
-  const resting = isError ? 'var(--error)' : 'var(--border-control-strong)'
+  const resting = error ? 'var(--error)' : 'var(--border-control-strong)'
   const marked = isChecked || indeterminate
 
   // Colours only. Hover, focus and pressed are CSS (.inspera-control in
-  // runtime.css), so the box responds to a real pointer and a real Tab rather
-  // than only to the `state` prop.
+  // runtime.css), so the box responds to a real pointer and a real Tab.
   const box: CSSProperties & Record<string, string | number> = {
     '--inspera-indicator-border': marked ? 'var(--primary)' : resting,
     '--inspera-indicator-bg': marked ? 'var(--primary)' : 'var(--white)',
-    '--inspera-indicator-border-hover': marked || isError ? 'var(--inspera-indicator-border)' : 'var(--primary)',
-    '--inspera-indicator-bg-hover': marked ? 'var(--primary)' : 'rgba(0,64,128,0.04)',
+    '--inspera-indicator-border-hover': marked || error ? 'var(--inspera-indicator-border)' : 'var(--primary)',
+    '--inspera-indicator-bg-hover': marked ? 'var(--primary)' : 'var(--primary-hover-overlay)',
     width: dim,
     height: dim,
     borderRadius: 'var(--radius-xs)',
-    borderWidth: 2,
+    borderWidth: 'var(--border-width-strong)',
     borderStyle: 'solid',
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'center',
     color: 'var(--white)',
     flexShrink: 0,
-    transition: 'all 120ms ease',
+    transition: 'all var(--duration-fast) var(--easing-standard)',
   }
 
   return (
     <label
-      htmlFor={id}
-      className="inspera-control"
-      data-force-state={state === 'Hover' || state === 'Focused' || state === 'Pressed' ? state : undefined}
+      htmlFor={inputId}
+      className={cx('inspera inspera-control', className)}
+      data-force-state={forceState}
       data-disabled={disabled || undefined}
       style={{
         display: 'inline-flex',
@@ -94,20 +91,26 @@ export default function Checkbox({
         color: 'var(--text-primary)',
         fontFamily: 'var(--font-sans)',
         fontSize: 16,
+        ...style,
       }}
     >
       <input
-        id={id}
+        id={inputId}
         type="checkbox"
         checked={isChecked}
         disabled={disabled}
-        ref={input}
-        aria-checked={indeterminate ? 'mixed' : isChecked}
-        onChange={(e) => {
-          setInternal(e.target.checked)
-          onChange?.(e.target.checked)
+        aria-label={withLabel ? undefined : label}
+        aria-invalid={error || undefined}
+        // `indeterminate` is a DOM property with no attribute, and a click
+        // clears it. Writing it on every render keeps the DOM, and so what a
+        // screen reader announces, in step with the prop.
+        ref={(node) => {
+          if (node) node.indeterminate = indeterminate
+          assignRef(ref, node)
         }}
+        onChange={(e) => setChecked(e.target.checked)}
         style={{ position: 'absolute', opacity: 0, width: 0, height: 0 }}
+        {...rest}
       />
       <span className="inspera-control-indicator" style={box} aria-hidden>
         {marked && (

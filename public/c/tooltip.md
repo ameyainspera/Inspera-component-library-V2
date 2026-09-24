@@ -52,23 +52,21 @@ Provide contextual help on hover or focus. - category: `feedback`.
 import { Tooltip } from '@inspera/components'
 
 <Tooltip
-  content="Supplementary help text"
-  placement="Top"
-  theme="Dark"
-  type="Default"
+  content="Supplementary help text shown on hover or focus."
 >
-  <IconButton icon="help" />
+  <Button label="Help" intent="Outline" leadingIcon="help" iconOnly />
 </Tooltip>
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `content` | `string` | `'Supplementary help text'` | The hint text. Keep it short; never put essential information here alone. |
-| `placement` | `'Top' \| 'Bottom' \| 'Left' \| 'Right'` | `'Top'` | Position relative to the trigger. |
+| `content` **(required)** | `string` | - | The hint text. Keep it short; never put essential information here alone. |
+| `children` **(required)** | `ReactElement` | - | The element the tooltip describes: one focusable element, e.g. an icon-only Button. It receives `aria-describedby` pointing at the tooltip. |
+| `placement` | `'Top' \| 'Bottom' \| 'Left' \| 'Right'` | `'Top'` | Preferred side. It flips when there is no room. |
 | `theme` | `'Light' \| 'Dark'` | `'Dark'` | Surface color. |
-| `type` | `'Default' \| 'Accessibility'` | `'Default'` | Accessibility type uses larger text. |
-| `children` | `ReactNode` | - | The element the tooltip describes. |
-| `forceVisible` | `boolean` | `false` | Keep the tooltip visible regardless of hover - used for documentation. |
+| `variant` | `'Default' \| 'Accessibility'` | `'Default'` | Accessibility uses larger text and more padding. |
+
+Also accepts any native `<span>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<span>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `tooltip`, keyboard operable. Use role="tooltip" on the tooltip element; Link trigger and tooltip with aria-describedby; Escape key dismisses the tooltip; Tooltip must not contain interactive content.
 
@@ -120,18 +118,115 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 ```css
 /* Tokens this component needs. Paste once, at `:root`. */
 :root {
-  --white:          #ffffff;
-  --gray-300:       #D9D9D9;
-  --gray-900:       #272727;
-  --action-active:  rgba(0, 0, 0, 0.56);
-  --text-primary:   rgba(0, 0, 0, 0.87);
-  --border-strong:  var(--gray-300);
-  --radius-sm:      4px;
-  --radius-pill:    9999px;
-  --shadow-100:     0px 4px 4px rgba(39, 39, 39, 0.08), 0px 2px 4px rgba(39, 39, 39, 0.12);
-  --z-tooltip:      800;
-  --font-sans:      'Inter', system-ui, -apple-system, sans-serif;
+  --primary:               #004080;
+  --error:                 #D32F2F;
+  --warning:               #EF6C00;
+  --success:               #2E7D32;
+  --white:                 #ffffff;
+  --gray-100:              #F7F7F7;
+  --gray-300:              #D9D9D9;
+  --gray-700:              #595959;
+  --gray-900:              #272727;
+  --text-primary:          rgba(0, 0, 0, 0.87);
+  --border-strong:         var(--gray-300);
+  --radius-sm:             4px;
+  --shadow-100:            0px 4px 4px rgba(39, 39, 39, 0.08), 0px 2px 4px rgba(39, 39, 39, 0.12);
+  --effect-button-shadow:  inset 0px -1px 0px rgba(0, 0, 0, 0.2), 0px 1px 0px rgba(0, 0, 0, 0.08);
+  --border-width-default:  1px;
+  --focus-ring-width:      2px;
+  --focus-ring-offset:     2px;
+  --focus-ring-color:      var(--primary);
+  --duration-fast:         100ms;
+  --easing-standard:       cubic-bezier(0.2, 0, 0, 1);
+  --z-tooltip:             800;
+  --font-sans:             'Inter', system-ui, -apple-system, sans-serif;
 }
+
+.inspera-btn {
+  /* Fill, text and border come from the intent modifier below. */
+  --btn-bg: var(--primary);
+  --btn-fg: var(--white);
+  --btn-border: transparent;
+  --btn-shadow: var(--effect-button-shadow);
+  --btn-bg-hover: color-mix(in srgb, var(--btn-bg) 90%, black);
+  --btn-bg-active: color-mix(in srgb, var(--btn-bg) 82%, black);
+  --btn-shadow-hover: inset 0 -1px 0 rgba(0, 0, 0, 0.2), 0 2px 6px rgba(0, 64, 128, 0.24);
+  --btn-shadow-active: inset 0 1px 2px rgba(0, 0, 0, 0.24);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 40px;
+  min-width: 80px;
+  padding: 0 16px;
+  border-radius: var(--radius-sm);
+  border: var(--border-width-default) solid var(--btn-border);
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  box-shadow: var(--btn-shadow);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background var(--duration-fast) var(--easing-standard),
+    border-color var(--duration-fast) var(--easing-standard),
+    box-shadow var(--duration-fast) var(--easing-standard),
+    transform var(--duration-fast) var(--easing-standard);
+}
+
+/* Sizes change height, padding and gap only - never the 16px type. */
+.inspera-btn--small { height: 32px; padding: 0 12px; gap: 6px; }
+.inspera-btn--large { height: 48px; padding: 0 24px; gap: 10px; }
+
+/* Icon only: a square the height of the button. It still needs aria-label. */
+.inspera-btn--icon-only { width: 40px; min-width: 0; padding: 0; }
+.inspera-btn--small.inspera-btn--icon-only { width: 32px; }
+.inspera-btn--large.inspera-btn--icon-only { width: 48px; }
+
+/* Solid intents differ only in fill; hover and pressed derive from it. */
+.inspera-btn--primary     { --btn-bg: var(--primary); }
+.inspera-btn--success     { --btn-bg: var(--success); }
+.inspera-btn--warning     { --btn-bg: var(--warning); }
+.inspera-btn--destructive { --btn-bg: var(--error); }
+.inspera-btn--secondary {
+  --btn-bg: var(--gray-100);
+  --btn-fg: var(--gray-900);
+  --btn-border: var(--gray-700);
+}
+
+/* Outline and Text carry no fill and no shadow; they tint on interaction. */
+.inspera-btn--outline,
+.inspera-btn--text {
+  --btn-bg: transparent;
+  --btn-fg: var(--primary);
+  --btn-shadow: none;
+  --btn-shadow-hover: none;
+  --btn-shadow-active: none;
+  --btn-bg-hover: color-mix(in srgb, var(--primary) 8%, transparent);
+  --btn-bg-active: color-mix(in srgb, var(--primary) 12%, transparent);
+}
+.inspera-btn--outline { --btn-border: var(--primary); }
+
+.inspera-btn:hover:not(:disabled) {
+  background: var(--btn-bg-hover);
+  box-shadow: var(--btn-shadow-hover);
+}
+.inspera-btn:active:not(:disabled) {
+  background: var(--btn-bg-active);
+  box-shadow: var(--btn-shadow-active);
+  transform: translateY(1px);
+}
+.inspera-btn:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+.inspera-btn:disabled { opacity: 0.38; cursor: not-allowed; }
+
+.inspera-btn .material-symbols-outlined { font-size: 20px; }
 
 .inspera-tooltip {
   position: relative;
@@ -219,27 +314,14 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   border-left-color: var(--border-strong); border-bottom-color: var(--border-strong);
 }
 
-.inspera-tooltip__default-trigger {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: var(--radius-pill);
-  border: 1px solid var(--border-strong);
-  background: var(--white);
-  font-family: var(--font-sans);
-  cursor: help;
-}
-.inspera-tooltip__default-trigger .material-symbols-outlined {
-  font-size: 20px;
-  color: var(--action-active);
-}
+
 ```
 
 ```html
 <span class="inspera-tooltip">
-  <button type="button" class="inspera-tooltip__default-trigger" aria-describedby="tip-1">
+  <!-- Any focusable trigger works; it must name itself and point at the bubble. -->
+  <button type="button" class="inspera-btn inspera-btn--outline inspera-btn--icon-only"
+          aria-label="Help" aria-describedby="tip-1">
     <span class="material-symbols-outlined" aria-hidden="true">help</span>
   </button>
   <span class="inspera-tooltip__bubble inspera-tooltip__bubble--top" id="tip-1" role="tooltip">

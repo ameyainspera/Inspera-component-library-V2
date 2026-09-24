@@ -53,21 +53,22 @@ import { Checkbox } from '@inspera/components'
 
 <Checkbox
   label="Send me product updates"
-  checked={checked}
-  onChange={setChecked}
-  size="Medium"
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | `'Checkbox label'` | Text beside the box. Always provide one. |
-| `checked` | `boolean` | - | Checked state. |
-| `indeterminate` | `boolean` | `false` | Partially-selected state, for a parent whose children are mixed. Wins over `checked` visually and announces as `aria-checked="mixed"`. |
-| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Pressed' \| 'Disabled' \| 'Error'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Pressed` are presentation-only - leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Error` and `Disabled` are real application state and belong in your code. |
-| `withLabel` | `boolean` | `true` | Render the label. |
-| `size` | `'Small' \| 'Medium'` | `'Medium'` | Indicator size. |
+| `label` **(required)** | `string` | - | Text beside the box. Required: it is the accessible name even when hidden. |
+| `checked` | `boolean` | - | Checked state. Controlled - pair with onChange. |
+| `defaultChecked` | `boolean` | `false` | Starting checked state when uncontrolled. |
 | `onChange` | `(checked: boolean) => void` | - | Fired with the new checked state. |
+| `indeterminate` | `boolean` | `false` | Partially-selected state, for a parent whose children are mixed. Wins over `checked` visually and announces as mixed. |
+| `withLabel` | `boolean` | `true` | Render the label text. When false, the label becomes `aria-label`. |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Indicator size. |
+| `disabled` | `boolean` | `false` | Blocks interaction and dims the control. |
+| `error` | `boolean` | `false` | Marks the control invalid: red border and `aria-invalid`. |
+
+Also accepts any native `<input>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<input>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `checkbox`, keyboard operable. Use aria-checked to reflect state; Group related checkboxes with fieldset and legend.
 
@@ -112,7 +113,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 - Keep the native `<input type="checkbox">` in the DOM, visually hidden with `position: absolute; opacity: 0; width: 0; height: 0`. `display: none` removes it from the tab order and from form submission.
 - Draw the focus ring on the box via `:focus-visible + .box`. A ring on a 0x0 input is invisible - this is the detail custom checkboxes miss most often.
 - The box is 20px (16px small) with a 2px border and `--radius-xs`. Unchecked is `--border-control-strong`; checked fills with `--primary`.
-- Indeterminate is a DOM property (`el.indeterminate = true`), not an HTML attribute, and it announces as `aria-checked="mixed"`. Its glyph is `remove`, not a tick. Static markup that cannot run script uses the `inspera-checkbox--mixed` class instead.
+- Indeterminate is a DOM property (`el.indeterminate = true`), not an HTML attribute; a native checkbox then announces as mixed by itself, so do not add `aria-checked`. Its glyph is `remove`, not a tick. Static markup that cannot run script uses the `inspera-checkbox--mixed` class instead.
 - The whole row is the `<label>`, so the text is part of the hit target.
 
 ```css
@@ -223,9 +224,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 </label>
 
 <!-- Indeterminate is a DOM property, not an attribute. Set it in script:
-     document.getElementById('all').indeterminate = true -->
-<label class="inspera-checkbox" for="all">
-  <input class="inspera-checkbox__input" id="all" type="checkbox" aria-checked="mixed" />
+     document.getElementById('all').indeterminate = true
+     A native checkbox then announces "mixed" on its own - no aria-checked. -->
+<label class="inspera-checkbox inspera-checkbox--mixed" for="all">
+  <input class="inspera-checkbox__input" id="all" type="checkbox" />
   <span class="inspera-checkbox__box" aria-hidden="true">
     <span class="material-symbols-outlined">remove</span>
   </span>

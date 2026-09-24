@@ -1,30 +1,34 @@
-import { type CSSProperties, type ReactNode } from 'react'
+import { type CSSProperties, type MouseEventHandler } from 'react'
+import { cx, type ForceState, type NativeAttrs } from './types'
 
 export type ButtonIntent =
   | 'Primary' | 'Secondary' | 'Outline' | 'Text' | 'Success' | 'Warning' | 'Destructive'
 export type ButtonSize = 'Small' | 'Medium' | 'Large'
-export type ButtonState = 'Default' | 'Hover' | 'Focused' | 'Pressed' | 'Disabled'
-export type ButtonContent = 'Text' | 'Icon + Text' | 'Text + Icon' | 'Text + Disclosure'
 
 export interface ButtonProps {
-  /** The button text. Start with a verb - "Save", not "OK". */
-  label?: string
+  /**
+   * The button text. Start with a verb - "Save", not "OK". With `iconOnly` it
+   * is not shown but becomes the accessible name, so it is still required.
+   */
+  label: string
   /** Visual role / semantic weight. */
   intent?: ButtonIntent
   /** Height 32 / 40 / 48. */
   size?: ButtonSize
-  /**
-   * Freezes a visual state so documentation can show it without a pointer.
-   * Leave unset in application code - hover, focus and active are handled in
-   * CSS and work on their own.
-   */
-  state?: ButtonState
-  /** Label / icon composition. */
-  content?: ButtonContent
-  /** Material Symbols name. Only rendered by the icon-bearing content variants. */
-  icon?: string
+  /** Material Symbols name shown before the label. */
+  leadingIcon?: string
+  /** Material Symbols name shown after the label. Use `expand_more` for a menu trigger. */
+  trailingIcon?: string
+  /** Show only the icon (`leadingIcon`, else `trailingIcon`); `label` becomes the accessible name. */
+  iconOnly?: boolean
+  /** Blocks interaction and dims the button. */
+  disabled?: boolean
+  /** Native button type. Defaults to `button`, so a Button never submits a form by accident. */
+  type?: 'button' | 'submit' | 'reset'
   /** Fired on click and on Enter or Space. */
-  onClick?: () => void
+  onClick?: MouseEventHandler<HTMLButtonElement>
+  /** @internal Freezes a hover, focus or pressed look for the docs gallery. */
+  forceState?: ForceState
 }
 
 const intentMap: Record<ButtonIntent, { bg: string; fg: string; border: string }> = {
@@ -56,36 +60,40 @@ function darken(color: string, amount: number): string {
 }
 
 export default function Button({
-  label = 'Button',
+  label,
   intent = 'Primary',
   size = 'Medium',
-  state,
-  content = 'Text',
-  icon = 'add',
+  leadingIcon,
+  trailingIcon,
+  iconOnly = false,
+  disabled = false,
+  type = 'button',
   onClick,
-}: ButtonProps) {
+  forceState,
+  className,
+  style,
+  ...rest
+}: ButtonProps & NativeAttrs<'button', ButtonProps>) {
   const c = intentMap[intent]
   const s = sizeMap[size]
   const isSolid = c.bg !== 'transparent'
-  const disabled = state === 'Disabled'
+  const onlyIcon = iconOnly ? (leadingIcon ?? trailingIcon) : undefined
 
   // Hover and pressed are CSS (see .inspera-button in runtime.css). The
   // component only supplies the colours; the pseudo-classes do the rest, so a
   // Button reacts to a real pointer instead of only to a prop.
-  const style: CSSProperties & Record<string, string | number> = {
+  const vars: CSSProperties & Record<string, string | number> = {
     '--inspera-bg': c.bg,
     '--inspera-fg': c.fg,
     '--inspera-border': c.border,
     '--inspera-shadow': isSolid ? 'var(--effect-button-shadow)' : 'none',
     '--inspera-bg-hover': isSolid ? darken(c.bg, 0.1) : 'color-mix(in srgb, var(--primary) 8%, transparent)',
     '--inspera-bg-active': isSolid ? darken(c.bg, 0.18) : 'color-mix(in srgb, var(--primary) 12%, transparent)',
-    '--inspera-shadow-hover': isSolid
-      ? 'inset 0px -1px 0px rgba(0,0,0,0.2), 0px 2px 6px rgba(0,64,128,0.24)'
-      : 'none',
-    '--inspera-shadow-active': isSolid ? 'inset 0px 1px 2px rgba(0,0,0,0.24)' : 'none',
+    '--inspera-shadow-hover': isSolid ? 'var(--effect-button-shadow-hover)' : 'none',
+    '--inspera-shadow-active': isSolid ? 'var(--effect-button-shadow-active)' : 'none',
     height: s.h,
-    minWidth: 80,
-    padding: `0 ${s.px}px`,
+    // An icon-only button is a square; a labelled one never drops below 80px.
+    ...(onlyIcon ? { width: s.h, minWidth: 0, padding: 0 } : { minWidth: 80, padding: `0 ${s.px}px` }),
     gap: s.gap,
     borderRadius: 'var(--radius-sm)',
     borderWidth: 'var(--border-width-default)',
@@ -100,31 +108,38 @@ export default function Button({
     cursor: disabled ? 'not-allowed' : 'pointer',
     opacity: disabled ? 0.38 : 1,
     whiteSpace: 'nowrap',
+    ...style,
   }
 
-  const iconEl: ReactNode = (
+  const icon = (name: string) => (
     <span className="material-symbols-outlined" style={{ fontSize: 20 }} aria-hidden>
-      {content === 'Text + Disclosure' ? 'expand_more' : icon}
+      {name}
     </span>
   )
 
   return (
     <button
-      type="button"
-      className="inspera-interactive inspera-button"
-      data-force-state={state && state !== 'Default' ? state : undefined}
-      style={style}
+      type={type}
+      className={cx('inspera inspera-interactive inspera-button', className)}
+      data-force-state={forceState}
+      style={vars}
       disabled={disabled}
       onClick={onClick}
-      aria-label={content === 'Icon + Text' || content === 'Text' ? undefined : label}
+      aria-label={onlyIcon ? label : undefined}
+      {...rest}
     >
-      {content === 'Icon + Text' && iconEl}
-      {/* The label only needs its own element when it sits beside an icon.
-          A text-only button wrapped its label in a span that carried nothing,
-          which made the rendered DOM differ from the HTML the spec publishes
-          for the same button - for no visual gain. */}
-      {content === 'Text' ? label : <span>{label}</span>}
-      {(content === 'Text + Icon' || content === 'Text + Disclosure') && iconEl}
+      {onlyIcon ? (
+        icon(onlyIcon)
+      ) : (
+        <>
+          {leadingIcon && icon(leadingIcon)}
+          {/* The label only needs its own element when it sits beside an icon,
+              so a text-only button renders exactly the markup the spec
+              publishes for it. */}
+          {leadingIcon || trailingIcon ? <span>{label}</span> : label}
+          {trailingIcon && icon(trailingIcon)}
+        </>
+      )}
     </button>
   )
 }

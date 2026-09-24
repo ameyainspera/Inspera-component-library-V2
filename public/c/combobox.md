@@ -53,26 +53,33 @@ import { Combobox } from '@inspera/components'
 
 <Combobox
   label="Assessment"
-  value={value}
-  onChange={setValue}
   options={[
     { value: 'algebra', label: 'Algebra Quiz', icon: 'quiz' },
     { value: 'biology', label: 'Biology Final', icon: 'science' },
+    { value: 'history', label: 'History Midterm', icon: 'history_edu' },
+    { value: 'physics', label: 'Physics Lab', icon: 'experiment' },
   ]}
+  placeholder="Search assessments..."
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | `'Assessment'` | Field label. |
-| `placeholder` | `string` | `'Search assessments...'` | Shown when nothing is typed or selected. |
-| `options` | `ComboboxOption[]` | `defaultOptions` | The full option list. Filtered as the user types. |
+| `label` **(required)** | `string` | - | Field label. Always required: it is the accessible name even when hidden. |
+| `options` **(required)** | `ComboboxOption[]` | - | The full option list. Filtered as the user types. |
+| `placeholder` | `string` | `'Search...'` | Shown when nothing is typed or selected. |
 | `value` | `string` | - | Selected value. Controlled - pair with onChange. |
-| `state` | `'Default' \| 'Focused' \| 'Disabled' \| 'Error'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Focused` is presentation-only. `Error` and `Disabled` are real state. |
-| `showLabel` | `boolean` | `true` | Render the field label. |
+| `defaultValue` | `string` | - | Starting value when uncontrolled. |
+| `onChange` | `(value: string) => void` | - | Fired with the chosen value (or the free text, with allowCustomValue). |
+| `showLabel` | `boolean` | `true` | Render the visible label. When false, the label becomes `aria-label`. |
 | `allowCustomValue` | `boolean` | `false` | Allow a typed value that matches no option to be committed. |
 | `emptyText` | `string` | `'No matches'` | Text shown when no option matches the query. |
-| `onChange` | `(value: string) => void` | - | Fired with the chosen value (or free text when allowCustomValue). |
+| `helpText` | `string` | - | Guidance shown below the field. Replaced by errorText when `error` is set. |
+| `errorText` | `string` | - | Validation message, shown while `error` is true. |
+| `error` | `boolean` | `false` | Marks the field invalid: red border, `aria-invalid`, errorText shown. |
+| `disabled` | `boolean` | `false` | Blocks interaction and dims the field. |
+
+Also accepts any native `<input>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<input>`. `className` and `style` go on the outermost element.
 
 ```ts
 export interface ComboboxOption {
@@ -135,20 +142,24 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 /* Tokens this component needs. Paste once, at `:root`. */
 :root {
   --primary:                #004080;
+  --error:                  #D32F2F;
   --white:                  #ffffff;
   --gray-200:               #EDEDED;
   --blue-100:               #F0F7FF;
   --blue-300:               #B3D9FF;
+  --red-300:                #F9B8B8;
   --action-active:          rgba(0, 0, 0, 0.56);
   --text-primary:           rgba(0, 0, 0, 0.87);
   --border-control:         #C4C4C4;
   --border-control-strong:  #8C8C8C;
+  --surface-disabled:       #F5F5F5;
   --surface:                var(--white);
   --border:                 var(--gray-200);
   --radius-sm:              4px;
   --radius-md:              8px;
   --shadow-200:             0px 8px 8px rgba(39, 39, 39, 0.08), 0px 4px 6px rgba(39, 39, 39, 0.12);
   --effect-state-focus:     0px 0px 0px 3px var(--blue-300);
+  --effect-state-error:     0px 0px 0px 3px var(--red-300);
   --border-width-default:   1px;
   --z-dropdown:             300;
   --font-sans:              'Inter', system-ui, -apple-system, sans-serif;
@@ -170,6 +181,8 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 }
 
 .inspera-combobox__field {
+  /* Anchors the option list, which opens directly below the field. */
+  position: relative;
   height: 40px;
   display: flex;
   align-items: center;
@@ -207,10 +220,11 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 /* Rendered only while open, anchored under the field. */
 .inspera-combobox__list {
+  /* Inside the field, so it lines up with the field's outer border. */
   position: absolute;
-  top: 74px;
-  left: 0;
-  right: 0;
+  top: calc(100% + 4px);
+  left: -1px;
+  right: -1px;
   z-index: var(--z-dropdown, 20);
   margin: 0;
   padding: 6px;
@@ -229,6 +243,19 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   cursor: pointer;
 }
 .inspera-combobox__option[aria-selected='true'] { background: var(--blue-100); }
+
+.inspera-combobox__field[data-invalid='true'],
+.inspera-combobox__field[data-invalid='true']:hover,
+.inspera-combobox__field[data-invalid='true']:focus-within {
+  border-color: var(--error);
+  box-shadow: var(--effect-state-error);
+}
+.inspera-combobox__field[data-disabled='true'] {
+  background: var(--surface-disabled);
+  opacity: 0.6;
+}
+.inspera-combobox__field[data-disabled='true'] .inspera-combobox__chevron { cursor: not-allowed; }
+.inspera-combobox__error { font-size: 12px; color: var(--error); }
 ```
 
 ```html
@@ -240,13 +267,12 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
            aria-expanded="false" aria-controls="country-list" aria-autocomplete="list"
            placeholder="Search countries" />
     <span class="material-symbols-outlined inspera-combobox__icon inspera-combobox__chevron" aria-hidden="true">expand_more</span>
+    <!-- Rendered only while open, inside the field so it sits right under it. -->
+    <ul class="inspera-combobox__list" id="country-list" role="listbox">
+      <li class="inspera-combobox__option" role="option" aria-selected="true">Norway</li>
+      <li class="inspera-combobox__option" role="option" aria-selected="false">Sweden</li>
+    </ul>
   </div>
-
-  <!-- Rendered only while open. -->
-  <ul class="inspera-combobox__list" id="country-list" role="listbox">
-    <li class="inspera-combobox__option" role="option" aria-selected="true">Norway</li>
-    <li class="inspera-combobox__option" role="option" aria-selected="false">Sweden</li>
-  </ul>
 </div>
 ```
 

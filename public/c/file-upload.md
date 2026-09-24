@@ -54,19 +54,23 @@ import { FileUpload } from '@inspera/components'
 <FileUpload
   label="Attachments"
   accept="image/*,.pdf"
-  multiple={false}
+  helpText="PNG, JPG or PDF up to 10MB"
   onFiles={handleFiles}
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | `'Upload files'` | Field label describing what to upload. |
-| `accept` | `string` | - | Accepted MIME types / extensions. |
-| `multiple` | `boolean` | `false` | Allow multiple files. |
-| `state` | `'Default' \| 'Dragging' \| 'Disabled' \| 'Error'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
-| `helpText` | `string` | `'PNG, JPG or PDF up to 10MB'` | Constraint hint text. |
+| `label` **(required)** | `string` | - | What to upload, e.g. "Attachments". The file input's accessible name. |
+| `accept` | `string` | - | Accepted MIME types / extensions, e.g. "image/*,.pdf". Applies to drops too. |
+| `multiple` | `boolean` | `false` | Allow more than one file. A drop of several is cut to the first when false. |
+| `helpText` | `string` | - | Constraint hint, e.g. "PNG, JPG or PDF up to 10MB". Replaced by errorText when `error` is set. |
+| `errorText` | `string` | - | Validation message, shown while `error` is true. |
+| `error` | `boolean` | `false` | Marks the zone invalid: red border and `aria-invalid`. |
+| `disabled` | `boolean` | `false` | Blocks interaction and dims the zone. |
 | `onFiles` | `(files: File[]) => void` | - | Fired with the selected files, from both drop and browse. |
+
+Also accepts any native `<input>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<input>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `button`, keyboard operable. Dropzone uses role="button" and is keyboard focusable; Enter / Space open the file browser; Provide an accessible label describing the action.
 
@@ -108,8 +112,8 @@ Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
 font weight of your own, and do not restyle it with a UI kit's defaults.
 
-- The zone carries `role="button"`, `tabindex="0"` and an Enter/Space handler that clicks the hidden input. Drag and drop alone is not an accessible way to upload.
-- Keep the native `<input type="file">` in the DOM, visually hidden - the zone triggers it with `.click()`.
+- The zone is a `<label>` around a visually hidden `<input type="file">`. Clicking the zone opens the picker natively, and the input is the one focusable control, named by `aria-label` and described by the help text. Do not use a `<div role="button">` with the input inside it - that nests one control in another.
+- Filter dropped files by the same `accept` and `multiple` rules as the picker, and reset the input value after each choice so picking the same file twice still fires.
 - Border is 2px dashed `--gray-400`; a 1px dash reads as a table rule at this size.
 - The drag state and hover share one look: `--primary` border on a `--blue-100` wash. Handle `dragover`, `dragleave` and `drop`, and `preventDefault` on dragover or the browser opens the file instead.
 - Always state the constraint ("PNG, JPG or PDF up to 10MB") - a bare drop zone gives no way to know what will be rejected.
@@ -130,10 +134,14 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   --focus-ring-width:   2px;
   --focus-ring-offset:  2px;
   --focus-ring-color:   var(--primary);
+  --duration-fast:      100ms;
+  --easing-standard:    cubic-bezier(0.2, 0, 0, 1);
   --font-sans:          'Inter', system-ui, -apple-system, sans-serif;
 }
 
 .inspera-upload {
+  /* Anchors the visually hidden input, so focusing it never scrolls the page. */
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -148,7 +156,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   cursor: pointer;
   text-align: center;
   font-family: var(--font-sans);
-  transition: all 120ms ease;
+  transition: all var(--duration-fast) var(--easing-standard);
 }
 
 /* Both the real drag state and the pointer share one look. */
@@ -158,7 +166,8 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   background: var(--blue-100);
 }
 
-.inspera-upload:focus-visible {
+/* The input inside has the focus; the zone draws the ring for it. */
+.inspera-upload:has(.inspera-upload__input:focus-visible) {
   outline: var(--focus-ring-width) solid var(--focus-ring-color);
   outline-offset: var(--focus-ring-offset);
 }
@@ -183,12 +192,14 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   color: var(--muted-foreground);
 }
 
-/* The native input stays in the DOM so the zone can click() it. */
+/* The native input is the real control: visually hidden but focusable, and
+   named by aria-label. A 0x0 input is skipped by some browsers' Tab order. */
 .inspera-upload__input {
   position: absolute;
   opacity: 0;
-  width: 0;
-  height: 0;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
 }
 
 .inspera-upload--error {
@@ -204,16 +215,17 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 ```
 
 ```html
-<!-- role="button" + tabindex + a key handler, because a div is not focusable
-     and Enter/Space do not activate it on their own. -->
-<div class="inspera-upload" role="button" tabindex="0" aria-label="Attachments">
+<!-- A <label> around the file input: clicking anywhere opens the picker
+     natively, and the input stays the one focusable, named control. -->
+<label class="inspera-upload" for="attachments">
   <span class="material-symbols-outlined inspera-upload__icon" aria-hidden="true">upload_file</span>
-  <div class="inspera-upload__prompt">
+  <span class="inspera-upload__prompt" aria-hidden="true">
     Drag &amp; drop or <span class="inspera-upload__browse">browse</span>
-  </div>
-  <span class="inspera-upload__help">PNG, JPG or PDF up to 10MB</span>
-  <input class="inspera-upload__input" type="file" accept="image/*,.pdf" multiple />
-</div>
+  </span>
+  <span class="inspera-upload__help" id="attachments-help">PNG, JPG or PDF up to 10MB</span>
+  <input class="inspera-upload__input" id="attachments" type="file" accept="image/*,.pdf" multiple
+         aria-label="Attachments" aria-describedby="attachments-help" />
+</label>
 ```
 
 

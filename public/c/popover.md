@@ -52,23 +52,23 @@ Show interactive content anchored to a trigger. - category: `feedback`.
 import { Popover } from '@inspera/components'
 
 <Popover
-  placement="Bottom"
+  trigger={<Button label="Filters" intent="Outline" trailingIcon="expand_more" />}
   title="Filter results"
-  trigger={<Button label="Filters" />}
   content={<FilterForm />}
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `trigger` | `ReactNode` | - | Element that toggles the popover. |
-| `title` | `string` | `'Popover title'` | Optional panel heading. |
-| `content` | `ReactNode` | `'Popover content with interactive elements.'` | Popover body content. |
-| `placement` | `'Top' \| 'Bottom' \| 'Left' \| 'Right'` | `'Bottom'` | Position relative to the trigger. |
-| `open` | `boolean` | - | Controlled open state. Leave unset to let the popover manage itself. |
-| `defaultOpen` | `boolean` | `false` | Open on mount. |
-| `forceVisible` | `boolean` | `false` | Keep the panel visible regardless of state - used for documentation. |
+| `trigger` **(required)** | `ReactElement` | - | The element that toggles the popover - usually a Button. |
+| `content` **(required)** | `ReactNode` | - | Popover body. May hold interactive content. |
+| `title` | `string` | - | Optional panel heading; also the panel's accessible name. |
+| `placement` | `'Top' \| 'Bottom' \| 'Left' \| 'Right'` | `'Bottom'` | Preferred side. It flips when there is no room. |
+| `open` | `boolean` | - | Open state. Controlled - pair with onOpenChange. |
+| `defaultOpen` | `boolean` | `false` | Open on mount, when uncontrolled. |
 | `onOpenChange` | `(open: boolean) => void` | - | Fired when the popover opens or closes. |
+
+Also accepts any native `<div>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<div>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `dialog`, keyboard operable. Trigger uses aria-haspopup and aria-expanded; Panel uses role="dialog"; Escape and outside-click close the popover; May contain interactive content (unlike Tooltip).
 
@@ -120,21 +120,119 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 ```css
 /* Tokens this component needs. Paste once, at `:root`. */
 :root {
-  --white:             #ffffff;
-  --gray-200:          #EDEDED;
-  --gray-300:          #D9D9D9;
-  --gray-600:          #7A7A7A;
-  --text-primary:      rgba(0, 0, 0, 0.87);
-  --surface:           var(--white);
-  --border:            var(--gray-200);
-  --border-strong:     var(--gray-300);
-  --muted-foreground:  var(--gray-600);
-  --radius-sm:         4px;
-  --radius-md:         8px;
-  --shadow-300:        0px 8px 16px rgba(39, 39, 39, 0.08), 0px 6px 8px rgba(39, 39, 39, 0.12);
-  --z-popover:         400;
-  --font-sans:         'Inter', system-ui, -apple-system, sans-serif;
+  --primary:               #004080;
+  --error:                 #D32F2F;
+  --warning:               #EF6C00;
+  --success:               #2E7D32;
+  --white:                 #ffffff;
+  --gray-100:              #F7F7F7;
+  --gray-200:              #EDEDED;
+  --gray-600:              #7A7A7A;
+  --gray-700:              #595959;
+  --gray-900:              #272727;
+  --text-primary:          rgba(0, 0, 0, 0.87);
+  --surface:               var(--white);
+  --border:                var(--gray-200);
+  --muted-foreground:      var(--gray-600);
+  --radius-sm:             4px;
+  --radius-md:             8px;
+  --shadow-300:            0px 8px 16px rgba(39, 39, 39, 0.08), 0px 6px 8px rgba(39, 39, 39, 0.12);
+  --effect-button-shadow:  inset 0px -1px 0px rgba(0, 0, 0, 0.2), 0px 1px 0px rgba(0, 0, 0, 0.08);
+  --border-width-default:  1px;
+  --focus-ring-width:      2px;
+  --focus-ring-offset:     2px;
+  --focus-ring-color:      var(--primary);
+  --duration-fast:         100ms;
+  --easing-standard:       cubic-bezier(0.2, 0, 0, 1);
+  --z-popover:             400;
+  --font-sans:             'Inter', system-ui, -apple-system, sans-serif;
 }
+
+.inspera-btn {
+  /* Fill, text and border come from the intent modifier below. */
+  --btn-bg: var(--primary);
+  --btn-fg: var(--white);
+  --btn-border: transparent;
+  --btn-shadow: var(--effect-button-shadow);
+  --btn-bg-hover: color-mix(in srgb, var(--btn-bg) 90%, black);
+  --btn-bg-active: color-mix(in srgb, var(--btn-bg) 82%, black);
+  --btn-shadow-hover: inset 0 -1px 0 rgba(0, 0, 0, 0.2), 0 2px 6px rgba(0, 64, 128, 0.24);
+  --btn-shadow-active: inset 0 1px 2px rgba(0, 0, 0, 0.24);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 40px;
+  min-width: 80px;
+  padding: 0 16px;
+  border-radius: var(--radius-sm);
+  border: var(--border-width-default) solid var(--btn-border);
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  box-shadow: var(--btn-shadow);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background var(--duration-fast) var(--easing-standard),
+    border-color var(--duration-fast) var(--easing-standard),
+    box-shadow var(--duration-fast) var(--easing-standard),
+    transform var(--duration-fast) var(--easing-standard);
+}
+
+/* Sizes change height, padding and gap only - never the 16px type. */
+.inspera-btn--small { height: 32px; padding: 0 12px; gap: 6px; }
+.inspera-btn--large { height: 48px; padding: 0 24px; gap: 10px; }
+
+/* Icon only: a square the height of the button. It still needs aria-label. */
+.inspera-btn--icon-only { width: 40px; min-width: 0; padding: 0; }
+.inspera-btn--small.inspera-btn--icon-only { width: 32px; }
+.inspera-btn--large.inspera-btn--icon-only { width: 48px; }
+
+/* Solid intents differ only in fill; hover and pressed derive from it. */
+.inspera-btn--primary     { --btn-bg: var(--primary); }
+.inspera-btn--success     { --btn-bg: var(--success); }
+.inspera-btn--warning     { --btn-bg: var(--warning); }
+.inspera-btn--destructive { --btn-bg: var(--error); }
+.inspera-btn--secondary {
+  --btn-bg: var(--gray-100);
+  --btn-fg: var(--gray-900);
+  --btn-border: var(--gray-700);
+}
+
+/* Outline and Text carry no fill and no shadow; they tint on interaction. */
+.inspera-btn--outline,
+.inspera-btn--text {
+  --btn-bg: transparent;
+  --btn-fg: var(--primary);
+  --btn-shadow: none;
+  --btn-shadow-hover: none;
+  --btn-shadow-active: none;
+  --btn-bg-hover: color-mix(in srgb, var(--primary) 8%, transparent);
+  --btn-bg-active: color-mix(in srgb, var(--primary) 12%, transparent);
+}
+.inspera-btn--outline { --btn-border: var(--primary); }
+
+.inspera-btn:hover:not(:disabled) {
+  background: var(--btn-bg-hover);
+  box-shadow: var(--btn-shadow-hover);
+}
+.inspera-btn:active:not(:disabled) {
+  background: var(--btn-bg-active);
+  box-shadow: var(--btn-shadow-active);
+  transform: translateY(1px);
+}
+.inspera-btn:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+.inspera-btn:disabled { opacity: 0.38; cursor: not-allowed; }
+
+.inspera-btn .material-symbols-outlined { font-size: 20px; }
 
 .inspera-popover {
   position: relative;
@@ -207,26 +305,15 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   color: var(--muted-foreground);
 }
 
-.inspera-popover__default-trigger {
-  height: 40px;
-  padding: 0 16px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border-strong);
-  background: var(--white);
-  color: var(--text-primary);
-  font-family: var(--font-sans);
-  font-weight: 600;
-  font-size: 16px;
-  cursor: pointer;
-}
+
 ```
 
 ```html
 <span class="inspera-popover">
-  <span class="inspera-popover__trigger" aria-expanded="true"
-        aria-haspopup="dialog" aria-controls="filters-popover">
-    <button type="button" class="inspera-popover__default-trigger">Filters</button>
-  </span>
+  <!-- The trigger is the canonical Button, and the ARIA state sits on it -
+       not on a wrapper, which is not focusable and announces nothing. -->
+  <button type="button" class="inspera-btn inspera-btn--outline"
+          aria-expanded="true" aria-haspopup="dialog" aria-controls="filters-popover">Filters</button>
   <div class="inspera-popover__panel inspera-popover__panel--bottom" id="filters-popover"
        role="dialog" aria-labelledby="filters-title">
     <span class="inspera-popover__arrow" aria-hidden="true"></span>

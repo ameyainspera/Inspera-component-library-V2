@@ -55,19 +55,21 @@ import { Stat } from '@inspera/components'
   label="Active candidates"
   value="12,480"
   delta="+8.2% vs last week"
-  deltaIntent="up"
+  deltaIntent="Up"
   icon="group"
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` **(required)** | `string` | `'Average score'` | Metric name. |
-| `value` **(required)** | `string \| number` | `'84%'` | Metric value. |
-| `delta` | `string` | `'+4.2%'` | Change indicator text. |
-| `deltaIntent` | `'up' \| 'down' \| 'neutral'` | `'up'` | Trend direction / color. |
+| `label` **(required)** | `string` | - | Metric name. |
+| `value` **(required)** | `string \| number` | - | Metric value. |
+| `delta` | `string` | - | Change indicator text, e.g. "+8.2% vs last week". Omit when there is no comparison. |
+| `deltaIntent` | `'Up' \| 'Down' \| 'Neutral'` | `'Neutral'` | Trend direction: sets the arrow, the colour and what is announced. |
 | `icon` | `string` | - | Optional leading icon. |
 | `helpText` | `string` | - | Optional context below the value, such as the comparison period. |
+
+Also accepts any native `<div>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<div>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `group`. Associate the value with its label for screen readers; Convey trend with text, not color alone; Use aria-label to summarize the metric and change.
 
@@ -172,6 +174,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 /* The delta carries the trend colour; the arrow is not decorative repetition,
    it is the direction for anyone who cannot rely on the colour alone. */
 .inspera-stat__delta {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -179,6 +182,19 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   font-weight: 500;
 }
 .inspera-stat__delta .material-symbols-outlined { font-size: 18px; }
+
+/* The arrow and colour carry direction for sighted users; this says it aloud. */
+.inspera-stat__trend {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
 
 .inspera-stat__delta--up      { color: var(--success); }
 .inspera-stat__delta--down    { color: var(--error); }

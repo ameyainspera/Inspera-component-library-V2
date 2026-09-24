@@ -54,27 +54,30 @@ import { Textarea } from '@inspera/components'
 <Textarea
   label="Feedback"
   placeholder="Share your thoughts..."
-  size="Medium"
-  showCount={false}
-  maxLength={280}
+  rows={3}
   helpText="Keep it constructive."
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | `'Description'` | Field label. |
-| `placeholder` | `string` | `'Placeholder text'` | Hint shown when empty. Not a substitute for the label. |
+| `label` **(required)** | `string` | - | Field label. Always required: it is the accessible name even when hidden. |
+| `placeholder` | `string` | - | Hint shown when empty. Not a substitute for the label. |
 | `value` | `string` | - | Current value. Controlled - pair with onChange. |
+| `defaultValue` | `string` | `''` | Starting value when uncontrolled. |
+| `onChange` | `(value: string) => void` | - | Fired with the new value on every keystroke. |
 | `rows` | `number` | `4` | Visible text rows. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Vertical padding density. |
-| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Filled' \| 'Error' \| 'Disabled' \| 'ReadOnly'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Filled` are presentation-only - leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Error`, `Disabled` and `ReadOnly` are real application state and belong in your code. |
-| `showLabel` | `boolean` | `true` | Show the field label. |
-| `helpText` | `string` | - | Guidance shown below the field. Replaced by errorText when invalid. |
-| `errorText` | `string` | - | Validation message. Linked to the control via aria-describedby. |
+| `showLabel` | `boolean` | `true` | Render the visible label. When false, the label becomes `aria-label`. |
+| `helpText` | `string` | - | Guidance shown below the field. Replaced by errorText when `error` is set. |
+| `errorText` | `string` | - | Validation message, shown while `error` is true. |
+| `error` | `boolean` | `false` | Marks the field invalid: red border, `aria-invalid`, errorText shown. |
+| `disabled` | `boolean` | `false` | Blocks editing and dims the field. |
+| `readOnly` | `boolean` | `false` | Shows the value without allowing edits. |
 | `maxLength` | `number` | - | Maximum character length. |
-| `showCount` | `boolean` | `false` | Show character counter. |
-| `onChange` | `(value: string) => void` | - | Fired with the new value on every keystroke. |
+| `showCount` | `boolean` | `false` | Show a character counter. |
+
+Also accepts any native `<textarea>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<textarea>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `textbox`, keyboard operable. Always associate label with textarea using htmlFor/id; Error text must be linked via aria-describedby; aria-invalid reflects the error state.
 
@@ -127,6 +130,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   --primary:                #004080;
   --error:                  #D32F2F;
   --white:                  #ffffff;
+  --gray-100:               #F7F7F7;
   --gray-600:               #7A7A7A;
   --blue-300:               #B3D9FF;
   --red-300:                #F9B8B8;
@@ -214,6 +218,9 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   background: var(--surface-disabled);
   opacity: 0.6;
 }
+
+.inspera-textarea__field[data-readonly='true'] { background: var(--gray-100); }
+.inspera-textarea__field[data-readonly='true']:hover { border-color: var(--border-control); }
 ```
 
 ```html

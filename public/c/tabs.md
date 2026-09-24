@@ -52,26 +52,37 @@ Organize content into switchable panels. - category: `navigation`.
 import { Tabs } from '@inspera/components'
 
 <Tabs
-  items={[{ label: 'Overview' }, { label: 'Questions' }]}
-  style="Underline"
-  size="Medium"
-  fullWidth={false}
+  items={[
+    { label: 'Overview' },
+    { label: 'Questions' },
+    { label: 'Settings' },
+    { label: 'Results' },
+  ]}
+  label="Assessment sections"
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `items` | `TabItem[]` | `defaultItems` | The tabs, in order. |
-| `style` | `'Underline' \| 'Contained'` | `'Underline'` | Visual treatment. |
+| `items` **(required)** | `TabItem[]` | - | The tabs, in order. |
+| `variant` | `'Underline' \| 'Contained'` | `'Underline'` | Visual treatment. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Tab height 40 / 48. |
 | `fullWidth` | `boolean` | `false` | Stretch tabs to fill the row. |
-| `value` | `number` | - | Index of the active tab. Controlled - pair with onChange. |
-| `onChange` | `(index: number) => void` | - | Fired with the index of the newly selected tab. |
+| `value` | `string` | - | Active tab's value. Controlled - pair with onChange. |
+| `defaultValue` | `string` | - | Starting tab when uncontrolled. Defaults to the first. |
+| `onChange` | `(value: string) => void` | - | Fired with the newly selected tab's value. |
+| `label` | `string` | - | Names the tab list for assistive tech, when no heading does. |
+
+Also accepts any native `<div>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<div>`. `className` and `style` go on the outermost element.
 
 ```ts
 export interface TabItem {
   label: string
+  /** Identifies the tab in value/onChange. Defaults to the label. */
+  value?: string
   icon?: string
+  /** The tab's panel. When items carry content, Tabs renders the panels too. */
+  content?: ReactNode
 }
 ```
 

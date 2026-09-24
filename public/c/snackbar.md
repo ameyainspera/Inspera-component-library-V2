@@ -52,22 +52,22 @@ Show brief, non-blocking feedback at the bottom of the screen. - category: `feed
 import { Snackbar } from '@inspera/components'
 
 <Snackbar
-  intent="Neutral"
   message="Assessment saved."
-  hasAction={false}
-  hasClose={true}
+  dismissible
+  onClose={handleClose}
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `message` | `string` | `'Assessment saved successfully.'` | What happened. One short sentence. |
+| `message` **(required)** | `string` | - | What happened. One short sentence. |
 | `intent` | `'Neutral' \| 'Info' \| 'Success' \| 'Warning' \| 'Error'` | `'Neutral'` | Accent icon color. |
-| `hasAction` | `boolean` | `false` | Show an inline action (e.g. Undo). |
-| `hasClose` | `boolean` | `true` | Show the dismiss button. |
-| `actionLabel` | `string` | `'Undo'` | Label for the inline action, typically "Undo". |
+| `actionLabel` | `string` | - | Label for an inline action, typically "Undo". Shown when set. |
 | `onAction` | `() => void` | - | Fired when the inline action is activated. |
-| `onClose` | `() => void` | - | Fired when dismissed. |
+| `dismissible` | `boolean` | `false` | Show a close button. Pair with onClose. |
+| `onClose` | `() => void` | - | Fired when the close button is activated. |
+
+Also accepts any native `<div>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<div>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `status`, keyboard operable. Use role="status" with aria-live="polite"; Action button must be focusable; Auto-dismiss timing must be generous (5s minimum).
 
@@ -135,10 +135,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   display: inline-flex;
   align-items: center;
   gap: 12px;
-  min-width: 300px;
+  min-width: min(300px, 100%);
   max-width: 480px;
-  height: 48px;
-  padding: 0 8px 0 16px;
+  min-height: 48px;
+  padding: 8px 8px 8px 16px;
   border-radius: var(--radius-md);
   background: var(--gray-900);
   color: var(--white);
@@ -179,7 +179,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   padding: 4px;
   border: none;
   background: none;
-  color: rgba(255, 255, 255, 0.7);
+  color: color-mix(in srgb, var(--white) 70%, transparent);
   display: inline-flex;
   cursor: pointer;
 }

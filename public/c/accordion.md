@@ -52,22 +52,40 @@ Show and hide sections of related content. - category: `data-display`.
 import { Accordion } from '@inspera/components'
 
 <Accordion
-  type="Single"
-  iconPosition="Right"
-  items={[{ title: 'What is Inspera?', content: '...' }]}
+  items={[
+    {
+      title: 'What is Inspera?',
+      content: 'A digital assessment platform for education and certification.',
+    },
+    {
+      title: 'How are results scored?',
+      content: 'Automatically for objective items, with manual grading for essays.',
+    },
+    {
+      title: 'Is it accessible?',
+      content: 'Yes - components follow WCAG 2.1 AA guidance.',
+    },
+  ]}
+  defaultValue={[0]}
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `items` | `AccordionItem[]` | `defaultItems` | Accordion sections. |
-| `type` | `'Single' \| 'Multiple'` | `'Single'` | Allow one or many open at once. |
-| `defaultOpenIndex` | `number` | `0` | Initially open section. |
-| `defaultOpenIndexes` | `number[]` | - | Initially open sections, for `type="Multiple"`. Wins over defaultOpenIndex. |
+| `items` **(required)** | `AccordionItem[]` | - | Accordion sections. |
+| `selection` | `'Single' \| 'Multiple'` | `'Single'` | Whether one or several sections can be open at once. |
+| `value` | `number[]` | - | Open section indexes. Controlled - pair with onChange. |
+| `defaultValue` | `number[]` | `[]` | Sections open at first, when uncontrolled. All closed by default. |
+| `onChange` | `(open: number[]) => void` | - | Fired with the open section indexes after a toggle. |
 | `iconPosition` | `'Left' \| 'Right'` | `'Right'` | Chevron placement. |
+| `headingLevel` | `2 \| 3 \| 4 \| 5 \| 6` | `3` | Heading level wrapping each trigger, to fit the page outline. |
+
+Also accepts any native `<div>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<div>`. `className` and `style` go on the outermost element.
 
 ```ts
 export interface AccordionItem {
+  /** Stable key. Defaults to the title. */
+  id?: string
   title: string
   content: ReactNode
 }

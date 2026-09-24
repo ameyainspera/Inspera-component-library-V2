@@ -53,10 +53,7 @@ import { Drawer } from '@inspera/components'
 
 <Drawer
   open={open}
-  side="Right"
-  size="Medium"
   title="Assessment details"
-  hasCloseButton={true}
   onClose={() => setOpen(false)}
 >
   {children}
@@ -65,14 +62,15 @@ import { Drawer } from '@inspera/components'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `open` | `boolean` | `false` | Visibility. |
-| `side` | `'Right' \| 'Left' \| 'Bottom'` | `'Right'` | Edge it slides from. |
-| `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Panel width / height. |
-| `title` | `string` | `'Panel'` | Header title. |
-| `hasCloseButton` | `boolean` | `true` | Show the close affordance. |
+| `open` **(required)** | `boolean` | - | Whether the drawer is shown. Controlled - pair with onClose. |
+| `title` **(required)** | `string` | - | Header title. Also the accessible name. |
 | `children` | `ReactNode` | - | Panel contents. |
-| `embedded` | `boolean` | `false` | Render just the panel inline (no overlay/scrim) - used for documentation previews. |
+| `side` | `'Right' \| 'Left' \| 'Bottom'` | `'Right'` | Edge it slides from. |
+| `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Panel width 320 / 400 / 560 (height, for Bottom). |
+| `hasCloseButton` | `boolean` | `true` | Show the header close button. |
 | `onClose` | `() => void` | - | Fired on the close button, the scrim, and Escape. |
+
+Also accepts any native `<div>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<div>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `dialog`, keyboard operable. Use role="dialog" with aria-modal="true"; Set aria-labelledby to the drawer title; Trap focus while open and restore it on close; Escape closes the drawer.
 
@@ -130,6 +128,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   --text-primary:   rgba(0, 0, 0, 0.87);
   --surface:        var(--white);
   --border:         var(--gray-200);
+  --scrim:          rgba(39, 39, 39, 0.48);
   --shadow-500:     0px 10px 32px rgba(39, 39, 39, 0.1), 0px 6px 14px rgba(39, 39, 39, 0.12);
   --z-modal:        600;
   --font-sans:      'Inter', system-ui, -apple-system, sans-serif;
@@ -138,8 +137,8 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 .inspera-drawer-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(39, 39, 39, 0.48);
-  z-index: var(--z-modal, 1000);
+  background: var(--scrim);
+  z-index: var(--z-modal);
 }
 
 .inspera-drawer {

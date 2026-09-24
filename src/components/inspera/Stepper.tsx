@@ -1,4 +1,5 @@
 import { type CSSProperties } from 'react'
+import { cx, srOnly, type NativeAttrs } from './types'
 
 export type StepperOrientation = 'Horizontal' | 'Vertical'
 export type StepperSize = 'Small' | 'Medium'
@@ -10,8 +11,8 @@ export interface Step {
 
 export interface StepperProps {
   /** Ordered steps. */
-  steps?: Step[]
-  /** Zero-based index of the current step. */
+  steps: Step[]
+  /** Zero-based index of the current step. Steps before it show as completed. */
   activeStep?: number
   /** Layout direction. */
   orientation?: StepperOrientation
@@ -19,19 +20,15 @@ export interface StepperProps {
   size?: StepperSize
 }
 
-const defaultSteps: Step[] = [
-  { label: 'Details', description: 'Assessment info' },
-  { label: 'Questions', description: 'Add content' },
-  { label: 'Settings', description: 'Rules & timing' },
-  { label: 'Review', description: 'Publish' },
-]
-
 export default function Stepper({
-  steps = defaultSteps,
-  activeStep = 1,
+  steps,
+  activeStep = 0,
   orientation = 'Horizontal',
   size = 'Medium',
-}: StepperProps) {
+  className,
+  style,
+  ...rest
+}: StepperProps & NativeAttrs<'ol', StepperProps>) {
   const vertical = orientation === 'Vertical'
   const circle = size === 'Small' ? 24 : 32
   const fontSize = size === 'Small' ? 13 : 14
@@ -46,7 +43,7 @@ export default function Stepper({
   }
 
   return (
-    <ol role="list" style={{ ...container, listStyle: 'none', margin: 0, padding: 0 }}>
+    <ol role="list" className={cx('inspera', className)} style={{ ...container, listStyle: 'none', margin: 0, padding: 0, ...style }} {...rest}>
       {steps.map((step, i) => {
         const completed = i < activeStep
         const active = i === activeStep
@@ -66,7 +63,7 @@ export default function Stepper({
           color: completed || active ? 'var(--white)' : 'var(--gray-600)',
           border: completed || active ? 'none' : '2px solid var(--border-strong)',
           boxShadow: active ? '0 0 0 4px var(--primary-focus-ring)' : 'none',
-          transition: 'background 140ms ease, box-shadow 140ms ease',
+          transition: 'background var(--duration-fast) var(--easing-standard), box-shadow var(--duration-fast) var(--easing-standard)',
         }
 
         const connector: CSSProperties = vertical
@@ -88,7 +85,7 @@ export default function Stepper({
 
         return (
           <li
-            key={step.label}
+            key={`${step.label}-${i}`}
             aria-current={active ? 'step' : undefined}
             style={{
               display: 'flex',
@@ -116,8 +113,10 @@ export default function Stepper({
                   i + 1
                 )}
               </span>
-              <span style={{ display: 'flex', flexDirection: 'column', gap: 2, textAlign: vertical ? 'left' : 'center' }}>
+              <span style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: 2, textAlign: vertical ? 'left' : 'center' }}>
                 <span style={{ fontSize, fontWeight: active || completed ? 600 : 500, color: active || completed ? 'var(--text-primary)' : 'var(--gray-600)' }}>
+                  {/* The indicator is decorative, so status is spoken here. */}
+                  <span style={srOnly}>{completed ? 'Completed: ' : active ? 'Current step: ' : `Step ${i + 1}: `}</span>
                   {step.label}
                 </span>
                 {step.description && (

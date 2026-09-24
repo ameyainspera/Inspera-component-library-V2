@@ -52,21 +52,32 @@ Choose one option from a small set of mutually exclusive segments. - category: `
 import { SegmentedControl } from '@inspera/components'
 
 <SegmentedControl
+  label="Date range"
   items={['Day', 'Week', 'Month']}
-  value={range}
-  onChange={setRange}
-  size="Medium"
-  fullWidth={false}
+  defaultValue="Week"
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `items` | `string[]` | `['Day', 'Week', 'Month']` | Segment labels. |
-| `value` | `number` | - | Active segment index. |
+| `label` **(required)** | `string` | - | Names the group for assistive tech, e.g. "Date range". Not shown. |
+| `items` **(required)** | `(string \| SegmentedControlItem)[]` | - | Segments, in order. Plain strings when value and label match. |
+| `value` | `string` | - | Selected segment value. Controlled - pair with onChange. |
+| `defaultValue` | `string` | - | Starting segment when uncontrolled. Defaults to the first. |
+| `onChange` | `(value: string) => void` | - | Fired with the chosen segment's value. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Segment height. |
 | `fullWidth` | `boolean` | `false` | Stretch to fill the row. |
-| `onChange` | `(index: number) => void` | - | Fired with the index of the chosen segment. |
+| `disabled` | `boolean` | `false` | Blocks interaction and dims the control. |
+
+Also accepts any native `<div>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<div>`. `className` and `style` go on the outermost element.
+
+```ts
+export interface SegmentedControlItem {
+  value: string
+  /** Shown text. Defaults to `value`. */
+  label?: string
+}
+```
 
 **Accessibility** - role `radiogroup`, keyboard operable. Container uses role="radiogroup"; Each segment uses role="radio" with aria-checked; Arrow keys move between segments.
 
@@ -117,16 +128,19 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 ```css
 /* Tokens this component needs. Paste once, at `:root`. */
 :root {
-  --primary:           #004080;
-  --white:             #ffffff;
-  --gray-100:          #F7F7F7;
-  --gray-600:          #7A7A7A;
-  --surface:           var(--white);
-  --muted-foreground:  var(--gray-600);
-  --radius-sm:         4px;
-  --radius-md:         8px;
-  --shadow-100:        0px 4px 4px rgba(39, 39, 39, 0.08), 0px 2px 4px rgba(39, 39, 39, 0.12);
-  --font-sans:         'Inter', system-ui, -apple-system, sans-serif;
+  --primary:            #004080;
+  --white:              #ffffff;
+  --gray-100:           #F7F7F7;
+  --gray-600:           #7A7A7A;
+  --surface:            var(--white);
+  --muted-foreground:   var(--gray-600);
+  --radius-sm:          4px;
+  --radius-md:          8px;
+  --shadow-100:         0px 4px 4px rgba(39, 39, 39, 0.08), 0px 2px 4px rgba(39, 39, 39, 0.12);
+  --focus-ring-width:   2px;
+  --focus-ring-offset:  2px;
+  --focus-ring-color:   var(--primary);
+  --font-sans:          'Inter', system-ui, -apple-system, sans-serif;
 }
 
 .inspera-segmented {
@@ -156,6 +170,14 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 .inspera-segmented--small .inspera-segmented__item { height: 32px; }
 .inspera-segmented--full .inspera-segmented__item { flex: 1; }
+
+.inspera-segmented__item:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.inspera-segmented--disabled { opacity: 0.38; }
+.inspera-segmented--disabled .inspera-segmented__item { cursor: not-allowed; }
 
 /* Selected: a raised white card on the tinted track. Colour alone is not
    enough separation at 14px. */

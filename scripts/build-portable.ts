@@ -26,7 +26,7 @@ import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import { componentList } from '../src/data/components'
-import { registry } from '../src/docs/registry'
+import { registry, snippetFor } from '../src/docs/registry'
 import { componentsPackage, artifacts } from '../src/data/distribution'
 import {
   contract, precedence, whenUnsure, patterns,
@@ -267,6 +267,20 @@ function propTable(props: PropDoc[]): string {
   return `| Prop | Type | Default | Description |\n| --- | --- | --- | --- |\n${rows.join('\n')}`
 }
 
+/**
+ * One sentence under the table saying what else the component takes. Without
+ * it a reader assumes the table is exhaustive and reaches for a wrapper div to
+ * get an `id` or a `className` onto the element.
+ */
+function nativeNote(native: string | undefined): string {
+  if (!native) return ''
+  return (
+    `\nAlso accepts any native \`<${native}>\` attribute (\`id\`, \`name\`, \`aria-*\`, ` +
+    `\`data-*\`, event handlers, \`ref\`), forwarded to the \`<${native}>\`. ` +
+    '`className` and `style` go on the outermost element.\n'
+  )
+}
+
 /** Resolve a spec to its real React export, failing loudly on a mismatch. */
 function exportNameFor(c: ComponentSpec): string {
   const name = c.exportName ?? c.name.replace(/\s+/g, '')
@@ -411,9 +425,9 @@ ${recipe.html}
 
 function componentMarkdown(c: ComponentSpec, importPath: string, standalone = true): string {
   const exportName = exportNameFor(c)
-  const { props, relatedTypes } = componentApi[exportName]
+  const { props, relatedTypes, native } = componentApi[exportName]
   const entry = registry[c.slug]
-  const example = entry ? entry.snippet(entry.defaults) : `<${exportName} />`
+  const example = entry ? snippetFor(c.slug, entry.defaults) : `<${exportName} />`
   const aliases = c.deprecatedAliases.length
     ? `\n**Deprecated aliases** (do not use): ${c.deprecatedAliases.map((a) => `\`${a}\``).join(', ')}\n`
     : ''
@@ -433,7 +447,7 @@ ${example}
 \`\`\`
 
 ${propTable(props)}
-${relatedTypesBlock(relatedTypes)}
+${nativeNote(native)}${relatedTypesBlock(relatedTypes)}
 **Accessibility** - role \`${c.accessibility.role}\`${c.accessibility.keyboard ? ', keyboard operable' : ''}. ${c.accessibility.ariaNotes.join('; ')}.
 
 **Do:** ${c.usage.do.join('; ')}.

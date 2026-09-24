@@ -52,7 +52,6 @@ Show placeholder shapes while content loads. - category: `feedback`.
 import { Skeleton } from '@inspera/components'
 
 <Skeleton
-  variant="Text"
   lines={3}
 />
 ```
@@ -64,6 +63,8 @@ import { Skeleton } from '@inspera/components'
 | `height` | `string \| number` | - | Explicit height. |
 | `lines` | `number` | `1` | Number of text lines. Only applies to the Text variant. |
 | `radius` | `string \| number` | - | Corner radius override. Match the shape being stood in for. |
+
+Also accepts any native `<span>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<span>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `presentation`. Skeletons are decorative and aria-hidden; Announce the real content once loaded; Mirror the layout of the content being loaded.
 

@@ -52,18 +52,18 @@ Fire transient notifications imperatively from anywhere. - category: `feedback`.
 import { ToastProvider } from '@inspera/components'
 
 // Mount once near your app root:
-<ToastProvider position="bottom-right" />
+<ToastProvider />
 
 // Then call from anywhere:
-toast("Assessment saved.", {
-  intent: "Success",
+toast('Assessment saved.', {
+  intent: 'Success',
 })
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `position` | `'top-left' \| 'top-center' \| 'top-right' \| 'bottom-left' \| 'bottom-center' \| 'bottom-right'` | `'bottom-right'` | Where the stack anchors on screen. |
-| `max` | `number` | `4` | Cap on simultaneously visible toasts. Oldest is dropped past the limit. |
+| `position` | `'TopLeft' \| 'TopCenter' \| 'TopRight' \| 'BottomLeft' \| 'BottomCenter' \| 'BottomRight'` | `'BottomRight'` | Where the stack anchors on screen. |
+| `max` | `number` | `4` | Most toasts on screen at once. Past it, the oldest is dismissed. |
 
 **Accessibility** - role `region`, keyboard operable. The stack is a role="region" labelled "Notifications" with aria-live; Each toast is announced when it appears; Action and dismiss buttons are focusable.
 
@@ -107,7 +107,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 - A toast is a Snackbar: `--gray-900` bar, white text, the intent tinting only the icon and the action. See the Snackbar recipe for the bar itself.
 - Mount one `ToastProvider` near the app root; it owns the fixed stack. Call `toast(message, { intent, actionLabel, onAction })` from anywhere - the point is firing them imperatively, not rendering them in place.
-- `position` (bottom-right, bottom-center, top-right, top-center) sets where the stack anchors; new toasts push on and old ones auto-dismiss on a timer, so give errors a longer or manual timeout.
+- `position` (BottomRight, BottomCenter, TopRight, TopCenter, and the Left variants) sets where the stack anchors; new toasts push on and old ones auto-dismiss on a timer, so give errors a longer or manual timeout.
 - Each toast is announced through the stack `role="region"` labelled "Notifications"; the bar itself stays `role="status"` / `aria-live="polite"` so it never interrupts.
 
 ```css
@@ -131,10 +131,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   display: inline-flex;
   align-items: center;
   gap: 12px;
-  min-width: 300px;
+  min-width: min(300px, 100%);
   max-width: 480px;
-  height: 48px;
-  padding: 0 8px 0 16px;
+  min-height: 48px;
+  padding: 8px 8px 8px 16px;
   border-radius: var(--radius-md);
   background: var(--gray-900);
   color: var(--white);
@@ -175,7 +175,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   padding: 4px;
   border: none;
   background: none;
-  color: rgba(255, 255, 255, 0.7);
+  color: color-mix(in srgb, var(--white) 70%, transparent);
   display: inline-flex;
   cursor: pointer;
 }

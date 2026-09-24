@@ -1,15 +1,20 @@
 import { type CSSProperties } from 'react'
-import Avatar, { type AvatarContent, type AvatarSize } from './Avatar'
+import Avatar, { type AvatarSize } from './Avatar'
+import { cx, type NativeAttrs } from './types'
 
 export interface AvatarGroupItem {
-  content?: AvatarContent
-  name?: string
+  /** The person's name: initials and accessible name. */
+  name: string
+  /** Photo URL. */
+  src?: string
+  /** Material Symbols name shown instead of initials. */
+  icon?: string
 }
 
 export interface AvatarGroupProps {
-  /** Avatars to display. */
-  avatars?: AvatarGroupItem[]
-  /** Maximum shown before overflow. */
+  /** People to show, in order. */
+  avatars: AvatarGroupItem[]
+  /** How many to show before collapsing the rest into "+N". */
   max?: number
   /** Avatar diameter. */
   size?: AvatarSize
@@ -17,25 +22,14 @@ export interface AvatarGroupProps {
 
 const sizeMap: Record<AvatarSize, number> = { Small: 32, Medium: 40, Large: 56 }
 
-const defaultAvatars: AvatarGroupItem[] = [
-  { content: 'Image', name: 'Amelia Hart' },
-  { content: 'Initials', name: 'Noah Bennett' },
-  { content: 'Image', name: 'Olivia Chen' },
-  { content: 'Initials', name: 'Liam Foster' },
-  { content: 'Icon', name: 'Guest user' },
-]
-
-function initialsFor(name?: string): string {
-  if (!name) return '??'
-  const parts = name.trim().split(/\s+/)
-  return ((parts[0]?.[0] ?? '') + (parts[1]?.[0] ?? '')).toUpperCase() || '??'
-}
-
 export default function AvatarGroup({
-  avatars = defaultAvatars,
+  avatars,
   max = 4,
   size = 'Medium',
-}: AvatarGroupProps) {
+  className,
+  style,
+  ...rest
+}: AvatarGroupProps & NativeAttrs<'div', AvatarGroupProps>) {
   const dim = sizeMap[size]
   const overlap = Math.round(dim * 0.3)
   const visible = avatars.slice(0, max)
@@ -43,29 +37,27 @@ export default function AvatarGroup({
 
   const ring: CSSProperties = {
     display: 'inline-flex',
-    borderRadius: '9999px',
+    borderRadius: 'var(--radius-pill)',
     boxShadow: '0 0 0 2px var(--white)',
   }
 
   return (
     <div
       role="group"
-      aria-label={`${avatars.length} participants`}
-      style={{ display: 'inline-flex', alignItems: 'center', fontFamily: 'var(--font-sans)' }}
+      aria-label={`${avatars.length} ${avatars.length === 1 ? 'person' : 'people'}`}
+      className={cx('inspera', className)}
+      style={{ display: 'inline-flex', alignItems: 'center', fontFamily: 'var(--font-sans)', ...style }}
+      {...rest}
     >
       {visible.map((a, i) => (
-        <span key={i} style={{ ...ring, marginLeft: i === 0 ? 0 : -overlap, zIndex: i }}>
-          <Avatar
-            size={size}
-            content={a.content ?? 'Initials'}
-            initials={initialsFor(a.name)}
-            alt={a.name ?? 'Participant'}
-          />
+        <span key={`${a.name}-${i}`} style={{ ...ring, marginLeft: i === 0 ? 0 : -overlap, zIndex: i }}>
+          <Avatar size={size} name={a.name} src={a.src} icon={a.icon} />
         </span>
       ))}
       {overflow > 0 && (
         <span
-          aria-label={`${overflow} more`}
+          role="img"
+          aria-label={`and ${overflow} more`}
           style={{
             ...ring,
             marginLeft: -overlap,

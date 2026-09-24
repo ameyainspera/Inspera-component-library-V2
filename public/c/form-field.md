@@ -53,22 +53,22 @@ import { FormField } from '@inspera/components'
 
 <FormField
   label="Email address"
-  htmlFor="email"
-  required={false}
   helpText="We'll never share your email."
 >
-  <TextInput id="email" showLabel={false} />
+  <TextInput label="Email address" placeholder="jane@inspera.com" />
 </FormField>
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | - | Field label text. |
-| `htmlFor` | `string` | - | id of the wrapped control for label association. |
-| `required` | `boolean` | `false` | Show a required asterisk. |
+| `label` **(required)** | `string` | - | Field label text. |
+| `htmlFor` | `string` | - | Only needed to wrap a control that is not from this library. Inspera controls pick up the field's id, description and error state on their own. |
+| `required` | `boolean` | `false` | Show a required asterisk and mark the control required. |
 | `helpText` | `string` | - | Helper text shown below the control. |
-| `errorText` | `string` | - | Error message; replaces help text when present. |
+| `errorText` | `string` | - | Error message; replaces help text and marks the control invalid. |
 | `children` **(required)** | `ReactNode` | - | The control this field wraps. Exactly one. |
+
+Also accepts any native `<div>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<div>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `group`, keyboard operable. Associate the label with the control via htmlFor/id; Link error and help text with aria-describedby on the control; Required fields should set aria-required on the control.
 

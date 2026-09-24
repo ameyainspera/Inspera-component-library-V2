@@ -52,21 +52,19 @@ Represent a user or entity with an image or initials. - category: `data-display`
 import { Avatar } from '@inspera/components'
 
 <Avatar
-  size="Medium"
-  content="Initials"
-  status="None"
+  name="Jane Cooper"
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
+| `name` **(required)** | `string` | - | The person's name. Gives the initials and the accessible name. |
+| `src` | `string` | - | Photo URL. Without one - or if it fails to load - the initials show. |
+| `icon` | `string` | - | Material Symbols name shown instead of initials, e.g. for a guest. |
 | `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Diameter 32 / 40 / 56. |
-| `content` | `'Image' \| 'Initials' \| 'Icon'` | `'Initials'` | What fills the avatar. |
-| `status` | `'None' \| 'Online' \| 'Offline' \| 'Busy'` | `'None'` | Presence indicator dot. |
-| `initials` | `string` | `'JC'` | One or two letters, used when content is Initials. Derive from the name rather than asking for them. |
-| `imageSrc` | `string` | `'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=112&h=112&fit=crop&auto=format'` | Image URL, used when content is Image. Falls back to initials if it fails to load. |
-| `alt` | `string` | `'User avatar'` | Alternative text for the image. Required whenever an image is shown. |
-| `icon` | `string` | `'person'` | Material Symbols name, used when content is Icon. |
+| `status` | `'None' \| 'Online' \| 'Offline' \| 'Busy'` | `'None'` | Presence indicator dot. Announced with the name. |
+
+Also accepts any native `<span>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<span>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `img`. Provide alt text for image avatars; Use aria-label for initials and icon variants.
 

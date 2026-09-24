@@ -144,6 +144,7 @@
   --border-strong: var(--gray-300); /* Control outline */
   --border-interactive: var(--gray-500); /* Control outline on hover */
   --muted-foreground: var(--gray-600); /* De-emphasised label text */
+  --scrim: rgba(39, 39, 39, 0.48); /* Backdrop behind Dialog, Drawer and Command Palette */
 
   /* Spacing */
   --space-0: 0px;
@@ -182,6 +183,9 @@
   --effect-state-hover-light: 0px 0px 0px 3px var(--gray-500); /* Hover outline */
   --effect-state-focus-on-dark: 0px 0px 0px 3px var(--green-300); /* Focus ring on a dark container */
   --effect-button-shadow: inset 0px -1px 0px rgba(0, 0, 0, 0.2), 0px 1px 0px rgba(0, 0, 0, 0.08); /* Standard button elevation highlight */
+  --effect-button-shadow-hover: inset 0 -1px 0 rgba(0, 0, 0, 0.2), 0 2px 6px rgba(0, 64, 128, 0.24); /* Solid button under the pointer */
+  --effect-button-shadow-active: inset 0 1px 2px rgba(0, 0, 0, 0.24); /* Solid button while pressed */
+  --effect-thumb-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); /* Slider and toggle thumb */
   --effect-link-underline-dark: inset 0px -1px 0px var(--gray-700); /* Link underline on light ground */
   --effect-link-underline-blue: inset 0px -1px 0px var(--blue-800); /* Primary link underline */
   --effect-link-underline-light: inset 0px -1px 0px var(--white); /* Link underline on dark ground */
@@ -558,6 +562,25 @@
   }
 }
 
+/* Drawer entrances, one per edge. */
+@keyframes inspera-drawer-right {
+  from {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes inspera-drawer-left {
+  from {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes inspera-drawer-bottom {
+  from {
+    transform: translateY(100%);
+  }
+}
+
 @keyframes inspera-indeterminate {
   0% {
     left: -40%;
@@ -703,12 +726,43 @@
 /* Toggle's thumb lifts under the pointer; the track carries the ring. The
    resting shadow lives here so the hover rule can outrank it. */
 .inspera-control-thumb {
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--effect-thumb-shadow);
 }
 
 .inspera-control:hover:not([data-disabled='true']) .inspera-control-thumb,
 .inspera-control[data-force-state='Hover'] .inspera-control-thumb {
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* --- Card --------------------------------------------------------------------
+   The resting shadow is a variable for the same reason as Button's fill: an
+   inline box-shadow would outrank the hover rule. Hover used to be done with
+   JS mouse handlers, so a keyboard user never saw the lift. */
+
+.inspera-card-hover {
+  box-shadow: var(--inspera-card-shadow);
+  transition: box-shadow var(--duration-fast) var(--easing-standard);
+}
+
+.inspera-card-hover--interactive:hover,
+.inspera-card-hover--interactive:has(:focus-visible) {
+  box-shadow: var(--shadow-300);
+}
+
+/* --- Text links that underline on interaction (Breadcrumb, Pagination) ---- */
+
+.inspera-underline-hover:hover,
+.inspera-underline-hover:focus-visible {
+  text-decoration: underline;
+}
+
+/* --- File drop zone --------------------------------------------------------
+   The zone is a <label> around a visually hidden file input, so the ring has
+   to be drawn on the zone when the input inside it has keyboard focus. */
+
+.inspera-dropzone:has(input:focus-visible) {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
 }
 
 /* --- Rows and items that respond to the pointer -------------------------
@@ -725,22 +779,68 @@
   background: var(--action-hover);
 }
 
+/* Rows sit flush inside containers that clip (a list or accordion with
+   rounded corners and overflow: hidden), so their focus ring is drawn inside
+   the row; outside it, the clip cut the ring off at the edges. */
+.inspera-row:focus-visible {
+  outline-offset: calc(var(--focus-ring-width) * -1);
+}
+
 /* Per-row actions (DataGrid) stay out of the way until the row is hovered or
    holds keyboard focus. They remain in the accessibility tree throughout, so a
    keyboard user reaches them; only the resting opacity changes. */
-.inspera-row-actions {
+/* Scoped to hoverable rows: a DataGrid with hoverable={false} has no
+   .inspera-row, and its actions used to stay invisible for good. */
+/* The cell's contents fade, not the cell: fading the <td> took its border
+   with it, and the row rule broke across the actions column. */
+.inspera-row .inspera-row-actions > * {
   opacity: 0;
   transition: opacity var(--duration-fast) var(--easing-standard);
 }
 
-.inspera-row:hover .inspera-row-actions,
-.inspera-row:focus-within .inspera-row-actions,
-.inspera-row[data-force-state='Hover'] .inspera-row-actions {
+/* No hover on touch screens, so the actions are always shown there. */
+@media (hover: none) {
+  .inspera-row .inspera-row-actions > * {
+    opacity: 1;
+  }
+}
+
+.inspera-row:hover .inspera-row-actions > *,
+.inspera-row:focus-within .inspera-row-actions > *,
+.inspera-row[data-force-state='Hover'] .inspera-row-actions > * {
   opacity: 1;
 }
 
+/* --- Base ------------------------------------------------------------------
+   Every component root carries `.inspera`, and every hand-built recipe element
+   an `inspera-*` class. Sizes in the library assume border-box - a 100%-wide
+   field with padding and a border must not grow past its container - and a
+   consumer's app cannot be relied on to set it. The docs site happened to
+   (Tailwind's preflight), which hid the dependency. */
+
+.inspera,
+.inspera *,
+.inspera *::before,
+.inspera *::after,
+[class*='inspera-'],
+[class*='inspera-'] *,
+[class*='inspera-'] *::before,
+[class*='inspera-'] *::after {
+  box-sizing: border-box;
+}
+
+/* Reduced motion. Components animate with inline transitions, which outrank
+   any class selector, so this needs !important to win. Spinners keep turning:
+   an indicator that stops reads as a hang. The skeleton shimmer is decoration
+   and stops. */
 @media (prefers-reduced-motion: reduce) {
+  .inspera,
+  .inspera *,
   .inspera-interactive {
-    transition: none;
+    transition-duration: 0ms !important;
+  }
+  .inspera-shimmer,
+  .inspera-drawer-slide {
+    animation: none !important;
   }
 }

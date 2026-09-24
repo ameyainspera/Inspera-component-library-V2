@@ -52,18 +52,23 @@ Enter a one-time verification code. - category: `input-controls`.
 import { OtpInput } from '@inspera/components'
 
 <OtpInput
-  length={6}
-  value={code}
-  onChange={setCode}
+  label="Verification code"
+  defaultValue="123"
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
+| `label` **(required)** | `string` | - | Names the code, e.g. "Verification code". Required: it labels the group. |
 | `length` | `number` | `6` | Number of digit boxes. |
-| `value` | `string` | - | Current code value. |
-| `state` | `'Default' \| 'Focused' \| 'Error' \| 'Disabled'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Focused` is presentation-only - leave it unset in application code, where CSS drives it from the real pointer and keyboard. `Error` and `Disabled` are real application state and belong in your code. |
-| `onChange` | `(value: string) => void` | - | Fired with the full code as digits are entered or pasted. |
+| `value` | `string` | - | Current code. Controlled - pair with onChange. |
+| `defaultValue` | `string` | `''` | Starting code when uncontrolled. |
+| `onChange` | `(value: string) => void` | - | Fired with the digits entered so far; complete when its length equals `length`. |
+| `showLabel` | `boolean` | `false` | Render the visible label above the boxes. |
+| `error` | `boolean` | `false` | Marks every box invalid: red border and `aria-invalid`. |
+| `disabled` | `boolean` | `false` | Blocks input and dims the boxes. |
+
+Also accepts any native `<div>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<div>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `textbox`, keyboard operable. Each box has an aria-label "Digit N"; aria-invalid reflects the error state; Backspace moves focus to the previous box; paste distributes digits.
 
@@ -107,7 +112,8 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 - One `<input>` per digit, 44x48, `--radius-md`, in `--font-mono` at 20px so the digits do not shift as they are typed.
 - `autocomplete="one-time-code"` goes on the first box only, and `off` on the rest. On every box the platform offers the code once per field.
-- Each box needs `aria-label="Digit N"` and `inputmode="numeric"`, plus `maxlength="1"`.
+- Wrap the boxes in `role="group"` named for the code ("Verification code"); each box is `aria-label="Digit N of 6"` with `inputmode="numeric"`.
+- Keep one slot per box: a digit typed into box 3 stays in box 3, and Backspace clears only its own box. Storing the code as one string collapses the gaps.
 - Wire the behaviour: typing advances focus, Backspace on an empty box moves back and clears, arrows move between boxes, and a paste on any box fills the rest.
 - Focus is per box - do not ring the whole row.
 

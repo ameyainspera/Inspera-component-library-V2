@@ -53,22 +53,30 @@ import { RadioGroup } from '@inspera/components'
 
 <RadioGroup
   label="Delivery speed"
-  name="delivery"
-  value="standard"
-  orientation="Vertical"
-  options={[{ label: 'Standard', value: 'standard' }]}
+  options={[
+    { label: 'Standard', value: 'standard' },
+    { label: 'Express', value: 'express' },
+    { label: 'Overnight', value: 'overnight' },
+  ]}
+  defaultValue="standard"
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | - | Group label, announced as the radiogroup name. |
-| `name` | `string` | - | Shared input name for the group. |
-| `options` | `RadioOption[]` | `DEFAULT_OPTIONS` | Radio options. |
-| `value` | `string` | - | Selected option value. |
-| `orientation` | `'Vertical' \| 'Horizontal'` | `'Vertical'` | Layout direction. |
-| `state` | `'Default' \| 'Disabled' \| 'Error'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
+| `label` **(required)** | `string` | - | Group label, announced as the radiogroup name. |
+| `options` **(required)** | `RadioOption[]` | - | Radio options. |
+| `value` | `string` | - | Selected option value. Controlled - pair with onChange. |
+| `defaultValue` | `string` | - | Starting selection when uncontrolled. |
 | `onChange` | `(value: string) => void` | - | Fired with the newly selected value. |
+| `name` | `string` | - | Shared input name for the group. Generated when unset. |
+| `orientation` | `'Vertical' \| 'Horizontal'` | `'Vertical'` | Layout direction. |
+| `helpText` | `string` | - | Guidance shown below the options. Replaced by errorText when `error` is set. |
+| `errorText` | `string` | - | Validation message, shown while `error` is true. |
+| `error` | `boolean` | `false` | Marks the group invalid and shows errorText. |
+| `disabled` | `boolean` | `false` | Disables every option. |
+
+Also accepts any native `<div>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<div>`. `className` and `style` go on the outermost element.
 
 ```ts
 export interface RadioOption {
@@ -209,15 +217,19 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 .inspera-radio-group__options {
   display: flex;
   flex-direction: column;
-  gap: 0;
+  /* Horizontal options wrap onto a new line rather than overflow. */
+  flex-wrap: wrap;
+  column-gap: 24px;
+  row-gap: 0;
 }
 
 /* Horizontal needs real separation; the vertical stack relies on each row's
    own 8px padding instead. */
 .inspera-radio-group--horizontal .inspera-radio-group__options {
   flex-direction: row;
-  gap: 24px;
 }
+
+.inspera-radio-group__error { font-size: 12px; color: var(--error); }
 ```
 
 ```html

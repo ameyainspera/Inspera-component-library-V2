@@ -52,24 +52,23 @@ Display semantic inline feedback. - category: `feedback`.
 import { Alert } from '@inspera/components'
 
 <Alert
-  intent="Info"
-  title="Heads up"
-  message="..."
-  layout="Simple"
-  background={true}
+  title="Grading in progress"
+  message="Results will be released once every essay is marked."
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `title` | `string` | `'Heads up'` | Short headline stating what happened. |
-| `message` | `string` | `'This is a contextual inline message that matches the intent severity.'` | Supporting detail. Keep it to one or two sentences. |
-| `intent` | `'Info' \| 'Success' \| 'Warning' \| 'Error'` | `'Info'` | Severity / color. |
-| `layout` | `'Simple' \| 'With CTA' \| 'With Close' \| 'With CTA + Close'` | `'Simple'` | Action affordances. |
-| `background` | `boolean` | `true` | Tinted fill vs. left-accent only. |
-| `ctaLabel` | `string` | `'View details'` | Label for the inline action. Only rendered by the "With CTA" layouts. |
-| `onCta` | `() => void` | - | Fired when the inline action is activated. |
-| `onClose` | `() => void` | - | Fired when the alert is dismissed. Only rendered by the "With Close" layouts. |
+| `message` **(required)** | `string` | - | Supporting detail. Keep it to one or two sentences. |
+| `title` | `string` | - | Short headline stating what happened. Optional. |
+| `intent` | `'Info' \| 'Success' \| 'Warning' \| 'Error'` | `'Info'` | Severity / color. Warning and Error interrupt screen readers; Info and Success wait. |
+| `background` | `boolean` | `true` | Tinted fill; false draws a left accent bar on a clear background. |
+| `actionLabel` | `string` | - | Label for an inline action link, e.g. "View details". Shown when set. |
+| `onAction` | `() => void` | - | Fired when the inline action is activated. |
+| `dismissible` | `boolean` | `false` | Show a close button. Pair with onClose. |
+| `onClose` | `() => void` | - | Fired when the close button is activated. |
+
+Also accepts any native `<div>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<div>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `alert`, keyboard operable. Error and Warning announce as role="alert"; Info and Success as a polite role="status" - never both on one element, since role="alert" already implies assertive; Close button must have aria-label="Close alert".
 

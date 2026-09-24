@@ -96,7 +96,7 @@ Prefer a role token over a raw palette shade wherever one exists.
 
 **Controls** - `var(--border-control)` #C4C4C4, `var(--border-control-strong)` #8C8C8C, `var(--text-placeholder)` #8C8C8C, `var(--surface-disabled)` #F5F5F5, `var(--surface-readonly)` var(--gray-100), `var(--surface-neutral)` #F0F0F0, `var(--avatar-surface)` #E0E0E0
 
-**Surface** - `var(--background)` var(--gray-100), `var(--surface)` var(--white), `var(--surface-sunken)` var(--gray-100), `var(--border)` var(--gray-200), `var(--border-strong)` var(--gray-300), `var(--border-interactive)` var(--gray-500), `var(--muted-foreground)` var(--gray-600)
+**Surface** - `var(--background)` var(--gray-100), `var(--surface)` var(--white), `var(--surface-sunken)` var(--gray-100), `var(--border)` var(--gray-200), `var(--border-strong)` var(--gray-300), `var(--border-interactive)` var(--gray-500), `var(--muted-foreground)` var(--gray-600), `var(--scrim)` rgba(39, 39, 39, 0.48)
 
 ### Typography
 
@@ -209,11 +209,11 @@ actually does rather than what this document claims.
 | --- | --- | --- | --- | --- |
 | `none` | `var(--radius-none)` | 0px | Flush edges - table cells, full-bleed surfaces, anything that meets another edge. | - |
 | `xs` | `var(--radius-xs)` | 2px | The smallest indicators, where 4px would read as a visible curve. | Checkbox, CommandPalette, Link, Rating |
-| `sm` | `var(--radius-sm)` | 4px | Controls: buttons, tags, segments, menu items. | Button, Combobox, CommandPalette, DatePicker, DateRangePicker, Dialog, List, Menu, NumberInput, Popover, SegmentedControl, Select, Skeleton, Tabs, Tooltip |
+| `sm` | `var(--radius-sm)` | 4px | Controls: buttons, tags, segments, menu items. | Button, Combobox, CommandPalette, DatePicker, DateRangePicker, List, Menu, NumberInput, SegmentedControl, Select, Skeleton, Tabs, Tooltip, calendar |
 | `md` | `var(--radius-md)` | 8px | Inputs, alerts and floating panels - the system default. | Accordion, Alert, Combobox, DataGrid, DatePicker, DateRangePicker, Drawer, FileUpload, List, Menu, NumberInput, OtpInput, Pagination, Popover, SegmentedControl, Select, Skeleton, Snackbar, Table, Tabs, TextInput, Textarea |
 | `lg` | `var(--radius-lg)` | 12px | Large surfaces that contain other components: cards, dialogs, drawers. | Card, CommandPalette, Dialog, Stat |
 | `xl` | `var(--radius-xl)` | 16px | Reserved for oversized surfaces. Nothing uses it today; prefer lg. | - |
-| `pill` | `var(--radius-pill)` | fully round | Only for shapes that are conceptually round: toggles, badges, radios, avatars. | Avatar, Badge, Dialog, Progress, RadioButton, Skeleton, Slider, Stepper, Tag, Toggle, Tooltip |
+| `pill` | `var(--radius-pill)` | fully round | Only for shapes that are conceptually round: toggles, badges, radios, avatars. | Avatar, AvatarGroup, Badge, Dialog, EmptyState, Progress, RadioButton, Skeleton, Slider, Stepper, Tag, Toggle |
 
 ### Depth / elevation
 
@@ -242,6 +242,9 @@ as `box-shadow`. Their colours are palette colours.
 | `state-hover-light` | `var(--effect-state-hover-light)` | `0px 0px 0px 3px var(--gray-500)` | Hover outline | unconfirmed: spread |
 | `state-focus-on-dark` | `var(--effect-state-focus-on-dark)` | `0px 0px 0px 3px var(--green-300)` | Focus ring on a dark container | unconfirmed: spread |
 | `button-shadow` | `var(--effect-button-shadow)` | `inset 0px -1px 0px rgba(0, 0, 0, 0.2), 0px 1px 0px rgba(0, 0, 0, 0.08)` | Standard button elevation highlight |
+| `button-shadow-hover` | `var(--effect-button-shadow-hover)` | `inset 0 -1px 0 rgba(0, 0, 0, 0.2), 0 2px 6px rgba(0, 64, 128, 0.24)` | Solid button under the pointer |
+| `button-shadow-active` | `var(--effect-button-shadow-active)` | `inset 0 1px 2px rgba(0, 0, 0, 0.24)` | Solid button while pressed |
+| `thumb-shadow` | `var(--effect-thumb-shadow)` | `0 1px 2px rgba(0, 0, 0, 0.2)` | Slider and toggle thumb |
 | `link-underline-dark` | `var(--effect-link-underline-dark)` | `inset 0px -1px 0px var(--gray-700)` | Link underline on light ground |
 | `link-underline-blue` | `var(--effect-link-underline-blue)` | `inset 0px -1px 0px var(--blue-800)` | Primary link underline |
 | `link-underline-light` | `var(--effect-link-underline-light)` | `inset 0px -1px 0px var(--white)` | Link underline on dark ground |

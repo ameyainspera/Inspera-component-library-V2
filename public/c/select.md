@@ -53,23 +53,35 @@ import { Select } from '@inspera/components'
 
 <Select
   label="Country"
-  widthMode="Fixed"
-  search={false}
-  options={['Norway', 'Sweden', 'Denmark']}
+  options={['Norway', 'Sweden', 'Denmark', 'Finland', 'Iceland']}
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | `'Country'` | Render the label. |
+| `label` **(required)** | `string` | - | Field label. Always required: it is the accessible name even when hidden. |
+| `options` **(required)** | `(string \| SelectOption)[]` | - | The choices, in display order. Plain strings when value and label match. |
 | `placeholder` | `string` | `'Select an option'` | Shown when nothing is selected. Not a substitute for the label. |
-| `options` | `string[]` | `defaultOptions` | The selectable values, in the order they should appear. |
 | `value` | `string` | - | Selected value. Controlled - pair with onChange. |
-| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Disabled' \| 'Error' \| 'Open'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Open` are presentation-only - leave them unset in application code, where CSS and the component's own state drive them. `Error` and `Disabled` are real application state and belong in your code. |
-| `widthMode` | `'Fixed' \| 'Content Adaptable'` | `'Fixed'` | Trigger sizing. |
-| `showLabel` | `boolean` | `true` | Render the visible label. Hiding it still requires an accessible name. |
-| `search` | `boolean` | `false` | Filterable option list. |
+| `defaultValue` | `string` | - | Starting value when uncontrolled. |
 | `onChange` | `(value: string) => void` | - | Fired with the selected value. |
+| `widthMode` | `'Fixed' \| 'Hug'` | `'Fixed'` | `Fixed` is 220px wide; `Hug` fits the selected text. |
+| `showLabel` | `boolean` | `true` | Render the visible label. When false, the label becomes `aria-label`. |
+| `search` | `boolean` | `false` | Adds a filter box at the top of the list. |
+| `helpText` | `string` | - | Guidance shown below the field. Replaced by errorText when `error` is set. |
+| `errorText` | `string` | - | Validation message, shown while `error` is true. |
+| `error` | `boolean` | `false` | Marks the field invalid: red border, `aria-invalid`, errorText shown. |
+| `disabled` | `boolean` | `false` | Blocks interaction and dims the field. |
+
+Also accepts any native `<div>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<div>`. `className` and `style` go on the outermost element.
+
+```ts
+export interface SelectOption {
+  value: string
+  /** Shown text. Defaults to `value`. */
+  label?: string
+}
+```
 
 **Accessibility** - role `combobox`, keyboard operable. Use aria-expanded to indicate open state; Use aria-activedescendant for highlighted option; Support arrow key navigation through options.
 
@@ -122,20 +134,24 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 /* Tokens this component needs. Paste once, at `:root`. */
 :root {
   --primary:                #004080;
+  --error:                  #D32F2F;
   --white:                  #ffffff;
   --gray-300:               #D9D9D9;
   --gray-600:               #7A7A7A;
   --blue-100:               #F0F7FF;
   --blue-300:               #B3D9FF;
+  --red-300:                #F9B8B8;
   --text-primary:           rgba(0, 0, 0, 0.87);
   --border-control:         #C4C4C4;
   --border-control-strong:  #8C8C8C;
+  --surface-disabled:       #F5F5F5;
   --border-strong:          var(--gray-300);
   --muted-foreground:       var(--gray-600);
   --radius-sm:              4px;
   --radius-md:              8px;
   --shadow-200:             0px 8px 8px rgba(39, 39, 39, 0.08), 0px 4px 6px rgba(39, 39, 39, 0.12);
   --effect-state-focus:     0px 0px 0px 3px var(--blue-300);
+  --effect-state-error:     0px 0px 0px 3px var(--red-300);
   --border-width-default:   1px;
   --duration-fast:          100ms;
   --easing-standard:        cubic-bezier(0.2, 0, 0, 1);
@@ -158,6 +174,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 .inspera-select__label {
   font-size: 16px;
   font-weight: 500;
+  color: var(--text-primary);
 }
 
 .inspera-select__anchor { position: relative; }
@@ -203,6 +220,22 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 }
 .inspera-select__trigger[aria-expanded='true'] .material-symbols-outlined { transform: rotate(180deg); }
 
+/* Invalid outranks hover and focus - the error has to stay legible. */
+.inspera-select__trigger[aria-invalid='true'],
+.inspera-select__trigger[aria-invalid='true']:hover {
+  border-color: var(--error);
+  box-shadow: var(--effect-state-error);
+}
+/* A div cannot be :disabled, so the state is read from aria-disabled. */
+.inspera-select__trigger[aria-disabled='true'] {
+  background: var(--surface-disabled);
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.inspera-select__trigger[aria-disabled='true']:hover { border-color: var(--border-control); }
+
+.inspera-select__error { font-size: 12px; color: var(--error); }
+
 /* The list is anchored to the trigger, not appended to the body. */
 .inspera-select__list {
   position: absolute;
@@ -246,10 +279,11 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 ```html
 <div class="inspera-select">
-  <label class="inspera-select__label" for="country">Country</label>
+  <!-- A <label for> cannot name a div, so the trigger points at the label's id. -->
+  <span class="inspera-select__label" id="country-label">Country</span>
   <div class="inspera-select__anchor">
     <div class="inspera-select__trigger" id="country" role="combobox" tabindex="0"
-         aria-expanded="false" aria-haspopup="listbox" aria-controls="country-list">
+         aria-labelledby="country-label" aria-expanded="false" aria-haspopup="listbox">
       <span>Select an option</span>
       <span class="material-symbols-outlined" aria-hidden="true">expand_more</span>
     </div>

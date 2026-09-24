@@ -1,12 +1,9 @@
 import type { CSSProperties } from 'react'
-
-export type IconStyle = 'outlined' | 'rounded' | 'sharp'
+import { cx, type NativeAttrs } from './types'
 
 export interface IconProps {
-  /** Material Symbols ligature name, e.g. "search" or "check_circle". */
+  /** Material Symbols Outlined ligature name, e.g. "search" or "check_circle". */
   name: string
-  /** Which Material Symbols face to use. */
-  style?: IconStyle
   /** Rendered size in px. 16 compact, 20 in controls, 24 standalone. */
   size?: number
   /** Filled (1) or outlined (0). Filled reads as a status glyph. */
@@ -15,51 +12,54 @@ export interface IconProps {
   weight?: 100 | 200 | 300 | 400 | 500 | 600 | 700
   /** Optical grade. Use 200 on dark backgrounds to hold weight. */
   grade?: -25 | 0 | 200
-  /** Optical size axis. Match to the rendered size. */
+  /** Optical size axis. Follows `size` unless set. */
   opticalSize?: 20 | 24 | 40 | 48
   /** Icon colour. Defaults to currentColor so it inherits from text. */
   color?: string
-  /** Additional classes, merged with the Material Symbols class. */
-  className?: string
-  /** Accessible name. Required when the icon carries meaning on its own. */
-  'aria-label'?: string
-  /** Hides the icon from assistive technology. Defaults to true unless aria-label is set. */
-  'aria-hidden'?: boolean | 'true' | 'false'
+  /**
+   * Accessible name, for an icon that means something on its own. Without
+   * one the icon is decorative and hidden from assistive tech.
+   */
+  label?: string
 }
 
-const classMap: Record<IconStyle, string> = {
-  outlined: 'material-symbols-outlined',
-  rounded: 'material-symbols-rounded',
-  sharp: 'material-symbols-sharp',
-}
+/** The optical size axis stop nearest the rendered size. */
+const opszFor = (size: number): 20 | 24 | 40 | 48 =>
+  size <= 20 ? 20 : size <= 32 ? 24 : size <= 44 ? 40 : 48
 
 export default function Icon({
   name,
-  style = 'outlined',
   size = 24,
   fill = 0,
   weight = 400,
   grade = 0,
-  opticalSize = 24,
+  opticalSize,
   color,
+  label,
   className,
-  'aria-label': ariaLabel,
-  'aria-hidden': ariaHidden,
-}: IconProps) {
+  style,
+  ...rest
+}: IconProps & NativeAttrs<'span', IconProps>) {
   const cssStyle: CSSProperties = {
     fontSize: size,
-    fontVariationSettings: `'FILL' ${fill}, 'wght' ${weight}, 'GRAD' ${grade}, 'opsz' ${opticalSize}`,
+    fontVariationSettings: `'FILL' ${fill}, 'wght' ${weight}, 'GRAD' ${grade}, 'opsz' ${opticalSize ?? opszFor(size)}`,
     color,
     lineHeight: 1,
     userSelect: 'none',
+    ...style,
   }
 
+  // Only Outlined: it is the one face the system loads. Rounded and Sharp were
+  // offered here, and rendered as plain text wherever that font was not loaded.
   return (
     <span
-      className={[classMap[style], className].filter(Boolean).join(' ')}
+      className={cx('material-symbols-outlined', className)}
       style={cssStyle}
-      aria-label={ariaLabel}
-      aria-hidden={ariaHidden ?? (ariaLabel ? undefined : true)}
+      // An aria-label on a plain span is not reliably read; role="img" makes it count.
+      role={label ? 'img' : undefined}
+      aria-label={label}
+      aria-hidden={label ? undefined : true}
+      {...rest}
     >
       {name}
     </span>

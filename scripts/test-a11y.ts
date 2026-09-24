@@ -63,7 +63,8 @@ const interactions: Record<string, (page: Page) => Promise<void>> = {
     const header = page.locator('th[aria-sort] >> nth=0')
     if (!(await header.count())) return check('data-grid', 'no sortable header found', false)
     const before = await header.getAttribute('aria-sort')
-    await header.click()
+    // The sort control is the button inside the header, not the whole cell.
+    await header.locator('button').click()
     await page.waitForTimeout(80)
     const after = await header.getAttribute('aria-sort')
     check('data-grid', `aria-sort should change on click (was ${before}, still ${after})`, before !== after)
@@ -84,13 +85,16 @@ const interactions: Record<string, (page: Page) => Promise<void>> = {
     if (!(await trigger.count())) return
     await trigger.click()
     await page.waitForTimeout(150)
-    const region = page.locator('[role="region"][aria-label="Notifications"]')
-    check('toast', 'firing toast() should render a notification', (await region.count()) > 0)
+    // The region is always mounted (so new toasts are announced); what must
+    // appear is the toast itself.
+    const toastText = page.locator('[role="region"][aria-label="Notifications"]').getByText('Assessment saved.')
+    check('toast', 'firing toast() should render a notification', (await toastText.count()) > 0)
   },
   'command-palette': async (page) => {
     await page.keyboard.press(process.platform === 'darwin' ? 'Meta+k' : 'Control+k')
     await page.waitForTimeout(150)
-    const dialog = page.locator('[role="dialog"], [role="listbox"]')
+    // The gallery shows an embedded panel, so look for the modal one.
+    const dialog = page.locator('[role="dialog"][aria-modal="true"][aria-label="Command palette"]')
     // Not every demo binds a global hotkey; only fail if a trigger button also
     // fails to open it.
     if (!(await dialog.count())) {

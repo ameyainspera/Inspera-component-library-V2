@@ -11,29 +11,34 @@ export const componentApi: Record<string, ComponentApi> = {
       {
         "name": "items",
         "type": "AccordionItem[]",
-        "required": false,
-        "default": "defaultItems",
+        "required": true,
         "description": "Accordion sections."
       },
       {
-        "name": "type",
+        "name": "selection",
         "type": "'Single' | 'Multiple'",
         "required": false,
         "default": "'Single'",
-        "description": "Allow one or many open at once."
+        "description": "Whether one or several sections can be open at once."
       },
       {
-        "name": "defaultOpenIndex",
-        "type": "number",
-        "required": false,
-        "default": "0",
-        "description": "Initially open section."
-      },
-      {
-        "name": "defaultOpenIndexes",
+        "name": "value",
         "type": "number[]",
         "required": false,
-        "description": "Initially open sections, for `type=\"Multiple\"`. Wins over defaultOpenIndex."
+        "description": "Open section indexes. Controlled - pair with onChange."
+      },
+      {
+        "name": "defaultValue",
+        "type": "number[]",
+        "required": false,
+        "default": "[]",
+        "description": "Sections open at first, when uncontrolled. All closed by default."
+      },
+      {
+        "name": "onChange",
+        "type": "(open: number[]) => void",
+        "required": false,
+        "description": "Fired with the open section indexes after a toggle."
       },
       {
         "name": "iconPosition",
@@ -41,73 +46,97 @@ export const componentApi: Record<string, ComponentApi> = {
         "required": false,
         "default": "'Right'",
         "description": "Chevron placement."
+      },
+      {
+        "name": "headingLevel",
+        "type": "2 | 3 | 4 | 5 | 6",
+        "required": false,
+        "default": "3",
+        "description": "Heading level wrapping each trigger, to fit the page outline."
       }
     ],
     "relatedTypes": {
-      "AccordionItem": "export interface AccordionItem {\n  title: string\n  content: ReactNode\n}"
-    }
+      "AccordionItem": "export interface AccordionItem {\n  /** Stable key. Defaults to the title. */\n  id?: string\n  title: string\n  content: ReactNode\n}"
+    },
+    "native": "div"
   },
   "Alert": {
     "props": [
       {
+        "name": "message",
+        "type": "string",
+        "required": true,
+        "description": "Supporting detail. Keep it to one or two sentences."
+      },
+      {
         "name": "title",
         "type": "string",
         "required": false,
-        "default": "'Heads up'",
-        "description": "Short headline stating what happened."
-      },
-      {
-        "name": "message",
-        "type": "string",
-        "required": false,
-        "default": "'This is a contextual inline message that matches the intent severity.'",
-        "description": "Supporting detail. Keep it to one or two sentences."
+        "description": "Short headline stating what happened. Optional."
       },
       {
         "name": "intent",
         "type": "'Info' | 'Success' | 'Warning' | 'Error'",
         "required": false,
         "default": "'Info'",
-        "description": "Severity / color."
-      },
-      {
-        "name": "layout",
-        "type": "'Simple' | 'With CTA' | 'With Close' | 'With CTA + Close'",
-        "required": false,
-        "default": "'Simple'",
-        "description": "Action affordances."
+        "description": "Severity / color. Warning and Error interrupt screen readers; Info and Success wait."
       },
       {
         "name": "background",
         "type": "boolean",
         "required": false,
         "default": "true",
-        "description": "Tinted fill vs. left-accent only."
+        "description": "Tinted fill; false draws a left accent bar on a clear background."
       },
       {
-        "name": "ctaLabel",
+        "name": "actionLabel",
         "type": "string",
         "required": false,
-        "default": "'View details'",
-        "description": "Label for the inline action. Only rendered by the \"With CTA\" layouts."
+        "description": "Label for an inline action link, e.g. \"View details\". Shown when set."
       },
       {
-        "name": "onCta",
+        "name": "onAction",
         "type": "() => void",
         "required": false,
         "description": "Fired when the inline action is activated."
       },
       {
+        "name": "dismissible",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Show a close button. Pair with onClose."
+      },
+      {
         "name": "onClose",
         "type": "() => void",
         "required": false,
-        "description": "Fired when the alert is dismissed. Only rendered by the \"With Close\" layouts."
+        "description": "Fired when the close button is activated."
       }
     ],
-    "relatedTypes": {}
+    "relatedTypes": {},
+    "native": "div"
   },
   "Avatar": {
     "props": [
+      {
+        "name": "name",
+        "type": "string",
+        "required": true,
+        "description": "The person's name. Gives the initials and the accessible name."
+      },
+      {
+        "name": "src",
+        "type": "string",
+        "required": false,
+        "description": "Photo URL. Without one - or if it fails to load - the initials show."
+      },
+      {
+        "name": "icon",
+        "type": "string",
+        "required": false,
+        "description": "Material Symbols name shown instead of initials, e.g. for a guest."
+      },
       {
         "name": "size",
         "type": "'Small' | 'Medium' | 'Large'",
@@ -116,65 +145,30 @@ export const componentApi: Record<string, ComponentApi> = {
         "description": "Diameter 32 / 40 / 56."
       },
       {
-        "name": "content",
-        "type": "'Image' | 'Initials' | 'Icon'",
-        "required": false,
-        "default": "'Initials'",
-        "description": "What fills the avatar."
-      },
-      {
         "name": "status",
         "type": "'None' | 'Online' | 'Offline' | 'Busy'",
         "required": false,
         "default": "'None'",
-        "description": "Presence indicator dot."
-      },
-      {
-        "name": "initials",
-        "type": "string",
-        "required": false,
-        "default": "'JC'",
-        "description": "One or two letters, used when content is Initials. Derive from the name rather than asking for them."
-      },
-      {
-        "name": "imageSrc",
-        "type": "string",
-        "required": false,
-        "default": "'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=112&h=112&fit=crop&auto=format'",
-        "description": "Image URL, used when content is Image. Falls back to initials if it fails to load."
-      },
-      {
-        "name": "alt",
-        "type": "string",
-        "required": false,
-        "default": "'User avatar'",
-        "description": "Alternative text for the image. Required whenever an image is shown."
-      },
-      {
-        "name": "icon",
-        "type": "string",
-        "required": false,
-        "default": "'person'",
-        "description": "Material Symbols name, used when content is Icon."
+        "description": "Presence indicator dot. Announced with the name."
       }
     ],
-    "relatedTypes": {}
+    "relatedTypes": {},
+    "native": "span"
   },
   "AvatarGroup": {
     "props": [
       {
         "name": "avatars",
         "type": "AvatarGroupItem[]",
-        "required": false,
-        "default": "defaultAvatars",
-        "description": "Avatars to display."
+        "required": true,
+        "description": "People to show, in order."
       },
       {
         "name": "max",
         "type": "number",
         "required": false,
         "default": "4",
-        "description": "Maximum shown before overflow."
+        "description": "How many to show before collapsing the rest into \"+N\"."
       },
       {
         "name": "size",
@@ -185,16 +179,16 @@ export const componentApi: Record<string, ComponentApi> = {
       }
     ],
     "relatedTypes": {
-      "AvatarGroupItem": "export interface AvatarGroupItem {\n  content?: AvatarContent\n  name?: string\n}"
-    }
+      "AvatarGroupItem": "export interface AvatarGroupItem {\n  /** The person's name: initials and accessible name. */\n  name: string\n  /** Photo URL. */\n  src?: string\n  /** Material Symbols name shown instead of initials. */\n  icon?: string\n}"
+    },
+    "native": "div"
   },
   "Badge": {
     "props": [
       {
         "name": "label",
         "type": "string",
-        "required": false,
-        "default": "'Badge'",
+        "required": true,
         "description": "The badge text. One or two words."
       },
       {
@@ -225,15 +219,15 @@ export const componentApi: Record<string, ComponentApi> = {
         "description": "Material Symbols name shown before the label when withIcon is set."
       }
     ],
-    "relatedTypes": {}
+    "relatedTypes": {},
+    "native": "span"
   },
   "Breadcrumb": {
     "props": [
       {
         "name": "items",
-        "type": "string[]",
-        "required": false,
-        "default": "defaultItems",
+        "type": "(string | BreadcrumbItem)[]",
+        "required": true,
         "description": "Trail from root to current page. The last entry is the current page and is not a link."
       },
       {
@@ -254,19 +248,28 @@ export const componentApi: Record<string, ComponentApi> = {
         "name": "onNavigate",
         "type": "(index: number) => void",
         "required": false,
-        "description": "Fired with the index of the crumb that was clicked."
+        "description": "Fired with the index of a crumb without an href, for client-side routing."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "default": "'Breadcrumb'",
+        "description": "Names the navigation landmark."
       }
     ],
-    "relatedTypes": {}
+    "relatedTypes": {
+      "BreadcrumbItem": "export interface BreadcrumbItem {\n  label: string\n  /** Link target. Crumbs with an href are real links - they open in a new tab and show their URL. */\n  href?: string\n}"
+    },
+    "native": "nav"
   },
   "Button": {
     "props": [
       {
         "name": "label",
         "type": "string",
-        "required": false,
-        "default": "'Button'",
-        "description": "The button text. Start with a verb - \"Save\", not \"OK\"."
+        "required": true,
+        "description": "The button text. Start with a verb - \"Save\", not \"OK\". With `iconOnly` it is not shown but becomes the accessible name, so it is still required."
       },
       {
         "name": "intent",
@@ -283,33 +286,47 @@ export const componentApi: Record<string, ComponentApi> = {
         "description": "Height 32 / 40 / 48."
       },
       {
-        "name": "state",
-        "type": "'Default' | 'Hover' | 'Focused' | 'Pressed' | 'Disabled'",
-        "required": false,
-        "description": "Freezes a visual state so documentation can show it without a pointer. Leave unset in application code - hover, focus and active are handled in CSS and work on their own."
-      },
-      {
-        "name": "content",
-        "type": "'Text' | 'Icon + Text' | 'Text + Icon' | 'Text + Disclosure'",
-        "required": false,
-        "default": "'Text'",
-        "description": "Label / icon composition."
-      },
-      {
-        "name": "icon",
+        "name": "leadingIcon",
         "type": "string",
         "required": false,
-        "default": "'add'",
-        "description": "Material Symbols name. Only rendered by the icon-bearing content variants."
+        "description": "Material Symbols name shown before the label."
+      },
+      {
+        "name": "trailingIcon",
+        "type": "string",
+        "required": false,
+        "description": "Material Symbols name shown after the label. Use `expand_more` for a menu trigger."
+      },
+      {
+        "name": "iconOnly",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Show only the icon (`leadingIcon`, else `trailingIcon`); `label` becomes the accessible name."
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Blocks interaction and dims the button."
+      },
+      {
+        "name": "type",
+        "type": "'button' | 'submit' | 'reset'",
+        "required": false,
+        "default": "'button'",
+        "description": "Native button type. Defaults to `button`, so a Button never submits a form by accident."
       },
       {
         "name": "onClick",
-        "type": "() => void",
+        "type": "MouseEventHandler<HTMLButtonElement>",
         "required": false,
         "description": "Fired on click and on Enter or Space."
       }
     ],
-    "relatedTypes": {}
+    "relatedTypes": {},
+    "native": "button"
   },
   "Card": {
     "props": [
@@ -317,14 +334,12 @@ export const componentApi: Record<string, ComponentApi> = {
         "name": "title",
         "type": "string",
         "required": false,
-        "default": "'Card title'",
-        "description": "Optional heading for the card."
+        "description": "Heading for the card. Also the accessible name of an interactive card."
       },
       {
         "name": "body",
         "type": "string",
         "required": false,
-        "default": "'Group related content in a contained surface using consistent padding and elevation.'",
         "description": "Short body copy. For anything richer, pass children instead."
       },
       {
@@ -346,58 +361,64 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "boolean",
         "required": false,
         "default": "false",
-        "description": "Renders as a focusable button with hover elevation."
+        "description": "The whole card becomes one click target, with hover elevation and a focus ring."
       },
       {
         "name": "children",
         "type": "ReactNode",
         "required": false,
-        "description": "Card contents. Takes precedence over title and body."
+        "description": "Card contents. Replaces title and body."
       },
       {
         "name": "onClick",
-        "type": "() => void",
+        "type": "MouseEventHandler<HTMLButtonElement>",
         "required": false,
-        "description": "Fired when an interactive card is activated. Set interactive as well, or there is no affordance."
+        "description": "Fired when an interactive card is activated."
       }
     ],
-    "relatedTypes": {}
+    "relatedTypes": {},
+    "native": "article"
   },
   "Checkbox": {
     "props": [
       {
         "name": "label",
         "type": "string",
-        "required": false,
-        "default": "'Checkbox label'",
-        "description": "Text beside the box. Always provide one."
+        "required": true,
+        "description": "Text beside the box. Required: it is the accessible name even when hidden."
       },
       {
         "name": "checked",
         "type": "boolean",
         "required": false,
-        "description": "Checked state."
+        "description": "Checked state. Controlled - pair with onChange."
+      },
+      {
+        "name": "defaultChecked",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Starting checked state when uncontrolled."
+      },
+      {
+        "name": "onChange",
+        "type": "(checked: boolean) => void",
+        "required": false,
+        "description": "Fired with the new checked state."
       },
       {
         "name": "indeterminate",
         "type": "boolean",
         "required": false,
         "default": "false",
-        "description": "Partially-selected state, for a parent whose children are mixed. Wins over `checked` visually and announces as `aria-checked=\"mixed\"`."
-      },
-      {
-        "name": "state",
-        "type": "'Default' | 'Hover' | 'Focused' | 'Pressed' | 'Disabled' | 'Error'",
-        "required": false,
-        "default": "'Default'",
-        "description": "Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Pressed` are presentation-only - leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Error` and `Disabled` are real application state and belong in your code."
+        "description": "Partially-selected state, for a parent whose children are mixed. Wins over `checked` visually and announces as mixed."
       },
       {
         "name": "withLabel",
         "type": "boolean",
         "required": false,
         "default": "true",
-        "description": "Render the label."
+        "description": "Render the label text. When false, the label becomes `aria-label`."
       },
       {
         "name": "size",
@@ -407,34 +428,55 @@ export const componentApi: Record<string, ComponentApi> = {
         "description": "Indicator size."
       },
       {
-        "name": "onChange",
-        "type": "(checked: boolean) => void",
+        "name": "disabled",
+        "type": "boolean",
         "required": false,
-        "description": "Fired with the new checked state."
+        "default": "false",
+        "description": "Blocks interaction and dims the control."
+      },
+      {
+        "name": "error",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Marks the control invalid: red border and `aria-invalid`."
       }
     ],
-    "relatedTypes": {}
+    "relatedTypes": {},
+    "native": "input"
   },
   "CheckboxGroup": {
     "props": [
       {
         "name": "label",
         "type": "string",
-        "required": false,
-        "description": "Group label, announced as the fieldset legend."
+        "required": true,
+        "description": "Group label, announced as the group's name."
       },
       {
         "name": "options",
         "type": "CheckboxOption[]",
-        "required": false,
-        "default": "DEFAULT_OPTIONS",
+        "required": true,
         "description": "Checkbox options."
       },
       {
         "name": "value",
         "type": "string[]",
         "required": false,
-        "description": "Selected option values."
+        "description": "Selected option values. Controlled - pair with onChange."
+      },
+      {
+        "name": "defaultValue",
+        "type": "string[]",
+        "required": false,
+        "default": "[]",
+        "description": "Starting selection when uncontrolled."
+      },
+      {
+        "name": "onChange",
+        "type": "(value: string[]) => void",
+        "required": false,
+        "description": "Fired with the full array of selected values."
       },
       {
         "name": "orientation",
@@ -444,45 +486,64 @@ export const componentApi: Record<string, ComponentApi> = {
         "description": "Layout direction."
       },
       {
-        "name": "state",
-        "type": "'Default' | 'Disabled' | 'Error'",
+        "name": "size",
+        "type": "CheckboxSize",
         "required": false,
-        "default": "'Default'",
-        "description": "Forces a visual state for documentation. Omit for real interactivity."
+        "default": "'Medium'",
+        "description": "Size of every checkbox in the group."
       },
       {
-        "name": "onChange",
-        "type": "(value: string[]) => void",
+        "name": "helpText",
+        "type": "string",
         "required": false,
-        "description": "Fired with the full array of selected values."
+        "description": "Guidance shown below the options. Replaced by errorText when `error` is set."
+      },
+      {
+        "name": "errorText",
+        "type": "string",
+        "required": false,
+        "description": "Validation message, shown while `error` is true."
+      },
+      {
+        "name": "error",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Marks every option invalid and shows errorText."
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Disables every option."
       }
     ],
     "relatedTypes": {
       "CheckboxOption": "export interface CheckboxOption {\n  label: string\n  value: string\n}"
-    }
+    },
+    "native": "div"
   },
   "Combobox": {
     "props": [
       {
         "name": "label",
         "type": "string",
-        "required": false,
-        "default": "'Assessment'",
-        "description": "Field label."
+        "required": true,
+        "description": "Field label. Always required: it is the accessible name even when hidden."
+      },
+      {
+        "name": "options",
+        "type": "ComboboxOption[]",
+        "required": true,
+        "description": "The full option list. Filtered as the user types."
       },
       {
         "name": "placeholder",
         "type": "string",
         "required": false,
-        "default": "'Search assessments...'",
+        "default": "'Search...'",
         "description": "Shown when nothing is typed or selected."
-      },
-      {
-        "name": "options",
-        "type": "ComboboxOption[]",
-        "required": false,
-        "default": "defaultOptions",
-        "description": "The full option list. Filtered as the user types."
       },
       {
         "name": "value",
@@ -491,18 +552,23 @@ export const componentApi: Record<string, ComponentApi> = {
         "description": "Selected value. Controlled - pair with onChange."
       },
       {
-        "name": "state",
-        "type": "'Default' | 'Focused' | 'Disabled' | 'Error'",
+        "name": "defaultValue",
+        "type": "string",
         "required": false,
-        "default": "'Default'",
-        "description": "Freezes a visual state so documentation can show it without a pointer. `Focused` is presentation-only. `Error` and `Disabled` are real state."
+        "description": "Starting value when uncontrolled."
+      },
+      {
+        "name": "onChange",
+        "type": "(value: string) => void",
+        "required": false,
+        "description": "Fired with the chosen value (or the free text, with allowCustomValue)."
       },
       {
         "name": "showLabel",
         "type": "boolean",
         "required": false,
         "default": "true",
-        "description": "Render the field label."
+        "description": "Render the visible label. When false, the label becomes `aria-label`."
       },
       {
         "name": "allowCustomValue",
@@ -519,51 +585,76 @@ export const componentApi: Record<string, ComponentApi> = {
         "description": "Text shown when no option matches the query."
       },
       {
-        "name": "onChange",
-        "type": "(value: string) => void",
+        "name": "helpText",
+        "type": "string",
         "required": false,
-        "description": "Fired with the chosen value (or free text when allowCustomValue)."
+        "description": "Guidance shown below the field. Replaced by errorText when `error` is set."
+      },
+      {
+        "name": "errorText",
+        "type": "string",
+        "required": false,
+        "description": "Validation message, shown while `error` is true."
+      },
+      {
+        "name": "error",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Marks the field invalid: red border, `aria-invalid`, errorText shown."
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Blocks interaction and dims the field."
       }
     ],
     "relatedTypes": {
       "ComboboxOption": "export interface ComboboxOption {\n  /** Value returned on select. */\n  value: string\n  /** Text shown in the list and field. Defaults to the value. */\n  label?: string\n  /** Optional Material Symbols icon shown before the label. */\n  icon?: string\n}"
-    }
+    },
+    "native": "input"
   },
   "CommandPalette": {
     "props": [
       {
         "name": "commands",
         "type": "Command[]",
-        "required": false,
-        "default": "defaultCommands",
+        "required": true,
         "description": "The commands to search."
       },
       {
         "name": "open",
         "type": "boolean",
         "required": false,
-        "description": "Controlled open state. Omit to let the component manage its own."
+        "description": "Open state. Controlled - pair with onOpenChange."
       },
       {
         "name": "defaultOpen",
         "type": "boolean",
         "required": false,
         "default": "false",
-        "description": "Open initially (uncontrolled)."
+        "description": "Open initially, when uncontrolled."
+      },
+      {
+        "name": "onOpenChange",
+        "type": "(open: boolean) => void",
+        "required": false,
+        "description": "Fired when the open state should change."
+      },
+      {
+        "name": "onSelect",
+        "type": "(command: Command) => void",
+        "required": false,
+        "description": "Fired with the chosen command."
       },
       {
         "name": "hotkey",
         "type": "boolean",
         "required": false,
         "default": "true",
-        "description": "Bind Cmd/Ctrl+K to toggle the palette."
-      },
-      {
-        "name": "embedded",
-        "type": "boolean",
-        "required": false,
-        "default": "false",
-        "description": "Render the panel inline without the portal or dimmed overlay. Used by the docs to show the palette on the page (and by the recipe audit, which cannot see through a portal). Mirrors the `embedded` prop on Dialog and Drawer."
+        "description": "Bind Cmd/Ctrl+K to toggle the palette. Mount one palette with this per page. Ignored while focus is in a textarea or rich-text editor, which often use the same shortcut."
       },
       {
         "name": "placeholder",
@@ -578,45 +669,32 @@ export const componentApi: Record<string, ComponentApi> = {
         "required": false,
         "default": "'No matching commands'",
         "description": "Shown when nothing matches."
-      },
-      {
-        "name": "onOpenChange",
-        "type": "(open: boolean) => void",
-        "required": false,
-        "description": "Fired when the open state should change."
-      },
-      {
-        "name": "onSelect",
-        "type": "(command: Command) => void",
-        "required": false,
-        "description": "Fired with the chosen command."
       }
     ],
     "relatedTypes": {
-      "Command": "export interface Command {\n  /** Stable id. */\n  id: string\n  /** Primary label shown in the list. */\n  label: string\n  /** Optional Material Symbols icon. */\n  icon?: string\n  /** Optional grouping heading. */\n  group?: string\n  /** Right-aligned hint, e.g. a shortcut or section name. */\n  hint?: string\n  /** Extra words to match against beyond the label. */\n  keywords?: string\n  /** Fired when the command is chosen. */\n  onSelect?: () => void\n}"
-    }
+      "Command": "export interface Command {\n  /** Stable id. */\n  id: string\n  /** Primary label shown in the list. */\n  label: string\n  /** Optional Material Symbols icon. */\n  icon?: string\n  /** Optional grouping heading. Commands with the same group should be adjacent. */\n  group?: string\n  /** Right-aligned hint, e.g. a shortcut or section name. */\n  hint?: string\n  /** Extra words to match against beyond the label. */\n  keywords?: string\n  /** Fired when the command is chosen. */\n  onSelect?: () => void\n}"
+    },
+    "native": "div"
   },
   "DataGrid": {
     "props": [
       {
         "name": "columns",
         "type": "DataGridColumn[]",
-        "required": false,
-        "default": "defaultColumns",
+        "required": true,
         "description": "Column definitions."
       },
       {
         "name": "rows",
-        "type": "Record<string, ReactNode>[]",
-        "required": false,
-        "default": "defaultRows",
+        "type": "DataGridRow[]",
+        "required": true,
         "description": "Row data keyed by column."
       },
       {
         "name": "getRowId",
-        "type": "(row: Record<string, ReactNode>, index: number) => string",
+        "type": "(row: DataGridRow, index: number) => string",
         "required": false,
-        "description": "Stable id per row. Defaults to the row index."
+        "description": "Stable id per row. Defaults to the row's position in `rows` - its position as given, not as sorted, so a selection stays on the row it was made on."
       },
       {
         "name": "size",
@@ -637,7 +715,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "boolean",
         "required": false,
         "default": "true",
-        "description": "Highlight rows on hover."
+        "description": "Highlight rows on hover and reveal row actions on hover."
       },
       {
         "name": "caption",
@@ -656,43 +734,57 @@ export const componentApi: Record<string, ComponentApi> = {
         "name": "selectedIds",
         "type": "string[]",
         "required": false,
-        "description": "Controlled set of selected row ids. Pair with onSelectionChange."
+        "description": "Selected row ids. Controlled - pair with onSelectionChange."
+      },
+      {
+        "name": "defaultSelectedIds",
+        "type": "string[]",
+        "required": false,
+        "default": "[]",
+        "description": "Starting selection when uncontrolled."
       },
       {
         "name": "onSelectionChange",
         "type": "(ids: string[]) => void",
         "required": false,
-        "description": "Fired with the full set of selected ids after any change."
+        "description": "Fired with every selected id after any change."
       },
       {
-        "name": "sortBy",
-        "type": "string",
+        "name": "sort",
+        "type": "DataGridSort",
         "required": false,
-        "description": "Controlled sort column key. Pair with onSortChange for server sorting."
+        "description": "Active sort. Controlled - pair with onSortChange."
       },
       {
-        "name": "sortDirection",
-        "type": "'Ascending' | 'Descending'",
+        "name": "defaultSort",
+        "type": "DataGridSort",
         "required": false,
-        "description": "Controlled sort direction."
+        "description": "Starting sort when uncontrolled."
       },
       {
         "name": "onSortChange",
-        "type": "(key: string, direction: DataGridSortDirection) => void",
+        "type": "(sort: DataGridSort) => void",
         "required": false,
-        "description": "Fired when a sortable header is activated. Enables controlled sorting."
+        "description": "Fired when a sortable header is activated."
+      },
+      {
+        "name": "manualSorting",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Rows arrive already sorted (server-side), so the grid only shows the state."
       },
       {
         "name": "rowActions",
-        "type": "(row: Record<string, ReactNode>, index: number) => ReactNode",
+        "type": "(row: DataGridRow, index: number) => ReactNode",
         "required": false,
-        "description": "Trailing per-row actions, revealed on row hover."
+        "description": "Trailing per-row actions. Revealed on hover and focus when `hoverable`."
       },
       {
         "name": "onRowClick",
-        "type": "(row: Record<string, ReactNode>, index: number) => void",
+        "type": "(row: DataGridRow, index: number) => void",
         "required": false,
-        "description": "Fired with the row data and its index."
+        "description": "Makes rows clickable and keyboard-operable (Enter / Space)."
       },
       {
         "name": "footer",
@@ -708,13 +800,6 @@ export const componentApi: Record<string, ComponentApi> = {
         "description": "Total row count across all pages. Defaults to the rendered row count."
       },
       {
-        "name": "page",
-        "type": "number",
-        "required": false,
-        "default": "1",
-        "description": "Current page (1-based)."
-      },
-      {
         "name": "pageCount",
         "type": "number",
         "required": false,
@@ -722,18 +807,17 @@ export const componentApi: Record<string, ComponentApi> = {
         "description": "Total number of pages."
       },
       {
-        "name": "pageSize",
+        "name": "page",
         "type": "number",
         "required": false,
-        "default": "20",
-        "description": "Rows shown per page, used for the range summary and the size select."
+        "description": "Current page (1-based). Controlled - pair with onPageChange."
       },
       {
-        "name": "pageSizeOptions",
-        "type": "number[]",
+        "name": "defaultPage",
+        "type": "number",
         "required": false,
-        "default": "[10, 20, 50, 100]",
-        "description": "Selectable page sizes."
+        "default": "1",
+        "description": "Starting page when uncontrolled."
       },
       {
         "name": "onPageChange",
@@ -742,76 +826,135 @@ export const componentApi: Record<string, ComponentApi> = {
         "description": "Fired with the requested page."
       },
       {
+        "name": "pageSize",
+        "type": "number",
+        "required": false,
+        "description": "Rows per page. Controlled - pair with onPageSizeChange."
+      },
+      {
+        "name": "defaultPageSize",
+        "type": "number",
+        "required": false,
+        "default": "20",
+        "description": "Starting page size when uncontrolled."
+      },
+      {
         "name": "onPageSizeChange",
         "type": "(size: number) => void",
         "required": false,
         "description": "Fired with the requested page size."
+      },
+      {
+        "name": "pageSizeOptions",
+        "type": "number[]",
+        "required": false,
+        "default": "[10, 20, 50, 100]",
+        "description": "Selectable page sizes."
       }
     ],
     "relatedTypes": {
-      "DataGridColumn": "export interface DataGridColumn {\n  /** Key into each row's data object. */\n  key: string\n  /** Column header text. */\n  header: string\n  /** Cell + header alignment. */\n  align?: 'left' | 'right' | 'center'\n  /** Fixed column width. */\n  width?: string | number\n  /** Allow the column to sort. A caret appears in the header. */\n  sortable?: boolean\n  /**\n   * Value used for sorting when the cell renders a non-primitive node. Return a\n   * string or number; without it a sortable column falls back to `row[key]`.\n   */\n  sortValue?: (row: Record<string, ReactNode>) => string | number\n}"
-    }
+      "DataGridRow": "export type DataGridRow = Record<string, ReactNode>",
+      "DataGridColumn": "export interface DataGridColumn {\n  /** Key into each row's data object. */\n  key: string\n  /** Column header text. */\n  header: string\n  /** Cell + header alignment. */\n  align?: 'left' | 'right' | 'center'\n  /** Fixed column width. */\n  width?: string | number\n  /** Allow the column to sort. A caret appears in the header. */\n  sortable?: boolean\n  /**\n   * Value used for sorting when the cell renders a non-primitive node (a\n   * Badge, say). Without it such a column cannot sort.\n   */\n  sortValue?: (row: DataGridRow) => string | number\n}",
+      "DataGridSort": "export interface DataGridSort {\n  key: string\n  direction: DataGridSortDirection\n}"
+    },
+    "native": "div"
   },
   "DatePicker": {
     "props": [
       {
         "name": "label",
         "type": "string",
-        "required": false,
-        "default": "'Date'",
-        "description": "Field label."
+        "required": true,
+        "description": "Field label. Always required: it is the accessible name even when hidden."
       },
       {
         "name": "value",
         "type": "string",
         "required": false,
-        "description": "Selected date (YYYY-MM-DD)."
+        "description": "Selected date (YYYY-MM-DD). Controlled - pair with onChange."
       },
       {
-        "name": "placeholder",
+        "name": "defaultValue",
         "type": "string",
         "required": false,
-        "default": "'Select date'",
-        "description": "Trigger placeholder."
-      },
-      {
-        "name": "state",
-        "type": "'Default' | 'Focused' | 'Disabled' | 'Error'",
-        "required": false,
-        "default": "'Default'",
-        "description": "Freezes a visual state so documentation can show it without a pointer. `Focused` is presentation-only - leave it unset in application code, where CSS drives it from the real pointer and keyboard. `Error` and `Disabled` are real application state and belong in your code."
-      },
-      {
-        "name": "showLabel",
-        "type": "boolean",
-        "required": false,
-        "default": "true",
-        "description": "Show the field label."
-      },
-      {
-        "name": "defaultOpen",
-        "type": "boolean",
-        "required": false,
-        "default": "false",
-        "description": "Open the calendar initially."
+        "description": "Starting date when uncontrolled (YYYY-MM-DD)."
       },
       {
         "name": "onChange",
         "type": "(iso: string) => void",
         "required": false,
         "description": "Fired with the selected date as an ISO string (YYYY-MM-DD)."
+      },
+      {
+        "name": "open",
+        "type": "boolean",
+        "required": false,
+        "description": "Calendar open state. Controlled - pair with onOpenChange."
+      },
+      {
+        "name": "defaultOpen",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Open the calendar initially, when uncontrolled."
+      },
+      {
+        "name": "onOpenChange",
+        "type": "(open: boolean) => void",
+        "required": false,
+        "description": "Fired when the calendar opens or closes."
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "required": false,
+        "default": "'Select date'",
+        "description": "Trigger text when no date is chosen."
+      },
+      {
+        "name": "showLabel",
+        "type": "boolean",
+        "required": false,
+        "default": "true",
+        "description": "Render the visible label. When false, the label becomes `aria-label`."
+      },
+      {
+        "name": "helpText",
+        "type": "string",
+        "required": false,
+        "description": "Guidance shown below the field. Replaced by errorText when `error` is set."
+      },
+      {
+        "name": "errorText",
+        "type": "string",
+        "required": false,
+        "description": "Validation message, shown while `error` is true."
+      },
+      {
+        "name": "error",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Marks the field invalid: red border and errorText shown."
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Blocks interaction and dims the field."
       }
     ],
-    "relatedTypes": {}
+    "relatedTypes": {},
+    "native": "button"
   },
   "DateRangePicker": {
     "props": [
       {
         "name": "label",
         "type": "string",
-        "required": false,
-        "default": "'Date range'",
-        "description": "Field label."
+        "required": true,
+        "description": "Field label. Always required: it is the accessible name even when hidden."
       },
       {
         "name": "value",
@@ -820,58 +963,100 @@ export const componentApi: Record<string, ComponentApi> = {
         "description": "Selected range. Controlled - pair with onChange."
       },
       {
-        "name": "placeholder",
-        "type": "string",
+        "name": "defaultValue",
+        "type": "DateRange",
         "required": false,
-        "default": "'Select a range'",
-        "description": "Trigger placeholder."
-      },
-      {
-        "name": "state",
-        "type": "'Default' | 'Focused' | 'Disabled' | 'Error'",
-        "required": false,
-        "default": "'Default'",
-        "description": "Freezes a visual state so documentation can show it without a pointer. `Focused` is presentation-only. `Error` and `Disabled` are real state."
-      },
-      {
-        "name": "showLabel",
-        "type": "boolean",
-        "required": false,
-        "default": "true",
-        "description": "Show the field label."
-      },
-      {
-        "name": "defaultOpen",
-        "type": "boolean",
-        "required": false,
-        "default": "false",
-        "description": "Open the calendar initially."
+        "description": "Starting range when uncontrolled."
       },
       {
         "name": "onChange",
         "type": "(range: DateRange) => void",
         "required": false,
         "description": "Fired with the range once both ends are chosen."
+      },
+      {
+        "name": "open",
+        "type": "boolean",
+        "required": false,
+        "description": "Calendar open state. Controlled - pair with onOpenChange."
+      },
+      {
+        "name": "defaultOpen",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Open the calendar initially, when uncontrolled."
+      },
+      {
+        "name": "onOpenChange",
+        "type": "(open: boolean) => void",
+        "required": false,
+        "description": "Fired when the calendar opens or closes."
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "required": false,
+        "default": "'Select a range'",
+        "description": "Trigger text when no range is chosen."
+      },
+      {
+        "name": "showLabel",
+        "type": "boolean",
+        "required": false,
+        "default": "true",
+        "description": "Render the visible label. When false, the label becomes `aria-label`."
+      },
+      {
+        "name": "helpText",
+        "type": "string",
+        "required": false,
+        "description": "Guidance shown below the field. Replaced by errorText when `error` is set."
+      },
+      {
+        "name": "errorText",
+        "type": "string",
+        "required": false,
+        "description": "Validation message, shown while `error` is true."
+      },
+      {
+        "name": "error",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Marks the field invalid: red border and errorText shown."
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Blocks interaction and dims the field."
       }
     ],
     "relatedTypes": {
-      "DateRange": "export interface DateRange {\n  /** Range start (YYYY-MM-DD) or null. */\n  start: string | null\n  /** Range end (YYYY-MM-DD) or null. */\n  end: string | null\n}"
-    }
+      "DateRange": "export interface DateRange {\n  /** Range start (YYYY-MM-DD). */\n  start: string\n  /** Range end (YYYY-MM-DD), on or after start. */\n  end: string\n}"
+    },
+    "native": "button"
   },
   "Dialog": {
     "props": [
       {
+        "name": "open",
+        "type": "boolean",
+        "required": true,
+        "description": "Whether the dialog is shown. Controlled - pair with onClose."
+      },
+      {
         "name": "title",
         "type": "string",
-        "required": false,
-        "default": "'Dialog title'",
+        "required": true,
         "description": "Dialog heading. Also the accessible name."
       },
       {
-        "name": "body",
+        "name": "children",
         "type": "ReactNode",
         "required": false,
-        "default": "'This is the dialog body. Provide context or a clear description of the action the user is about to take.'",
         "description": "Dialog content."
       },
       {
@@ -886,7 +1071,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "boolean",
         "required": false,
         "default": "true",
-        "description": "Show the header close affordance."
+        "description": "Show the header close button."
       },
       {
         "name": "hasActions",
@@ -910,24 +1095,10 @@ export const componentApi: Record<string, ComponentApi> = {
         "description": "Label for the dismissing action."
       },
       {
-        "name": "open",
-        "type": "boolean",
-        "required": false,
-        "default": "true",
-        "description": "Whether the dialog is shown. Controlled - pair with onClose."
-      },
-      {
-        "name": "embedded",
-        "type": "boolean",
-        "required": false,
-        "default": "false",
-        "description": "Render just the panel (no overlay) - used for documentation previews."
-      },
-      {
         "name": "onClose",
         "type": "() => void",
         "required": false,
-        "description": "Fired on the close button, the overlay, and Escape."
+        "description": "Fired on the close button, Cancel, the scrim, and Escape."
       },
       {
         "name": "onConfirm",
@@ -936,7 +1107,8 @@ export const componentApi: Record<string, ComponentApi> = {
         "description": "Fired when the confirming action is activated."
       }
     ],
-    "relatedTypes": {}
+    "relatedTypes": {},
+    "native": "div"
   },
   "Divider": {
     "props": [
@@ -945,7 +1117,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "'Horizontal' | 'Vertical'",
         "required": false,
         "default": "'Horizontal'",
-        "description": "Divider direction."
+        "description": "Divider direction. A vertical divider needs a flex row around it."
       },
       {
         "name": "label",
@@ -961,16 +1133,28 @@ export const componentApi: Record<string, ComponentApi> = {
         "description": "Surrounding margin."
       }
     ],
-    "relatedTypes": {}
+    "relatedTypes": {},
+    "native": "div"
   },
   "Drawer": {
     "props": [
       {
         "name": "open",
         "type": "boolean",
+        "required": true,
+        "description": "Whether the drawer is shown. Controlled - pair with onClose."
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "required": true,
+        "description": "Header title. Also the accessible name."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
         "required": false,
-        "default": "false",
-        "description": "Visibility."
+        "description": "Panel contents."
       },
       {
         "name": "side",
@@ -984,34 +1168,14 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "'Small' | 'Medium' | 'Large'",
         "required": false,
         "default": "'Medium'",
-        "description": "Panel width / height."
-      },
-      {
-        "name": "title",
-        "type": "string",
-        "required": false,
-        "default": "'Panel'",
-        "description": "Header title."
+        "description": "Panel width 320 / 400 / 560 (height, for Bottom)."
       },
       {
         "name": "hasCloseButton",
         "type": "boolean",
         "required": false,
         "default": "true",
-        "description": "Show the close affordance."
-      },
-      {
-        "name": "children",
-        "type": "ReactNode",
-        "required": false,
-        "description": "Panel contents."
-      },
-      {
-        "name": "embedded",
-        "type": "boolean",
-        "required": false,
-        "default": "false",
-        "description": "Render just the panel inline (no overlay/scrim) - used for documentation previews."
+        "description": "Show the header close button."
       },
       {
         "name": "onClose",
@@ -1020,30 +1184,29 @@ export const componentApi: Record<string, ComponentApi> = {
         "description": "Fired on the close button, the scrim, and Escape."
       }
     ],
-    "relatedTypes": {}
+    "relatedTypes": {},
+    "native": "div"
   },
   "EmptyState": {
     "props": [
+      {
+        "name": "title",
+        "type": "string",
+        "required": true,
+        "description": "Primary message, e.g. \"No assessments yet\"."
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "required": false,
+        "description": "Supporting explanation: why it is empty, or what to do next."
+      },
       {
         "name": "icon",
         "type": "string",
         "required": false,
         "default": "'inbox'",
         "description": "Material Symbols icon name."
-      },
-      {
-        "name": "title",
-        "type": "string",
-        "required": false,
-        "default": "'No results found'",
-        "description": "Primary message."
-      },
-      {
-        "name": "description",
-        "type": "string",
-        "required": false,
-        "default": "'Try adjusting your filters or search terms.'",
-        "description": "Supporting explanation."
       },
       {
         "name": "actionLabel",
@@ -1065,43 +1228,55 @@ export const componentApi: Record<string, ComponentApi> = {
         "description": "Overall scale."
       }
     ],
-    "relatedTypes": {}
+    "relatedTypes": {},
+    "native": "div"
   },
   "FileUpload": {
     "props": [
       {
         "name": "label",
         "type": "string",
-        "required": false,
-        "default": "'Upload files'",
-        "description": "Field label describing what to upload."
+        "required": true,
+        "description": "What to upload, e.g. \"Attachments\". The file input's accessible name."
       },
       {
         "name": "accept",
         "type": "string",
         "required": false,
-        "description": "Accepted MIME types / extensions."
+        "description": "Accepted MIME types / extensions, e.g. \"image/*,.pdf\". Applies to drops too."
       },
       {
         "name": "multiple",
         "type": "boolean",
         "required": false,
         "default": "false",
-        "description": "Allow multiple files."
-      },
-      {
-        "name": "state",
-        "type": "'Default' | 'Dragging' | 'Disabled' | 'Error'",
-        "required": false,
-        "default": "'Default'",
-        "description": "Forces a visual state for documentation. Omit for real interactivity."
+        "description": "Allow more than one file. A drop of several is cut to the first when false."
       },
       {
         "name": "helpText",
         "type": "string",
         "required": false,
-        "default": "'PNG, JPG or PDF up to 10MB'",
-        "description": "Constraint hint text."
+        "description": "Constraint hint, e.g. \"PNG, JPG or PDF up to 10MB\". Replaced by errorText when `error` is set."
+      },
+      {
+        "name": "errorText",
+        "type": "string",
+        "required": false,
+        "description": "Validation message, shown while `error` is true."
+      },
+      {
+        "name": "error",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Marks the zone invalid: red border and `aria-invalid`."
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Blocks interaction and dims the zone."
       },
       {
         "name": "onFiles",
@@ -1110,28 +1285,29 @@ export const componentApi: Record<string, ComponentApi> = {
         "description": "Fired with the selected files, from both drop and browse."
       }
     ],
-    "relatedTypes": {}
+    "relatedTypes": {},
+    "native": "input"
   },
   "FormField": {
     "props": [
       {
         "name": "label",
         "type": "string",
-        "required": false,
+        "required": true,
         "description": "Field label text."
       },
       {
         "name": "htmlFor",
         "type": "string",
         "required": false,
-        "description": "id of the wrapped control for label association."
+        "description": "Only needed to wrap a control that is not from this library. Inspera controls pick up the field's id, description and error state on their own."
       },
       {
         "name": "required",
         "type": "boolean",
         "required": false,
         "default": "false",
-        "description": "Show a required asterisk."
+        "description": "Show a required asterisk and mark the control required."
       },
       {
         "name": "helpText",
@@ -1143,7 +1319,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "name": "errorText",
         "type": "string",
         "required": false,
-        "description": "Error message; replaces help text when present."
+        "description": "Error message; replaces help text and marks the control invalid."
       },
       {
         "name": "children",
@@ -1152,7 +1328,8 @@ export const componentApi: Record<string, ComponentApi> = {
         "description": "The control this field wraps. Exactly one."
       }
     ],
-    "relatedTypes": {}
+    "relatedTypes": {},
+    "native": "div"
   },
   "Icon": {
     "props": [
@@ -1160,14 +1337,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "name": "name",
         "type": "string",
         "required": true,
-        "description": "Material Symbols ligature name, e.g. \"search\" or \"check_circle\"."
-      },
-      {
-        "name": "style",
-        "type": "'outlined' | 'rounded' | 'sharp'",
-        "required": false,
-        "default": "'outlined'",
-        "description": "Which Material Symbols face to use."
+        "description": "Material Symbols Outlined ligature name, e.g. \"search\" or \"check_circle\"."
       },
       {
         "name": "size",
@@ -1201,8 +1371,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "name": "opticalSize",
         "type": "20 | 24 | 40 | 48",
         "required": false,
-        "default": "24",
-        "description": "Optical size axis. Match to the rendered size."
+        "description": "Optical size axis. Follows `size` unless set."
       },
       {
         "name": "color",
@@ -1211,47 +1380,34 @@ export const componentApi: Record<string, ComponentApi> = {
         "description": "Icon colour. Defaults to currentColor so it inherits from text."
       },
       {
-        "name": "className",
+        "name": "label",
         "type": "string",
         "required": false,
-        "description": "Additional classes, merged with the Material Symbols class."
-      },
-      {
-        "name": "aria-label",
-        "type": "string",
-        "required": false,
-        "description": "Accessible name. Required when the icon carries meaning on its own."
-      },
-      {
-        "name": "aria-hidden",
-        "type": "boolean | 'true' | 'false'",
-        "required": false,
-        "description": "Hides the icon from assistive technology. Defaults to true unless aria-label is set."
+        "description": "Accessible name, for an icon that means something on its own. Without one the icon is decorative and hidden from assistive tech."
       }
     ],
-    "relatedTypes": {}
+    "relatedTypes": {},
+    "native": "span"
   },
   "Link": {
     "props": [
       {
+        "name": "href",
+        "type": "string",
+        "required": true,
+        "description": "Destination URL. Always a real one - use a Button for actions."
+      },
+      {
         "name": "children",
         "type": "ReactNode",
         "required": false,
-        "description": "Link text. Takes precedence over label."
+        "description": "Link text."
       },
       {
         "name": "label",
         "type": "string",
         "required": false,
-        "default": "'Learn more'",
         "description": "Link text, when not passing children."
-      },
-      {
-        "name": "href",
-        "type": "string",
-        "required": false,
-        "default": "'#'",
-        "description": "Destination URL. Always provide a real one."
       },
       {
         "name": "intent",
@@ -1279,7 +1435,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "boolean",
         "required": false,
         "default": "false",
-        "description": "Open in a new tab with an icon."
+        "description": "Open in a new tab, with an icon and a spoken \"opens in a new tab\"."
       },
       {
         "name": "disabled",
@@ -1302,20 +1458,20 @@ export const componentApi: Record<string, ComponentApi> = {
       },
       {
         "name": "onClick",
-        "type": "(e: React.MouseEvent) => void",
+        "type": "(e: MouseEvent<HTMLAnchorElement>) => void",
         "required": false,
-        "description": "Fired on activation. Use for routing, not to replace href."
+        "description": "Fired on activation. Use for client-side routing, not to replace href."
       }
     ],
-    "relatedTypes": {}
+    "relatedTypes": {},
+    "native": "a"
   },
   "List": {
     "props": [
       {
         "name": "items",
         "type": "ListItem[]",
-        "required": false,
-        "default": "defaultItems",
+        "required": true,
         "description": "List rows."
       },
       {
@@ -1347,77 +1503,74 @@ export const componentApi: Record<string, ComponentApi> = {
       }
     ],
     "relatedTypes": {
-      "ListItem": "export interface ListItem {\n  primary: string\n  secondary?: string\n  leading?: ReactNode\n  trailing?: ReactNode\n}"
-    }
+      "ListItem": "export interface ListItem {\n  /** Stable key. Defaults to the row position. */\n  id?: string\n  primary: string\n  secondary?: string\n  /** Material Symbols name shown before the text. */\n  leadingIcon?: string\n  /** Material Symbols name shown after the text, e.g. `chevron_right`. */\n  trailingIcon?: string\n  /** Any element before the text - an Avatar, a Checkbox. */\n  leading?: ReactNode\n  /** Any element after the text - a Badge, a count. Strings render as text. */\n  trailing?: ReactNode\n}"
+    },
+    "native": "ul"
   },
   "Menu": {
     "props": [
       {
         "name": "label",
         "type": "string",
-        "required": false,
-        "default": "'Actions'",
-        "description": "Trigger label."
+        "required": true,
+        "description": "Trigger text. Pass `aria-label` too when the text alone is ambiguous, e.g. per-row \"Actions\"."
       },
       {
         "name": "items",
         "type": "MenuItem[]",
-        "required": false,
-        "default": "sampleItems",
-        "description": "Menu items."
+        "required": true,
+        "description": "Menu items, in order."
       },
       {
         "name": "placement",
-        "type": "'Bottom Start' | 'Bottom End'",
+        "type": "'BottomStart' | 'BottomEnd'",
         "required": false,
-        "default": "'Bottom Start'",
-        "description": "Alignment to trigger."
+        "default": "'BottomStart'",
+        "description": "Aligns the menu to the trigger's start or end edge."
       },
       {
         "name": "open",
         "type": "boolean",
         "required": false,
-        "description": "Controlled open state. Leave unset to let the menu manage itself."
+        "description": "Open state. Controlled - pair with onOpenChange."
       },
       {
         "name": "defaultOpen",
         "type": "boolean",
         "required": false,
         "default": "false",
-        "description": "Open on mount."
+        "description": "Open on mount, when uncontrolled."
       },
       {
-        "name": "forceVisible",
-        "type": "boolean",
+        "name": "onOpenChange",
+        "type": "(open: boolean) => void",
         "required": false,
-        "default": "false",
-        "description": "Always render the open menu, for documentation."
+        "description": "Fired when the menu opens or closes."
       },
       {
         "name": "onSelect",
-        "type": "(label: string) => void",
+        "type": "(value: string, item: MenuItem) => void",
         "required": false,
-        "description": "Fired with the label of the chosen item."
+        "description": "Fired with the chosen item's value (its label, unless set)."
       }
     ],
     "relatedTypes": {
-      "MenuItem": "export interface MenuItem {\n  label: string\n  icon?: string\n  danger?: boolean\n  disabled?: boolean\n  divider?: boolean\n}"
-    }
+      "MenuItem": "export interface MenuItem {\n  label: string\n  /** Passed to onSelect. Defaults to the label. */\n  value?: string\n  icon?: string\n  /** Red text, for destructive actions. Put these last, after a divider. */\n  danger?: boolean\n  disabled?: boolean\n  /** A separator line instead of an item; `label` is ignored. */\n  divider?: boolean\n  /** Fired when this item is chosen, before the menu-level onSelect. */\n  onSelect?: () => void\n}"
+    },
+    "native": "button"
   },
   "NumberInput": {
     "props": [
       {
         "name": "label",
         "type": "string",
-        "required": false,
-        "default": "'Amount'",
-        "description": "Field label."
+        "required": true,
+        "description": "Field label. Always required: it is the accessible name even when hidden."
       },
       {
         "name": "placeholder",
         "type": "string",
         "required": false,
-        "default": "'0'",
         "description": "Hint shown when empty."
       },
       {
@@ -1425,6 +1578,18 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "number",
         "required": false,
         "description": "Current value. Controlled - pair with onChange."
+      },
+      {
+        "name": "defaultValue",
+        "type": "number",
+        "required": false,
+        "description": "Starting value when uncontrolled."
+      },
+      {
+        "name": "onChange",
+        "type": "(value: number) => void",
+        "required": false,
+        "description": "Fired with each committed value - valid, and within min/max."
       },
       {
         "name": "min",
@@ -1446,13 +1611,6 @@ export const componentApi: Record<string, ComponentApi> = {
         "description": "Increment applied by the steppers and arrow keys."
       },
       {
-        "name": "state",
-        "type": "'Default' | 'Focused' | 'Disabled' | 'Error' | 'ReadOnly'",
-        "required": false,
-        "default": "'Default'",
-        "description": "Freezes a visual state so documentation can show it without a pointer. `Focused` is presentation-only. `Error`, `Disabled` and `ReadOnly` are real application state."
-      },
-      {
         "name": "size",
         "type": "'Small' | 'Medium'",
         "required": false,
@@ -1464,7 +1622,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "boolean",
         "required": false,
         "default": "true",
-        "description": "Render the field label."
+        "description": "Render the visible label. When false, the label becomes `aria-label`."
       },
       {
         "name": "suffix",
@@ -1476,25 +1634,47 @@ export const componentApi: Record<string, ComponentApi> = {
         "name": "helpText",
         "type": "string",
         "required": false,
-        "description": "Helper text."
+        "description": "Guidance shown below the field. Replaced by errorText when `error` is set."
       },
       {
         "name": "errorText",
         "type": "string",
         "required": false,
-        "description": "Error message, shown when state is Error."
+        "description": "Validation message, shown while `error` is true."
       },
       {
-        "name": "onChange",
-        "type": "(value: number) => void",
+        "name": "error",
+        "type": "boolean",
         "required": false,
-        "description": "Fired with the new numeric value."
+        "default": "false",
+        "description": "Marks the field invalid: red border, `aria-invalid`, errorText shown."
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Blocks editing and dims the field."
+      },
+      {
+        "name": "readOnly",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Shows the value without allowing edits."
       }
     ],
-    "relatedTypes": {}
+    "relatedTypes": {},
+    "native": "input"
   },
   "OtpInput": {
     "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": "Names the code, e.g. \"Verification code\". Required: it labels the group."
+      },
       {
         "name": "length",
         "type": "number",
@@ -1506,39 +1686,66 @@ export const componentApi: Record<string, ComponentApi> = {
         "name": "value",
         "type": "string",
         "required": false,
-        "description": "Current code value."
+        "description": "Current code. Controlled - pair with onChange."
       },
       {
-        "name": "state",
-        "type": "'Default' | 'Focused' | 'Error' | 'Disabled'",
+        "name": "defaultValue",
+        "type": "string",
         "required": false,
-        "default": "'Default'",
-        "description": "Freezes a visual state so documentation can show it without a pointer. `Focused` is presentation-only - leave it unset in application code, where CSS drives it from the real pointer and keyboard. `Error` and `Disabled` are real application state and belong in your code."
+        "default": "''",
+        "description": "Starting code when uncontrolled."
       },
       {
         "name": "onChange",
         "type": "(value: string) => void",
         "required": false,
-        "description": "Fired with the full code as digits are entered or pasted."
+        "description": "Fired with the digits entered so far; complete when its length equals `length`."
+      },
+      {
+        "name": "showLabel",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Render the visible label above the boxes."
+      },
+      {
+        "name": "error",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Marks every box invalid: red border and `aria-invalid`."
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Blocks input and dims the boxes."
       }
     ],
-    "relatedTypes": {}
+    "relatedTypes": {},
+    "native": "div"
   },
   "Pagination": {
     "props": [
       {
+        "name": "pageCount",
+        "type": "number",
+        "required": true,
+        "description": "Total number of pages."
+      },
+      {
         "name": "page",
         "type": "number",
         "required": false,
-        "default": "1",
-        "description": "Current page (1-based)."
+        "description": "Current page (1-based). Controlled - pair with onChange."
       },
       {
-        "name": "pageCount",
+        "name": "defaultPage",
         "type": "number",
         "required": false,
-        "default": "10",
-        "description": "Total number of pages."
+        "default": "1",
+        "description": "Starting page when uncontrolled."
       },
       {
         "name": "siblingCount",
@@ -1566,58 +1773,57 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "(page: number) => void",
         "required": false,
         "description": "Fired with the requested page number, 1-based."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "default": "'Pagination'",
+        "description": "Names the navigation landmark. Give each pager on a page its own."
       }
     ],
-    "relatedTypes": {}
+    "relatedTypes": {},
+    "native": "nav"
   },
   "Popover": {
     "props": [
       {
         "name": "trigger",
+        "type": "ReactElement",
+        "required": true,
+        "description": "The element that toggles the popover - usually a Button."
+      },
+      {
+        "name": "content",
         "type": "ReactNode",
-        "required": false,
-        "description": "Element that toggles the popover."
+        "required": true,
+        "description": "Popover body. May hold interactive content."
       },
       {
         "name": "title",
         "type": "string",
         "required": false,
-        "default": "'Popover title'",
-        "description": "Optional panel heading."
-      },
-      {
-        "name": "content",
-        "type": "ReactNode",
-        "required": false,
-        "default": "'Popover content with interactive elements.'",
-        "description": "Popover body content."
+        "description": "Optional panel heading; also the panel's accessible name."
       },
       {
         "name": "placement",
         "type": "'Top' | 'Bottom' | 'Left' | 'Right'",
         "required": false,
         "default": "'Bottom'",
-        "description": "Position relative to the trigger."
+        "description": "Preferred side. It flips when there is no room."
       },
       {
         "name": "open",
         "type": "boolean",
         "required": false,
-        "description": "Controlled open state. Leave unset to let the popover manage itself."
+        "description": "Open state. Controlled - pair with onOpenChange."
       },
       {
         "name": "defaultOpen",
         "type": "boolean",
         "required": false,
         "default": "false",
-        "description": "Open on mount."
-      },
-      {
-        "name": "forceVisible",
-        "type": "boolean",
-        "required": false,
-        "default": "false",
-        "description": "Keep the panel visible regardless of state - used for documentation."
+        "description": "Open on mount, when uncontrolled."
       },
       {
         "name": "onOpenChange",
@@ -1626,10 +1832,17 @@ export const componentApi: Record<string, ComponentApi> = {
         "description": "Fired when the popover opens or closes."
       }
     ],
-    "relatedTypes": {}
+    "relatedTypes": {},
+    "native": "div"
   },
   "Progress": {
     "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": "What is progressing, e.g. \"Uploading attachments\". The accessible name."
+      },
       {
         "name": "variant",
         "type": "'Linear' | 'Circular'",
@@ -1641,8 +1854,8 @@ export const componentApi: Record<string, ComponentApi> = {
         "name": "value",
         "type": "number",
         "required": false,
-        "default": "60",
-        "description": "Completion percentage 0-100. Ignored when indeterminate."
+        "default": "0",
+        "description": "Completion percentage 0-100. Required unless indeterminate."
       },
       {
         "name": "indeterminate",
@@ -1671,87 +1884,106 @@ export const componentApi: Record<string, ComponentApi> = {
         "required": false,
         "default": "false",
         "description": "Render the percentage."
-      },
-      {
-        "name": "label",
-        "type": "string",
-        "required": false,
-        "default": "'Progress'",
-        "description": "Accessible name. Say what is progressing, not just \"Progress\"."
       }
     ],
-    "relatedTypes": {}
+    "relatedTypes": {},
+    "native": "span"
   },
   "RadioButton": {
     "props": [
       {
         "name": "label",
         "type": "string",
-        "required": false,
-        "default": "'Radio option'",
-        "description": "Text beside the control. Always provide one."
+        "required": true,
+        "description": "Text beside the control. Required: it is the accessible name even when hidden."
       },
       {
         "name": "selected",
         "type": "boolean",
         "required": false,
-        "description": "Selected state."
+        "description": "Selected state. Controlled - pair with onChange."
       },
       {
-        "name": "name",
-        "type": "string",
-        "required": false,
-        "description": "Shared form name. Every radio in a group must use the same value. Left unset, each radio gets its own generated name and stands alone - this used to default to the literal `\"radio\"`, which silently put every unrelated RadioButton on a page into one mutually exclusive group."
-      },
-      {
-        "name": "state",
-        "type": "'Default' | 'Hover' | 'Focused' | 'Pressed' | 'Disabled' | 'Error'",
-        "required": false,
-        "default": "'Default'",
-        "description": "Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Pressed` are presentation-only - leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Error` and `Disabled` are real application state and belong in your code."
-      },
-      {
-        "name": "withLabel",
+        "name": "defaultSelected",
         "type": "boolean",
         "required": false,
-        "default": "true",
-        "description": "Render the label."
+        "default": "false",
+        "description": "Starting selected state when uncontrolled."
       },
       {
         "name": "onChange",
         "type": "(selected: boolean) => void",
         "required": false,
         "description": "Fired when this option becomes selected."
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "required": false,
+        "description": "Shared form name. Every radio in a group must use the same value. Left unset, each radio gets its own generated name and stands alone."
+      },
+      {
+        "name": "withLabel",
+        "type": "boolean",
+        "required": false,
+        "default": "true",
+        "description": "Render the label text. When false, the label becomes `aria-label`."
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Blocks interaction and dims the control."
+      },
+      {
+        "name": "error",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Marks the control invalid: red ring and `aria-invalid`."
       }
     ],
-    "relatedTypes": {}
+    "relatedTypes": {},
+    "native": "input"
   },
   "RadioGroup": {
     "props": [
       {
         "name": "label",
         "type": "string",
-        "required": false,
+        "required": true,
         "description": "Group label, announced as the radiogroup name."
-      },
-      {
-        "name": "name",
-        "type": "string",
-        "required": false,
-        "description": "Shared input name for the group."
       },
       {
         "name": "options",
         "type": "RadioOption[]",
-        "required": false,
-        "default": "DEFAULT_OPTIONS",
+        "required": true,
         "description": "Radio options."
       },
       {
         "name": "value",
         "type": "string",
         "required": false,
-        "description": "Selected option value."
+        "description": "Selected option value. Controlled - pair with onChange."
+      },
+      {
+        "name": "defaultValue",
+        "type": "string",
+        "required": false,
+        "description": "Starting selection when uncontrolled."
+      },
+      {
+        "name": "onChange",
+        "type": "(value: string) => void",
+        "required": false,
+        "description": "Fired with the newly selected value."
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "required": false,
+        "description": "Shared input name for the group. Generated when unset."
       },
       {
         "name": "orientation",
@@ -1761,30 +1993,63 @@ export const componentApi: Record<string, ComponentApi> = {
         "description": "Layout direction."
       },
       {
-        "name": "state",
-        "type": "'Default' | 'Disabled' | 'Error'",
+        "name": "helpText",
+        "type": "string",
         "required": false,
-        "default": "'Default'",
-        "description": "Forces a visual state for documentation. Omit for real interactivity."
+        "description": "Guidance shown below the options. Replaced by errorText when `error` is set."
       },
       {
-        "name": "onChange",
-        "type": "(value: string) => void",
+        "name": "errorText",
+        "type": "string",
         "required": false,
-        "description": "Fired with the newly selected value."
+        "description": "Validation message, shown while `error` is true."
+      },
+      {
+        "name": "error",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Marks the group invalid and shows errorText."
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Disables every option."
       }
     ],
     "relatedTypes": {
       "RadioOption": "export interface RadioOption {\n  label: string\n  value: string\n}"
-    }
+    },
+    "native": "div"
   },
   "Rating": {
     "props": [
       {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": "What is being rated, e.g. \"Question difficulty\". The accessible name; not shown."
+      },
+      {
         "name": "value",
         "type": "number",
         "required": false,
-        "description": "Current rating. Controlled - pair with onChange. Omit it and the component tracks its own, the same contract Checkbox and Toggle use."
+        "description": "Current rating. Controlled - pair with onChange."
+      },
+      {
+        "name": "defaultValue",
+        "type": "number",
+        "required": false,
+        "default": "0",
+        "description": "Starting rating when uncontrolled."
+      },
+      {
+        "name": "onChange",
+        "type": "(value: number) => void",
+        "required": false,
+        "description": "Fired with the chosen rating; 0 when cleared. Not fired when readOnly."
       },
       {
         "name": "max",
@@ -1805,38 +2070,50 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "boolean",
         "required": false,
         "default": "false",
-        "description": "Display-only mode."
+        "description": "Display-only: announced as \"4 of 5 stars\", not as a set of choices."
       },
       {
         "name": "showValue",
         "type": "boolean",
         "required": false,
         "default": "false",
-        "description": "Show numeric value."
-      },
-      {
-        "name": "onChange",
-        "type": "(value: number) => void",
-        "required": false,
-        "description": "Fired with the chosen rating. Not fired when readOnly."
+        "description": "Show the numeric value beside the stars."
       }
     ],
-    "relatedTypes": {}
+    "relatedTypes": {},
+    "native": "div"
   },
   "SegmentedControl": {
     "props": [
       {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": "Names the group for assistive tech, e.g. \"Date range\". Not shown."
+      },
+      {
         "name": "items",
-        "type": "string[]",
-        "required": false,
-        "default": "['Day', 'Week', 'Month']",
-        "description": "Segment labels."
+        "type": "(string | SegmentedControlItem)[]",
+        "required": true,
+        "description": "Segments, in order. Plain strings when value and label match."
       },
       {
         "name": "value",
-        "type": "number",
+        "type": "string",
         "required": false,
-        "description": "Active segment index."
+        "description": "Selected segment value. Controlled - pair with onChange."
+      },
+      {
+        "name": "defaultValue",
+        "type": "string",
+        "required": false,
+        "description": "Starting segment when uncontrolled. Defaults to the first."
+      },
+      {
+        "name": "onChange",
+        "type": "(value: string) => void",
+        "required": false,
+        "description": "Fired with the chosen segment's value."
       },
       {
         "name": "size",
@@ -1853,22 +2130,31 @@ export const componentApi: Record<string, ComponentApi> = {
         "description": "Stretch to fill the row."
       },
       {
-        "name": "onChange",
-        "type": "(index: number) => void",
+        "name": "disabled",
+        "type": "boolean",
         "required": false,
-        "description": "Fired with the index of the chosen segment."
+        "default": "false",
+        "description": "Blocks interaction and dims the control."
       }
     ],
-    "relatedTypes": {}
+    "relatedTypes": {
+      "SegmentedControlItem": "export interface SegmentedControlItem {\n  value: string\n  /** Shown text. Defaults to `value`. */\n  label?: string\n}"
+    },
+    "native": "div"
   },
   "Select": {
     "props": [
       {
         "name": "label",
         "type": "string",
-        "required": false,
-        "default": "'Country'",
-        "description": "Render the label."
+        "required": true,
+        "description": "Field label. Always required: it is the accessible name even when hidden."
+      },
+      {
+        "name": "options",
+        "type": "(string | SelectOption)[]",
+        "required": true,
+        "description": "The choices, in display order. Plain strings when value and label match."
       },
       {
         "name": "placeholder",
@@ -1878,54 +2164,75 @@ export const componentApi: Record<string, ComponentApi> = {
         "description": "Shown when nothing is selected. Not a substitute for the label."
       },
       {
-        "name": "options",
-        "type": "string[]",
-        "required": false,
-        "default": "defaultOptions",
-        "description": "The selectable values, in the order they should appear."
-      },
-      {
         "name": "value",
         "type": "string",
         "required": false,
         "description": "Selected value. Controlled - pair with onChange."
       },
       {
-        "name": "state",
-        "type": "'Default' | 'Hover' | 'Focused' | 'Disabled' | 'Error' | 'Open'",
+        "name": "defaultValue",
+        "type": "string",
         "required": false,
-        "default": "'Default'",
-        "description": "Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Open` are presentation-only - leave them unset in application code, where CSS and the component's own state drive them. `Error` and `Disabled` are real application state and belong in your code."
-      },
-      {
-        "name": "widthMode",
-        "type": "'Fixed' | 'Content Adaptable'",
-        "required": false,
-        "default": "'Fixed'",
-        "description": "Trigger sizing."
-      },
-      {
-        "name": "showLabel",
-        "type": "boolean",
-        "required": false,
-        "default": "true",
-        "description": "Render the visible label. Hiding it still requires an accessible name."
-      },
-      {
-        "name": "search",
-        "type": "boolean",
-        "required": false,
-        "default": "false",
-        "description": "Filterable option list."
+        "description": "Starting value when uncontrolled."
       },
       {
         "name": "onChange",
         "type": "(value: string) => void",
         "required": false,
         "description": "Fired with the selected value."
+      },
+      {
+        "name": "widthMode",
+        "type": "'Fixed' | 'Hug'",
+        "required": false,
+        "default": "'Fixed'",
+        "description": "`Fixed` is 220px wide; `Hug` fits the selected text."
+      },
+      {
+        "name": "showLabel",
+        "type": "boolean",
+        "required": false,
+        "default": "true",
+        "description": "Render the visible label. When false, the label becomes `aria-label`."
+      },
+      {
+        "name": "search",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Adds a filter box at the top of the list."
+      },
+      {
+        "name": "helpText",
+        "type": "string",
+        "required": false,
+        "description": "Guidance shown below the field. Replaced by errorText when `error` is set."
+      },
+      {
+        "name": "errorText",
+        "type": "string",
+        "required": false,
+        "description": "Validation message, shown while `error` is true."
+      },
+      {
+        "name": "error",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Marks the field invalid: red border, `aria-invalid`, errorText shown."
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Blocks interaction and dims the field."
       }
     ],
-    "relatedTypes": {}
+    "relatedTypes": {
+      "SelectOption": "export interface SelectOption {\n  value: string\n  /** Shown text. Defaults to `value`. */\n  label?: string\n}"
+    },
+    "native": "div"
   },
   "Skeleton": {
     "props": [
@@ -1962,16 +2269,16 @@ export const componentApi: Record<string, ComponentApi> = {
         "description": "Corner radius override. Match the shape being stood in for."
       }
     ],
-    "relatedTypes": {}
+    "relatedTypes": {},
+    "native": "span"
   },
   "Slider": {
     "props": [
       {
         "name": "label",
         "type": "string",
-        "required": false,
-        "default": "'Value'",
-        "description": "Field label describing what is being adjusted."
+        "required": true,
+        "description": "What is being adjusted. Required: it is the accessible name even when hidden."
       },
       {
         "name": "min",
@@ -1988,12 +2295,6 @@ export const componentApi: Record<string, ComponentApi> = {
         "description": "Maximum value."
       },
       {
-        "name": "value",
-        "type": "number",
-        "required": false,
-        "description": "Current value. Controlled - pair with onChange."
-      },
-      {
         "name": "step",
         "type": "number",
         "required": false,
@@ -2001,11 +2302,28 @@ export const componentApi: Record<string, ComponentApi> = {
         "description": "Increment granularity."
       },
       {
-        "name": "state",
-        "type": "'Default' | 'Focused' | 'Disabled'",
+        "name": "value",
+        "type": "number",
         "required": false,
-        "default": "'Default'",
-        "description": "Freezes a visual state so documentation can show it without a pointer. `Focused` is presentation-only - leave it unset in application code, where CSS drives it from the real pointer and keyboard. `Disabled` is real application state and belongs in your code."
+        "description": "Current value. Controlled - pair with onChange."
+      },
+      {
+        "name": "defaultValue",
+        "type": "number",
+        "required": false,
+        "description": "Starting value when uncontrolled. Defaults to the midpoint."
+      },
+      {
+        "name": "onChange",
+        "type": "(value: number) => void",
+        "required": false,
+        "description": "Fired as the value changes, by drag or arrow key."
+      },
+      {
+        "name": "formatValue",
+        "type": "(value: number) => string",
+        "required": false,
+        "description": "Formats the shown value and what assistive tech announces, e.g. `(v) => `${v}%``."
       },
       {
         "name": "showValue",
@@ -2019,24 +2337,25 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "boolean",
         "required": false,
         "default": "true",
-        "description": "Show the field label."
+        "description": "Render the visible label. When false, the label becomes `aria-label`."
       },
       {
-        "name": "onChange",
-        "type": "(value: number) => void",
+        "name": "disabled",
+        "type": "boolean",
         "required": false,
-        "description": "Fired as the value changes, by drag or arrow key."
+        "default": "false",
+        "description": "Blocks interaction and dims the control."
       }
     ],
-    "relatedTypes": {}
+    "relatedTypes": {},
+    "native": "input"
   },
   "Snackbar": {
     "props": [
       {
         "name": "message",
         "type": "string",
-        "required": false,
-        "default": "'Assessment saved successfully.'",
+        "required": true,
         "description": "What happened. One short sentence."
       },
       {
@@ -2047,25 +2366,10 @@ export const componentApi: Record<string, ComponentApi> = {
         "description": "Accent icon color."
       },
       {
-        "name": "hasAction",
-        "type": "boolean",
-        "required": false,
-        "default": "false",
-        "description": "Show an inline action (e.g. Undo)."
-      },
-      {
-        "name": "hasClose",
-        "type": "boolean",
-        "required": false,
-        "default": "true",
-        "description": "Show the dismiss button."
-      },
-      {
         "name": "actionLabel",
         "type": "string",
         "required": false,
-        "default": "'Undo'",
-        "description": "Label for the inline action, typically \"Undo\"."
+        "description": "Label for an inline action, typically \"Undo\". Shown when set."
       },
       {
         "name": "onAction",
@@ -2074,13 +2378,21 @@ export const componentApi: Record<string, ComponentApi> = {
         "description": "Fired when the inline action is activated."
       },
       {
+        "name": "dismissible",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Show a close button. Pair with onClose."
+      },
+      {
         "name": "onClose",
         "type": "() => void",
         "required": false,
-        "description": "Fired when dismissed."
+        "description": "Fired when the close button is activated."
       }
     ],
-    "relatedTypes": {}
+    "relatedTypes": {},
+    "native": "div"
   },
   "Spinner": {
     "props": [
@@ -2103,10 +2415,11 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "string",
         "required": false,
         "default": "'Loading'",
-        "description": "Accessible label."
+        "description": "What is loading, announced to screen readers."
       }
     ],
-    "relatedTypes": {}
+    "relatedTypes": {},
+    "native": "span"
   },
   "Stat": {
     "props": [
@@ -2114,29 +2427,26 @@ export const componentApi: Record<string, ComponentApi> = {
         "name": "label",
         "type": "string",
         "required": true,
-        "default": "'Average score'",
         "description": "Metric name."
       },
       {
         "name": "value",
         "type": "string | number",
         "required": true,
-        "default": "'84%'",
         "description": "Metric value."
       },
       {
         "name": "delta",
         "type": "string",
         "required": false,
-        "default": "'+4.2%'",
-        "description": "Change indicator text."
+        "description": "Change indicator text, e.g. \"+8.2% vs last week\". Omit when there is no comparison."
       },
       {
         "name": "deltaIntent",
-        "type": "'up' | 'down' | 'neutral'",
+        "type": "'Up' | 'Down' | 'Neutral'",
         "required": false,
-        "default": "'up'",
-        "description": "Trend direction / color."
+        "default": "'Neutral'",
+        "description": "Trend direction: sets the arrow, the colour and what is announced."
       },
       {
         "name": "icon",
@@ -2151,23 +2461,23 @@ export const componentApi: Record<string, ComponentApi> = {
         "description": "Optional context below the value, such as the comparison period."
       }
     ],
-    "relatedTypes": {}
+    "relatedTypes": {},
+    "native": "div"
   },
   "Stepper": {
     "props": [
       {
         "name": "steps",
         "type": "Step[]",
-        "required": false,
-        "default": "defaultSteps",
+        "required": true,
         "description": "Ordered steps."
       },
       {
         "name": "activeStep",
         "type": "number",
         "required": false,
-        "default": "1",
-        "description": "Zero-based index of the current step."
+        "default": "0",
+        "description": "Zero-based index of the current step. Steps before it show as completed."
       },
       {
         "name": "orientation",
@@ -2186,23 +2496,28 @@ export const componentApi: Record<string, ComponentApi> = {
     ],
     "relatedTypes": {
       "Step": "export interface Step {\n  label: string\n  description?: string\n}"
-    }
+    },
+    "native": "ol"
   },
   "Table": {
     "props": [
       {
         "name": "columns",
         "type": "TableColumn[]",
-        "required": false,
-        "default": "defaultColumns",
+        "required": true,
         "description": "Column definitions."
       },
       {
         "name": "rows",
-        "type": "Record<string, ReactNode>[]",
-        "required": false,
-        "default": "defaultRows",
+        "type": "TableRow[]",
+        "required": true,
         "description": "Row data keyed by column."
+      },
+      {
+        "name": "getRowId",
+        "type": "(row: TableRow, index: number) => string",
+        "required": false,
+        "description": "Stable id per row, for selection and keys. Defaults to the row's position."
       },
       {
         "name": "size",
@@ -2230,7 +2545,26 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "boolean",
         "required": false,
         "default": "false",
-        "description": "Add a row selection column."
+        "description": "Add a selection column with a select-all box."
+      },
+      {
+        "name": "selectedIds",
+        "type": "string[]",
+        "required": false,
+        "description": "Selected row ids. Controlled - pair with onSelectionChange."
+      },
+      {
+        "name": "defaultSelectedIds",
+        "type": "string[]",
+        "required": false,
+        "default": "[]",
+        "description": "Starting selection when uncontrolled."
+      },
+      {
+        "name": "onSelectionChange",
+        "type": "(ids: string[]) => void",
+        "required": false,
+        "description": "Fired with every selected id after any change."
       },
       {
         "name": "caption",
@@ -2240,26 +2574,27 @@ export const componentApi: Record<string, ComponentApi> = {
       },
       {
         "name": "onRowClick",
-        "type": "(row: Record<string, ReactNode>, index: number) => void",
+        "type": "(row: TableRow, index: number) => void",
         "required": false,
-        "description": "Fired with the row data and its index."
+        "description": "Makes rows clickable and keyboard-operable (Enter / Space)."
       }
     ],
     "relatedTypes": {
-      "TableColumn": "export interface TableColumn {\n  key: string\n  header: string\n  align?: 'left' | 'right' | 'center'\n  width?: string | number\n}"
-    }
+      "TableColumn": "export interface TableColumn {\n  key: string\n  header: string\n  align?: 'left' | 'right' | 'center'\n  width?: string | number\n}",
+      "TableRow": "export type TableRow = Record<string, ReactNode>"
+    },
+    "native": "table"
   },
   "Tabs": {
     "props": [
       {
         "name": "items",
         "type": "TabItem[]",
-        "required": false,
-        "default": "defaultItems",
+        "required": true,
         "description": "The tabs, in order."
       },
       {
-        "name": "style",
+        "name": "variant",
         "type": "'Underline' | 'Contained'",
         "required": false,
         "default": "'Underline'",
@@ -2281,20 +2616,33 @@ export const componentApi: Record<string, ComponentApi> = {
       },
       {
         "name": "value",
-        "type": "number",
+        "type": "string",
         "required": false,
-        "description": "Index of the active tab. Controlled - pair with onChange."
+        "description": "Active tab's value. Controlled - pair with onChange."
+      },
+      {
+        "name": "defaultValue",
+        "type": "string",
+        "required": false,
+        "description": "Starting tab when uncontrolled. Defaults to the first."
       },
       {
         "name": "onChange",
-        "type": "(index: number) => void",
+        "type": "(value: string) => void",
         "required": false,
-        "description": "Fired with the index of the newly selected tab."
+        "description": "Fired with the newly selected tab's value."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "description": "Names the tab list for assistive tech, when no heading does."
       }
     ],
     "relatedTypes": {
-      "TabItem": "export interface TabItem {\n  label: string\n  icon?: string\n}"
-    }
+      "TabItem": "export interface TabItem {\n  label: string\n  /** Identifies the tab in value/onChange. Defaults to the label. */\n  value?: string\n  icon?: string\n  /** The tab's panel. When items carry content, Tabs renders the panels too. */\n  content?: ReactNode\n}"
+    },
+    "native": "div"
   },
   "Tag": {
     "props": [
@@ -2323,7 +2671,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "boolean",
         "required": false,
         "default": "false",
-        "description": "Show a remove affordance."
+        "description": "Show a remove button. Pair with onRemove."
       },
       {
         "name": "leadingIcon",
@@ -2335,31 +2683,30 @@ export const componentApi: Record<string, ComponentApi> = {
         "name": "onRemove",
         "type": "() => void",
         "required": false,
-        "description": "Fired when the remove control is activated. Set removable as well."
+        "description": "Fired when the remove button is activated."
       },
       {
         "name": "onClick",
-        "type": "() => void",
+        "type": "MouseEventHandler<HTMLButtonElement>",
         "required": false,
-        "description": "Fired when the tag itself is activated."
+        "description": "Makes the tag text itself a button."
       }
     ],
-    "relatedTypes": {}
+    "relatedTypes": {},
+    "native": "span"
   },
   "TextInput": {
     "props": [
       {
         "name": "label",
         "type": "string",
-        "required": false,
-        "default": "'Label'",
-        "description": "Show the field label."
+        "required": true,
+        "description": "Field label. Always required: it is the accessible name even when hidden."
       },
       {
         "name": "placeholder",
         "type": "string",
         "required": false,
-        "default": "'Placeholder text'",
         "description": "Hint shown when empty. Not a substitute for the label."
       },
       {
@@ -2369,11 +2716,17 @@ export const componentApi: Record<string, ComponentApi> = {
         "description": "Current value. Controlled - pair with onChange."
       },
       {
-        "name": "state",
-        "type": "'Default' | 'Hover' | 'Focused' | 'Disabled' | 'Error' | 'Filled' | 'ReadOnly'",
+        "name": "defaultValue",
+        "type": "string",
         "required": false,
-        "default": "'Default'",
-        "description": "Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Filled` are presentation-only - leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Error`, `Disabled` and `ReadOnly` are real application state and belong in your code."
+        "default": "''",
+        "description": "Starting value when uncontrolled."
+      },
+      {
+        "name": "onChange",
+        "type": "(value: string) => void",
+        "required": false,
+        "description": "Fired with the new value on every keystroke."
       },
       {
         "name": "size",
@@ -2386,56 +2739,70 @@ export const componentApi: Record<string, ComponentApi> = {
         "name": "leadingIcon",
         "type": "string",
         "required": false,
-        "description": "Show a leading icon."
+        "description": "Material Symbols name shown before the text."
       },
       {
         "name": "trailingIcon",
         "type": "string",
         "required": false,
-        "description": "Show a trailing icon."
+        "description": "Material Symbols name shown after the text. Decorative only."
       },
       {
         "name": "showLabel",
         "type": "boolean",
         "required": false,
         "default": "true",
-        "description": "Render the visible label. Hiding it still requires an accessible name."
+        "description": "Render the visible label. When false, the label becomes `aria-label`."
       },
       {
         "name": "helpText",
         "type": "string",
         "required": false,
-        "description": "Show helper text."
+        "description": "Guidance shown below the field. Replaced by errorText when `error` is set."
       },
       {
         "name": "errorText",
         "type": "string",
         "required": false,
-        "description": "Show error message."
+        "description": "Validation message, shown while `error` is true."
       },
       {
-        "name": "onChange",
-        "type": "(value: string) => void",
+        "name": "error",
+        "type": "boolean",
         "required": false,
-        "description": "Fired with the new value on every keystroke."
+        "default": "false",
+        "description": "Marks the field invalid: red border, `aria-invalid`, errorText shown."
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Blocks editing and dims the field."
+      },
+      {
+        "name": "readOnly",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Shows the value without allowing edits."
       }
     ],
-    "relatedTypes": {}
+    "relatedTypes": {},
+    "native": "input"
   },
   "Textarea": {
     "props": [
       {
         "name": "label",
         "type": "string",
-        "required": false,
-        "default": "'Description'",
-        "description": "Field label."
+        "required": true,
+        "description": "Field label. Always required: it is the accessible name even when hidden."
       },
       {
         "name": "placeholder",
         "type": "string",
         "required": false,
-        "default": "'Placeholder text'",
         "description": "Hint shown when empty. Not a substitute for the label."
       },
       {
@@ -2443,6 +2810,19 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "string",
         "required": false,
         "description": "Current value. Controlled - pair with onChange."
+      },
+      {
+        "name": "defaultValue",
+        "type": "string",
+        "required": false,
+        "default": "''",
+        "description": "Starting value when uncontrolled."
+      },
+      {
+        "name": "onChange",
+        "type": "(value: string) => void",
+        "required": false,
+        "description": "Fired with the new value on every keystroke."
       },
       {
         "name": "rows",
@@ -2459,30 +2839,44 @@ export const componentApi: Record<string, ComponentApi> = {
         "description": "Vertical padding density."
       },
       {
-        "name": "state",
-        "type": "'Default' | 'Hover' | 'Focused' | 'Filled' | 'Error' | 'Disabled' | 'ReadOnly'",
-        "required": false,
-        "default": "'Default'",
-        "description": "Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Filled` are presentation-only - leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Error`, `Disabled` and `ReadOnly` are real application state and belong in your code."
-      },
-      {
         "name": "showLabel",
         "type": "boolean",
         "required": false,
         "default": "true",
-        "description": "Show the field label."
+        "description": "Render the visible label. When false, the label becomes `aria-label`."
       },
       {
         "name": "helpText",
         "type": "string",
         "required": false,
-        "description": "Guidance shown below the field. Replaced by errorText when invalid."
+        "description": "Guidance shown below the field. Replaced by errorText when `error` is set."
       },
       {
         "name": "errorText",
         "type": "string",
         "required": false,
-        "description": "Validation message. Linked to the control via aria-describedby."
+        "description": "Validation message, shown while `error` is true."
+      },
+      {
+        "name": "error",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Marks the field invalid: red border, `aria-invalid`, errorText shown."
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Blocks editing and dims the field."
+      },
+      {
+        "name": "readOnly",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Shows the value without allowing edits."
       },
       {
         "name": "maxLength",
@@ -2495,24 +2889,19 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "boolean",
         "required": false,
         "default": "false",
-        "description": "Show character counter."
-      },
-      {
-        "name": "onChange",
-        "type": "(value: string) => void",
-        "required": false,
-        "description": "Fired with the new value on every keystroke."
+        "description": "Show a character counter."
       }
     ],
-    "relatedTypes": {}
+    "relatedTypes": {},
+    "native": "textarea"
   },
   "ToastProvider": {
     "props": [
       {
         "name": "position",
-        "type": "'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right'",
+        "type": "'TopLeft' | 'TopCenter' | 'TopRight' | 'BottomLeft' | 'BottomCenter' | 'BottomRight'",
         "required": false,
-        "default": "'bottom-right'",
+        "default": "'BottomRight'",
         "description": "Where the stack anchors on screen."
       },
       {
@@ -2520,7 +2909,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "number",
         "required": false,
         "default": "4",
-        "description": "Cap on simultaneously visible toasts. Oldest is dropped past the limit."
+        "description": "Most toasts on screen at once. Past it, the oldest is dismissed."
       }
     ],
     "relatedTypes": {}
@@ -2530,22 +2919,27 @@ export const componentApi: Record<string, ComponentApi> = {
       {
         "name": "label",
         "type": "string",
-        "required": false,
-        "default": "'Toggle setting'",
-        "description": "Text beside the switch describing the setting."
+        "required": true,
+        "description": "Text describing the setting. Required: it is the accessible name even when hidden."
       },
       {
         "name": "checked",
         "type": "boolean",
         "required": false,
-        "description": "On / off state."
+        "description": "On / off state. Controlled - pair with onChange."
       },
       {
-        "name": "state",
-        "type": "'Default' | 'Hover' | 'Focused' | 'Disabled'",
+        "name": "defaultChecked",
+        "type": "boolean",
         "required": false,
-        "default": "'Default'",
-        "description": "Freezes a visual state so documentation can show it without a pointer. `Hover` and `Focused` are presentation-only - leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Disabled` is real application state and belongs in your code."
+        "default": "false",
+        "description": "Starting state when uncontrolled."
+      },
+      {
+        "name": "onChange",
+        "type": "(checked: boolean) => void",
+        "required": false,
+        "description": "Fired with the new on/off state."
       },
       {
         "name": "size",
@@ -2559,32 +2953,39 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "boolean",
         "required": false,
         "default": "true",
-        "description": "Render the label."
+        "description": "Render the label text. When false, the label becomes `aria-label`."
       },
       {
-        "name": "onChange",
-        "type": "(checked: boolean) => void",
+        "name": "disabled",
+        "type": "boolean",
         "required": false,
-        "description": "Fired with the new on/off state."
+        "default": "false",
+        "description": "Blocks interaction and dims the control."
       }
     ],
-    "relatedTypes": {}
+    "relatedTypes": {},
+    "native": "input"
   },
   "Tooltip": {
     "props": [
       {
         "name": "content",
         "type": "string",
-        "required": false,
-        "default": "'Supplementary help text'",
+        "required": true,
         "description": "The hint text. Keep it short; never put essential information here alone."
+      },
+      {
+        "name": "children",
+        "type": "ReactElement",
+        "required": true,
+        "description": "The element the tooltip describes: one focusable element, e.g. an icon-only Button. It receives `aria-describedby` pointing at the tooltip."
       },
       {
         "name": "placement",
         "type": "'Top' | 'Bottom' | 'Left' | 'Right'",
         "required": false,
         "default": "'Top'",
-        "description": "Position relative to the trigger."
+        "description": "Preferred side. It flips when there is no room."
       },
       {
         "name": "theme",
@@ -2594,26 +2995,14 @@ export const componentApi: Record<string, ComponentApi> = {
         "description": "Surface color."
       },
       {
-        "name": "type",
+        "name": "variant",
         "type": "'Default' | 'Accessibility'",
         "required": false,
         "default": "'Default'",
-        "description": "Accessibility type uses larger text."
-      },
-      {
-        "name": "children",
-        "type": "ReactNode",
-        "required": false,
-        "description": "The element the tooltip describes."
-      },
-      {
-        "name": "forceVisible",
-        "type": "boolean",
-        "required": false,
-        "default": "false",
-        "description": "Keep the tooltip visible regardless of hover - used for documentation."
+        "description": "Accessibility uses larger text and more padding."
       }
     ],
-    "relatedTypes": {}
+    "relatedTypes": {},
+    "native": "span"
   }
 }

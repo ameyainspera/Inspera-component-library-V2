@@ -54,26 +54,24 @@ import { Link } from '@inspera/components'
 <Link
   href="/docs"
   label="Learn more"
-  intent="Default"
-  size="Medium"
-  underline="Hover"
-  external={false}
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `children` | `ReactNode` | - | Link text. Takes precedence over label. |
-| `label` | `string` | `'Learn more'` | Link text, when not passing children. |
-| `href` | `string` | `'#'` | Destination URL. Always provide a real one. |
+| `href` **(required)** | `string` | - | Destination URL. Always a real one - use a Button for actions. |
+| `children` | `ReactNode` | - | Link text. |
+| `label` | `string` | - | Link text, when not passing children. |
 | `intent` | `'Default' \| 'Muted'` | `'Default'` | Color emphasis. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Text size. |
 | `underline` | `'Always' \| 'Hover' \| 'None'` | `'Hover'` | Underline behavior. |
-| `external` | `boolean` | `false` | Open in a new tab with an icon. |
+| `external` | `boolean` | `false` | Open in a new tab, with an icon and a spoken "opens in a new tab". |
 | `disabled` | `boolean` | `false` | Non-interactive state. |
 | `leadingIcon` | `string` | - | Material Symbols name shown before the text. |
 | `trailingIcon` | `string` | - | Material Symbols name shown after the text. |
-| `onClick` | `(e: React.MouseEvent) => void` | - | Fired on activation. Use for routing, not to replace href. |
+| `onClick` | `(e: MouseEvent<HTMLAnchorElement>) => void` | - | Fired on activation. Use for client-side routing, not to replace href. |
+
+Also accepts any native `<a>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<a>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `link`, keyboard operable. Use a real anchor with a valid href; External links set target="_blank" and rel="noreferrer"; Disabled links set aria-disabled and prevent navigation; Focus ring is visible on keyboard focus.
 
@@ -124,17 +122,20 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 ```css
 /* Tokens this component needs. Paste once, at `:root`. */
 :root {
-  --primary:             #004080;
-  --gray-600:            #7A7A7A;
-  --primary-focus-ring:  rgba(0, 64, 128, 0.3);
-  --action-disabled:     rgba(0, 0, 0, 0.38);
-  --radius-xs:           2px;
-  --duration-fast:       100ms;
-  --easing-standard:     cubic-bezier(0.2, 0, 0, 1);
-  --font-sans:           'Inter', system-ui, -apple-system, sans-serif;
+  --primary:            #004080;
+  --gray-600:           #7A7A7A;
+  --action-disabled:    rgba(0, 0, 0, 0.38);
+  --radius-xs:          2px;
+  --focus-ring-width:   2px;
+  --focus-ring-offset:  2px;
+  --focus-ring-color:   var(--primary);
+  --duration-fast:      100ms;
+  --easing-standard:    cubic-bezier(0.2, 0, 0, 1);
+  --font-sans:          'Inter', system-ui, -apple-system, sans-serif;
 }
 
 .inspera-link {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -159,8 +160,21 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 .inspera-link--underline-none:hover { text-decoration: none; }
 
 .inspera-link:focus-visible {
-  outline: 2px solid var(--primary-focus-ring);
-  outline-offset: 2px;
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* "(opens in a new tab)" for screen readers - the icon alone says nothing. */
+.inspera-link__hint {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 /* Disabled: no href, announced with aria-disabled. A link with no href is not

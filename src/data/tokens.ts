@@ -259,6 +259,9 @@ export const effects: EffectToken[] = [
   { name: 'state-focus-on-dark', value: '0px 0px 0px 3px var(--green-300)', note: 'Focus ring on a dark container', pending: ['spread'] },
 
   { name: 'button-shadow', value: 'inset 0px -1px 0px rgba(0, 0, 0, 0.2), 0px 1px 0px rgba(0, 0, 0, 0.08)', note: 'Standard button elevation highlight' },
+  { name: 'button-shadow-hover', value: 'inset 0 -1px 0 rgba(0, 0, 0, 0.2), 0 2px 6px rgba(0, 64, 128, 0.24)', note: 'Solid button under the pointer' },
+  { name: 'button-shadow-active', value: 'inset 0 1px 2px rgba(0, 0, 0, 0.24)', note: 'Solid button while pressed' },
+  { name: 'thumb-shadow', value: '0 1px 2px rgba(0, 0, 0, 0.2)', note: 'Slider and toggle thumb' },
 
   { name: 'link-underline-dark', value: 'inset 0px -1px 0px var(--gray-700)', note: 'Link underline on light ground' },
   { name: 'link-underline-blue', value: 'inset 0px -1px 0px var(--blue-800)', note: 'Primary link underline' },
@@ -341,6 +344,7 @@ export const systemTokens: Record<string, SystemToken[]> = {
     { name: 'border-strong', value: 'var(--gray-300)', note: 'Control outline' },
     { name: 'border-interactive', value: 'var(--gray-500)', note: 'Control outline on hover' },
     { name: 'muted-foreground', value: 'var(--gray-600)', note: 'De-emphasised label text' },
+    { name: 'scrim', value: 'rgba(39, 39, 39, 0.48)', note: 'Backdrop behind Dialog, Drawer and Command Palette' },
   ],
 }
 

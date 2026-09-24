@@ -53,19 +53,18 @@ import { Badge } from '@inspera/components'
 
 <Badge
   label="Neutral"
-  intent="Neutral"
-  size="Medium"
-  withIcon={false}
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | `'Badge'` | The badge text. One or two words. |
+| `label` **(required)** | `string` | - | The badge text. One or two words. |
 | `intent` | `'Neutral' \| 'Info' \| 'Success' \| 'Warning' \| 'Error'` | `'Neutral'` | Semantic color. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Height 20 / 24. |
 | `withIcon` | `boolean` | `false` | Show a leading status icon. |
 | `icon` | `string` | - | Material Symbols name shown before the label when withIcon is set. |
+
+Also accepts any native `<span>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<span>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `status`. Use aria-label for icon-only badges; Use role="status" for dynamic count badges.
 

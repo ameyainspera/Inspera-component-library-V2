@@ -53,21 +53,22 @@ import { Button } from '@inspera/components'
 
 <Button
   label="Button"
-  intent="Primary"
-  size="Medium"
-  content="Text"
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | `'Button'` | The button text. Start with a verb - "Save", not "OK". |
+| `label` **(required)** | `string` | - | The button text. Start with a verb - "Save", not "OK". With `iconOnly` it is not shown but becomes the accessible name, so it is still required. |
 | `intent` | `'Primary' \| 'Secondary' \| 'Outline' \| 'Text' \| 'Success' \| 'Warning' \| 'Destructive'` | `'Primary'` | Visual role / semantic weight. |
 | `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Height 32 / 40 / 48. |
-| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Pressed' \| 'Disabled'` | - | Freezes a visual state so documentation can show it without a pointer. Leave unset in application code - hover, focus and active are handled in CSS and work on their own. |
-| `content` | `'Text' \| 'Icon + Text' \| 'Text + Icon' \| 'Text + Disclosure'` | `'Text'` | Label / icon composition. |
-| `icon` | `string` | `'add'` | Material Symbols name. Only rendered by the icon-bearing content variants. |
-| `onClick` | `() => void` | - | Fired on click and on Enter or Space. |
+| `leadingIcon` | `string` | - | Material Symbols name shown before the label. |
+| `trailingIcon` | `string` | - | Material Symbols name shown after the label. Use `expand_more` for a menu trigger. |
+| `iconOnly` | `boolean` | `false` | Show only the icon (`leadingIcon`, else `trailingIcon`); `label` becomes the accessible name. |
+| `disabled` | `boolean` | `false` | Blocks interaction and dims the button. |
+| `type` | `'button' \| 'submit' \| 'reset'` | `'button'` | Native button type. Defaults to `button`, so a Button never submits a form by accident. |
+| `onClick` | `MouseEventHandler<HTMLButtonElement>` | - | Fired on click and on Enter or Space. |
+
+Also accepts any native `<button>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<button>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `button`, keyboard operable. Icon-only buttons must have an accessible label.
 
@@ -177,6 +178,11 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 /* Sizes change height, padding and gap only - never the 16px type. */
 .inspera-btn--small { height: 32px; padding: 0 12px; gap: 6px; }
 .inspera-btn--large { height: 48px; padding: 0 24px; gap: 10px; }
+
+/* Icon only: a square the height of the button. It still needs aria-label. */
+.inspera-btn--icon-only { width: 40px; min-width: 0; padding: 0; }
+.inspera-btn--small.inspera-btn--icon-only { width: 32px; }
+.inspera-btn--large.inspera-btn--icon-only { width: 48px; }
 
 /* Solid intents differ only in fill; hover and pressed derive from it. */
 .inspera-btn--primary     { --btn-bg: var(--primary); }

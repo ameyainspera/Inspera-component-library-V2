@@ -1,23 +1,24 @@
-import { type CSSProperties, type ReactNode, useState } from 'react'
+import { type CSSProperties, type MouseEvent, type ReactNode } from 'react'
+import { cx, srOnly, type NativeAttrs } from './types'
 
 export type LinkIntent = 'Default' | 'Muted'
 export type LinkSize = 'Small' | 'Medium'
 export type LinkUnderline = 'Always' | 'Hover' | 'None'
 
 export interface LinkProps {
-  /** Link text. Takes precedence over label. */
+  /** Destination URL. Always a real one - use a Button for actions. */
+  href: string
+  /** Link text. */
   children?: ReactNode
   /** Link text, when not passing children. */
   label?: string
-  /** Destination URL. Always provide a real one. */
-  href?: string
   /** Color emphasis. */
   intent?: LinkIntent
   /** Text size. */
   size?: LinkSize
   /** Underline behavior. */
   underline?: LinkUnderline
-  /** Open in a new tab with an icon. */
+  /** Open in a new tab, with an icon and a spoken "opens in a new tab". */
   external?: boolean
   /** Non-interactive state. */
   disabled?: boolean
@@ -25,14 +26,14 @@ export interface LinkProps {
   leadingIcon?: string
   /** Material Symbols name shown after the text. */
   trailingIcon?: string
-  /** Fired on activation. Use for routing, not to replace href. */
-  onClick?: (e: React.MouseEvent) => void
+  /** Fired on activation. Use for client-side routing, not to replace href. */
+  onClick?: (e: MouseEvent<HTMLAnchorElement>) => void
 }
 
 export default function Link({
+  href,
   children,
-  label = 'Learn more',
-  href = '#',
+  label,
   intent = 'Default',
   size = 'Medium',
   underline = 'Hover',
@@ -41,20 +42,18 @@ export default function Link({
   leadingIcon,
   trailingIcon,
   onClick,
-}: LinkProps) {
-  const [hover, setHover] = useState(false)
-  const [focus, setFocus] = useState(false)
-
+  className,
+  style,
+  ...rest
+}: LinkProps & NativeAttrs<'a', LinkProps>) {
   const color = disabled
     ? 'var(--action-disabled)'
     : intent === 'Muted'
       ? 'var(--gray-600)'
       : 'var(--primary)'
 
-  const showUnderline =
-    underline === 'Always' || (underline === 'Hover' && hover && !disabled)
-
-  const style: CSSProperties = {
+  const anchor: CSSProperties = {
+    position: 'relative',
     display: 'inline-flex',
     alignItems: 'center',
     gap: 4,
@@ -62,19 +61,22 @@ export default function Link({
     fontFamily: 'var(--font-sans)',
     fontSize: size === 'Small' ? 14 : 16,
     fontWeight: 500,
-    textDecoration: showUnderline ? 'underline' : 'none',
+    textDecoration: underline === 'Always' ? 'underline' : 'none',
     textUnderlineOffset: 2,
     cursor: disabled ? 'not-allowed' : 'pointer',
     borderRadius: 'var(--radius-xs)',
-    outline: focus && !disabled ? '2px solid var(--primary-focus-ring)' : 'none',
-    outlineOffset: 2,
-    transition: 'color 120ms ease',
+    transition: 'color var(--duration-fast) var(--easing-standard)',
+    ...style,
   }
   const iconSize = size === 'Small' ? 16 : 18
 
   return (
     <a
       href={disabled ? undefined : href}
+      // Focus ring from :focus-visible (.inspera-interactive) and hover
+      // underline from CSS. Both were JS state, so the ring also showed on
+      // every mouse click.
+      className={cx('inspera inspera-interactive', underline === 'Hover' && !disabled && 'inspera-underline-hover', className)}
       onClick={(e) => {
         if (disabled) {
           e.preventDefault()
@@ -83,13 +85,11 @@ export default function Link({
         onClick?.(e)
       }}
       target={external ? '_blank' : undefined}
-      rel={external ? 'noreferrer' : undefined}
+      rel={external ? 'noopener noreferrer' : undefined}
+      role={disabled ? 'link' : undefined}
       aria-disabled={disabled || undefined}
-      style={style}
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
-      onFocus={() => setFocus(true)}
-      onBlur={() => setFocus(false)}
+      style={anchor}
+      {...rest}
     >
       {leadingIcon && (
         <span className="material-symbols-outlined" style={{ fontSize: iconSize }} aria-hidden>{leadingIcon}</span>
@@ -101,6 +101,7 @@ export default function Link({
       {external && !trailingIcon && (
         <span className="material-symbols-outlined" style={{ fontSize: iconSize }} aria-hidden>open_in_new</span>
       )}
+      {external && <span style={srOnly}> (opens in a new tab)</span>}
     </a>
   )
 }

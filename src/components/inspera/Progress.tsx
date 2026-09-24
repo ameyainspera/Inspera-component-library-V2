@@ -1,13 +1,16 @@
 import { type CSSProperties, useId } from 'react'
+import { cx, type NativeAttrs } from './types'
 
 export type ProgressVariant = 'Linear' | 'Circular'
 export type ProgressSize = 'Small' | 'Medium' | 'Large'
 export type ProgressIntent = 'Primary' | 'Success' | 'Warning' | 'Error'
 
 export interface ProgressProps {
+  /** What is progressing, e.g. "Uploading attachments". The accessible name. */
+  label: string
   /** Bar or ring. */
   variant?: ProgressVariant
-  /** Completion percentage 0-100. Ignored when indeterminate. */
+  /** Completion percentage 0-100. Required unless indeterminate. */
   value?: number
   /** Unknown-duration animation. */
   indeterminate?: boolean
@@ -17,8 +20,6 @@ export interface ProgressProps {
   intent?: ProgressIntent
   /** Render the percentage. */
   showValue?: boolean
-  /** Accessible name. Say what is progressing, not just "Progress". */
-  label?: string
 }
 
 const intentMap: Record<ProgressIntent, string> = {
@@ -32,14 +33,17 @@ const linearHeight: Record<ProgressSize, number> = { Small: 4, Medium: 8, Large:
 const circularDiameter: Record<ProgressSize, number> = { Small: 24, Medium: 40, Large: 56 }
 
 export default function Progress({
+  label,
   variant = 'Linear',
-  value = 60,
+  value = 0,
   indeterminate = false,
   size = 'Medium',
   intent = 'Primary',
   showValue = false,
-  label = 'Progress',
-}: ProgressProps) {
+  className,
+  style,
+  ...rest
+}: ProgressProps & NativeAttrs<'span', ProgressProps>) {
   const id = useId()
   const clamped = Math.max(0, Math.min(100, value))
   const color = intentMap[intent]
@@ -60,7 +64,7 @@ export default function Progress({
     const dashOffset = circumference * (1 - clamped / 100)
 
     return (
-      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontFamily: 'var(--font-sans)' }}>
+      <span className={cx('inspera', className)} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontFamily: 'var(--font-sans)', ...style }} {...rest}>
         <span
           {...ariaProps}
           style={{
@@ -82,7 +86,7 @@ export default function Progress({
               strokeLinecap="round"
               strokeDasharray={circumference}
               strokeDashoffset={indeterminate ? circumference * 0.7 : dashOffset}
-              style={{ transition: indeterminate ? undefined : 'stroke-dashoffset 240ms ease' }}
+              style={{ transition: indeterminate ? undefined : 'stroke-dashoffset var(--duration-normal) var(--easing-standard)' }}
             />
           </svg>
         </span>
@@ -104,7 +108,7 @@ export default function Progress({
   }
 
   return (
-    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, width: '100%', fontFamily: 'var(--font-sans)' }}>
+    <span className={cx('inspera', className)} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, width: '100%', fontFamily: 'var(--font-sans)', ...style }} {...rest}>
       <span {...ariaProps} aria-describedby={showValue ? id : undefined} style={track}>
         {indeterminate ? (
           <span
@@ -129,7 +133,7 @@ export default function Progress({
               width: `${clamped}%`,
               borderRadius: 'var(--radius-pill)',
               background: color,
-              transition: 'width 240ms ease',
+              transition: 'width var(--duration-normal) var(--easing-standard)',
             }}
           />
         )}

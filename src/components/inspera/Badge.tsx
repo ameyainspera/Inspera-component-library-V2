@@ -1,11 +1,12 @@
 import { type CSSProperties } from 'react'
+import { cx, type NativeAttrs } from './types'
 
 export type BadgeIntent = 'Neutral' | 'Info' | 'Success' | 'Warning' | 'Error'
 export type BadgeSize = 'Small' | 'Medium'
 
 export interface BadgeProps {
   /** The badge text. One or two words. */
-  label?: string
+  label: string
   /** Semantic color. */
   intent?: BadgeIntent
   /** Height 20 / 24. */
@@ -25,15 +26,18 @@ const intentMap: Record<BadgeIntent, { bg: string; fg: string; icon: string }> =
 }
 
 export default function Badge({
-  label = 'Badge',
+  label,
   intent = 'Neutral',
   size = 'Medium',
   withIcon = false,
   icon,
-}: BadgeProps) {
+  className,
+  style,
+  ...rest
+}: BadgeProps & NativeAttrs<'span', BadgeProps>) {
   const c = intentMap[intent]
   const small = size === 'Small'
-  const style: CSSProperties = {
+  const pill: CSSProperties = {
     display: 'inline-flex',
     alignItems: 'center',
     gap: 4,
@@ -47,9 +51,12 @@ export default function Badge({
     fontWeight: 500,
     lineHeight: 1,
     whiteSpace: 'nowrap',
+    ...style,
   }
+  // Static text, not a live region: `role="status"` on every badge made a
+  // table of 50 rows announce 50 times.
   return (
-    <span style={style} role="status">
+    <span className={cx('inspera', className)} style={pill} {...rest}>
       {withIcon && (
         <span className="material-symbols-outlined" style={{ fontSize: small ? 14 : 16, fontVariationSettings: "'FILL' 1" }} aria-hidden>
           {icon ?? c.icon}

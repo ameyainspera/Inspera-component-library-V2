@@ -1,106 +1,147 @@
-import { type CSSProperties, useEffect, useId, useRef, useState } from 'react'
-
-export type DateRangePickerState = 'Default' | 'Focused' | 'Disabled' | 'Error'
+import { type CSSProperties, type FocusEvent, useRef, useState } from 'react'
+import { CalendarMonth, addMonths, formatDay, parseIso, toIso } from './calendar'
+import { FieldMessage, labelStyle, useFieldA11y } from './FormField'
+import { Portal, useAnchoredPosition, useEscapeLayer, useOutsidePress } from './overlay'
+import { assignRef, cx, type ForceState, type NativeAttrs } from './types'
+import { useControllableState } from './useControllableState'
 
 export interface DateRange {
-  /** Range start (YYYY-MM-DD) or null. */
-  start: string | null
-  /** Range end (YYYY-MM-DD) or null. */
-  end: string | null
+  /** Range start (YYYY-MM-DD). */
+  start: string
+  /** Range end (YYYY-MM-DD), on or after start. */
+  end: string
 }
 
 export interface DateRangePickerProps {
-  /** Field label. */
-  label?: string
+  /** Field label. Always required: it is the accessible name even when hidden. */
+  label: string
   /** Selected range. Controlled - pair with onChange. */
   value?: DateRange
-  /** Trigger placeholder. */
-  placeholder?: string
-  /**
-   * Freezes a visual state so documentation can show it without a pointer.
-   * `Focused` is presentation-only. `Error` and `Disabled` are real state.
-   */
-  state?: DateRangePickerState
-  /** Show the field label. */
-  showLabel?: boolean
-  /** Open the calendar initially. */
-  defaultOpen?: boolean
+  /** Starting range when uncontrolled. */
+  defaultValue?: DateRange
   /** Fired with the range once both ends are chosen. */
   onChange?: (range: DateRange) => void
+  /** Calendar open state. Controlled - pair with onOpenChange. */
+  open?: boolean
+  /** Open the calendar initially, when uncontrolled. */
+  defaultOpen?: boolean
+  /** Fired when the calendar opens or closes. */
+  onOpenChange?: (open: boolean) => void
+  /** Trigger text when no range is chosen. */
+  placeholder?: string
+  /** Render the visible label. When false, the label becomes `aria-label`. */
+  showLabel?: boolean
+  /** Guidance shown below the field. Replaced by errorText when `error` is set. */
+  helpText?: string
+  /** Validation message, shown while `error` is true. */
+  errorText?: string
+  /** Marks the field invalid: red border and errorText shown. */
+  error?: boolean
+  /** Blocks interaction and dims the field. */
+  disabled?: boolean
+  /** @internal Freezes a hover, focus or open look for the docs gallery. `Open` draws the calendar inline. */
+  forceState?: ForceState
 }
 
-const WEEKDAYS = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']
-const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-
-function toIso(y: number, m: number, d: number) {
-  return `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`
-}
-
-function fmt(iso: string | null) {
-  if (!iso) return ''
-  const [y, m, d] = iso.split('-').map(Number)
-  return `${d} ${MONTHS[m - 1].slice(0, 3)} ${y}`
+/** First day of the month containing `iso`. */
+const monthOf = (iso: string) => {
+  const d = parseIso(iso) ?? new Date()
+  return toIso(new Date(d.getFullYear(), d.getMonth(), 1))
 }
 
 export default function DateRangePicker({
-  label = 'Date range',
+  label,
   value,
-  placeholder = 'Select a range',
-  state = 'Default',
-  showLabel = true,
-  defaultOpen = false,
+  defaultValue,
   onChange,
-}: DateRangePickerProps) {
-  const id = useId()
-  const rootRef = useRef<HTMLDivElement>(null)
-  const [internal, setInternal] = useState<DateRange>(value ?? { start: null, end: null })
-  const range = value ?? internal
-  const [open, setOpen] = useState(defaultOpen)
+  open: openProp,
+  defaultOpen = false,
+  onOpenChange,
+  placeholder = 'Select a range',
+  showLabel = true,
+  helpText,
+  errorText,
+  error = false,
+  disabled = false,
+  forceState,
+  className,
+  style,
+  id,
+  ref,
+  ...rest
+}: DateRangePickerProps & NativeAttrs<'button', DateRangePickerProps>) {
+  const field = useFieldA11y({ id, label, showLabel, helpText, errorText, error })
+  const [range, setRange] = useControllableState<DateRange | undefined>(
+    value,
+    defaultValue,
+    onChange as ((r: DateRange | undefined) => void) | undefined,
+  )
+  const [openState, setOpenState] = useControllableState(openProp, defaultOpen, onOpenChange)
+  const frozenOpen = forceState === 'Open'
+  const open = !disabled && (frozenOpen || openState)
 
-  const disabled = state === 'Disabled'
-  const isError = state === 'Error'
+  // The first click of a new range lives here, not in `value`: a range only
+  // exists once both ends are chosen. Writing half a range into controlled
+  // state used to drop the click, so a controlled picker could never finish.
+  const [pending, setPending] = useState<string | null>(null)
+  const [focused, setFocused] = useState(range?.start ?? toIso(new Date()))
+  const [viewStart, setViewStart] = useState(monthOf(focused))
+  const [keyboard, setKeyboard] = useState(false)
 
-  useEffect(() => { setOpen(defaultOpen) }, [defaultOpen])
+  const trigger = useRef<HTMLButtonElement | null>(null)
+  const panel = useRef<HTMLDivElement>(null)
+  const live = open && !frozenOpen
+  const pos = useAnchoredPosition(live, trigger, panel)
 
-  const base = range.start ? new Date(range.start) : new Date()
-  const [viewY, setViewY] = useState(base.getFullYear())
-  const [viewM, setViewM] = useState(base.getMonth())
+  /** Move the tab stop, scrolling the two-month view only when it leaves it. */
+  const focusDay = (iso: string) => {
+    setFocused(iso)
+    const m = monthOf(iso)
+    if (m < viewStart) setViewStart(m)
+    else if (m > addMonths(viewStart, 1)) setViewStart(addMonths(m, -1))
+  }
 
-  useEffect(() => {
-    if (!open) return
-    const onDoc = (e: MouseEvent) => {
-      if (rootRef.current && !rootRef.current.contains(e.target as Node)) setOpen(false)
-    }
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(false) }
-    document.addEventListener('mousedown', onDoc)
-    document.addEventListener('keydown', onKey)
-    return () => {
-      document.removeEventListener('mousedown', onDoc)
-      document.removeEventListener('keydown', onKey)
-    }
-  }, [open])
-
-  const setRange = (next: DateRange) => {
-    if (!value) setInternal(next)
-    if (next.start && next.end) onChange?.(next)
+  const show = () => {
+    const start = range?.start ?? toIso(new Date())
+    setPending(null)
+    setFocused(start)
+    setViewStart(monthOf(start))
+    setKeyboard(true)
+    setOpenState(true)
+  }
+  const hide = (refocus = true) => {
+    setOpenState(false)
+    setPending(null)
+    setKeyboard(false)
+    if (refocus) trigger.current?.focus()
   }
 
   const pick = (iso: string) => {
-    // First click starts a new range; second click closes it (ordered).
-    if (!range.start || (range.start && range.end)) {
-      setRange({ start: iso, end: null })
-    } else {
-      if (iso < range.start) setRange({ start: iso, end: range.start })
-      else setRange({ start: range.start, end: iso })
-      setOpen(false)
+    if (!pending) {
+      setPending(iso)
+      return
     }
+    setRange(iso < pending ? { start: iso, end: pending } : { start: pending, end: iso })
+    hide()
   }
 
-  const inRange = (iso: string) =>
-    range.start && range.end && iso >= range.start && iso <= range.end
-  const isEnd = (iso: string) => iso === range.start || iso === range.end
+  useEscapeLayer(live, () => hide())
+  useOutsidePress(live, [trigger, panel], () => hide(false))
 
-  const field: CSSProperties = {
+  const onPanelBlur = (e: FocusEvent) => {
+    const next = e.relatedTarget as Node | null
+    if (next && !panel.current?.contains(next) && next !== trigger.current) hide(false)
+  }
+
+  const dayState = (iso: string) => {
+    if (pending) return { selected: iso === pending }
+    if (!range) return {}
+    const end = iso === range.start || iso === range.end
+    return { selected: end, within: !end && iso > range.start && iso < range.end }
+  }
+
+  const box: CSSProperties = {
+    width: '100%',
     height: 40,
     display: 'flex',
     alignItems: 'center',
@@ -112,6 +153,8 @@ export default function DateRangePicker({
     background: disabled ? 'var(--surface-disabled)' : 'var(--white)',
     cursor: disabled ? 'not-allowed' : 'pointer',
     opacity: disabled ? 0.6 : 1,
+    textAlign: 'left',
+    font: 'inherit',
   }
 
   const navBtn: CSSProperties = {
@@ -119,122 +162,94 @@ export default function DateRangePicker({
     border: 'none', background: 'transparent', borderRadius: 'var(--radius-sm)', cursor: 'pointer', color: 'var(--text-primary)',
   }
 
-  function renderMonth(y: number, m: number) {
-    const firstDay = new Date(y, m, 1).getDay()
-    const daysInMonth = new Date(y, m + 1, 0).getDate()
-    const cells: (number | null)[] = []
-    for (let i = 0; i < firstDay; i++) cells.push(null)
-    for (let d = 1; d <= daysInMonth; d++) cells.push(d)
+  const months = [viewStart, addMonths(viewStart, 1)].map((iso) => parseIso(iso)!)
+  const display = range ? `${formatDay(range.start)} - ${formatDay(range.end)}` : ''
 
-    return (
-      <div style={{ width: 240 }}>
-        <div style={{ textAlign: 'center', fontSize: 14, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 8 }}>
-          {MONTHS[m]} {y}
-        </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 2 }}>
-          {WEEKDAYS.map((w) => (
-            <span key={w} style={{ textAlign: 'center', fontSize: 12, fontWeight: 600, color: 'var(--muted-foreground)', padding: '4px 0' }}>{w}</span>
-          ))}
-          {cells.map((d, i) => {
-            if (d === null) return <span key={`e-${i}`} />
-            const iso = toIso(y, m, d)
-            const end = isEnd(iso)
-            const within = inRange(iso)
-            return (
-              <button
-                key={d}
-                type="button"
-                aria-label={`${MONTHS[m]} ${d}, ${y}`}
-                aria-pressed={end || undefined}
-                onClick={() => pick(iso)}
-                style={{
-                  height: 32,
-                  border: 'none',
-                  borderRadius: 'var(--radius-sm)',
-                  background: end ? 'var(--primary)' : within ? 'var(--blue-100)' : 'transparent',
-                  color: end ? 'var(--white)' : 'var(--text-primary)',
-                  fontFamily: 'var(--font-sans)',
-                  fontSize: 14,
-                  cursor: 'pointer',
-                }}
-              >
-                {d}
-              </button>
-            )
-          })}
-        </div>
+  const calendar = (
+    <div
+      ref={panel}
+      role="dialog"
+      aria-label={`Choose ${label.toLowerCase()}`}
+      onBlur={onPanelBlur}
+      style={{
+        zIndex: 'var(--z-dropdown)',
+        padding: 12,
+        background: 'var(--surface)',
+        borderRadius: 'var(--radius-md)',
+        boxShadow: 'var(--shadow-200)',
+        border: 'var(--border-width-default) solid var(--border)',
+        fontFamily: 'var(--font-sans)',
+        ...(frozenOpen ? { position: 'absolute', top: 'calc(100% + 4px)', left: 0 } : pos.style),
+      }}
+    >
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+        <button type="button" className="inspera-interactive" aria-label="Previous month" style={navBtn} onClick={() => { setKeyboard(false); setViewStart(addMonths(viewStart, -1)) }}>
+          <span className="material-symbols-outlined" style={{ fontSize: 20 }} aria-hidden>chevron_left</span>
+        </button>
+        <span aria-live="polite" style={{ fontSize: 12, color: 'var(--muted-foreground)' }}>
+          {pending ? 'Choose the end date' : 'Choose the start date'}
+        </span>
+        <button type="button" className="inspera-interactive" aria-label="Next month" style={navBtn} onClick={() => { setKeyboard(false); setViewStart(addMonths(viewStart, 1)) }}>
+          <span className="material-symbols-outlined" style={{ fontSize: 20 }} aria-hidden>chevron_right</span>
+        </button>
       </div>
-    )
-  }
-
-  const nextM = viewM === 11 ? 0 : viewM + 1
-  const nextY = viewM === 11 ? viewY + 1 : viewY
-
-  const display = range.start
-    ? `${fmt(range.start)} - ${range.end ? fmt(range.end) : '...'}`
-    : ''
+      {/* Two months side by side; they stack when the viewport is too narrow. */}
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16 }}>
+        {months.map((m) => (
+          <div key={m.getMonth()} style={{ width: 240 }}>
+            <CalendarMonth
+              showTitle
+              year={m.getFullYear()}
+              month={m.getMonth()}
+              focused={focused}
+              onFocusDay={(iso) => { setKeyboard(true); focusDay(iso) }}
+              onPick={pick}
+              dayState={dayState}
+              autoFocus={live && keyboard}
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  )
 
   return (
-    <div ref={rootRef} style={{ display: 'flex', flexDirection: 'column', gap: 6, width: '100%', position: 'relative', fontFamily: 'var(--font-sans)' }}>
-      {showLabel && (
-        <label htmlFor={id} style={{ fontSize: 16, fontWeight: 500, color: 'var(--text-primary)' }}>{label}</label>
+    <div
+      className={cx('inspera', className)}
+      style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: 6, width: '100%', fontFamily: 'var(--font-sans)', ...style }}
+    >
+      {field.ownLabel && (
+        <label id={field.labelId} htmlFor={field.id} style={labelStyle}>{label}</label>
       )}
-      <button
-        id={id}
-        type="button"
-        className="inspera-interactive inspera-field"
-        data-force-state={open ? 'Open' : state === 'Focused' ? 'Focused' : undefined}
-        data-invalid={isError || undefined}
-        data-disabled={disabled || undefined}
-        disabled={disabled}
-        aria-haspopup="dialog"
-        aria-expanded={open}
-        aria-invalid={isError || undefined}
-        onClick={() => setOpen((o) => !o)}
-        style={{ ...field, textAlign: 'left', font: 'inherit' }}
-      >
-        <span style={{ flex: 1, fontSize: 16, color: display ? 'var(--text-primary)' : 'var(--text-placeholder)' }}>
-          {display || placeholder}
-        </span>
-        <span className="material-symbols-outlined" style={{ fontSize: 20, color: 'var(--action-active)' }} aria-hidden>date_range</span>
-      </button>
-
-      {open && !disabled && (
-        <div
-          role="dialog"
-          aria-label="Choose date range"
-          style={{
-            position: 'absolute',
-            top: showLabel ? 74 : 48,
-            left: 0,
-            zIndex: 20,
-            padding: 12,
-            background: 'var(--surface)',
-            borderRadius: 'var(--radius-md)',
-            boxShadow: 'var(--shadow-200)',
-            border: '1px solid var(--border)',
+      <div style={{ position: 'relative' }}>
+        <button
+          ref={(node) => {
+            trigger.current = node
+            assignRef(ref, node)
           }}
+          id={field.id}
+          type="button"
+          className="inspera-interactive inspera-field"
+          data-force-state={open ? 'Open' : forceState}
+          data-invalid={field.invalid || undefined}
+          data-disabled={disabled || undefined}
+          disabled={disabled}
+          aria-haspopup="dialog"
+          aria-expanded={open}
+          aria-label={field.ariaLabel ? `${field.ariaLabel}${display ? `, ${display}` : ''}` : undefined}
+          aria-describedby={field.describedBy}
+          onClick={() => (openState ? hide(false) : show())}
+          style={box}
+          {...rest}
         >
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-            <button type="button" aria-label="Previous month" style={navBtn} onClick={() => {
-              const m = viewM - 1
-              if (m < 0) { setViewM(11); setViewY(viewY - 1) } else setViewM(m)
-            }}>
-              <span className="material-symbols-outlined" style={{ fontSize: 20 }} aria-hidden>chevron_left</span>
-            </button>
-            <button type="button" aria-label="Next month" style={navBtn} onClick={() => {
-              const m = viewM + 1
-              if (m > 11) { setViewM(0); setViewY(viewY + 1) } else setViewM(m)
-            }}>
-              <span className="material-symbols-outlined" style={{ fontSize: 20 }} aria-hidden>chevron_right</span>
-            </button>
-          </div>
-          <div style={{ display: 'flex', gap: 16 }}>
-            {renderMonth(viewY, viewM)}
-            {renderMonth(nextY, nextM)}
-          </div>
-        </div>
-      )}
+          <span style={{ flex: 1, fontSize: 16, color: display ? 'var(--text-primary)' : 'var(--text-placeholder)' }}>
+            {display || placeholder}
+          </span>
+          <span className="material-symbols-outlined" style={{ fontSize: 20, color: 'var(--action-active)' }} aria-hidden>date_range</span>
+        </button>
+        {frozenOpen ? calendar : live && <Portal>{calendar}</Portal>}
+      </div>
+      <FieldMessage field={field} />
     </div>
   )
 }

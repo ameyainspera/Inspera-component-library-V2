@@ -52,7 +52,6 @@ Search and run commands from a keyboard-driven overlay. - category: `feedback`.
 import { CommandPalette } from '@inspera/components'
 
 <CommandPalette
-  hotkey={true}
   open={open}
   onOpenChange={setOpen}
   commands={[
@@ -64,15 +63,16 @@ import { CommandPalette } from '@inspera/components'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `commands` | `Command[]` | `defaultCommands` | The commands to search. |
-| `open` | `boolean` | - | Controlled open state. Omit to let the component manage its own. |
-| `defaultOpen` | `boolean` | `false` | Open initially (uncontrolled). |
-| `hotkey` | `boolean` | `true` | Bind Cmd/Ctrl+K to toggle the palette. |
-| `embedded` | `boolean` | `false` | Render the panel inline without the portal or dimmed overlay. Used by the docs to show the palette on the page (and by the recipe audit, which cannot see through a portal). Mirrors the `embedded` prop on Dialog and Drawer. |
-| `placeholder` | `string` | `'Type a command or search...'` | Search field placeholder. |
-| `emptyText` | `string` | `'No matching commands'` | Shown when nothing matches. |
+| `commands` **(required)** | `Command[]` | - | The commands to search. |
+| `open` | `boolean` | - | Open state. Controlled - pair with onOpenChange. |
+| `defaultOpen` | `boolean` | `false` | Open initially, when uncontrolled. |
 | `onOpenChange` | `(open: boolean) => void` | - | Fired when the open state should change. |
 | `onSelect` | `(command: Command) => void` | - | Fired with the chosen command. |
+| `hotkey` | `boolean` | `true` | Bind Cmd/Ctrl+K to toggle the palette. Mount one palette with this per page. Ignored while focus is in a textarea or rich-text editor, which often use the same shortcut. |
+| `placeholder` | `string` | `'Type a command or search...'` | Search field placeholder. |
+| `emptyText` | `string` | `'No matching commands'` | Shown when nothing matches. |
+
+Also accepts any native `<div>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<div>`. `className` and `style` go on the outermost element.
 
 ```ts
 export interface Command {
@@ -82,7 +82,7 @@ export interface Command {
   label: string
   /** Optional Material Symbols icon. */
   icon?: string
-  /** Optional grouping heading. */
+  /** Optional grouping heading. Commands with the same group should be adjacent. */
   group?: string
   /** Right-aligned hint, e.g. a shortcut or section name. */
   hint?: string
@@ -135,9 +135,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 - On the page the panel sits inside a fixed, dimmed overlay (`position: fixed; inset: 0`) centred horizontally and pushed down ~12vh. `embedded` renders just the panel for documentation.
 - The panel is `--radius-lg` on `--white` with `--shadow-300`; the 52px search row is divided from the list by a `--border` rule.
-- Commands group under uppercase 12px headings; the heading renders inline as the list is walked so grouped and ungrouped commands share one keyboard index.
+- Commands group under uppercase 12px headings. Each group is a `role="group"` inside the listbox, labelled by its heading; the options keep one keyboard index across groups.
 - The active option is filled `--blue-100` and starts on the first row. Up / Down move it, Enter runs it, Escape closes; Cmd/Ctrl+K toggles the whole palette.
-- It is a `role="dialog"` with `aria-modal`; the input is `role="combobox"` over a `role="listbox"`. Return focus to the trigger when it closes.
+- It is a `role="dialog"` with `aria-modal`; the input is `role="combobox"` over a `role="listbox"`, with `aria-activedescendant` on the active option. Trap Tab inside while open, and return focus to the trigger when it closes.
+- Cmd/Ctrl+K toggles it - but not while focus is in a textarea or rich-text editor, which use that shortcut themselves.
 
 ```css
 /* Tokens this component needs. Paste once, at `:root`. */
@@ -238,27 +239,29 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   <div class="inspera-cmdk__search">
     <span class="material-symbols-outlined inspera-cmdk__search-icon" aria-hidden="true">search</span>
     <input class="inspera-cmdk__input" role="combobox" aria-expanded="true"
-           aria-controls="cmdk-list" aria-autocomplete="list"
-           placeholder="Type a command or search..." />
+           aria-label="Search commands" aria-controls="cmdk-list" aria-autocomplete="list"
+           aria-activedescendant="cmdk-opt-0" placeholder="Type a command or search..." />
     <kbd class="inspera-cmdk__kbd">Esc</kbd>
   </div>
-  <ul class="inspera-cmdk__list" id="cmdk-list" role="listbox">
-    <li>
-      <div class="inspera-cmdk__group">Actions</div>
-      <div class="inspera-cmdk__option" role="option" aria-selected="true">
+  <!-- Groups are real role="group"s inside the listbox, each named by its
+       heading; options carry ids so the input can point at the active one. -->
+  <div class="inspera-cmdk__list" id="cmdk-list" role="listbox" aria-label="Commands">
+    <div role="group" aria-labelledby="cmdk-g0">
+      <div class="inspera-cmdk__group" id="cmdk-g0" role="presentation">Actions</div>
+      <div class="inspera-cmdk__option" id="cmdk-opt-0" role="option" aria-selected="true">
         <span class="material-symbols-outlined inspera-cmdk__option-icon" aria-hidden="true">add_circle</span>
         <span class="inspera-cmdk__option-label">Create new test</span>
         <span class="inspera-cmdk__option-hint">C then T</span>
       </div>
-    </li>
-    <li>
-      <div class="inspera-cmdk__group">Navigate</div>
-      <div class="inspera-cmdk__option" role="option" aria-selected="false">
+    </div>
+    <div role="group" aria-labelledby="cmdk-g1">
+      <div class="inspera-cmdk__group" id="cmdk-g1" role="presentation">Navigate</div>
+      <div class="inspera-cmdk__option" id="cmdk-opt-1" role="option" aria-selected="false">
         <span class="material-symbols-outlined inspera-cmdk__option-icon" aria-hidden="true">send</span>
         <span class="inspera-cmdk__option-label">Go to Deliver</span>
       </div>
-    </li>
-  </ul>
+    </div>
+  </div>
 </div>
 ```
 

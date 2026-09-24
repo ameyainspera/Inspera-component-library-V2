@@ -3,28 +3,28 @@
 
 export const artifactSizes: Record<string, { bytes: number; tokens: number }> = {
   "llms-full.txt": {
-    "bytes": 333797,
-    "tokens": 83449
+    "bytes": 381728,
+    "tokens": 95432
   },
   "llms.txt": {
-    "bytes": 22901,
-    "tokens": 5725
+    "bytes": 23362,
+    "tokens": 5841
   },
   "foundations.md": {
-    "bytes": 17065,
-    "tokens": 4266
+    "bytes": 17526,
+    "tokens": 4382
   },
   "guidance.md": {
     "bytes": 13472,
     "tokens": 3368
   },
   "api.json": {
-    "bytes": 130317,
-    "tokens": 32579
+    "bytes": 142164,
+    "tokens": 35541
   },
   "tokens.css": {
-    "bytes": 23952,
-    "tokens": 5988
+    "bytes": 27595,
+    "tokens": 6899
   },
   "inspera.theme.css": {
     "bytes": 4913,

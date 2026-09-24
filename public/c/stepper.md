@@ -52,19 +52,24 @@ Show progress through a sequence of steps. - category: `navigation`.
 import { Stepper } from '@inspera/components'
 
 <Stepper
-  steps={[{ label: 'Details' }, { label: 'Questions' }, { label: 'Review' }]}
+  steps={[
+    { label: 'Details', description: 'Assessment info' },
+    { label: 'Questions', description: 'Add content' },
+    { label: 'Settings', description: 'Rules & timing' },
+    { label: 'Review', description: 'Publish' },
+  ]}
   activeStep={1}
-  orientation="Horizontal"
-  size="Medium"
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `steps` | `Step[]` | `defaultSteps` | Ordered steps. |
-| `activeStep` | `number` | `1` | Zero-based index of the current step. |
+| `steps` **(required)** | `Step[]` | - | Ordered steps. |
+| `activeStep` | `number` | `0` | Zero-based index of the current step. Steps before it show as completed. |
 | `orientation` | `'Horizontal' \| 'Vertical'` | `'Horizontal'` | Layout direction. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Indicator size. |
+
+Also accepts any native `<ol>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<ol>`. `className` and `style` go on the outermost element.
 
 ```ts
 export interface Step {
@@ -221,12 +226,26 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 .inspera-stepper__indicator .material-symbols-outlined { font-size: 18px; }
 
 .inspera-stepper__text {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 2px;
   text-align: center;
 }
 .inspera-stepper--vertical .inspera-stepper__text { text-align: left; }
+
+/* The indicator is decorative, so each step's status is spoken here. */
+.inspera-stepper__status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
 
 .inspera-stepper__label {
   font-size: 14px;

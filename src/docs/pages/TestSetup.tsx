@@ -1,10 +1,6 @@
 import { type ReactNode, useState } from 'react'
 import {
-  Badge,
-  Checkbox,
-  RadioButton,
-  TextInput,
-  Textarea,
+  Badge, Checkbox, RadioButton, TextInput, Textarea, Select,
 } from '../../components/inspera'
 import { AssessorNav } from '../../imports/pasted_text/global-nav'
 
@@ -177,7 +173,7 @@ function CheckRow({
   const [checked, setChecked] = useState(defaultChecked)
   return (
     <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
-      <Checkbox checked={checked} onChange={setChecked} withLabel={false} size="Small" />
+      <Checkbox label={label} checked={checked} onChange={setChecked} withLabel={false} size="Small" />
       <div style={{ display: 'flex', flexDirection: 'column', gap: 2, minWidth: 0, paddingTop: 7 }}>
         <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
           <span style={{ fontSize: 14, color: 'var(--text-primary)' }}>{label}</span>
@@ -394,10 +390,11 @@ function ExamDay() {
             />
           </div>
           <Textarea
+            label="Message shown to the candidate"
             showLabel={false}
             rows={2}
-            value="Local network issues. This might be permanent. Please contact an invigilator to download submission."
-            state={messageMode === 'default' ? 'Disabled' : 'Default'}
+            defaultValue="Local network issues. This might be permanent. Please contact an invigilator to download submission."
+            disabled={messageMode === 'default'}
           />
         </div>
       </div>
@@ -523,7 +520,7 @@ function GradingWorkflowNew() {
   return (
     <div style={{ maxWidth: 380, ...stack(14) }}>
       <Field label="Select grading workflow">
-        <TextInput showLabel={false} placeholder="Select grading workfl..." trailingIcon="account_tree" />
+        <TextInput label="Select grading workflow" showLabel={false} placeholder="Select grading workfl..." trailingIcon="account_tree" />
       </Field>
       <span style={{ display: 'inline-flex', alignItems: 'center', gap: 10, fontSize: 13 }}>
         <a href="#" onClick={(e) => e.preventDefault()} style={{ color: LINK, textDecoration: 'none', fontWeight: 500 }}>View details</a>
@@ -548,7 +545,13 @@ function LegacyGradingWorkflow() {
             How should the grading process be completed? <LearnMore />
           </span>
           <div style={{ width: '100%', maxWidth: 480 }}>
-            <TextInput showLabel={false} value="Confirm all candidates at once (Default)" trailingIcon="expand_more" />
+            <Select
+              label="General workflow"
+              showLabel={false}
+              widthMode="Hug"
+              options={['Confirm all candidates at once (Default)', 'Confirm one candidate at a time']}
+              defaultValue="Confirm all candidates at once (Default)"
+            />
           </div>
         </div>
         <div style={{ ...stack(8), paddingTop: 26 }}>
@@ -890,22 +893,22 @@ export default function TestSetup() {
           <div style={stack(18)}>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', columnGap: 48, rowGap: 20 }}>
               <Field label="Test name">
-                <TextInput showLabel={false} value={testName} onChange={setTestName} trailingIcon="edit" />
+                <TextInput label="Test name" showLabel={false} value={testName} onChange={setTestName} trailingIcon="edit" />
               </Field>
               <Field label="Question Set">
-                <TextInput showLabel={false} placeholder="-Select question set-" trailingIcon="folder_open" />
+                <TextInput label="Question set" showLabel={false} placeholder="-Select question set-" trailingIcon="folder_open" />
               </Field>
               <Field label="Session ID">
-                <TextInput showLabel={false} placeholder="Enter Session ID" value={sessionId} onChange={setSessionId} />
+                <TextInput label="Session ID" showLabel={false} placeholder="Enter Session ID" value={sessionId} onChange={setSessionId} />
               </Field>
               <Field label="Access Group">
-                <TextInput showLabel={false} placeholder="-Select Access Group-" />
+                <TextInput label="Access group" showLabel={false} placeholder="-Select Access Group-" />
               </Field>
             </div>
 
             <div style={{ maxWidth: 360 }}>
               <Field label="Template">
-                <TextInput showLabel={false} placeholder="-Select template-" trailingIcon="segment" />
+                <TextInput label="Template" showLabel={false} placeholder="-Select template-" trailingIcon="segment" />
               </Field>
             </div>
 
@@ -914,18 +917,18 @@ export default function TestSetup() {
             <div style={{ display: 'flex', gap: 32, flexWrap: 'wrap' }}>
               <Field label="Test start time">
                 <div style={{ display: 'flex', gap: 8 }}>
-                  <div style={{ width: 150 }}><TextInput showLabel={false} leadingIcon="calendar_today" placeholder="Not set" /></div>
-                  <div style={{ width: 130 }}><TextInput showLabel={false} leadingIcon="schedule" value="10:00 AM" /></div>
+                  <div style={{ width: 150 }}><TextInput label="Start date" showLabel={false} leadingIcon="calendar_today" placeholder="Not set" /></div>
+                  <div style={{ width: 130 }}><TextInput label="Start time" showLabel={false} leadingIcon="schedule" defaultValue="10:00 AM" /></div>
                 </div>
               </Field>
               <Field label="Test end time">
                 <div style={{ display: 'flex', gap: 8 }}>
-                  <div style={{ width: 150 }}><TextInput showLabel={false} leadingIcon="calendar_today" placeholder="Not set" /></div>
-                  <div style={{ width: 130 }}><TextInput showLabel={false} leadingIcon="schedule" value="12:00 PM" /></div>
+                  <div style={{ width: 150 }}><TextInput label="End date" showLabel={false} leadingIcon="calendar_today" placeholder="Not set" /></div>
+                  <div style={{ width: 130 }}><TextInput label="End time" showLabel={false} leadingIcon="schedule" defaultValue="12:00 PM" /></div>
                 </div>
               </Field>
               <Field label="Duration (hh:mm)">
-                <div style={{ width: 170 }}><TextInput showLabel={false} leadingIcon="schedule" value="No limit" /></div>
+                <div style={{ width: 170 }}><TextInput label="Duration" showLabel={false} leadingIcon="schedule" defaultValue="No limit" /></div>
               </Field>
             </div>
 
@@ -939,7 +942,7 @@ export default function TestSetup() {
             </div>
 
             <Field label="Test information">
-              <Textarea showLabel={false} rows={2} placeholder="Replace this text." value={testInfo} onChange={setTestInfo} />
+              <Textarea label="Test information" showLabel={false} rows={2} placeholder="Replace this text." value={testInfo} onChange={setTestInfo} />
             </Field>
           </div>
 

@@ -1,130 +1,156 @@
-import { type CSSProperties, type ReactElement, type ReactNode, cloneElement, isValidElement, useEffect, useId, useState } from 'react'
+import {
+  type CSSProperties, type ReactElement, cloneElement, isValidElement, useEffect, useId, useRef, useState,
+} from 'react'
+import { Portal, type Side, useAnchoredPosition, useEscapeLayer } from './overlay'
+import { type NativeAttrs } from './types'
 
 export type TooltipPlacement = 'Top' | 'Bottom' | 'Left' | 'Right'
 export type TooltipTheme = 'Light' | 'Dark'
-export type TooltipType = 'Default' | 'Accessibility'
+export type TooltipVariant = 'Default' | 'Accessibility'
 
 export interface TooltipProps {
   /** The hint text. Keep it short; never put essential information here alone. */
-  content?: string
-  /** Position relative to the trigger. */
+  content: string
+  /**
+   * The element the tooltip describes: one focusable element, e.g. an
+   * icon-only Button. It receives `aria-describedby` pointing at the tooltip.
+   */
+  children: ReactElement
+  /** Preferred side. It flips when there is no room. */
   placement?: TooltipPlacement
   /** Surface color. */
   theme?: TooltipTheme
-  /** Accessibility type uses larger text. */
-  type?: TooltipType
-  /** The element the tooltip describes. */
-  children?: ReactNode
-  /** Keep the tooltip visible regardless of hover - used for documentation. */
+  /** Accessibility uses larger text and more padding. */
+  variant?: TooltipVariant
+  /** @internal Keep the bubble visible, drawn inline - for documentation. */
   forceVisible?: boolean
 }
 
-const ARROW = 8 // square size px
-const GAP = 8   // bubble-to-trigger gap (must be >= ARROW/2 so arrow fits)
+const ARROW = 8
+const GAP = 8
+const sideOf: Record<TooltipPlacement, Side> = { Top: 'top', Bottom: 'bottom', Left: 'left', Right: 'right' }
 
-function positionStyle(placement: TooltipPlacement): CSSProperties {
+function inlinePosition(placement: TooltipPlacement): CSSProperties {
   switch (placement) {
-    case 'Top':    return { bottom: `calc(100% + ${GAP}px)`, left: '50%', transform: 'translateX(-50%)' }
-    case 'Bottom': return { top:    `calc(100% + ${GAP}px)`, left: '50%', transform: 'translateX(-50%)' }
-    case 'Left':   return { right:  `calc(100% + ${GAP}px)`, top: '50%',  transform: 'translateY(-50%)' }
-    case 'Right':  return { left:   `calc(100% + ${GAP}px)`, top: '50%',  transform: 'translateY(-50%)' }
+    case 'Top':    return { position: 'absolute', bottom: `calc(100% + ${GAP}px)`, left: '50%', transform: 'translateX(-50%)' }
+    case 'Bottom': return { position: 'absolute', top:    `calc(100% + ${GAP}px)`, left: '50%', transform: 'translateX(-50%)' }
+    case 'Left':   return { position: 'absolute', right:  `calc(100% + ${GAP}px)`, top: '50%',  transform: 'translateY(-50%)' }
+    case 'Right':  return { position: 'absolute', left:   `calc(100% + ${GAP}px)`, top: '50%',  transform: 'translateY(-50%)' }
   }
 }
 
-function arrowStyle(placement: TooltipPlacement, dark: boolean): CSSProperties {
+function arrowStyle(side: Side, dark: boolean, offset: number | null): CSSProperties {
   const half = ARROW / 2
   const bg = dark ? 'var(--gray-900)' : 'var(--white)'
-  const border = dark ? 'transparent' : 'var(--border-strong)'
-  const base: CSSProperties = { position: 'absolute', width: ARROW, height: ARROW, background: bg, zIndex: 31 }
-  switch (placement) {
-    case 'Top':
-      return { ...base, bottom: -half, left: '50%', marginLeft: -half, transform: 'rotate(45deg)',
-        borderRight: `1px solid ${border}`, borderBottom: `1px solid ${border}` }
-    case 'Bottom':
-      return { ...base, top: -half, left: '50%', marginLeft: -half, transform: 'rotate(45deg)',
-        borderLeft: `1px solid ${border}`, borderTop: `1px solid ${border}` }
-    case 'Left':
-      return { ...base, right: -half, top: '50%', marginTop: -half, transform: 'rotate(45deg)',
-        borderRight: `1px solid ${border}`, borderTop: `1px solid ${border}` }
-    case 'Right':
-      return { ...base, left: -half, top: '50%', marginTop: -half, transform: 'rotate(45deg)',
-        borderLeft: `1px solid ${border}`, borderBottom: `1px solid ${border}` }
+  const border = `var(--border-width-default) solid ${dark ? 'transparent' : 'var(--border-strong)'}`
+  const along = offset === null ? '50%' : offset
+  const base: CSSProperties = { position: 'absolute', width: ARROW, height: ARROW, background: bg, transform: 'rotate(45deg)' }
+  switch (side) {
+    case 'top':    return { ...base, bottom: -half, left: along, marginLeft: -half, borderRight: border, borderBottom: border }
+    case 'bottom': return { ...base, top: -half, left: along, marginLeft: -half, borderLeft: border, borderTop: border }
+    case 'left':   return { ...base, right: -half, top: along, marginTop: -half, borderRight: border, borderTop: border }
+    case 'right':  return { ...base, left: -half, top: along, marginTop: -half, borderLeft: border, borderBottom: border }
   }
 }
 
 export default function Tooltip({
-  content = 'Supplementary help text',
+  content,
+  children,
   placement = 'Top',
   theme = 'Dark',
-  type = 'Default',
-  children,
+  variant = 'Default',
   forceVisible = false,
-}: TooltipProps) {
+  className,
+  style,
+  ...rest
+}: TooltipProps & NativeAttrs<'span', TooltipProps>) {
   const id = useId()
+  // Pointer and focus are tracked apart: moving the mouse away used to hide the
+  // tooltip while the trigger still had keyboard focus.
   const [hovered, setHovered] = useState(false)
+  const [focused, setFocused] = useState(false)
   const [dismissed, setDismissed] = useState(false)
-  const visible = forceVisible || (hovered && !dismissed)
+  const leaveTimer = useRef<number | undefined>(undefined)
+  const shown = forceVisible || ((hovered || focused) && !dismissed)
+  const live = shown && !forceVisible
 
-  // The spec promises Escape dismisses the tooltip; nothing implemented it.
-  // WCAG 1.4.13 requires it for content that appears on hover or focus.
+  const anchor = useRef<HTMLSpanElement>(null)
+  const bubbleRef = useRef<HTMLSpanElement>(null)
+  const pos = useAnchoredPosition(live, anchor, bubbleRef, { side: sideOf[placement], align: 'center', offset: GAP })
+
+  // WCAG 1.4.13: dismissible with Escape without moving focus. Registered as a
+  // layer so Escape closes the tooltip, not the dialog it sits in.
+  useEscapeLayer(live, () => setDismissed(true))
   useEffect(() => {
-    if (!hovered) { setDismissed(false); return }
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setDismissed(true) }
-    document.addEventListener('keydown', onKey)
-    return () => document.removeEventListener('keydown', onKey)
-  }, [hovered])
+    if (!hovered && !focused) setDismissed(false)
+  }, [hovered, focused])
+  useEffect(() => () => window.clearTimeout(leaveTimer.current), [])
+
+  // A short grace period lets the pointer cross the gap onto the bubble, which
+  // WCAG 1.4.13 also requires to be hoverable.
+  const enter = () => { window.clearTimeout(leaveTimer.current); setHovered(true) }
+  const leave = () => { leaveTimer.current = window.setTimeout(() => setHovered(false), 100) }
 
   const dark = theme === 'Dark'
+  const side = forceVisible ? sideOf[placement] : pos.side
   const bubble: CSSProperties = {
-    position: 'absolute',
-    ...positionStyle(placement),
     maxWidth: 240,
     width: 'max-content',
-    padding: type === 'Accessibility' ? '10px 12px' : '8px 12px',
+    padding: variant === 'Accessibility' ? '10px 12px' : '8px 12px',
     borderRadius: 'var(--radius-sm)',
     background: dark ? 'var(--gray-900)' : 'var(--white)',
     color: dark ? 'var(--white)' : 'var(--text-primary)',
-    border: dark ? 'none' : '1px solid var(--border-strong)',
+    border: dark ? 'none' : 'var(--border-width-default) solid var(--border-strong)',
     fontFamily: 'var(--font-sans)',
-    fontSize: type === 'Accessibility' ? 14 : 12,
+    fontSize: variant === 'Accessibility' ? 14 : 12,
     lineHeight: 1.4,
     boxShadow: 'var(--shadow-100)',
-    zIndex: 30,
-    pointerEvents: 'none',
-    opacity: visible ? 1 : 0,
-    transition: 'opacity 140ms ease',
+    zIndex: 'var(--z-tooltip)',
+    ...(forceVisible ? inlinePosition(placement) : pos.style),
+    ...style,
   }
 
-  // A custom trigger has to carry the describedby too, or the tooltip it owns
-  // is never announced - the spec's "link trigger and tooltip" held only for
-  // the built-in trigger below.
-  const trigger = children
-    ? isValidElement(children)
-      ? cloneElement(children as ReactElement<{ 'aria-describedby'?: string }>, { 'aria-describedby': id })
-      : children
-    : (
-    <button
-      type="button"
-      aria-describedby={id}
-      style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 40, height: 40, borderRadius: 'var(--radius-pill)', border: '1px solid var(--border-strong)', background: 'var(--white)', fontFamily: 'var(--font-sans)', cursor: 'help' }}
+  // Keep whatever description the trigger already had, and add ours.
+  const trigger = isValidElement(children)
+    ? cloneElement(children as ReactElement<{ 'aria-describedby'?: string }>, {
+        'aria-describedby': [
+          (children.props as { 'aria-describedby'?: string })['aria-describedby'],
+          id,
+        ].filter(Boolean).join(' '),
+      })
+    : children
+
+  // Always in the DOM - `hidden` when not shown - so the trigger's
+  // aria-describedby resolves even before the first hover.
+  const node = (
+    <span
+      ref={bubbleRef}
+      id={id}
+      role="tooltip"
+      hidden={!shown}
+      className={className ? `inspera ${className}` : 'inspera'}
+      style={bubble}
+      onMouseEnter={enter}
+      onMouseLeave={leave}
+      {...rest}
     >
-      <span className="material-symbols-outlined" style={{ fontSize: 20, color: 'var(--action-active)' }} aria-hidden>help</span>
-    </button>
+      {content}
+      <span aria-hidden style={arrowStyle(side, dark, forceVisible ? null : pos.arrow)} />
+    </span>
   )
 
   return (
     <span
+      ref={anchor}
+      className="inspera"
       style={{ position: 'relative', display: 'inline-flex' }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      onFocus={() => setHovered(true)}
-      onBlur={() => setHovered(false)}
+      onMouseEnter={enter}
+      onMouseLeave={leave}
+      onFocus={() => setFocused(true)}
+      onBlur={() => setFocused(false)}
     >
       {trigger}
-      <span id={id} role="tooltip" style={bubble}>
-        {content}
-        <span aria-hidden style={arrowStyle(placement, dark)} />
-      </span>
+      {forceVisible ? node : <Portal>{node}</Portal>}
     </span>
   )
 }

@@ -1,74 +1,70 @@
-import { type CSSProperties, useEffect, useId, useState } from 'react'
+import { type CSSProperties } from 'react'
+import { FieldMessage, labelStyle, useFieldA11y } from './FormField'
+import { cx, type ForceState, type NativeAttrs } from './types'
+import { useControllableState } from './useControllableState'
 
-export type TextInputState =
-  | 'Default' | 'Hover' | 'Focused' | 'Disabled' | 'Error' | 'Filled' | 'ReadOnly'
 export type TextInputSize = 'Small' | 'Medium'
 
 export interface TextInputProps {
-  /** Show the field label. */
-  label?: string
+  /** Field label. Always required: it is the accessible name even when hidden. */
+  label: string
   /** Hint shown when empty. Not a substitute for the label. */
   placeholder?: string
   /** Current value. Controlled - pair with onChange. */
   value?: string
-  /**
-   * Freezes a visual state so documentation can show it without a pointer.
-   * `Hover`, `Focused` and `Filled` are presentation-only - leave them unset in
-   * application code, where CSS drives them from the real pointer and keyboard.
-   * `Error`, `Disabled` and `ReadOnly` are real application state and belong in
-   * your code.
-   */
-  state?: TextInputState
-  /** Control height. */
-  size?: TextInputSize
-  /** Show a leading icon. */
-  leadingIcon?: string
-  /** Show a trailing icon. */
-  trailingIcon?: string
-  /** Render the visible label. Hiding it still requires an accessible name. */
-  showLabel?: boolean
-  /** Show helper text. */
-  helpText?: string
-  /** Show error message. */
-  errorText?: string
+  /** Starting value when uncontrolled. */
+  defaultValue?: string
   /** Fired with the new value on every keystroke. */
   onChange?: (value: string) => void
+  /** Control height. */
+  size?: TextInputSize
+  /** Material Symbols name shown before the text. */
+  leadingIcon?: string
+  /** Material Symbols name shown after the text. Decorative only. */
+  trailingIcon?: string
+  /** Render the visible label. When false, the label becomes `aria-label`. */
+  showLabel?: boolean
+  /** Guidance shown below the field. Replaced by errorText when `error` is set. */
+  helpText?: string
+  /** Validation message, shown while `error` is true. */
+  errorText?: string
+  /** Marks the field invalid: red border, `aria-invalid`, errorText shown. */
+  error?: boolean
+  /** Blocks editing and dims the field. */
+  disabled?: boolean
+  /** Shows the value without allowing edits. */
+  readOnly?: boolean
+  /** @internal Freezes a hover or focus look for the docs gallery. */
+  forceState?: ForceState
 }
 
 export default function TextInput({
-  label = 'Label',
-  placeholder = 'Placeholder text',
+  label,
+  placeholder,
   value,
-  state = 'Default',
+  defaultValue = '',
+  onChange,
   size = 'Medium',
   leadingIcon,
   trailingIcon,
   showLabel = true,
   helpText,
   errorText,
-  onChange,
-}: TextInputProps) {
-  const id = useId()
-  const [internal, setInternal] = useState(state === 'Filled' ? 'Jane Cooper' : '')
-  const current = value ?? internal
+  error = false,
+  disabled = false,
+  readOnly = false,
+  forceState,
+  className,
+  style,
+  id,
+  required,
+  ...rest
+}: TextInputProps & NativeAttrs<'input', TextInputProps>) {
+  const [current, setCurrent] = useControllableState(value, defaultValue, onChange)
+  const field = useFieldA11y({ id, label, showLabel, helpText, errorText, error, required })
 
-  // `state="Filled"` has to be an effect, not just a useState initializer: the
-  // docs playground swaps the prop on a live instance rather than remounting
-  // it, and an initializer only ever runs once - so the control showed an
-  // empty field. Only seeds the sample text; typing still wins afterwards.
-  useEffect(() => {
-    if (state === 'Filled') setInternal('Jane Cooper')
-  }, [state])
-
-  const disabled = state === 'Disabled'
-  const readOnly = state === 'ReadOnly'
-  const isError = state === 'Error'
-
-
-  const height = size === 'Small' ? 32 : 40
-
-  const field: CSSProperties = {
-    height,
+  const box: CSSProperties = {
+    height: size === 'Small' ? 32 : 40,
     display: 'flex',
     alignItems: 'center',
     gap: 8,
@@ -83,33 +79,35 @@ export default function TextInput({
   const iconStyle: CSSProperties = { fontSize: 20, color: 'var(--action-active)' }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 6, width: '100%', fontFamily: 'var(--font-sans)' }}>
-      {showLabel && (
-        <label htmlFor={id} style={{ fontSize: 16, fontWeight: 500, color: 'var(--text-primary)' }}>
+    <div
+      className={cx('inspera', className)}
+      style={{ display: 'flex', flexDirection: 'column', gap: 6, width: '100%', fontFamily: 'var(--font-sans)', ...style }}
+    >
+      {field.ownLabel && (
+        <label id={field.labelId} htmlFor={field.id} style={labelStyle}>
           {label}
         </label>
       )}
       <div
         className="inspera-interactive inspera-field"
-        data-force-state={state && state !== 'Default' ? state : undefined}
-        data-invalid={isError || undefined}
+        data-force-state={forceState}
+        data-invalid={field.invalid || undefined}
         data-disabled={disabled || undefined}
         data-readonly={readOnly || undefined}
-        style={field}
+        style={box}
       >
         {leadingIcon && <span className="material-symbols-outlined" style={iconStyle} aria-hidden>{leadingIcon}</span>}
         <input
-          id={id}
+          id={field.id}
           value={current}
           placeholder={placeholder}
           disabled={disabled}
           readOnly={readOnly}
-          aria-invalid={isError || undefined}
-          aria-describedby={errorText ? `${id}-err` : helpText ? `${id}-help` : undefined}
-          onChange={(e) => {
-            setInternal(e.target.value)
-            onChange?.(e.target.value)
-          }}
+          required={field.required || undefined}
+          aria-label={field.ariaLabel}
+          aria-invalid={field.invalid || undefined}
+          aria-describedby={field.describedBy}
+          onChange={(e) => setCurrent(e.target.value)}
           style={{
             flex: 1,
             border: 'none',
@@ -120,15 +118,11 @@ export default function TextInput({
             color: 'var(--text-primary)',
             minWidth: 0,
           }}
+          {...rest}
         />
         {trailingIcon && <span className="material-symbols-outlined" style={iconStyle} aria-hidden>{trailingIcon}</span>}
       </div>
-      {isError && errorText && (
-        <span id={`${id}-err`} style={{ fontSize: 12, color: 'var(--error)' }}>{errorText}</span>
-      )}
-      {!isError && helpText && (
-        <span id={`${id}-help`} style={{ fontSize: 12, color: 'var(--muted-foreground)' }}>{helpText}</span>
-      )}
+      <FieldMessage field={field} />
     </div>
   )
 }

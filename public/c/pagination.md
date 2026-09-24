@@ -52,22 +52,24 @@ Navigate between pages of content. - category: `navigation`.
 import { Pagination } from '@inspera/components'
 
 <Pagination
-  page={page}
   pageCount={12}
-  size="Medium"
-  showEdges={true}
-  onChange={setPage}
+  defaultPage={4}
+  onChange={loadPage}
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `page` | `number` | `1` | Current page (1-based). |
-| `pageCount` | `number` | `10` | Total number of pages. |
+| `pageCount` **(required)** | `number` | - | Total number of pages. |
+| `page` | `number` | - | Current page (1-based). Controlled - pair with onChange. |
+| `defaultPage` | `number` | `1` | Starting page when uncontrolled. |
 | `siblingCount` | `number` | `1` | Pages shown either side of current. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Control height. |
 | `showEdges` | `boolean` | `true` | Show first / last controls. |
 | `onChange` | `(page: number) => void` | - | Fired with the requested page number, 1-based. |
+| `label` | `string` | `'Pagination'` | Names the navigation landmark. Give each pager on a page its own. |
+
+Also accepts any native `<nav>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<nav>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `navigation`, keyboard operable. Wrap in nav with aria-label="Pagination"; Mark the current page with aria-current="page"; Disable and aria-disable prev/next at the bounds.
 

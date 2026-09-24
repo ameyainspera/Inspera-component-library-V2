@@ -52,22 +52,23 @@ Capture or display a star rating. - category: `input-controls`.
 import { Rating } from '@inspera/components'
 
 <Rating
-  value={score}
-  onChange={setScore}
-  max={5}
-  size="Medium"
-  readOnly={false}
+  label="Question difficulty"
+  defaultValue={3}
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `value` | `number` | - | Current rating. Controlled - pair with onChange. Omit it and the component tracks its own, the same contract Checkbox and Toggle use. |
+| `label` **(required)** | `string` | - | What is being rated, e.g. "Question difficulty". The accessible name; not shown. |
+| `value` | `number` | - | Current rating. Controlled - pair with onChange. |
+| `defaultValue` | `number` | `0` | Starting rating when uncontrolled. |
+| `onChange` | `(value: number) => void` | - | Fired with the chosen rating; 0 when cleared. Not fired when readOnly. |
 | `max` | `number` | `5` | Number of stars. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Star size. |
-| `readOnly` | `boolean` | `false` | Display-only mode. |
-| `showValue` | `boolean` | `false` | Show numeric value. |
-| `onChange` | `(value: number) => void` | - | Fired with the chosen rating. Not fired when readOnly. |
+| `readOnly` | `boolean` | `false` | Display-only: announced as "4 of 5 stars", not as a set of choices. |
+| `showValue` | `boolean` | `false` | Show the numeric value beside the stars. |
+
+Also accepts any native `<div>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<div>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `radiogroup`, keyboard operable. Container uses role="radiogroup" with an accessible label; Each star is a radio with aria-checked and an aria-label; Arrow keys adjust the rating.
 

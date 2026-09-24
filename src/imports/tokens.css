@@ -144,6 +144,7 @@
   --border-strong: var(--gray-300); /* Control outline */
   --border-interactive: var(--gray-500); /* Control outline on hover */
   --muted-foreground: var(--gray-600); /* De-emphasised label text */
+  --scrim: rgba(39, 39, 39, 0.48); /* Backdrop behind Dialog, Drawer and Command Palette */
 
   /* Spacing */
   --space-0: 0px;
@@ -182,6 +183,9 @@
   --effect-state-hover-light: 0px 0px 0px 3px var(--gray-500); /* Hover outline */
   --effect-state-focus-on-dark: 0px 0px 0px 3px var(--green-300); /* Focus ring on a dark container */
   --effect-button-shadow: inset 0px -1px 0px rgba(0, 0, 0, 0.2), 0px 1px 0px rgba(0, 0, 0, 0.08); /* Standard button elevation highlight */
+  --effect-button-shadow-hover: inset 0 -1px 0 rgba(0, 0, 0, 0.2), 0 2px 6px rgba(0, 64, 128, 0.24); /* Solid button under the pointer */
+  --effect-button-shadow-active: inset 0 1px 2px rgba(0, 0, 0, 0.24); /* Solid button while pressed */
+  --effect-thumb-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); /* Slider and toggle thumb */
   --effect-link-underline-dark: inset 0px -1px 0px var(--gray-700); /* Link underline on light ground */
   --effect-link-underline-blue: inset 0px -1px 0px var(--blue-800); /* Primary link underline */
   --effect-link-underline-light: inset 0px -1px 0px var(--white); /* Link underline on dark ground */

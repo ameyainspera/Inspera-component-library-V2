@@ -54,23 +54,28 @@ import { TextInput } from '@inspera/components'
 <TextInput
   label="Email address"
   placeholder="jane@inspera.com"
-  size="Medium"
+  helpText="We'll never share your email."
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | `'Label'` | Show the field label. |
-| `placeholder` | `string` | `'Placeholder text'` | Hint shown when empty. Not a substitute for the label. |
+| `label` **(required)** | `string` | - | Field label. Always required: it is the accessible name even when hidden. |
+| `placeholder` | `string` | - | Hint shown when empty. Not a substitute for the label. |
 | `value` | `string` | - | Current value. Controlled - pair with onChange. |
-| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Disabled' \| 'Error' \| 'Filled' \| 'ReadOnly'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Filled` are presentation-only - leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Error`, `Disabled` and `ReadOnly` are real application state and belong in your code. |
-| `size` | `'Small' \| 'Medium'` | `'Medium'` | Control height. |
-| `leadingIcon` | `string` | - | Show a leading icon. |
-| `trailingIcon` | `string` | - | Show a trailing icon. |
-| `showLabel` | `boolean` | `true` | Render the visible label. Hiding it still requires an accessible name. |
-| `helpText` | `string` | - | Show helper text. |
-| `errorText` | `string` | - | Show error message. |
+| `defaultValue` | `string` | `''` | Starting value when uncontrolled. |
 | `onChange` | `(value: string) => void` | - | Fired with the new value on every keystroke. |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Control height. |
+| `leadingIcon` | `string` | - | Material Symbols name shown before the text. |
+| `trailingIcon` | `string` | - | Material Symbols name shown after the text. Decorative only. |
+| `showLabel` | `boolean` | `true` | Render the visible label. When false, the label becomes `aria-label`. |
+| `helpText` | `string` | - | Guidance shown below the field. Replaced by errorText when `error` is set. |
+| `errorText` | `string` | - | Validation message, shown while `error` is true. |
+| `error` | `boolean` | `false` | Marks the field invalid: red border, `aria-invalid`, errorText shown. |
+| `disabled` | `boolean` | `false` | Blocks editing and dims the field. |
+| `readOnly` | `boolean` | `false` | Shows the value without allowing edits. |
+
+Also accepts any native `<input>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<input>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `textbox`, keyboard operable. Always associate label with input using htmlFor/id; Error text must be linked via aria-describedby; Required fields must use aria-required.
 

@@ -46,15 +46,15 @@ const SHARED_PROPS = [
 
 /**
  * One case per single-control variation, plus the defaults - the same shape
- * audit-snippets uses. `state` is skipped: its Hover/Focused/Pressed values
- * freeze an appearance for the docs, and a recipe describes the resting element
- * plus real pseudo-classes, so there is nothing to compare.
+ * audit-snippets uses. Preview controls are skipped: they freeze a hover or
+ * focus look for the docs, and a recipe describes the resting element plus
+ * real pseudo-classes, so there is nothing to compare.
  */
 function casesFor(slug: string): { name: string; values: Record<string, string> }[] {
   const entry = registry[slug]
   const out = [{ name: 'defaults', values: entry.defaults }]
   for (const [key, def] of Object.entries(entry.controls)) {
-    if (key === 'state') continue
+    if (def.group === 'preview') continue
     for (const option of def.options) {
       if (option === entry.defaults[key]) continue
       out.push({ name: `${key}=${option}`, values: { ...entry.defaults, [key]: option } })
@@ -64,6 +64,10 @@ function casesFor(slug: string): { name: string; values: Record<string, string> 
 }
 
 const problems: string[] = []
+
+// Optional slug filter: `pnpm audit:recipes -- table snackbar`.
+const only = process.argv.slice(2).filter((a) => !a.startsWith('--'))
+const selected = Object.entries(recipes).filter(([slug]) => only.length === 0 || only.includes(slug))
 
 // ---------------------------------------------------------------------------
 // Coverage first. Every published spec opens by telling a tool that cannot
@@ -83,12 +87,32 @@ if (missing.length > 0) {
 // ---------------------------------------------------------------------------
 // Cheap checks next, before paying for a browser.
 // ---------------------------------------------------------------------------
-for (const [slug, recipe] of Object.entries(recipes)) {
+for (const [slug, recipe] of selected) {
   const entry = registry[slug]
   if (!entry) {
     problems.push(`${slug} | recipe has no playground entry to drive it`)
     continue
   }
+  // Every props control must reach both sides - the HTML and the component the
+  // recipe renders to check it - the same rule the JSX snippet meets. Without
+  // this, a recipe that ignored Disabled on *both* sides compared equal and
+  // passed, while the HTML tab handed over markup that was not disabled.
+  const baseMarkup = recipe.markup(entry.defaults)
+  const baseReal = renderToStaticMarkup(recipe.component(entry.defaults))
+  for (const [key, def] of Object.entries(entry.controls)) {
+    if (def.group === 'preview' || recipe.markupIgnores?.includes(key)) continue
+    for (const option of def.options) {
+      if (option === entry.defaults[key]) continue
+      const values = { ...entry.defaults, [key]: option }
+      if (recipe.markup(values) === baseMarkup) {
+        problems.push(`${slug} | control "${key}=${option}" moves the preview but not the HTML`)
+      }
+      if (renderToStaticMarkup(recipe.component(values)) === baseReal) {
+        problems.push(`${slug} | control "${key}=${option}" is ignored by the recipe's component(), so it is never compared`)
+      }
+    }
+  }
+
   // Every class the live markup emits must actually exist in the CSS shipped
   // beside it. A modifier the stylesheet does not define is invisible - the
   // element renders, it just renders wrong, which is the failure this stops.
@@ -162,7 +186,7 @@ type Case = {
 }
 
 const cases: Case[] = []
-for (const [slug, recipe] of Object.entries(recipes)) {
+for (const [slug, recipe] of selected) {
   for (const { name, values } of casesFor(slug)) {
     cases.push({
       slug,
@@ -266,7 +290,8 @@ await browser.close()
 if (found.length > 0) {
   // One component can produce hundreds of near-identical lines; show enough to
   // act on and say how many were held back.
-  const shown = found.slice(0, 60)
+  // AUDIT_ALL=1 prints every drift, for working through a large change.
+  const shown = process.env.AUDIT_ALL ? found : found.slice(0, 60)
   console.error(`\n✗ Recipe drifted from the component in ${found.length} place(s):\n`)
   for (const p of shown) console.error('  ' + p)
   if (found.length > shown.length) console.error(`\n  ...and ${found.length - shown.length} more.`)

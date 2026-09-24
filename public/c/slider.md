@@ -53,25 +53,25 @@ import { Slider } from '@inspera/components'
 
 <Slider
   label="Volume"
-  min={0}
-  max={100}
-  value={volume}
-  onChange={setVolume}
-  showValue={true}
+  defaultValue={40}
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | `'Value'` | Field label describing what is being adjusted. |
+| `label` **(required)** | `string` | - | What is being adjusted. Required: it is the accessible name even when hidden. |
 | `min` | `number` | `0` | Minimum value. |
 | `max` | `number` | `100` | Maximum value. |
-| `value` | `number` | - | Current value. Controlled - pair with onChange. |
 | `step` | `number` | `1` | Increment granularity. |
-| `state` | `'Default' \| 'Focused' \| 'Disabled'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Focused` is presentation-only - leave it unset in application code, where CSS drives it from the real pointer and keyboard. `Disabled` is real application state and belongs in your code. |
-| `showValue` | `boolean` | `true` | Show the current value. |
-| `showLabel` | `boolean` | `true` | Show the field label. |
+| `value` | `number` | - | Current value. Controlled - pair with onChange. |
+| `defaultValue` | `number` | - | Starting value when uncontrolled. Defaults to the midpoint. |
 | `onChange` | `(value: number) => void` | - | Fired as the value changes, by drag or arrow key. |
+| `formatValue` | `(value: number) => string` | - | Formats the shown value and what assistive tech announces, e.g. `(v) => `${v}%``. |
+| `showValue` | `boolean` | `true` | Show the current value. |
+| `showLabel` | `boolean` | `true` | Render the visible label. When false, the label becomes `aria-label`. |
+| `disabled` | `boolean` | `false` | Blocks interaction and dims the control. |
+
+Also accepts any native `<input>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<input>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `slider`, keyboard operable. Use role="slider" with aria-valuemin / aria-valuemax / aria-valuenow; Provide an accessible label via aria-label; Arrow keys adjust the value.
 

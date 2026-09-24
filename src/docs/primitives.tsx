@@ -36,6 +36,7 @@ export function CopyButton({ text, label = 'Copy' }: { text: string; label?: str
   return (
     <button
       type="button"
+      className="inspera-interactive"
       onClick={async () => {
         try {
           await navigator.clipboard.writeText(text)
@@ -53,8 +54,8 @@ export function CopyButton({ text, label = 'Copy' }: { text: string; label?: str
         padding: '0 12px',
         borderRadius: 'var(--radius-sm)',
         border: '1px solid var(--border-strong)',
-        background: copied ? 'var(--primary)' : '#FFFFFF',
-        color: copied ? '#FFFFFF' : 'var(--gray-800)',
+        background: copied ? 'var(--primary)' : 'var(--surface)',
+        color: copied ? 'var(--white)' : 'var(--gray-800)',
         fontFamily: 'var(--font-sans)',
         fontSize: 13,
         fontWeight: 500,
@@ -100,6 +101,7 @@ export function CodeBlock({
   const pre = useRef<HTMLPreElement>(null)
   const [overflowing, setOverflowing] = useState(false)
   const [atEnd, setAtEnd] = useState(false)
+  const [scrolls, setScrolls] = useState(false)
 
   useEffect(() => {
     const el = pre.current
@@ -110,6 +112,9 @@ export function CodeBlock({
       const scrollable = el.scrollHeight - el.clientHeight
       setOverflowing(scrollable > 1)
       setAtEnd(el.scrollTop >= scrollable - 1)
+      // Long lines scroll sideways too; either way the block has to be
+      // reachable by keyboard, or its hidden part is mouse-only.
+      setScrolls(scrollable > 1 || el.scrollWidth - el.clientWidth > 1)
     }
     measure()
     el.addEventListener('scroll', measure, { passive: true })
@@ -160,7 +165,8 @@ export function CodeBlock({
       </div>
       <pre
         ref={pre}
-        tabIndex={overflowing ? 0 : undefined}
+        tabIndex={scrolls ? 0 : undefined}
+        aria-label={scrolls ? `${language ?? 'Code'} (scrollable)` : undefined}
         style={{
           margin: 0,
           padding: 16,
@@ -234,7 +240,7 @@ export function CodeTabs({
               padding: '0 10px',
               border: 'none',
               borderRadius: 3,
-              background: active ? '#FFFFFF' : 'transparent',
+              background: active ? 'var(--white)' : 'transparent',
               color: active ? 'var(--gray-900)' : 'var(--gray-400)',
               fontFamily: 'var(--font-mono)',
               fontSize: 11,
@@ -257,15 +263,17 @@ export function CodeTabs({
 // Segmented control used to drive the interactive playground.
 // ---------------------------------------------------------------------------
 export function SegmentedControl({
-  label, options, value, onChange,
+  label, options, value, onChange, defaultValue,
 }: {
   label: string
   options: string[]
   value: string
   onChange: (v: string) => void
+  /** Marked with a dot, so the default is visible without reordering options. */
+  defaultValue?: string
 }) {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+    <div role="group" aria-label={label} style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
       <span style={{ fontSize: 12, fontWeight: 600, letterSpacing: 0.4, textTransform: 'uppercase', color: 'var(--muted-foreground)' }}>
         {label}
       </span>
@@ -276,22 +284,33 @@ export function SegmentedControl({
             <button
               key={opt}
               type="button"
+              className="inspera-interactive"
+              aria-pressed={active}
               onClick={() => onChange(opt)}
+              title={opt === defaultValue ? 'Default' : undefined}
               style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 6,
                 height: 32,
                 padding: '0 12px',
                 borderRadius: 'var(--radius-sm)',
                 border: `1px solid ${active ? 'var(--primary)' : 'var(--border-strong)'}`,
-                background: active ? 'var(--primary)' : '#FFFFFF',
-                color: active ? '#FFFFFF' : 'var(--gray-700)',
+                background: active ? 'var(--primary)' : 'var(--surface)',
+                color: active ? 'var(--white)' : 'var(--gray-700)',
                 fontFamily: 'var(--font-sans)',
                 fontSize: 13,
                 fontWeight: active ? 600 : 400,
                 cursor: 'pointer',
-                transition: 'all 120ms ease',
               }}
             >
               {opt}
+              {opt === defaultValue && (
+                <span
+                  aria-label="(default)"
+                  style={{ width: 5, height: 5, borderRadius: 'var(--radius-pill)', background: active ? 'var(--white)' : 'var(--gray-500)' }}
+                />
+              )}
             </button>
           )
         })}
@@ -307,15 +326,21 @@ export function PreviewCanvas({
   children,
   minHeight = 220,
   contentWidth = 480,
+  align = 'center',
+  floating = false,
 }: {
   children: ReactNode
   minHeight?: number
+  /** Holds an open panel that must not be clipped; the canvas does not scroll. */
+  floating?: boolean
   /**
    * Width budget for the previewed component. Components size to their
    * container rather than carrying a fixed width, so the *canvas* decides how
    * wide a preview should be - the component never does.
    */
   contentWidth?: number
+  /** `start` pins the component to the top, for panels that open downward. */
+  align?: 'start' | 'center'
 }) {
   return (
     <div
@@ -323,18 +348,20 @@ export function PreviewCanvas({
         position: 'relative',
         minHeight,
         display: 'flex',
-        alignItems: 'center',
+        alignItems: align === 'start' ? 'flex-start' : 'center',
         justifyContent: 'center',
         padding: 32,
         borderRadius: 'var(--radius-lg)',
         border: '1px solid var(--border)',
-        backgroundColor: '#f8fbff',
-        backgroundImage: 'radial-gradient(circle at center, rgba(157, 200, 255, 0.45) 1.2px, transparent 1.4px)',
+        backgroundColor: 'var(--canvas-bg)',
+        backgroundImage: 'radial-gradient(circle at center, var(--canvas-dot) 1.2px, transparent 1.4px)',
         backgroundSize: '18px 18px',
-        overflow: 'visible',
+        // Scrolls sideways rather than spilling out when a wide component meets
+        // a narrow window - except around an open panel, which must stay whole.
+        ...(floating ? { overflow: 'visible' } : { overflowX: 'auto' }),
       }}
     >
-      <div style={{ width: '100%', maxWidth: contentWidth, display: 'flex', justifyContent: 'center' }}>
+      <div style={{ width: '100%', maxWidth: contentWidth, display: 'flex', justifyContent: 'center', minWidth: 0 }}>
         {children}
       </div>
     </div>

@@ -53,21 +53,21 @@ import { Card } from '@inspera/components'
 
 <Card
   title="Algebra Quiz"
-  elevation="Raised"
-  padding="Default"
-  interactive={false}
+  body="24 questions | 45 minutes. Group related content in a contained surface."
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `title` | `string` | `'Card title'` | Optional heading for the card. |
-| `body` | `string` | `'Group related content in a contained surface using consistent padding and elevation.'` | Short body copy. For anything richer, pass children instead. |
+| `title` | `string` | - | Heading for the card. Also the accessible name of an interactive card. |
+| `body` | `string` | - | Short body copy. For anything richer, pass children instead. |
 | `elevation` | `'Flat' \| 'Raised' \| 'Outlined'` | `'Raised'` | Surface treatment. |
 | `padding` | `'Compact' \| 'Default' \| 'Spacious'` | `'Default'` | Internal padding (12 / 16 / 24). |
-| `interactive` | `boolean` | `false` | Renders as a focusable button with hover elevation. |
-| `children` | `ReactNode` | - | Card contents. Takes precedence over title and body. |
-| `onClick` | `() => void` | - | Fired when an interactive card is activated. Set interactive as well, or there is no affordance. |
+| `interactive` | `boolean` | `false` | The whole card becomes one click target, with hover elevation and a focus ring. |
+| `children` | `ReactNode` | - | Card contents. Replaces title and body. |
+| `onClick` | `MouseEventHandler<HTMLButtonElement>` | - | Fired when an interactive card is activated. |
+
+Also accepts any native `<article>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<article>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `article`, keyboard operable. Interactive cards should use role="button" or be wrapped in an anchor; Non-interactive cards use role="article" or a semantic section.
 
@@ -110,7 +110,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 - Radius is `--radius-lg`. Padding is 12 / 16 / 24 for Compact / Default / Spacious.
 - Flat has neither border nor shadow, Raised adds `--shadow-200`, Outlined adds a 1px `--border-strong`. Never both a shadow and a strong border.
 - The transparent 1px border at rest is deliberate: without it, Outlined would be 2px wider than Flat.
-- An interactive card is a `<button>`. A `<div>` with a click handler is not keyboard operable and will fail review.
+- An interactive card stays an `<article>` with one transparent `<button class="inspera-card__link">` stretched over it, named by the title. Never wrap the card in a `<button>` (headings inside a button are invalid) and never put a click handler on a `<div>`.
 - Title 16px/500, body 16px/1.4 in `--gray-700` - the body is not smaller than the title.
 
 ```css
@@ -132,6 +132,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 }
 
 .inspera-card {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -157,14 +158,28 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 .inspera-card--raised   { box-shadow: var(--shadow-200); }
 .inspera-card--outlined { border-color: var(--border-strong); }
 
-/* Interactive cards are <button>, so they are focusable and operable by
-   keyboard for free. A div with onclick is not. */
-.inspera-card--interactive { cursor: pointer; }
-.inspera-card--interactive:hover { box-shadow: var(--shadow-300); }
-.inspera-card--interactive:focus-visible {
+/* Interactive: one transparent button stretched over the whole card. The
+   card stays an <article>, so its heading is still a heading - wrapping it all
+   in a <button> flattened title and body into one long button name. */
+.inspera-card__link {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: inherit;
+  background: transparent;
+  cursor: pointer;
+}
+.inspera-card__link:focus-visible {
   outline: var(--focus-ring-width) solid var(--focus-ring-color);
   outline-offset: var(--focus-ring-offset);
 }
+.inspera-card--interactive:hover,
+.inspera-card--interactive:has(:focus-visible) { box-shadow: var(--shadow-300); }
+
+/* Interactive cards are <button>, so they are focusable and operable by
+   keyboard for free. A div with onclick is not. */
 
 .inspera-card__title {
   margin: 0;

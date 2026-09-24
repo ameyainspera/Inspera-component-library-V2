@@ -53,20 +53,26 @@ import { DatePicker } from '@inspera/components'
 
 <DatePicker
   label="Due date"
-  value="2026-08-19"
-  onChange={setDate}
 />
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | `'Date'` | Field label. |
-| `value` | `string` | - | Selected date (YYYY-MM-DD). |
-| `placeholder` | `string` | `'Select date'` | Trigger placeholder. |
-| `state` | `'Default' \| 'Focused' \| 'Disabled' \| 'Error'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Focused` is presentation-only - leave it unset in application code, where CSS drives it from the real pointer and keyboard. `Error` and `Disabled` are real application state and belong in your code. |
-| `showLabel` | `boolean` | `true` | Show the field label. |
-| `defaultOpen` | `boolean` | `false` | Open the calendar initially. |
+| `label` **(required)** | `string` | - | Field label. Always required: it is the accessible name even when hidden. |
+| `value` | `string` | - | Selected date (YYYY-MM-DD). Controlled - pair with onChange. |
+| `defaultValue` | `string` | - | Starting date when uncontrolled (YYYY-MM-DD). |
 | `onChange` | `(iso: string) => void` | - | Fired with the selected date as an ISO string (YYYY-MM-DD). |
+| `open` | `boolean` | - | Calendar open state. Controlled - pair with onOpenChange. |
+| `defaultOpen` | `boolean` | `false` | Open the calendar initially, when uncontrolled. |
+| `onOpenChange` | `(open: boolean) => void` | - | Fired when the calendar opens or closes. |
+| `placeholder` | `string` | `'Select date'` | Trigger text when no date is chosen. |
+| `showLabel` | `boolean` | `true` | Render the visible label. When false, the label becomes `aria-label`. |
+| `helpText` | `string` | - | Guidance shown below the field. Replaced by errorText when `error` is set. |
+| `errorText` | `string` | - | Validation message, shown while `error` is true. |
+| `error` | `boolean` | `false` | Marks the field invalid: red border and errorText shown. |
+| `disabled` | `boolean` | `false` | Blocks interaction and dims the field. |
+
+Also accepts any native `<button>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<button>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `dialog`, keyboard operable. Trigger uses aria-haspopup="dialog" and aria-expanded; Popover uses role="dialog" with a label; Day cells are buttons with descriptive aria-labels; Escape closes the popover.
 
@@ -119,15 +125,18 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 /* Tokens this component needs. Paste once, at `:root`. */
 :root {
   --primary:                #004080;
+  --error:                  #D32F2F;
   --white:                  #ffffff;
   --gray-200:               #EDEDED;
   --gray-600:               #7A7A7A;
   --blue-300:               #B3D9FF;
+  --red-300:                #F9B8B8;
   --action-active:          rgba(0, 0, 0, 0.56);
   --text-primary:           rgba(0, 0, 0, 0.87);
   --border-control:         #C4C4C4;
   --border-control-strong:  #8C8C8C;
   --text-placeholder:       #8C8C8C;
+  --surface-disabled:       #F5F5F5;
   --surface:                var(--white);
   --border:                 var(--gray-200);
   --muted-foreground:       var(--gray-600);
@@ -135,6 +144,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   --radius-md:              8px;
   --shadow-200:             0px 8px 8px rgba(39, 39, 39, 0.08), 0px 4px 6px rgba(39, 39, 39, 0.12);
   --effect-state-focus:     0px 0px 0px 3px var(--blue-300);
+  --effect-state-error:     0px 0px 0px 3px var(--red-300);
   --border-width-default:   1px;
   --duration-fast:          100ms;
   --easing-standard:        cubic-bezier(0.2, 0, 0, 1);
@@ -158,6 +168,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 }
 
 .inspera-datepicker__trigger {
+  width: 100%;
   height: 40px;
   display: flex;
   align-items: center;
@@ -190,6 +201,24 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 }
 .inspera-datepicker__value--set { color: var(--text-primary); }
 
+/* The trigger and its panel share an anchor, so the calendar opens directly
+   under the field whether or not a label sits above it. */
+.inspera-datepicker__anchor { position: relative; }
+
+.inspera-datepicker__trigger[data-invalid='true'],
+.inspera-datepicker__trigger[data-invalid='true']:hover {
+  border-color: var(--error);
+  box-shadow: var(--effect-state-error);
+}
+.inspera-datepicker__trigger:disabled {
+  background: var(--surface-disabled);
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.inspera-datepicker__trigger:disabled:hover { border-color: var(--border-control); }
+
+.inspera-datepicker__error { font-size: 12px; color: var(--error); }
+
 .inspera-datepicker__trigger .material-symbols-outlined {
   font-size: 20px;
   color: var(--action-active);
@@ -197,9 +226,9 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 .inspera-datepicker__panel {
   position: absolute;
-  top: 74px;
+  top: calc(100% + 4px);
   left: 0;
-  z-index: var(--z-dropdown, 20);
+  z-index: var(--z-dropdown);
   width: 280px;
   padding: 12px;
   background: var(--surface);

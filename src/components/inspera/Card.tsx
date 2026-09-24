@@ -1,10 +1,11 @@
-import { type CSSProperties, type ReactNode } from 'react'
+import { type CSSProperties, type MouseEventHandler, type ReactNode } from 'react'
+import { cx, type NativeAttrs } from './types'
 
 export type CardElevation = 'Flat' | 'Raised' | 'Outlined'
 export type CardPadding = 'Compact' | 'Default' | 'Spacious'
 
 export interface CardProps {
-  /** Optional heading for the card. */
+  /** Heading for the card. Also the accessible name of an interactive card. */
   title?: string
   /** Short body copy. For anything richer, pass children instead. */
   body?: string
@@ -12,26 +13,32 @@ export interface CardProps {
   elevation?: CardElevation
   /** Internal padding (12 / 16 / 24). */
   padding?: CardPadding
-  /** Renders as a focusable button with hover elevation. */
+  /** The whole card becomes one click target, with hover elevation and a focus ring. */
   interactive?: boolean
-  /** Card contents. Takes precedence over title and body. */
+  /** Card contents. Replaces title and body. */
   children?: ReactNode
-  /** Fired when an interactive card is activated. Set interactive as well, or there is no affordance. */
-  onClick?: () => void
+  /** Fired when an interactive card is activated. */
+  onClick?: MouseEventHandler<HTMLButtonElement>
 }
 
 const padMap: Record<CardPadding, number> = { Compact: 12, Default: 16, Spacious: 24 }
 
 export default function Card({
-  title = 'Card title',
-  body = 'Group related content in a contained surface using consistent padding and elevation.',
+  title,
+  body,
   elevation = 'Raised',
   padding = 'Default',
   interactive = false,
   children,
   onClick,
-}: CardProps) {
-  const style: CSSProperties = {
+  className,
+  style,
+  ...rest
+}: CardProps & NativeAttrs<'article', CardProps>) {
+  const surface: CSSProperties & Record<string, string | number> = {
+    // Resting shadow as a variable, so the hover rule in runtime.css can win.
+    '--inspera-card-shadow': elevation === 'Raised' ? 'var(--shadow-200)' : 'none',
+    position: 'relative',
     display: 'flex',
     flexDirection: 'column',
     gap: 12,
@@ -40,34 +47,48 @@ export default function Card({
     borderRadius: 'var(--radius-lg)',
     background: 'var(--white)',
     color: 'var(--text-primary)',
-    border: elevation === 'Outlined' ? '1px solid var(--border-strong)' : '1px solid transparent',
-    boxShadow: elevation === 'Raised' ? 'var(--shadow-200)' : 'none',
-    cursor: interactive ? 'pointer' : 'default',
-    transition: 'box-shadow 140ms ease, transform 140ms ease',
+    border: elevation === 'Outlined' ? 'var(--border-width-default) solid var(--border-strong)' : 'var(--border-width-default) solid transparent',
     textAlign: 'left',
     fontFamily: 'var(--font-sans)',
+    cursor: 'default',
+    ...style,
   }
 
   const content = children ?? (
     <>
-      <h3 style={{ margin: 0, fontSize: 16, fontWeight: 500 }}>{title}</h3>
-      <p style={{ margin: 0, fontSize: 16, lineHeight: 1.4, color: 'var(--gray-700)' }}>{body}</p>
+      {title && <h3 style={{ margin: 0, fontSize: 16, fontWeight: 500 }}>{title}</h3>}
+      {body && <p style={{ margin: 0, fontSize: 16, lineHeight: 1.4, color: 'var(--gray-700)' }}>{body}</p>}
     </>
   )
 
-  if (interactive) {
-    return (
-      <button
-        type="button"
-        onClick={onClick}
-        style={style}
-        onMouseEnter={(e) => { e.currentTarget.style.boxShadow = 'var(--shadow-300)' }}
-        onMouseLeave={(e) => { e.currentTarget.style.boxShadow = elevation === 'Raised' ? 'var(--shadow-200)' : 'none' }}
-      >
-        {content}
-      </button>
-    )
-  }
-
-  return <article style={style}>{content}</article>
+  return (
+    <article
+      className={cx('inspera inspera-card-hover', interactive && 'inspera-card-hover--interactive', className)}
+      style={surface}
+      {...rest}
+    >
+      {content}
+      {interactive && (
+        // One transparent button over the whole card. Wrapping the card in a
+        // <button> put headings and paragraphs inside it, which is invalid and
+        // flattens them into a single run-on name for screen readers.
+        <button
+          type="button"
+          className="inspera-interactive"
+          aria-label={title}
+          onClick={onClick}
+          style={{
+            position: 'absolute',
+            inset: 0,
+            margin: 0,
+            padding: 0,
+            border: 'none',
+            borderRadius: 'inherit',
+            background: 'transparent',
+            cursor: 'pointer',
+          }}
+        />
+      )}
+    </article>
+  )
 }
