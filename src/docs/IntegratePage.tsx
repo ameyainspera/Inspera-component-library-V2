@@ -1,6 +1,6 @@
 import { type ReactNode, useState } from 'react'
 import { componentList } from '../data/components'
-import { componentsPackage, artifacts, artifactSize, type Artifact } from '../data/distribution'
+import { componentsPackage, artifacts, artifactSize, publicPath, publicUrl, type Artifact } from '../data/distribution'
 import { Panel, SectionTitle, CodeBlock, CopyButton, SegmentedControl } from './primitives'
 
 // ---------------------------------------------------------------------------
@@ -63,7 +63,7 @@ function Step({ n, title, children }: { n: number; title: string; children?: Rea
       <span
         style={{
           width: 22, height: 22, flexShrink: 0, borderRadius: 'var(--radius-pill)',
-          background: 'var(--primary)', color: '#fff', fontSize: 12, fontWeight: 700,
+          background: 'var(--primary)', color: 'var(--white)', fontSize: 12, fontWeight: 600,
           display: 'inline-flex', alignItems: 'center', justifyContent: 'center', marginTop: 1,
         }}
       >
@@ -80,10 +80,9 @@ function Step({ n, title, children }: { n: number; title: string; children?: Rea
 const COUNT = componentList.length
 
 // Kept short on purpose. The old primer told people to paste a ~16k-token file
-// into every session; the index at /llms.txt is ~1.5k and links the rest, so a
-// model fetches only the components it actually uses.
-const specUrl = (path: string) =>
-  `${typeof window !== 'undefined' ? window.location.origin : ''}${path}`
+// into every session; the index at /llms.txt is a fraction of that and links
+// the rest, so a model fetches only the components it actually uses.
+const specUrl = (path: string) => publicUrl(path)
 
 const primerPrompt = () => `You are building UI with the Inspera Design System.
 
@@ -151,7 +150,7 @@ function ArtifactLink({ file, saveAs, note, advice }: Artifact) {
   return (
     <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, padding: '7px 0', borderBottom: '1px solid var(--border)' }}>
       <a
-        href={`/${file}`}
+        href={publicPath(file)}
         target="_blank"
         rel="noreferrer"
         style={{ fontFamily: 'var(--font-mono)', fontSize: 13, color: 'var(--primary)', textDecoration: 'none', flexShrink: 0, minWidth: 168 }}
@@ -160,12 +159,12 @@ function ArtifactLink({ file, saveAs, note, advice }: Artifact) {
       </a>
       <span style={{ fontSize: 13, color: 'var(--muted-foreground)', flex: 1, minWidth: 0 }}>
         {note}
-        <span style={{ display: 'block', fontSize: 12, color: 'var(--gray-500)' }}>{artifactSize(file, advice)}</span>
+        <span style={{ display: 'block', fontSize: 12, color: 'var(--gray-700)' }}>{artifactSize(file, advice)}</span>
       </span>
       {/* Every row was view-only, so getting one of these into another tool's
           context meant Save-As and living with the served name. */}
       <a
-        href={`/${file}`}
+        href={publicPath(file)}
         download={saveAs}
         title={`Download as ${saveAs}`}
         aria-label={`Download ${file} as ${saveAs}`}
@@ -245,7 +244,7 @@ function ToolSetupCard() {
         <p style={{ margin: 0, fontSize: 13, color: 'var(--muted-foreground)', lineHeight: 1.5 }}>{tool.note}</p>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
           <a
-            href={tool.file}
+            href={publicPath(tool.file)}
             target="_blank"
             rel="noreferrer"
             style={{
@@ -335,7 +334,7 @@ export default function IntegratePage() {
           <p style={{ margin: 0, fontSize: 13, color: 'var(--muted-foreground)', lineHeight: 1.5 }}>
             In Figma Make, open <strong>Kits &gt; Create / Publish kit</strong> and point it at the
             <code style={{ fontFamily: 'var(--font-mono)', fontSize: 12, margin: '0 4px' }}>kit/</code>
-            directory (or the published <code style={{ fontFamily: 'var(--font-mono)', fontSize: 12 }}>@inspera/kit</code>). New projects can attach it.
+            directory. New projects can then attach it.
           </p>
         </Step>
         <Step n={2} title="Prompt as normal">
@@ -345,7 +344,7 @@ export default function IntegratePage() {
           </p>
         </Step>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: 'var(--gray-700)' }}>
-          <span className="material-symbols-outlined" style={{ fontSize: 16, color: 'var(--accent-algae, #00A788)' }} aria-hidden>info</span>
+          <span className="material-symbols-outlined" style={{ fontSize: 16, color: 'var(--accent-algae)' }} aria-hidden>info</span>
           Kit enforcement is Figma-Make-only. In other tools, use the npm package or portable spec below.
         </div>
       </ContextCard>
@@ -377,17 +376,17 @@ export default function IntegratePage() {
           <CodeBlock
             language="tsx"
             copyLabel="Copy"
-            code={`import '@inspera/components/tokens.css'
-import { Button, List } from '@inspera/components'
+            code={`import '@inspera/components/styles.css'
+import { List } from '@inspera/components'
 
 export function SettingsScreen() {
   return (
     <List
       interactive
       items={[
-        { primary: 'General settings', secondary: 'Language, timezone, theme', leading: 'settings', trailing: 'chevron_right' },
-        { primary: 'Notifications', secondary: 'Email and push preferences', leading: 'notifications', trailing: 'chevron_right' },
-        { primary: 'Security', secondary: 'Password and two-factor auth', leading: 'lock', trailing: 'chevron_right' },
+        { primary: 'General settings', secondary: 'Language, timezone, theme', leadingIcon: 'settings', trailingIcon: 'chevron_right' },
+        { primary: 'Notifications', secondary: 'Email and push preferences', leadingIcon: 'notifications', trailingIcon: 'chevron_right' },
+        { primary: 'Security', secondary: 'Password and two-factor auth', leadingIcon: 'lock', trailingIcon: 'chevron_right' },
       ]}
     />
   )
@@ -411,8 +410,8 @@ export function SettingsScreen() {
               Why it stays consistent
             </div>
             <p style={{ margin: 0, fontSize: 14, color: 'var(--gray-700)', lineHeight: 1.55 }}>
-              Every format is generated from the same source in <code style={{ fontFamily: 'var(--font-mono)', fontSize: 12 }}>src/</code>, and CI
-              fails if a generated file drifts from it.
+              Every format is generated from the same source in <code style={{ fontFamily: 'var(--font-mono)', fontSize: 12 }}>src/</code>, and
+              {' '}<code style={{ fontFamily: 'var(--font-mono)', fontSize: 12 }}>pnpm verify:generated</code> fails if a generated file drifts from it.
               Whichever path you take, you get the same {COUNT} components, the same tokens (Inter, Noto Sans Mono, Material Symbols,
               the <code style={{ fontFamily: 'var(--font-mono)', fontSize: 12 }}>#004080</code> navy palette), and the same accessibility rules -
               so a mockup built in Figma Make and a production screen built in code look and behave the same.

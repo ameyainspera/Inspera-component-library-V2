@@ -194,6 +194,7 @@ function QuestionSetsTable() {
             <td style={{ ...td, position: 'relative' }}>
               <select
                 defaultValue="Draft"
+                aria-label={`Status of ${row.title}`}
                 onClick={(e) => e.stopPropagation()}
                 style={{
                   width: '100%', height: 36, padding: '0 10px', fontSize: 14, borderRadius: 'var(--radius-sm)',

@@ -15,6 +15,7 @@
     "audit:search": "tsx scripts/audit-search.ts",
     "audit:recipes": "tsx scripts/audit-recipes.ts",
     "audit:snippets": "tsx scripts/audit-snippets.ts",
+    "audit:pages": "tsx scripts/audit-pages.ts",
     "audit:ascii": "tsx scripts/audit-ascii.ts",
     "audit:spec": "tsx scripts/audit-spec-standalone.ts",
     "test:visual": "tsx scripts/test-visual.ts",

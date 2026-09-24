@@ -109,3 +109,19 @@ export function artifactSize(file: string, advice?: string): string {
   const tokens = m.tokens >= 1000 ? `~${Math.round(m.tokens / 1000)}k tokens` : `~${m.tokens} tokens`
   return advice ? `${tokens}, ${advice}` : tokens
 }
+
+/**
+ * A file in public/ as a link that works wherever the site is hosted. Links
+ * were written as `/llms.txt`, which breaks as soon as the site is served
+ * from a sub-path (Vite's `base`, set from FIGMA_PUBLIC_URL).
+ */
+export function publicPath(file: string): string {
+  const base = (import.meta as { env?: { BASE_URL?: string } }).env?.BASE_URL ?? '/'
+  return `${base.endsWith('/') ? base : `${base}/`}${file.replace(/^\/+/, '')}`
+}
+
+/** The same file as an absolute URL, for pasting into another tool. */
+export function publicUrl(file: string): string {
+  const origin = typeof window !== 'undefined' ? window.location.origin : ''
+  return `${origin}${publicPath(file)}`
+}

@@ -1,6 +1,6 @@
 import { type ReactNode } from 'react'
 import { examplePages, examplePageBySlug, type ExamplePage } from './pages/registry'
-import { downloadPageBundle } from './pages/bundle'
+import { followLink } from './links'
 
 interface PagesPageProps {
   /** When set, render that page full-bleed; otherwise show the gallery. */
@@ -26,6 +26,12 @@ const chip = (label: string): ReactNode => (
   </span>
 )
 
+/** Says so plainly when a page is a reference screen, not library-built. */
+const usesLabel = (page: ExamplePage) =>
+  page.uses.length === 0
+    ? 'Reference screen - no library components yet'
+    : `${page.uses.length} library component${page.uses.length === 1 ? '' : 's'}`
+
 /** Full-bleed page view: a thin toolbar naming the page, then the page itself. */
 function PageView({ slug, onNavigate }: { slug: string; onNavigate: (hash: string) => void }) {
   const page = examplePageBySlug(slug)
@@ -34,13 +40,9 @@ function PageView({ slug, onNavigate }: { slug: string; onNavigate: (hash: strin
     return (
       <div style={{ padding: 40, fontFamily: 'var(--font-sans)', color: 'var(--muted-foreground)' }}>
         <p style={{ marginBottom: 16 }}>That page does not exist yet.</p>
-        <button
-          type="button"
-          onClick={() => onNavigate('#/pages')}
-          style={{ color: 'var(--primary)', background: 'none', border: 'none', cursor: 'pointer', fontSize: 14 }}
-        >
-          ← Back to example pages
-        </button>
+        <a href="#/pages" onClick={followLink(onNavigate, '#/pages')} style={{ color: 'var(--primary)', fontSize: 14 }}>
+          Back to example pages
+        </a>
       </div>
     )
   }
@@ -63,19 +65,19 @@ function PageView({ slug, onNavigate }: { slug: string; onNavigate: (hash: strin
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 0 }}>
-          <button
-            type="button"
-            onClick={() => onNavigate('#/pages')}
+          <a
+            href="#/pages"
+            onClick={followLink(onNavigate, '#/pages')}
             style={{
               display: 'inline-flex', alignItems: 'center', gap: 4, height: 30, padding: '0 10px',
               border: '1px solid var(--border-strong)', borderRadius: 'var(--radius-sm)',
-              background: 'var(--surface)', color: 'var(--gray-800)', cursor: 'pointer',
+              background: 'var(--surface)', color: 'var(--gray-800)', textDecoration: 'none',
               fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 500,
             }}
           >
             <span className="material-symbols-outlined" style={{ fontSize: 18 }} aria-hidden>arrow_back</span>
             Pages
-          </button>
+          </a>
           <div style={{ display: 'flex', flexDirection: 'column', minWidth: 0 }}>
             <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--gray-900)' }}>{page.name}</span>
             <span
@@ -90,7 +92,7 @@ function PageView({ slug, onNavigate }: { slug: string; onNavigate: (hash: strin
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexShrink: 0 }}>
           <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--muted-foreground)' }}>
-            {page.uses.length} components
+            {usesLabel(page)}
           </span>
           <DownloadButton page={page} />
         </div>
@@ -109,10 +111,8 @@ function DownloadButton({ page }: { page: ExamplePage }) {
     <button
       type="button"
       title="Download this page's code + design tokens as a single file for any AI assistant"
-      onClick={(e) => {
-        e.stopPropagation()
-        downloadPageBundle(page)
-      }}
+      // The bundle builder carries the raw sources, so it loads on first use.
+      onClick={() => void import('./pages/download').then((m) => m.downloadPageBundle(page))}
       onMouseEnter={(e) => {
         e.currentTarget.style.background = 'var(--gray-100)'
         e.currentTarget.style.borderColor = 'var(--border-strong)'
@@ -122,6 +122,8 @@ function DownloadButton({ page }: { page: ExamplePage }) {
         e.currentTarget.style.borderColor = 'var(--border)'
       }}
       style={{
+        // Above the card's stretched link, so it stays its own control.
+        position: 'relative', zIndex: 1,
         display: 'inline-flex', alignItems: 'center', gap: 5,
         height: 30, padding: '0 12px',
         border: '1px solid var(--border)', borderRadius: 'var(--radius-pill)',
@@ -136,44 +138,33 @@ function DownloadButton({ page }: { page: ExamplePage }) {
   )
 }
 
-/** One example-page tile: a clickable card with a download button in the footer. */
+/**
+ * One example-page tile. The title is the link and stretches over the whole
+ * card (index.css), so the card is still one big target - but the Download
+ * button is a sibling, not a control nested inside another control. Enter on
+ * Download used to open the page as well.
+ */
 function GalleryCard({ page, onNavigate }: { page: ExamplePage; onNavigate: (hash: string) => void }) {
   const ready = page.status === 'ready'
+  const hash = `#/pages/${page.slug}`
   return (
-    <div
-      role={ready ? 'button' : undefined}
-      tabIndex={ready ? 0 : undefined}
-      onClick={() => ready && onNavigate(`#/pages/${page.slug}`)}
-      onKeyDown={(e) => {
-        if (ready && (e.key === 'Enter' || e.key === ' ')) {
-          e.preventDefault()
-          onNavigate(`#/pages/${page.slug}`)
-        }
-      }}
+    <article
+      className={ready ? 'docs-page-card' : undefined}
       style={{
+        position: 'relative',
         display: 'flex', flexDirection: 'column', alignItems: 'stretch', gap: 14,
         textAlign: 'left', padding: 20,
-        border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)',
-        background: 'var(--surface)', boxShadow: 'var(--shadow-100)',
-        cursor: ready ? 'pointer' : 'default', opacity: ready ? 1 : 0.72,
+        border: ready ? '1px solid var(--border)' : '1px dashed var(--border-strong)', borderRadius: 'var(--radius-lg)',
+        background: 'var(--surface)',
+        boxShadow: ready ? 'var(--shadow-100)' : 'none',
         fontFamily: 'var(--font-sans)',
-        transition: 'box-shadow 140ms ease, transform 140ms ease, border-color 140ms ease',
-      }}
-      onMouseEnter={(e) => {
-        if (!ready) return
-        e.currentTarget.style.boxShadow = 'var(--shadow-300)'
-        e.currentTarget.style.borderColor = 'var(--border-strong)'
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.boxShadow = 'var(--shadow-100)'
-        e.currentTarget.style.borderColor = 'var(--border)'
       }}
     >
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12 }}>
         <span
           style={{
             width: 44, height: 44, borderRadius: 'var(--radius-md)',
-            background: 'var(--blue-100)', color: 'var(--primary)',
+            background: ready ? 'var(--blue-100)' : 'var(--gray-200)', color: ready ? 'var(--primary)' : 'var(--gray-700)',
             display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
           }}
         >
@@ -182,20 +173,37 @@ function GalleryCard({ page, onNavigate }: { page: ExamplePage; onNavigate: (has
         {ready ? (
           <DownloadButton page={page} />
         ) : (
-          <span style={{ fontSize: 10, fontWeight: 600, letterSpacing: 0.4, textTransform: 'uppercase', color: 'var(--gray-500)' }}>
-            Soon
+          // Dimming the whole card took this label to about 2:1 contrast.
+          <span
+            style={{
+              fontSize: 11, fontWeight: 600, letterSpacing: 0.4, textTransform: 'uppercase',
+              color: 'var(--gray-800)', background: 'var(--gray-200)',
+              borderRadius: 'var(--radius-pill)', padding: '2px 8px',
+            }}
+          >
+            Coming soon
           </span>
         )}
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-        <span style={{ fontSize: 17, fontWeight: 600, color: 'var(--text-primary)' }}>{page.name}</span>
-        <span style={{ fontSize: 14, lineHeight: 1.45, color: 'var(--muted-foreground)' }}>{page.description}</span>
+        <h2 style={{ margin: 0, fontSize: 17, fontWeight: 600, color: 'var(--text-primary)' }}>
+          {ready ? (
+            <a href={hash} onClick={followLink(onNavigate, hash)} className="docs-page-card-link" style={{ color: 'inherit', textDecoration: 'none' }}>
+              {page.name}
+            </a>
+          ) : page.name}
+        </h2>
+        <p style={{ margin: 0, fontSize: 14, lineHeight: 1.45, color: 'var(--muted-foreground)' }}>{page.description}</p>
       </div>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-        {page.uses.slice(0, 6).map(chip)}
-        {page.uses.length > 6 && chip(`+${page.uses.length - 6}`)}
-      </div>
-    </div>
+      {page.uses.length > 0 ? (
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+          {page.uses.slice(0, 6).map(chip)}
+          {page.uses.length > 6 && chip(`+${page.uses.length - 6}`)}
+        </div>
+      ) : (
+        <span style={{ fontSize: 12, color: 'var(--muted-foreground)' }}>{usesLabel(page)}</span>
+      )}
+    </article>
   )
 }
 

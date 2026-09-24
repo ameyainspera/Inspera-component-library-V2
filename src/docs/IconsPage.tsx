@@ -260,7 +260,7 @@ export default function IconsPage() {
 
       {/* ── Scrollable content, with the detail panel beside it ── */}
       <div style={{ display: 'flex', flex: 1, minHeight: 0 }}>
-      <div style={{ flex: 1, minWidth: 0, overflowY: 'auto', padding: '20px 40px 32px' }}>
+      <div style={{ flex: 1, minWidth: 0, overflowY: 'auto', padding: '20px clamp(16px, 3vw, 40px) 32px' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
 
       {/* Results count */}
@@ -322,21 +322,21 @@ export default function IconsPage() {
             <div style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--muted-foreground)', marginBottom: 8 }}>HTML</div>
             <pre style={{
               margin: 0, padding: '10px 12px', background: 'var(--gray-100)', borderRadius: 'var(--radius-sm)',
-              fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--gray-800)', overflowX: 'auto',
+              fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--gray-800)', whiteSpace: 'pre-wrap', overflowWrap: 'anywhere',
             }}>{`<span class="material-symbols-outlined"\n  aria-hidden="true"\n  style="font-variation-settings:\n    'FILL' ${fill}, 'wght' ${weight},\n    'GRAD' 0, 'opsz' ${opsz}">\n  icon_name\n</span>`}</pre>
           </div>
           <div>
             <div style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--muted-foreground)', marginBottom: 8 }}>Inspera Icon component</div>
             <pre style={{
               margin: 0, padding: '10px 12px', background: 'var(--gray-100)', borderRadius: 'var(--radius-sm)',
-              fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--gray-800)', overflowX: 'auto',
+              fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--gray-800)', whiteSpace: 'pre-wrap', overflowWrap: 'anywhere',
             }}>{`import { Icon } from '@inspera/components'\n\n<Icon\n  name="icon_name"${fill ? `\n  fill={1}` : ''}${weight !== 400 ? `\n  weight={${weight}}` : ''}\n  size={${opsz}}\n/>`}</pre>
           </div>
           <div>
             <div style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--muted-foreground)', marginBottom: 8 }}>CSS import</div>
             <pre style={{
               margin: 0, padding: '10px 12px', background: 'var(--gray-100)', borderRadius: 'var(--radius-sm)',
-              fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--gray-800)', overflowX: 'auto',
+              fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--gray-800)', whiteSpace: 'pre-wrap', overflowWrap: 'anywhere',
             }}>{`/* Once, at the top of your stylesheet */\n@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-25..200&display=block');`}</pre>
           </div>
         </div>

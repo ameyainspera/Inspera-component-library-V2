@@ -3,6 +3,7 @@ import { navigation } from '../data/navigation'
 import { components } from '../data/components'
 import { totalIconCount } from '../data/icons'
 import { FOUNDATION_SECTIONS } from './FoundationsPage'
+import { followLink } from './links'
 import { search, type Searchable } from './search'
 
 interface SidebarProps {
@@ -82,6 +83,9 @@ export default function Sidebar({ route, onNavigate }: SidebarProps) {
   // ⌘K / Ctrl-K from anywhere focuses the box; Escape gets you out.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      // A component on the page (the Command Palette demo) may own the
+      // shortcut; it claims it by preventing the default first.
+      if (e.defaultPrevented) return
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault()
         inputRef.current?.focus()
@@ -128,7 +132,7 @@ export default function Sidebar({ route, onNavigate }: SidebarProps) {
   const groupHeading: React.CSSProperties = {
     padding: '0 12px 10px',
     fontSize: 11,
-    fontWeight: 700,
+    fontWeight: 600,
     letterSpacing: 0.8,
     textTransform: 'uppercase',
     color: 'var(--gray-600)',
@@ -138,6 +142,8 @@ export default function Sidebar({ route, onNavigate }: SidebarProps) {
     paddingTop: 18,
     borderTop: '1px solid var(--border)',
   }
+
+  const follow = (hash: string) => followLink(onNavigate, hash)
 
   const linkStyle = (active: boolean, disabled: boolean) => ({
     display: 'flex',
@@ -155,6 +161,8 @@ export default function Sidebar({ route, onNavigate }: SidebarProps) {
     background: active ? 'var(--blue-100)' : 'transparent',
     cursor: disabled ? 'default' : 'pointer',
     textAlign: 'left' as const,
+    textDecoration: 'none',
+    boxSizing: 'border-box' as const,
     userSelect: 'none' as const,
   })
 
@@ -233,23 +241,23 @@ export default function Sidebar({ route, onNavigate }: SidebarProps) {
             </p>
           ) : (
             <>
-              <div style={{ padding: '0 4px 8px', fontSize: 11, color: 'var(--gray-500)' }}>
+              <div style={{ padding: '0 4px 8px', fontSize: 11, color: 'var(--gray-700)' }}>
                 {hits.length} result{hits.length === 1 ? '' : 's'}
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                 {hits.map((hit, i) => (
-                  <button
+                  <a
                     key={hit.item.id}
-                    type="button"
+                    href={hit.item.href}
                     role="option"
                     aria-selected={i === cursor}
                     data-active={i === cursor}
-                    onClick={() => go(hit.item.href)}
+                    onClick={followLink(go, hit.item.href)}
                     onMouseEnter={() => setCursor(i)}
                     style={{
                       display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 2,
                       width: '100%', padding: '7px 10px', border: 'none', textAlign: 'left',
-                      borderRadius: 'var(--radius-sm)', cursor: 'pointer',
+                      borderRadius: 'var(--radius-sm)', cursor: 'pointer', textDecoration: 'none', boxSizing: 'border-box',
                       fontFamily: 'var(--font-sans)',
                       background: i === cursor ? 'var(--blue-100)' : 'transparent',
                     }}
@@ -258,7 +266,7 @@ export default function Sidebar({ route, onNavigate }: SidebarProps) {
                       <span style={{ fontSize: 14, fontWeight: 500, color: i === cursor ? 'var(--primary)' : 'var(--gray-800)' }}>
                         {hit.item.name}
                       </span>
-                      <span style={{ fontSize: 10, color: 'var(--gray-500)', marginLeft: 'auto', whiteSpace: 'nowrap' }}>
+                      <span style={{ fontSize: 10, color: 'var(--gray-700)', marginLeft: 'auto', whiteSpace: 'nowrap' }}>
                         {hit.item.group}
                       </span>
                     </span>
@@ -278,7 +286,7 @@ export default function Sidebar({ route, onNavigate }: SidebarProps) {
                         {hit.item.detail}
                       </span>
                     )}
-                  </button>
+                  </a>
                 ))}
               </div>
             </>
@@ -288,9 +296,10 @@ export default function Sidebar({ route, onNavigate }: SidebarProps) {
         <>
           {/* Integrate first: it answers "how do I use this", which is what a
               newcomer needs before any token page. */}
-          <button
-            type="button"
-            onClick={() => onNavigate(INTEGRATE.hash)}
+          <a
+            href={INTEGRATE.hash}
+            onClick={follow(INTEGRATE.hash)}
+            aria-current={route === INTEGRATE.hash ? 'page' : undefined}
             style={{
               ...linkStyle(route === INTEGRATE.hash, false),
               padding: '10px 12px',
@@ -306,12 +315,13 @@ export default function Sidebar({ route, onNavigate }: SidebarProps) {
             <span className="material-symbols-outlined" style={{ fontSize: 16, color: 'var(--muted-foreground)' }} aria-hidden>
               chevron_right
             </span>
-          </button>
+          </a>
 
           {/* Example pages: full screens assembled from the components below. */}
-          <button
-            type="button"
-            onClick={() => onNavigate(PAGES.hash)}
+          <a
+            href={PAGES.hash}
+            onClick={follow(PAGES.hash)}
+            aria-current={route.startsWith(PAGES.hash) ? 'page' : undefined}
             style={{
               ...linkStyle(route.startsWith(PAGES.hash), false),
               marginTop: 8,
@@ -328,7 +338,7 @@ export default function Sidebar({ route, onNavigate }: SidebarProps) {
             <span className="material-symbols-outlined" style={{ fontSize: 16, color: 'var(--muted-foreground)' }} aria-hidden>
               chevron_right
             </span>
-          </button>
+          </a>
 
           <div style={groupWrap}>
             <div style={groupHeading}>Foundations</div>
@@ -337,15 +347,16 @@ export default function Sidebar({ route, onNavigate }: SidebarProps) {
                 const hash = `#/foundations/${f.slug}`
                 const active = route === hash || (f.slug === 'colors' && route === '#/foundations')
                 return (
-                  <button key={f.slug} type="button" onClick={() => onNavigate(hash)} style={linkStyle(active, false)}>
+                  <a key={f.slug} href={hash} onClick={follow(hash)} aria-current={active ? 'page' : undefined} style={linkStyle(active, false)}>
                     <span>{f.label}</span>
-                  </button>
+                  </a>
                 )
               })}
               {/* Iconography is a foundation too. */}
-              <button
-                type="button"
-                onClick={() => onNavigate(ICONS.hash)}
+              <a
+                href={ICONS.hash}
+                onClick={follow(ICONS.hash)}
+                aria-current={route === ICONS.hash ? 'page' : undefined}
                 style={linkStyle(route === ICONS.hash, false)}
               >
                 <span>{ICONS.label}</span>
@@ -357,7 +368,7 @@ export default function Sidebar({ route, onNavigate }: SidebarProps) {
                 }}>
                   {ICONS.badge}
                 </span>
-              </button>
+              </a>
             </div>
           </div>
 
@@ -369,21 +380,20 @@ export default function Sidebar({ route, onNavigate }: SidebarProps) {
                   const hash = `#/component/${item.slug}`
                   const active = route === hash
                   const disabled = item.status === 'coming-soon'
-                  return (
-                    <button
-                      key={item.slug}
-                      type="button"
-                      disabled={disabled}
-                      onClick={() => !disabled && onNavigate(hash)}
-                      style={linkStyle(active, disabled)}
-                    >
-                      <span>{item.name}</span>
-                      {disabled && (
-                        <span style={{ fontSize: 10, fontWeight: 600, letterSpacing: 0.4, textTransform: 'uppercase', color: 'var(--gray-400)' }}>
+                  if (disabled) {
+                    return (
+                      <span key={item.slug} aria-disabled="true" style={linkStyle(false, true)}>
+                        <span>{item.name}</span>
+                        <span style={{ fontSize: 10, fontWeight: 600, letterSpacing: 0.4, textTransform: 'uppercase', color: 'var(--gray-600)' }}>
                           Soon
                         </span>
-                      )}
-                    </button>
+                      </span>
+                    )
+                  }
+                  return (
+                    <a key={item.slug} href={hash} onClick={follow(hash)} aria-current={active ? 'page' : undefined} style={linkStyle(active, false)}>
+                      <span>{item.name}</span>
+                    </a>
                   )
                 })}
               </div>

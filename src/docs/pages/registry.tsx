@@ -14,7 +14,11 @@ export interface ExamplePage {
   description: string
   /** Material Symbols icon for the gallery card. */
   icon: string
-  /** Components this page is assembled from - shown as its "recipe". */
+  /**
+   * Library components the page imports - shown as its "recipe". For a ready
+   * page `pnpm audit:pages` checks this against the source; for a coming-soon
+   * page it is the plan.
+   */
   uses: string[]
   /** Status. "ready" pages render; "coming-soon" show as a placeholder card. */
   status: 'ready' | 'coming-soon'
@@ -38,7 +42,8 @@ export const examplePages: ExamplePage[] = [
     name: 'Home dashboard',
     description: 'Institution home screen: global nav, the metrics band and the recent events feed.',
     icon: 'dashboard',
-    uses: ['TopNav', 'Stat', 'Card', 'List', 'Toast', 'Badge'],
+    // A pasted reference screen: not yet rebuilt from library components.
+    uses: [],
     status: 'ready',
     component: HomeDashboard,
     entry: '/src/docs/pages/HomeDashboard.tsx',
@@ -49,7 +54,7 @@ export const examplePages: ExamplePage[] = [
     name: 'Monitor',
     description: 'Monitor > Candidates roster: the Views rail with saved counts, search toolbar, and the wide live candidate grid.',
     icon: 'monitor_heart',
-    uses: ['TextInput', 'Table', 'Pagination', 'Badge'],
+    uses: ['TextInput', 'Pagination'],
     status: 'ready',
     component: MonitorCandidates,
     entry: '/src/docs/pages/MonitorCandidates.tsx',
@@ -60,7 +65,7 @@ export const examplePages: ExamplePage[] = [
     name: 'Question sets',
     description: 'Author > Question Sets roster: the Views rail, search and filter toolbar, the grid with per-row status, and pager.',
     icon: 'quiz',
-    uses: ['TextInput', 'Table', 'Pagination', 'Select', 'Button'],
+    uses: ['TextInput', 'Pagination'],
     status: 'ready',
     component: QuestionSets,
     entry: '/src/docs/pages/QuestionSets.tsx',
@@ -71,7 +76,7 @@ export const examplePages: ExamplePage[] = [
     name: 'Deliver',
     description: 'Deliver > Tests roster: the Views rail, search and filter toolbar, the tests grid and pager.',
     icon: 'list_alt',
-    uses: ['TextInput', 'Table', 'Pagination', 'Badge', 'Button', 'Select'],
+    uses: ['TextInput', 'Pagination'],
     status: 'ready',
     component: DeliverTests,
     entry: '/src/docs/pages/DeliverTests.tsx',
@@ -82,7 +87,7 @@ export const examplePages: ExamplePage[] = [
     name: 'Test setup',
     description: 'Deliver > Setup screen: test details, candidate and committee counts, and the Options accordion.',
     icon: 'edit_document',
-    uses: ['TextInput', 'Select', 'Textarea', 'Checkbox', 'RadioButton', 'Accordion', 'Badge', 'Button'],
+    uses: ['TextInput', 'Textarea', 'Select', 'Checkbox', 'RadioButton', 'Badge'],
     status: 'ready',
     component: TestSetup,
     entry: '/src/docs/pages/TestSetup.tsx',

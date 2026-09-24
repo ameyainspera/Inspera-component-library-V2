@@ -107,7 +107,8 @@ export default function IconDetailPanel({
     <aside
       aria-label={`${name} detail`}
       style={{
-        width: 320, flexShrink: 0, height: '100%', overflowY: 'auto',
+        // Narrower on a small window, so the icon grid beside it keeps some columns.
+        width: 'clamp(260px, 26vw, 320px)', flexShrink: 0, height: '100%', overflowY: 'auto',
         borderLeft: '1px solid var(--border)', background: 'var(--surface)',
         padding: 20, boxSizing: 'border-box',
         display: 'flex', flexDirection: 'column', gap: 20,

@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react'
 import {
   brandColors, semanticColors, brandAccents, palette,
   spacing, radius, shadows, typeScale, systemTokens,
@@ -115,6 +116,17 @@ function EffectsSection() {
   )
 }
 
+/**
+ * A token row: fixed columns keep their width so rows line up, and the row
+ * wraps instead of overflowing the panel when the content area is narrow.
+ */
+const tokenRow = (padding: string): CSSProperties => ({
+  display: 'flex', alignItems: 'center', flexWrap: 'wrap', columnGap: 14, rowGap: 4,
+  padding, borderBottom: '1px solid var(--border)',
+})
+const col = (width: number): CSSProperties => ({ flex: `0 0 ${width}px` })
+const note: CSSProperties = { flex: '1 1 220px', minWidth: 0, fontSize: 13, color: 'var(--gray-700)' }
+
 function MotionSection() {
   return (
     <Panel>
@@ -123,20 +135,20 @@ function MotionSection() {
       </SectionTitle>
       <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 600 }}>Duration</h3>
       {motion.duration.map((d) => (
-        <div key={d.token} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '8px 0', borderBottom: '1px solid var(--border)' }}>
-          <code style={{ fontFamily: 'var(--font-mono)', fontSize: 13, width: 80 }}>{d.token}</code>
-          <code style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--primary)', width: 170 }}>var(--duration-{d.token})</code>
-          <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--muted-foreground)', width: 60 }}>{d.value}</span>
-          <span style={{ fontSize: 13, color: 'var(--gray-700)' }}>{d.note}</span>
+        <div key={d.token} style={tokenRow('8px 0')}>
+          <code style={{ fontFamily: 'var(--font-mono)', fontSize: 13, ...col(80) }}>{d.token}</code>
+          <code style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--primary)', ...col(170) }}>var(--duration-{d.token})</code>
+          <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--muted-foreground)', ...col(60) }}>{d.value}</span>
+          <span style={note}>{d.note}</span>
         </div>
       ))}
       <h3 style={{ margin: '20px 0 8px', fontSize: 15, fontWeight: 600 }}>Easing</h3>
       {motion.easing.map((e) => (
-        <div key={e.token} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '8px 0', borderBottom: '1px solid var(--border)' }}>
-          <code style={{ fontFamily: 'var(--font-mono)', fontSize: 13, width: 80 }}>{e.token}</code>
-          <code style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--primary)', width: 170 }}>var(--easing-{e.token})</code>
-          <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--muted-foreground)', flex: 1, minWidth: 0 }}>{e.value}</span>
-          <span style={{ fontSize: 13, color: 'var(--gray-700)' }}>{e.note}</span>
+        <div key={e.token} style={tokenRow('8px 0')}>
+          <code style={{ fontFamily: 'var(--font-mono)', fontSize: 13, ...col(80) }}>{e.token}</code>
+          <code style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--primary)', ...col(170) }}>var(--easing-{e.token})</code>
+          <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--muted-foreground)', flex: '1 1 200px', minWidth: 0, overflowWrap: 'anywhere' }}>{e.value}</span>
+          <span style={note}>{e.note}</span>
         </div>
       ))}
     </Panel>
@@ -152,13 +164,13 @@ function LayeringSection() {
       </SectionTitle>
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         {[...zIndex].reverse().map((z) => (
-          <div key={z.token} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '10px 0', borderBottom: '1px solid var(--border)' }}>
-            <code style={{ fontFamily: 'var(--font-mono)', fontSize: 13, fontWeight: 600, width: 90 }}>{z.token}</code>
-            <code style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--primary)', width: 150 }}>var(--z-{z.token})</code>
-            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--muted-foreground)', width: 44, textAlign: 'right' }}>{z.value}</span>
+          <div key={z.token} style={tokenRow('10px 0')}>
+            <code style={{ fontFamily: 'var(--font-mono)', fontSize: 13, fontWeight: 600, ...col(90) }}>{z.token}</code>
+            <code style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--primary)', ...col(150) }}>var(--z-{z.token})</code>
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--muted-foreground)', ...col(44), textAlign: 'right' }}>{z.value}</span>
             {/* Bar length shows the stacking order at a glance. */}
-            <span style={{ height: 8, flex: `0 0 ${Math.max(4, (z.value / max) * 180)}px`, background: 'var(--primary)', borderRadius: 'var(--radius-pill)', opacity: 0.25 + (z.value / max) * 0.75 }} />
-            <span style={{ fontSize: 13, color: 'var(--gray-700)' }}>{z.note}</span>
+            <span style={{ height: 8, flex: `0 1 ${Math.max(4, (z.value / max) * 180)}px`, background: 'var(--primary)', borderRadius: 'var(--radius-pill)', opacity: 0.25 + (z.value / max) * 0.75 }} />
+            <span style={note}>{z.note}</span>
           </div>
         ))}
       </div>
@@ -174,18 +186,18 @@ function BreakpointsSection() {
         Breakpoints
       </SectionTitle>
       {breakpoints.map((b) => (
-        <div key={b.token} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '10px 0', borderBottom: '1px solid var(--border)' }}>
-          <code style={{ fontFamily: 'var(--font-mono)', fontSize: 13, fontWeight: 600, width: 44 }}>{b.token}</code>
-          <code style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--primary)', width: 190 }}>var(--breakpoint-{b.token})</code>
-          <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--muted-foreground)', width: 70 }}>{b.value}px</span>
-          <span style={{ height: 10, flex: `0 0 ${(b.value / max) * 260}px`, background: 'var(--blue-300)', borderRadius: 'var(--radius-xs)' }} />
+        <div key={b.token} style={tokenRow('10px 0')}>
+          <code style={{ fontFamily: 'var(--font-mono)', fontSize: 13, fontWeight: 600, ...col(44) }}>{b.token}</code>
+          <code style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--primary)', ...col(190) }}>var(--breakpoint-{b.token})</code>
+          <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--muted-foreground)', ...col(70) }}>{b.value}px</span>
+          <span style={{ height: 10, flex: `0 1 ${(b.value / max) * 260}px`, background: 'var(--blue-300)', borderRadius: 'var(--radius-xs)' }} />
         </div>
       ))}
 
       <h3 style={{ margin: '24px 0 8px', fontSize: 15, fontWeight: 600 }}>Borders &amp; focus</h3>
       {[...borderWidths.map((b) => ({ name: `border-width-${b.token}`, value: b.value })), ...focusRing].map((t) => (
-        <div key={t.name} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '8px 0', borderBottom: '1px solid var(--border)' }}>
-          <code style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--primary)', width: 230 }}>var(--{t.name})</code>
+        <div key={t.name} style={tokenRow('8px 0')}>
+          <code style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--primary)', ...col(230) }}>var(--{t.name})</code>
           <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--muted-foreground)' }}>{t.value}</span>
         </div>
       ))}
@@ -304,7 +316,7 @@ export const FOUNDATION_SECTIONS: FoundationSection[] = [
             .filter((g) => g.rows.length > 0),
         ].map((group) => (
           <div key={group.label} style={{ marginBottom: 28 }}>
-            <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: 0.6, textTransform: 'uppercase', color: 'var(--gray-500)', marginBottom: 10 }}>
+            <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: 0.6, textTransform: 'uppercase', color: 'var(--gray-700)', marginBottom: 10 }}>
               {group.label}
             </div>
             <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -312,16 +324,16 @@ export const FOUNDATION_SECTIONS: FoundationSection[] = [
                 <div
                   key={t.token}
                   style={{
-                    display: 'flex', alignItems: 'baseline', gap: 16,
+                    display: 'flex', alignItems: 'baseline', flexWrap: 'wrap', columnGap: 16, rowGap: 4,
                     borderBottom: '1px solid var(--border)', padding: '10px 0',
                   }}
                 >
-                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--muted-foreground)', width: 150, flexShrink: 0 }}>
+                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--muted-foreground)', ...col(150) }}>
                     {t.token}
                   </span>
                   <span
                     style={{
-                      flex: 1, minWidth: 0, color: 'var(--gray-900)',
+                      flex: '1 1 200px', minWidth: 0, color: 'var(--gray-900)',
                       fontFamily: t.fontFamily,
                       fontSize: t.size,
                       fontWeight: t.weight,
@@ -334,7 +346,7 @@ export const FOUNDATION_SECTIONS: FoundationSection[] = [
                   >
                     The quick brown fox jumps over the lazy dog
                   </span>
-                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--muted-foreground)', flexShrink: 0, textAlign: 'right', width: 190 }}>
+                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--muted-foreground)', textAlign: 'right', ...col(190), marginLeft: 'auto' }}>
                     {t.size}/{Math.round(t.lineHeight * 100)}% | {t.weight}
                     {t.tracking !== undefined && ` | ${t.tracking > 0 ? '+' : ''}${t.tracking}`}
                     {t.pending?.length ? <span title={`Inferred, not from Figma: ${t.pending.join(', ')}`} style={{ color: 'var(--warning)' }}> °</span> : null}
@@ -437,7 +449,7 @@ export const FOUNDATION_SECTIONS: FoundationSection[] = [
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 24 }}>
           {shadows.map((s) => (
             <div key={s.token} style={{ textAlign: 'center' }}>
-              <div style={{ width: 96, height: 64, background: '#fff', borderRadius: 'var(--radius-md)', boxShadow: s.value }} />
+              <div style={{ width: 96, height: 64, background: 'var(--white)', borderRadius: 'var(--radius-md)', boxShadow: s.value }} />
               <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, marginTop: 10 }}>shadow.{s.token}</div>
             </div>
           ))}

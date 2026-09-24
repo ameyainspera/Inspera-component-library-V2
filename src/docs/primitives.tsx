@@ -150,13 +150,13 @@ export function CodeBlock({
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
             {headerLeft}
             {overflowing && (
-              <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: 1, textTransform: 'uppercase', color: 'var(--gray-500)' }}>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: 1, textTransform: 'uppercase', color: 'var(--gray-700)' }}>
                 {lines} lines
               </span>
             )}
           </div>
         ) : (
-          <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: 1, textTransform: 'uppercase', color: 'var(--gray-500)' }}>
+          <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: 1, textTransform: 'uppercase', color: 'var(--gray-700)' }}>
             {language ?? 'code'}
             {overflowing && ` | ${lines} lines`}
           </span>

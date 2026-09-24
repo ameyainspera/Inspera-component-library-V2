@@ -100,7 +100,7 @@ const isBool = (c: ControlDef) => c.options.length === 2 && c.options.includes('
 
 const groupLabel: CSSProperties = {
   fontSize: 11,
-  fontWeight: 700,
+  fontWeight: 600,
   letterSpacing: 0.8,
   textTransform: 'uppercase',
   color: 'var(--gray-600)',

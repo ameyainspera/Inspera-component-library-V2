@@ -1,13 +1,16 @@
-import { useEffect, useState } from 'react'
+import { Suspense, lazy, useEffect, useState } from 'react'
 import { componentList } from './data/components'
-import { artifactSize, fullSpec } from './data/distribution'
+import { artifactSize, fullSpec, publicPath } from './data/distribution'
 import Sidebar from './docs/Sidebar'
 import FoundationsPage from './docs/FoundationsPage'
 import ComponentPage from './docs/ComponentPage'
 import IconsPage from './docs/IconsPage'
 import IntegratePage from './docs/IntegratePage'
-import PagesPage from './docs/PagesPage'
 import SpecPage from './docs/SpecPage'
+import { followLink } from './docs/links'
+
+// The example pages are full screens of their own; load them when visited.
+const PagesPage = lazy(() => import('./docs/PagesPage'))
 
 // Lightweight hash routing keeps the docs shareable (deep links to a component)
 // without pulling in a router dependency.
@@ -55,16 +58,16 @@ export default function App() {
           background: 'var(--surface)',
         }}
       >
-        <button
-          type="button"
-          onClick={() => navigate('#/foundations')}
-          style={{ display: 'flex', alignItems: 'center', gap: 10, background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+        <a
+          href="#/foundations"
+          onClick={followLink(navigate, '#/foundations')}
+          style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}
         >
           <span
             style={{
               width: 32, height: 32, borderRadius: 'var(--radius-md)', background: 'var(--primary)',
-              display: 'inline-flex', alignItems: 'center', justifyContent: 'center', color: '#fff',
-              fontWeight: 700, fontSize: 16, letterSpacing: -0.5,
+              display: 'inline-flex', alignItems: 'center', justifyContent: 'center', color: 'var(--white)',
+              fontWeight: 600, fontSize: 16, letterSpacing: -0.5,
             }}
           >
             I
@@ -73,7 +76,7 @@ export default function App() {
             <span style={{ fontWeight: 600, fontSize: 15, color: 'var(--gray-900)' }}>Inspera</span>
             <span style={{ fontSize: 12, color: 'var(--muted-foreground)' }}>Component Library</span>
           </span>
-        </button>
+        </a>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
           {/* The complete document, not the index. llms.txt lists component
               names and links a file per component - useful to an agent that
@@ -85,24 +88,25 @@ export default function App() {
               single control cannot do both without one of them being a
               surprise. Joined into one group so they still read as a pair. */}
           <div style={{ display: 'inline-flex' }}>
-            <button
-              type="button"
-              onClick={() => navigate('#/spec')}
+            <a
+              href="#/spec"
+              onClick={followLink(navigate, '#/spec')}
+              aria-current={isSpec ? 'page' : undefined}
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: 6, height: 32, padding: '0 12px',
                 borderRadius: 'var(--radius-sm) 0 0 var(--radius-sm)',
                 border: '1px solid var(--border-strong)', borderRight: 'none',
                 background: isSpec ? 'var(--blue-100)' : 'var(--surface)',
                 color: 'var(--gray-800)', fontFamily: 'var(--font-sans)',
-                fontSize: 13, fontWeight: 500, cursor: 'pointer',
+                fontSize: 13, fontWeight: 500, textDecoration: 'none',
               }}
               title={`The complete AI build guide - foundations + all ${componentList.length} components`}
             >
               <span className="material-symbols-outlined" style={{ fontSize: 18 }} aria-hidden>description</span>
               AI spec
-            </button>
+            </a>
             <a
-              href={`/${fullSpec.file}`}
+              href={publicPath(fullSpec.file)}
               download={fullSpec.saveAs}
               style={{
                 display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
@@ -118,7 +122,7 @@ export default function App() {
             </a>
           </div>
           <a
-            href="/llms.txt"
+            href={publicPath('llms.txt')}
             target="_blank"
             rel="noreferrer"
             style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--muted-foreground)', textDecoration: 'none' }}
@@ -127,7 +131,7 @@ export default function App() {
             llms.txt
           </a>
           <a
-            href="/tokens.w3c.json"
+            href={publicPath('tokens.w3c.json')}
             target="_blank"
             rel="noreferrer"
             style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--muted-foreground)', textDecoration: 'none' }}
@@ -144,8 +148,11 @@ export default function App() {
       {/* Body */}
       <div style={{ display: 'flex', flex: 1, minHeight: 0 }}>
         <Sidebar route={hash} onNavigate={navigate} />
+        {/* Focusable, so the keyboard can scroll pages that hold no controls
+            (Typography, Breakpoints). */}
         <main
           id="docs-scroll"
+          tabIndex={0}
           style={{
             flex: 1, minWidth: 0,
             overflowY: fullBleed ? 'hidden' : 'auto',
@@ -161,7 +168,7 @@ export default function App() {
             : isIcons
               ? <IconsPage />
               : pagesMatch
-                ? <PagesPage slug={pagesMatch[1]} onNavigate={navigate} />
+                ? <Suspense fallback={null}><PagesPage slug={pagesMatch[1]} onNavigate={navigate} /></Suspense>
                 : componentMatch
                   ? <ComponentPage key={componentMatch[1]} slug={componentMatch[1]} />
                   : <FoundationsPage section={foundationsMatch?.[1] ?? 'colors'} />}

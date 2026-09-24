@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { componentList } from '../data/components'
-import { artifacts, artifactSize, fullSpec } from '../data/distribution'
+import { artifacts, artifactSize, fullSpec, publicPath } from '../data/distribution'
 import { Panel, SectionTitle, CodeBlock } from './primitives'
 
 /**
@@ -25,7 +25,7 @@ export default function SpecPage() {
   useEffect(() => {
     // Fetched rather than bundled: 281KB has no business in the app bundle,
     // and this way the page always shows exactly what the download contains.
-    fetch(`/${fullSpec.file}`)
+    fetch(publicPath(fullSpec.file))
       .then((r) => (r.ok ? r.text() : Promise.reject(new Error(String(r.status)))))
       .then(setText)
       .catch(() => setFailed(true))
@@ -51,7 +51,7 @@ export default function SpecPage() {
         <SectionTitle sub="Pick the form that matches how your tool takes context.">Use it</SectionTitle>
         <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 16 }}>
           <a
-            href={`/${fullSpec.file}`}
+            href={publicPath(fullSpec.file)}
             download={fullSpec.saveAs}
             style={{
               display: 'inline-flex', alignItems: 'center', gap: 6, height: 40, padding: '0 16px',
@@ -64,7 +64,7 @@ export default function SpecPage() {
             Download {fullSpec.saveAs}
           </a>
           <a
-            href={`/${fullSpec.file}`}
+            href={publicPath(fullSpec.file)}
             target="_blank"
             rel="noreferrer"
             style={{
@@ -82,7 +82,7 @@ export default function SpecPage() {
           {artifactSize(fullSpec.file, meta?.advice)}. Upload it once as a project or context file - Claude Projects,
           a custom GPT, Cursor's docs - rather than pasting it into a message. For a tool that
           re-sends its context every turn, use{' '}
-          <a href="/llms.txt" target="_blank" rel="noreferrer" style={{ color: 'var(--primary)' }}>llms.txt</a>{' '}
+          <a href={publicPath('llms.txt')} target="_blank" rel="noreferrer" style={{ color: 'var(--primary)', textDecoration: 'underline' }}>llms.txt</a>{' '}
           instead, which links a spec per component.
         </p>
       </Panel>

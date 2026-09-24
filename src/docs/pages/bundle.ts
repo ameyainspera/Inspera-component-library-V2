@@ -3,53 +3,121 @@ import type { ExamplePage } from './registry'
 /**
  * Builds a single self-contained text file for an example page so anyone can
  * hand it to an AI assistant and rebuild the screen from scratch: the design
- * tokens, the runtime CSS, the font wiring, every library component the page
- * uses, its non-library imports, and the page source itself.
+ * tokens, the runtime CSS, the font wiring, every library file the page needs,
+ * its non-library imports, and the page source itself.
  *
- * Source is read at build time via Vite's `?raw` glob, so the download always
- * reflects the current code - there is no separate copy to keep in sync.
+ * This module is pure - it reads source through the `read` function it is
+ * given. `download.ts` supplies Vite's `?raw` glob in the browser, so the
+ * download always reflects the current code; `scripts/audit-pages.ts` supplies
+ * the file system, and checks that every bundle resolves its own imports.
  */
-const RAW = import.meta.glob('/src/**/*.{ts,tsx,css}', {
-  query: '?raw',
-  import: 'default',
-  eager: true,
-}) as Record<string, string>
+export type ReadSource = (path: string) => string | undefined
 
-const read = (path: string): string => RAW[path] ?? ''
+const LIB = '/src/components/inspera/'
+const BARREL = `${LIB}index.ts`
+
+/** Relative specifiers of every `import ... from` / `export ... from` in a file. */
+export function relativeImports(src: string): string[] {
+  return [...src.matchAll(/(?:^|\n)\s*(?:import|export)\s[^'"]*?from\s*['"](\.{1,2}\/[^'"]+)['"]/g)].map((m) => m[1])
+}
+
+/** Resolve a relative specifier from an absolute /src path, trying the TS extensions. */
+export function resolveImport(from: string, spec: string, read: ReadSource): string | undefined {
+  const parts = from.split('/').slice(0, -1)
+  for (const seg of spec.split('/')) {
+    if (seg === '..') parts.pop()
+    else if (seg !== '.') parts.push(seg)
+  }
+  const base = parts.join('/')
+  return [`${base}.tsx`, `${base}.ts`, `${base}/index.ts`, base].find((p) => read(p) !== undefined)
+}
+
+/** Names a file imports from the library barrel, types included. */
+export function libraryImportNames(src: string): string[] {
+  const names: string[] = []
+  for (const m of src.matchAll(/import\s*(?:type\s*)?\{([^}]*)\}\s*from\s*['"][^'"]*components\/inspera['"]/g)) {
+    for (const raw of m[1].split(',')) {
+      const name = raw.replace(/^\s*type\s+/, '').split(/\s+as\s+/)[0].trim()
+      if (name) names.push(name)
+    }
+  }
+  return names
+}
+
+interface BarrelExport {
+  statement: string
+  names: string[]
+  /** Names exported as a component (`default as X`). */
+  components: string[]
+  target: string
+}
+
+function barrelExports(read: ReadSource): BarrelExport[] {
+  const src = read(BARREL) ?? ''
+  return [...src.matchAll(/export\s+(?:type\s+)?\{([^}]*)\}\s*from\s*['"](\.\/[^'"]+)['"]/g)].map((m) => {
+    const entries = m[1].split(',').map((s) => s.trim()).filter(Boolean)
+    return {
+      statement: m[0],
+      names: entries.map((s) => s.split(/\s+as\s+/).pop()!.trim()),
+      components: entries.filter((s) => /^default\s+as\s+/.test(s)).map((s) => s.split(/\s+as\s+/)[1].trim()),
+      target: resolveImport(BARREL, m[2], read) ?? '',
+    }
+  })
+}
+
+/** The library components a page renders - what its gallery card lists. */
+export function libraryComponentsUsed(page: ExamplePage, read: ReadSource): string[] {
+  const components = new Set(barrelExports(read).flatMap((e) => e.components))
+  const sources = [page.entry, ...(page.extras ?? [])].filter(Boolean).map((p) => read(p!) ?? '')
+  return [...new Set(sources.flatMap(libraryImportNames))].filter((n) => components.has(n))
+}
+
+/**
+ * Every library file a page needs: the modules its imported names come from,
+ * then everything those import in turn (the shared hooks, types and overlay
+ * helpers). The full barrel re-exports all components, so the bundle carries a
+ * barrel trimmed to just these files - otherwise its imports would not resolve.
+ */
+export function libraryFiles(page: ExamplePage, read: ReadSource): { path: string; body: string }[] {
+  const exports = barrelExports(read)
+  const sources = [page.entry, ...(page.extras ?? [])].filter(Boolean).map((p) => read(p!) ?? '')
+  const wanted = new Set(sources.flatMap(libraryImportNames))
+  if (wanted.size === 0) return []
+
+  const seen = new Set<string>()
+  const visit = (path: string) => {
+    if (seen.has(path) || !path.startsWith(LIB)) return
+    const src = read(path)
+    if (src === undefined) return
+    seen.add(path)
+    for (const spec of relativeImports(src)) {
+      const next = resolveImport(path, spec, read)
+      if (next) visit(next)
+    }
+  }
+  for (const e of exports) if (e.names.some((n) => wanted.has(n))) visit(e.target)
+
+  const barrel = [
+    '// Trimmed to the files this page needs. The full library barrel exports every component.',
+    ...exports.filter((e) => seen.has(e.target)).map((e) => e.statement),
+    '',
+  ].join('\n')
+
+  return [...[...seen].sort().map((path) => ({ path, body: read(path)! })), { path: BARREL, body: barrel }]
+}
 
 /** Font `@import` lines that must lead the consumer's global stylesheet. */
-function fontImports(): string {
-  const css = read('/src/index.css')
-  return css
+function fontImports(read: ReadSource): string {
+  return (read('/src/index.css') ?? '')
     .split('\n')
     .filter((l) => l.trim().startsWith('@import url('))
     .join('\n')
 }
 
-/** The `<Name>.tsx` files for every component imported from the library. */
-function insperaComponentFiles(entrySrc: string): string[] {
-  const block = entrySrc.match(
-    /import\s*(?:type\s*)?\{([^}]*)\}\s*from\s*['"][^'"]*components\/inspera['"]/,
-  )
-  if (!block) return []
-  const names = block[1]
-    .split(',')
-    .map((n) => n.replace(/\btype\b/, '').trim().split(/\s+as\s+/)[0].trim())
-    .filter(Boolean)
-  const paths = new Set<string>()
-  for (const name of names) {
-    const p = `/src/components/inspera/${name}.tsx`
-    if (RAW[p]) paths.add(p)
-  }
-  // Include the barrel so the imports in the page resolve as written.
-  if (paths.size && RAW['/src/components/inspera/index.ts']) {
-    paths.add('/src/components/inspera/index.ts')
-  }
-  return [...paths]
-}
+const rel = (path: string) => path.replace(/^\/src\//, 'src/')
 
 const fence = (path: string, lang: string, body: string): string =>
-  `### \`${path.replace(/^\/src\//, 'src/')}\`\n\n\`\`\`${lang}\n${body.trimEnd()}\n\`\`\`\n`
+  `### \`${rel(path)}\`\n\n\`\`\`${lang}\n${body.trimEnd()}\n\`\`\`\n`
 
 /**
  * The complete, ready-to-paste global stylesheet. Everything that must be
@@ -59,9 +127,9 @@ const fence = (path: string, lang: string, body: string): string =>
  *      drops them and every Material Symbols icon renders as its ligature text)
  *   2. @import 'tailwindcss'
  *   3. the design tokens   (the var(--…) custom properties everything reads)
- *   4. the runtime CSS     (icon helper classes + component keyframes)
+ *   4. the runtime CSS     (component states, keyframes and icon helpers)
  */
-function globalCss(): string {
+function globalCss(read: ReadSource): string {
   return [
     '/* ============================================================',
     '   GLOBAL STYLESHEET - import this ONCE at your app root.',
@@ -73,26 +141,26 @@ function globalCss(): string {
     '   ============================================================ */',
     '',
     '/* 1. Fonts - must be the very first statements in the file. */',
-    fontImports(),
+    fontImports(read),
     '',
     "/* 2. Tailwind CSS v4. */",
     "@import 'tailwindcss';",
     '',
     '/* 3. Design tokens - the var(--…) custom properties. */',
-    read('/src/imports/tokens.css').trimEnd(),
+    (read('/src/imports/tokens.css') ?? '').trimEnd(),
     '',
-    '/* 4. Runtime CSS - Material Symbols helpers + component keyframes. */',
-    read('/src/imports/runtime.css').trimEnd(),
+    '/* 4. Runtime CSS - component states, keyframes and icon helpers. */',
+    (read('/src/imports/runtime.css') ?? '').trimEnd(),
     '',
   ].join('\n')
 }
 
 /** Assemble the full Markdown bundle for a page. */
-export function buildPageBundle(page: ExamplePage): string {
+export function buildPageBundle(page: ExamplePage, read: ReadSource): string {
   const entry = page.entry ?? ''
-  const entrySrc = read(entry)
+  const entrySrc = read(entry) ?? ''
   const extras = page.extras ?? []
-  const components = insperaComponentFiles(entrySrc)
+  const library = libraryFiles(page, read)
 
   const parts: string[] = []
 
@@ -100,9 +168,9 @@ export function buildPageBundle(page: ExamplePage): string {
   // recreates the exact paths instead of inventing its own structure.
   const files = [
     '- `src/index.css` - the complete global stylesheet (§1). **Required.**',
-    ...components.map((p) => `- \`${p.replace(/^\/src\//, 'src/')}\``),
-    ...extras.map((p) => `- \`${p.replace(/^\/src\//, 'src/')}\``),
-    `- \`${entry.replace(/^\/src\//, 'src/')}\` - the page itself.`,
+    ...library.map((f) => `- \`${rel(f.path)}\``),
+    ...extras.map((p) => `- \`${rel(p)}\``),
+    `- \`${rel(entry)}\` - the page itself.`,
   ].join('\n')
 
   parts.push(
@@ -113,10 +181,10 @@ export function buildPageBundle(page: ExamplePage): string {
     'This file is self-contained: give it to any AI coding assistant and ask it ' +
       'to rebuild the page exactly. It includes the complete global stylesheet ' +
       '(fonts + Tailwind + design tokens + runtime CSS in the correct order), ' +
-      'every library component the page uses, its supporting modules, and the ' +
+      'every library file the page needs, its supporting modules, and the ' +
       'page code.',
     '',
-    '**Stack:** React + TypeScript + Tailwind CSS v4.',
+    '**Stack:** React 19 + TypeScript + Tailwind CSS v4.',
     '',
     '---',
     '',
@@ -154,36 +222,28 @@ export function buildPageBundle(page: ExamplePage): string {
     '## 1. `src/index.css` - the complete global stylesheet (copy verbatim)',
     '',
     '```css',
-    globalCss(),
+    globalCss(read),
     '```',
     '',
   )
 
-  if (components.length) {
-    parts.push('## 2. Library components used by this page', '')
-    for (const path of components) parts.push(fence(path, 'tsx', read(path)))
+  if (library.length) {
+    parts.push(
+      '## 2. Library files',
+      '',
+      'The components this page imports, the shared helpers they depend on, and ' +
+        'a barrel trimmed to them. Recreate each at the path shown.',
+      '',
+    )
+    for (const f of library) parts.push(fence(f.path, f.path.endsWith('.tsx') ? 'tsx' : 'ts', f.body))
   }
 
   if (extras.length) {
     parts.push('## 3. Supporting modules', '')
-    for (const path of extras) parts.push(fence(path, 'tsx', read(path)))
+    for (const path of extras) parts.push(fence(path, 'tsx', read(path) ?? ''))
   }
 
   parts.push('## 4. The page', '', fence(entry, 'tsx', entrySrc))
 
   return parts.join('\n')
-}
-
-/** Trigger a browser download of the page bundle as a `.md` text file. */
-export function downloadPageBundle(page: ExamplePage): void {
-  const text = buildPageBundle(page)
-  const blob = new Blob([text], { type: 'text/markdown;charset=utf-8' })
-  const url = URL.createObjectURL(blob)
-  const a = document.createElement('a')
-  a.href = url
-  a.download = `${page.slug}.md`
-  document.body.appendChild(a)
-  a.click()
-  a.remove()
-  URL.revokeObjectURL(url)
 }

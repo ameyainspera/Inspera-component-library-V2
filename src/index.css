@@ -1,12 +1,12 @@
 /* Font imports must precede all other CSS statements (including the Tailwind
    import, which Lightning CSS inlines into real rules). Placed after it, these
-   @import rules are invalid and get dropped - which silently breaks the fonts. */
+   @import rules are invalid and get dropped - which silently breaks the fonts.
+   Outlined is the only icon face the system uses, so it is the only one loaded;
+   Inter stops at 600 because the type scale does - 700 would be synthesised. */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@400;500;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;500;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-25..200&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-25..200&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-25..200&display=swap');
 @import 'tailwindcss';
 
 /* Generated from src/data/tokens.ts by `pnpm generate` - every Inspera token
@@ -36,6 +36,33 @@ body,
 /* A visible keyboard focus ring for the docs' own buttons and links. :where()
    keeps this at zero specificity, so every component's own focus style wins. */
 :where(button, a, input, select, textarea, [tabindex]):focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* Example-page cards: the title link stretches over the card, so the whole
+   card is clickable while its Download button stays a separate control. */
+/* The main scroll area takes focus for keyboard scrolling; ring it inside. */
+#docs-scroll:focus-visible {
+  outline-offset: calc(-1 * var(--focus-ring-width));
+}
+
+.docs-page-card {
+  transition: box-shadow var(--duration-fast) ease, border-color var(--duration-fast) ease;
+}
+.docs-page-card:hover {
+  box-shadow: var(--shadow-300) !important;
+  border-color: var(--border-strong) !important;
+}
+.docs-page-card-link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+.docs-page-card-link:focus-visible {
+  outline: none;
+}
+.docs-page-card:has(.docs-page-card-link:focus-visible) {
   outline: var(--focus-ring-width) solid var(--focus-ring-color);
   outline-offset: var(--focus-ring-offset);
 }

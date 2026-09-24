@@ -52,10 +52,12 @@ function CtaButton({
 /** Radio control for the Invitation-mode row. Tints green when it is the
  *  selected "Add candidates" option; otherwise it shows a neutral grey ring. */
 function InviteRadio({
+  label,
   selected,
   accent,
   onChange,
 }: {
+  label: string
   selected: boolean
   accent?: string
   onChange: () => void
@@ -65,7 +67,9 @@ function InviteRadio({
     <button
       type="button"
       onClick={onChange}
-      aria-pressed={selected}
+      role="radio"
+      aria-checked={selected}
+      aria-label={label}
       style={{
         width: 18, height: 18, padding: 0, borderRadius: '50%', flexShrink: 0, cursor: 'pointer',
         background: 'transparent',
@@ -97,7 +101,9 @@ function GreenCheck({
       <button
         type="button"
         onClick={() => setChecked((c) => !c)}
-        aria-pressed={checked}
+        role="checkbox"
+        aria-checked={checked}
+        aria-label={label}
         style={{
           width: 16, height: 16, marginTop: 2, padding: 0, flexShrink: 0, cursor: 'pointer',
           borderRadius: 3, border: checked ? 'none' : '1.5px solid var(--border-strong)',
@@ -106,7 +112,7 @@ function GreenCheck({
         }}
       >
         {checked && (
-          <span className="material-symbols-outlined" style={{ fontSize: 14, color: '#fff', fontWeight: 700 }} aria-hidden>check</span>
+          <span className="material-symbols-outlined" style={{ fontSize: 14, color: 'var(--white)', fontWeight: 700 }} aria-hidden>check</span>
         )}
       </button>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 2, minWidth: 0 }}>
@@ -426,14 +432,14 @@ function AfterTest() {
         <div style={stack(10)}>
           <SubHeading>Share comments with candidate. <LearnMore /></SubHeading>
           <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-            <InviteRadio selected={shareComments === 'private'} accent={GREEN} onChange={() => setShareComments('private')} />
+            <InviteRadio label="Not shared" selected={shareComments === 'private'} accent={GREEN} onChange={() => setShareComments('private')} />
             <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
               <span style={{ fontSize: 14, fontWeight: 600, color: shareComments === 'private' ? GREEN : 'var(--text-primary)' }}>Not shared.</span>
               <span style={{ fontSize: 13, color: shareComments === 'private' ? GREEN : 'var(--muted-foreground)' }}>Comments are private to each grader.</span>
             </div>
           </div>
           <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-            <InviteRadio selected={shareComments === 'shared'} accent={GREEN} onChange={() => setShareComments('shared')} />
+            <InviteRadio label="Shared with candidate" selected={shareComments === 'shared'} accent={GREEN} onChange={() => setShareComments('shared')} />
             <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
               <span style={{ fontSize: 14, fontWeight: 600, color: shareComments === 'shared' ? GREEN : 'var(--text-primary)' }}>Shared with candidate.</span>
               <span style={{ fontSize: 13, color: 'var(--muted-foreground)' }}>Available for candidates with status <em>Graded</em>.</span>
@@ -506,7 +512,7 @@ function GreenRadio({
   const titleColor = disabled ? 'var(--muted-foreground)' : selected ? GREEN : 'var(--text-primary)'
   return (
     <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start', opacity: disabled ? 0.6 : 1 }}>
-      <InviteRadio selected={selected} accent={GREEN} onChange={disabled ? () => {} : onChange} />
+      <InviteRadio label={title} selected={selected} accent={GREEN} onChange={disabled ? () => {} : onChange} />
       <div style={{ display: 'flex', flexDirection: 'column', gap: 2, minWidth: 0 }}>
         <span style={{ fontSize: 14, fontWeight: 600, color: titleColor }}>{title}</span>
         {description && <span style={{ fontSize: 13, color: 'var(--muted-foreground)', lineHeight: 1.4 }}>{description}</span>}
@@ -949,18 +955,18 @@ export default function TestSetup() {
           {/* Invitation mode - both options share one row, framed by the light
               section dividers seen in the real screen. The selected "Add
               candidates" affordance is a green radio + green label (no check). */}
-          <div style={{
+          <div role="radiogroup" aria-labelledby="invitation-mode" style={{
             display: 'flex', alignItems: 'center', gap: 28, flexWrap: 'wrap',
             padding: '18px 0', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)',
           }}>
-            <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)', whiteSpace: 'nowrap' }}>Invitation mode:</span>
+            <span id="invitation-mode" style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)', whiteSpace: 'nowrap' }}>Invitation mode:</span>
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, whiteSpace: 'nowrap' }}>
-              <InviteRadio selected={invitation === 'add'} accent={GREEN} onChange={() => setInvitation('add')} />
+              <InviteRadio label="Add candidates to test" selected={invitation === 'add'} accent={GREEN} onChange={() => setInvitation('add')} />
               <span style={{ fontSize: 14, color: GREEN, fontWeight: 500 }}>Add candidates to test</span>
               <LearnMore />
             </span>
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, whiteSpace: 'nowrap' }}>
-              <InviteRadio selected={invitation === 'code'} onChange={() => setInvitation('code')} />
+              <InviteRadio label="Invite by sharing Test Code" selected={invitation === 'code'} onChange={() => setInvitation('code')} />
               <span style={{ fontSize: 14, color: 'var(--text-primary)' }}>Invite by sharing Test Code</span>
               <LearnMore />
             </span>
