@@ -1,6 +1,6 @@
 // SOURCE OF TRUTH for every Inspera token.
 //
-// This file generates src/tokens.css, packages/components/tokens.css,
+// This file generates src/imports/tokens.css, packages/components/styles.css,
 // kit/styles.css and public/tokens.w3c.json via scripts/build-portable.ts.
 // Add a token here and it appears everywhere; never edit a generated file.
 

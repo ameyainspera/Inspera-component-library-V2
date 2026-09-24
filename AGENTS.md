@@ -1,3 +1,28 @@
+# Inspera Component Library
+
+The reference site and distribution hub for the Inspera Design System: React + Vite + Tailwind CSS, running inside Figma Make. `DISTRIBUTION.md` covers the outputs and every check.
+
+## Where things live
+
+- `src/components/inspera/` - the library components (one file each, plus shared `types.ts`, `overlay.tsx`, `useControllableState.ts`, `useModalBehavior.ts`, `calendar.tsx`; barrel in `index.ts`).
+- `src/data/tokens.ts` - token values. `src/data/components.ts` - component semantics for the docs and the AI spec.
+- `src/docs/registry.tsx` - each component page's playground controls, snippets and "Variants & states" gallery. `src/data/recipes.tsx` - the HTML+CSS recipe for each component.
+- `src/docs/` - the docs shell (`App.tsx` routes by hash); `src/docs/pages/` - the example pages.
+- `src/imports/runtime.css` - hand-written CSS the components need (states, keyframes). `src/imports/tokens.css` is generated.
+- `scripts/build-portable.ts` - generates everything under `public/`, `kit/`, `packages/components/styles.css`, and the `*.generated.ts` files.
+
+## Rules for library components
+
+- No Tailwind classes in `src/components/inspera/`: inline styles with `var(--token)` values and `runtime.css` classes only, so a component renders in an app without Tailwind.
+- Content is a required prop; never a placeholder default. State props come in pairs (`value` + `defaultValue` + `onChange`) through `useControllableState`.
+- Accept `className`, `style` and native attributes via `NativeAttrs`, and spread them on the root element.
+- Docs-only props (`forceState`, `forceVisible`, `embedded`) are marked `/** @internal */` and never reach snippets or the spec.
+- After changing a component, its tokens or its registry entry: run `pnpm generate`, then `pnpm typecheck`, `pnpm audit:snippets` and `pnpm audit:recipes`.
+
+---
+
+The sections below come from the Figma Make scaffold.
+
 # figma-make-app
 
 React + Vite + Tailwind CSS project running inside Figma Make.
@@ -30,7 +55,7 @@ This is the canonical project structure. Start with task-relevant files below. O
 
 ## Styling
 
-This project uses **Tailwind CSS v4** through the `@tailwindcss/vite` plugin configured in `vite.config.ts`. `src/index.css` imports Tailwind with `@import 'tailwindcss';`. Use Tailwind utility classes directly in JSX and put global CSS or Tailwind v4 theme customization in `src/index.css`. This scaffold does not need a Tailwind config file or PostCSS config.
+This project uses **Tailwind CSS v4** through the `@tailwindcss/vite` plugin configured in `vite.config.ts`. `src/index.css` imports Tailwind with `@import 'tailwindcss';`. Use Tailwind utility classes directly in JSX (except in `src/components/inspera/` - see above) and put global CSS or Tailwind v4 theme customization in `src/index.css`. This scaffold does not need a Tailwind config file or PostCSS config.
 
 `src/main.tsx` imports `src/index.css`, so global font wiring belongs in `src/index.css`. Keep CSS `@import` statements first, then add any `@font-face` rules and font-family defaults there.
 

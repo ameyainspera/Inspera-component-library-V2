@@ -5,7 +5,7 @@
  * Source of truth:
  *   - src/data/tokens.ts      (token values)
  *   - src/data/components.ts  (component semantics)
- *   - src/imports/runtime.css (icon helper + keyframes, copied verbatim)
+ *   - src/imports/runtime.css (component states, keyframes, icon helpers; copied verbatim)
  *
  * Generated outputs (never hand-edited):
  *   - src/imports/tokens.css         :root custom properties for the docs app
@@ -13,8 +13,9 @@
  *   - public/llms-full.txt           the same content, everything inline
  *   - public/c/<slug>.md             one self-contained file per component
  *   - public/tokens.w3c.json         W3C Design Tokens JSON
- *   - packages/components/tokens.css  token CSS shipped by the npm package
- *   - kit/styles.css                  same tokens for the Figma Make kit
+ *   - packages/components/styles.css  tokens + runtime CSS shipped by the npm package
+ *   - packages/components/README.md   only its marked blocks: component list, fonts
+ *   - public/tokens.css, kit/styles.css  the same stylesheet for the web and the Make kit
  *   - kit/guidelines/tokens.md        kit token reference
  *   - kit/guidelines/components.md    kit component catalog + APIs
  *   - kit/.figma/make/kit.json        kit manifest
@@ -504,6 +505,46 @@ are documented separately - see llms.txt for the index.
 
 ${buildFoundations({ compact: false })}
 `
+}
+
+// ---------------------------------------------------------------------------
+// npm package README - hand-written, with generated blocks
+//
+// The README said "15 components" and wired JetBrains Mono long after both
+// stopped being true. The parts that follow the source are now written here,
+// between <!-- generated:NAME --> markers; the prose around them stays
+// hand-written.
+// ---------------------------------------------------------------------------
+function spliceGenerated(text: string, file: string, name: string, content: string): string {
+  const start = `<!-- generated:${name} -->`
+  const end = `<!-- /generated:${name} -->`
+  const i = text.indexOf(start)
+  const j = text.indexOf(end)
+  if (i < 0 || j < i) throw new Error(`${file}: missing the ${start} ... ${end} markers`)
+  return `${text.slice(0, i + start.length)}\n${content}\n${text.slice(j)}`
+}
+
+function buildPackageReadme(): string {
+  const file = 'packages/components/README.md'
+  const byCategory: Record<string, ComponentSpec[]> = {}
+  for (const c of componentList) (byCategory[c.category] ??= []).push(c)
+  const components = [
+    `${componentList.length} components, by category:`,
+    '',
+    ...Object.entries(byCategory).map(([cat, list]) => `- **${cat}** (${list.length}): ${list.map((c) => `\`${exportNameFor(c)}\``).join(', ')}`),
+  ].join('\n')
+  // The same font imports the reference site loads, in the same order.
+  const fonts = [
+    '```css',
+    ...readFileSync(join(root, 'src/index.css'), 'utf8')
+      .split('\n')
+      .filter((l) => l.startsWith("@import url('https://fonts.googleapis.com")),
+    '```',
+  ].join('\n')
+  let text = readFileSync(join(root, file), 'utf8')
+  text = spliceGenerated(text, file, 'components', components)
+  text = spliceGenerated(text, file, 'fonts', fonts)
+  return text
 }
 
 // ---------------------------------------------------------------------------
@@ -1294,7 +1335,8 @@ write('public/api.json', JSON.stringify(buildApiJson(), null, 2) + '\n')
 write('public/aliases.json', JSON.stringify(buildAliasesJson(), null, 2) + '\n')
 write('public/inspera.theme.css', buildTailwindTheme())
 write('public/tokens.w3c.json', JSON.stringify(buildW3CTokens(), null, 2) + '\n')
-write('packages/components/tokens.css', distributedCss)
+write('packages/components/styles.css', distributedCss)
+write('packages/components/README.md', buildPackageReadme())
 write('public/tokens.css', distributedCss)
 write('kit/styles.css', distributedCss)
 for (const f of toolRules()) write(f.path, f.content)
