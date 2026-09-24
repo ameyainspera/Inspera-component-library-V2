@@ -5,10 +5,10 @@
  * Source of truth:
  *   - src/data/tokens.ts      (token values)
  *   - src/data/components.ts  (component semantics)
- *   - src/runtime.css         (icon helper + keyframes, copied verbatim)
+ *   - src/imports/runtime.css (icon helper + keyframes, copied verbatim)
  *
  * Generated outputs (never hand-edited):
- *   - src/tokens.css                 :root custom properties for the docs app
+ *   - src/imports/tokens.css         :root custom properties for the docs app
  *   - public/llms.txt                index any LLM tool can paste
  *   - public/llms-full.txt           the same content, everything inline
  *   - public/c/<slug>.md             one self-contained file per component
@@ -72,9 +72,30 @@ const assertAscii = (rel: string, content: string) => {
   }
 }
 
+/**
+ * `--check` generates everything in memory and compares it with what is on
+ * disk instead of writing. It is the drift gate: the folder is not always a git
+ * repository, so "regenerate, then diff" cannot be relied on.
+ */
+const CHECK = process.argv.includes('--check')
+const drifted: string[] = []
+/** What this run produced, so sizes can be measured without touching disk. */
+const produced = new Map<string, string>()
+
 const write = (rel: string, content: string) => {
   assertAscii(rel, content)
+  produced.set(rel, content)
   const abs = join(root, rel)
+  if (CHECK) {
+    let current: string | null = null
+    try {
+      current = readFileSync(abs, 'utf8')
+    } catch {
+      /* missing counts as drift */
+    }
+    if (current !== content) drifted.push(rel)
+    return
+  }
   mkdirSync(dirname(abs), { recursive: true })
   writeFileSync(abs, content)
   console.log('  ✓', rel)
@@ -170,10 +191,10 @@ function buildTypeClasses(): string {
 
 /** The stylesheet shipped to consumers: tokens + the runtime CSS, verbatim. */
 function buildDistributedCss(): string {
-  const runtime = readFileSync(join(root, 'src/runtime.css'), 'utf8')
+  const runtime = readFileSync(join(root, 'src/imports/runtime.css'), 'utf8')
     .replace(/^\/\*[\s\S]*?\*\/\n\n/, '') // strip the authoring preamble
   return (
-    GENERATED_HEADER('src/data/tokens.ts + src/runtime.css') +
+    GENERATED_HEADER('src/data/tokens.ts + src/imports/runtime.css') +
     buildRootCss() +
     '\n' +
     buildTypeClasses() +
@@ -579,7 +600,7 @@ ${whenUnsure.map((r) => `- ${r}`).join('\n')}`
  * The document named Inter and Material Symbols in its rules and its
  * done-checklist, and then gave no way to load either. A recipe only ever sets
  * `font-size` on `.material-symbols-outlined`; the rule that makes that class a
- * font lives in src/runtime.css, which is not part of the download. So a
+ * font lives in src/imports/runtime.css, which is not part of the download. So a
  * designer who pasted the spec into an AI tool got correct colours, correct
  * radii, correct spacing - and every icon rendered as its own name, the word
  * "add" sitting inside the button.
@@ -588,12 +609,15 @@ ${whenUnsure.map((r) => `- ${r}`).join('\n')}`
  * that ships and the rule that is documented cannot drift apart.
  */
 function iconRuleFromRuntime(): string {
-  const runtime = readFileSync(join(root, 'src/runtime.css'), 'utf8')
-  const start = runtime.indexOf('.material-symbols-outlined,')
-  const end = runtime.indexOf("\n\n", runtime.indexOf(".material-symbols-sharp    {"))
+  const runtime = readFileSync(join(root, 'src/imports/runtime.css'), 'utf8')
+  // Outlined is the only face runtime.css defines, so the block is the one rule
+  // from its selector to its closing brace.
+  const start = runtime.indexOf('.material-symbols-outlined {')
+  const close = start === -1 ? -1 : runtime.indexOf('\n}', start)
+  const end = close === -1 ? -1 : close + 2
   if (start === -1 || end === -1) {
     throw new Error(
-      'Could not find the Material Symbols block in src/runtime.css. buildSetup() ' +
+      'Could not find the Material Symbols block in src/imports/runtime.css. buildSetup() ' +
         'copies it verbatim so the documented rule matches the shipped one - fix the ' +
         'markers here if that file was restructured.',
     )
@@ -1194,29 +1218,19 @@ const distributedCss = buildDistributedCss()
 function artifactSizes(): Record<string, { bytes: number; tokens: number }> {
   const out: Record<string, { bytes: number; tokens: number }> = {}
   for (const a of artifacts) {
-    const abs = join(root, 'public', a.file)
-    let bytes: number
-    try {
-      bytes = readFileSync(abs).byteLength
-    } catch {
+    const content = produced.get(`public/${a.file}`)
+    if (content === undefined) {
       throw new Error(
         `distribution.ts lists "${a.file}" but public/${a.file} was not generated. ` +
           'Remove it from the artifacts list, or emit it.',
       )
     }
+    const bytes = Buffer.byteLength(content, 'utf8')
     out[a.file] = { bytes, tokens: Math.round(bytes / 4) }
   }
   return out
 }
 
-write(
-  'src/data/artifact-sizes.generated.ts',
-  '// GENERATED by scripts/build-portable.ts - measured from the files that were\n' +
-    '// just written, so a size shown in the UI is never a stale guess. Do not edit.\n\n' +
-    'export const artifactSizes: Record<string, { bytes: number; tokens: number }> = ' +
-    JSON.stringify(artifactSizes(), null, 2) +
-    '\n',
-)
 write(
   'src/data/radius-usage.generated.ts',
   '// GENERATED by scripts/build-portable.ts - which components use each radius\n' +
@@ -1249,7 +1263,7 @@ write(
     '\n',
 )
 write(
-  'src/tokens.css',
+  'src/imports/tokens.css',
   GENERATED_HEADER('src/data/tokens.ts') + buildRootCss() + '\n' + buildTypeClasses(),
 )
 write('public/llms.txt', buildLlmsIndex())
@@ -1273,4 +1287,24 @@ for (const f of toolRules()) write(f.path, f.content)
 write('kit/guidelines/components.md', buildKitComponentsMd())
 write('kit/guidelines/tokens.md', buildKitTokensMd())
 write('kit/.figma/make/kit.json', JSON.stringify(buildKitManifest(), null, 2) + '\n')
-console.log('Done.')
+// Last: sizes are measured from the outputs above, never from a previous run.
+write(
+  'src/data/artifact-sizes.generated.ts',
+  '// GENERATED by scripts/build-portable.ts - measured from the files that were\n' +
+    '// just written, so a size shown in the UI is never a stale guess. Do not edit.\n\n' +
+    'export const artifactSizes: Record<string, { bytes: number; tokens: number }> = ' +
+    JSON.stringify(artifactSizes(), null, 2) +
+    '\n',
+)
+
+if (CHECK) {
+  if (drifted.length > 0) {
+    console.error(`\n${drifted.length} generated file(s) are out of date:`)
+    for (const f of drifted) console.error('  ✗', f)
+    console.error('\nRun `pnpm generate` and include the result.')
+    process.exit(1)
+  }
+  console.log('All generated files are up to date.')
+} else {
+  console.log('Done.')
+}

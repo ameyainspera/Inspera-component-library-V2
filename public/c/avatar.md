@@ -82,9 +82,7 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
 
-.material-symbols-outlined,
-.material-symbols-rounded,
-.material-symbols-sharp {
+.material-symbols-outlined {
   font-weight: normal;
   font-style: normal;
   line-height: 1;
@@ -98,11 +96,8 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
   -webkit-font-feature-settings: 'liga';
   -moz-font-feature-settings: 'liga';
   user-select: none;
+  font-family: 'Material Symbols Outlined';
 }
-
-.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
-.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
-.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
 ```
 
 #### Without the package - exact HTML and CSS

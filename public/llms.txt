@@ -66,7 +66,6 @@ this list.
 | Token | CSS variable | Value | Use |
 | --- | --- | --- | --- |
 | `primary.main` | `var(--primary)` | #004080 | Primary brand / interactive |
-| `secondary.main` | `var(--secondary)` | #322060 | Secondary brand, used sparingly |
 | `error` | `var(--error)` | #D32F2F | Use only for its meaning (error) |
 | `warning` | `var(--warning)` | #EF6C00 | Use only for its meaning (warning) |
 | `info` | `var(--info)` | #0288D1 | Use only for its meaning (info) |
@@ -213,10 +212,10 @@ actually does rather than what this document claims.
 | Token | CSS variable | Value | When to use | Used by |
 | --- | --- | --- | --- | --- |
 | `none` | `var(--radius-none)` | 0px | Flush edges - table cells, full-bleed surfaces, anything that meets another edge. | - |
-| `xs` | `var(--radius-xs)` | 2px | The smallest indicators, where 4px would read as a visible curve. | Checkbox, Link, Rating |
-| `sm` | `var(--radius-sm)` | 4px | Controls: buttons, tags, segments, menu items. | Button, DatePicker, Dialog, List, Menu, Popover, SegmentedControl, Select, Skeleton, Tabs, Tooltip |
-| `md` | `var(--radius-md)` | 8px | Inputs, alerts and floating panels - the system default. | Accordion, Alert, DatePicker, Drawer, FileUpload, List, Menu, OtpInput, Pagination, Popover, SegmentedControl, Select, Skeleton, Snackbar, Table, Tabs, TextInput, Textarea |
-| `lg` | `var(--radius-lg)` | 12px | Large surfaces that contain other components: cards, dialogs, drawers. | Card, Dialog, Stat |
+| `xs` | `var(--radius-xs)` | 2px | The smallest indicators, where 4px would read as a visible curve. | Checkbox, CommandPalette, Link, Rating |
+| `sm` | `var(--radius-sm)` | 4px | Controls: buttons, tags, segments, menu items. | Button, Combobox, CommandPalette, DatePicker, DateRangePicker, Dialog, List, Menu, NumberInput, Popover, SegmentedControl, Select, Skeleton, Tabs, Tooltip |
+| `md` | `var(--radius-md)` | 8px | Inputs, alerts and floating panels - the system default. | Accordion, Alert, Combobox, DataGrid, DatePicker, DateRangePicker, Drawer, FileUpload, List, Menu, NumberInput, OtpInput, Pagination, Popover, SegmentedControl, Select, Skeleton, Snackbar, Table, Tabs, TextInput, Textarea |
+| `lg` | `var(--radius-lg)` | 12px | Large surfaces that contain other components: cards, dialogs, drawers. | Card, CommandPalette, Dialog, Stat |
 | `xl` | `var(--radius-xl)` | 16px | Reserved for oversized surfaces. Nothing uses it today; prefer lg. | - |
 | `pill` | `var(--radius-pill)` | fully round | Only for shapes that are conceptually round: toggles, badges, radios, avatars. | Avatar, Badge, Dialog, Progress, RadioButton, Skeleton, Slider, Stepper, Tag, Toggle, Tooltip |
 
@@ -335,6 +334,9 @@ Focus is never removed, only replaced by something at least as visible:
 - [Checkbox Group](./c/checkbox-group.md) - Group related multi-select checkboxes.
 - [Rating](./c/rating.md) - Capture or display a star rating.
 - [OTP Input](./c/otp-input.md) - Enter a one-time verification code.
+- [Number Input](./c/number-input.md) - Enter and adjust a numeric value with steppers.
+- [Combobox](./c/combobox.md) - Filter a list of options by typing to select one.
+- [Date Range Picker](./c/date-range-picker.md) - Select a start and end date from a calendar.
 
 ### data-display
 
@@ -342,6 +344,7 @@ Focus is never removed, only replaced by something at least as visible:
 - [Badge](./c/badge.md) - Display a short status label or count.
 - [Avatar](./c/avatar.md) - Represent a user or entity with an image or initials.
 - [Table](./c/table.md) - Display structured data in rows and columns.
+- [Data Grid](./c/data-grid.md) - Display large datasets with sorting, selection and paging.
 - [Accordion](./c/accordion.md) - Show and hide sections of related content.
 - [Tag](./c/tag.md) - Label, categorize, or filter with a removable chip.
 - [Divider](./c/divider.md) - Separate content with a thin rule.
@@ -355,6 +358,8 @@ Focus is never removed, only replaced by something at least as visible:
 - [Alert](./c/alert.md) - Display semantic inline feedback.
 - [Dialog](./c/dialog.md) - Present content or actions that require user attention.
 - [Snackbar](./c/snackbar.md) - Show brief, non-blocking feedback at the bottom of the screen.
+- [Toast](./c/toast.md) - Fire transient notifications imperatively from anywhere.
+- [Command Palette](./c/command-palette.md) - Search and run commands from a keyboard-driven overlay.
 - [Tooltip](./c/tooltip.md) - Provide contextual help on hover or focus.
 - [Progress](./c/progress.md) - Show completion of an ongoing task.
 - [Spinner](./c/spinner.md) - Indicate an indeterminate loading state.

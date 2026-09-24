@@ -5,10 +5,6 @@
       "$type": "color",
       "$value": "#004080"
     },
-    "secondary": {
-      "$type": "color",
-      "$value": "#322060"
-    },
     "error": {
       "$type": "color",
       "$value": "#D32F2F"

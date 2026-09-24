@@ -24,7 +24,7 @@ import { registry } from '../src/docs/registry'
 // Hermetic on purpose: the comparison needs the two stylesheets and nothing
 // else, so this runs in CI without a dev server, a build, or a network.
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
-const stylesheets = ['public/tokens.css', 'src/runtime.css']
+const stylesheets = ['public/tokens.css', 'src/imports/runtime.css']
   .map((f) => readFileSync(join(root, f), 'utf8'))
   .join('\n')
 

@@ -1,6 +1,6 @@
 # Components
 
-The Inspera kit ships 42 components. Import from `@inspera/kit`. Read the
+The Inspera kit ships 48 components. Import from `@inspera/kit`. Read the
 component's entry before using it - prop names and variant casing are exact.
 
 ## input-controls
@@ -50,9 +50,7 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
 
-.material-symbols-outlined,
-.material-symbols-rounded,
-.material-symbols-sharp {
+.material-symbols-outlined {
   font-weight: normal;
   font-style: normal;
   line-height: 1;
@@ -66,11 +64,8 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
   -webkit-font-feature-settings: 'liga';
   -moz-font-feature-settings: 'liga';
   user-select: none;
+  font-family: 'Material Symbols Outlined';
 }
-
-.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
-.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
-.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
 ```
 
 #### Without the package - exact HTML and CSS
@@ -258,9 +253,7 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
 
-.material-symbols-outlined,
-.material-symbols-rounded,
-.material-symbols-sharp {
+.material-symbols-outlined {
   font-weight: normal;
   font-style: normal;
   line-height: 1;
@@ -274,11 +267,8 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
   -webkit-font-feature-settings: 'liga';
   -moz-font-feature-settings: 'liga';
   user-select: none;
+  font-family: 'Material Symbols Outlined';
 }
-
-.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
-.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
-.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
 ```
 
 #### Without the package - exact HTML and CSS
@@ -473,9 +463,7 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
 
-.material-symbols-outlined,
-.material-symbols-rounded,
-.material-symbols-sharp {
+.material-symbols-outlined {
   font-weight: normal;
   font-style: normal;
   line-height: 1;
@@ -489,11 +477,8 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
   -webkit-font-feature-settings: 'liga';
   -moz-font-feature-settings: 'liga';
   user-select: none;
+  font-family: 'Material Symbols Outlined';
 }
-
-.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
-.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
-.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
 ```
 
 #### Without the package - exact HTML and CSS
@@ -671,9 +656,7 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
 
-.material-symbols-outlined,
-.material-symbols-rounded,
-.material-symbols-sharp {
+.material-symbols-outlined {
   font-weight: normal;
   font-style: normal;
   line-height: 1;
@@ -687,11 +670,8 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
   -webkit-font-feature-settings: 'liga';
   -moz-font-feature-settings: 'liga';
   user-select: none;
+  font-family: 'Material Symbols Outlined';
 }
-
-.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
-.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
-.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
 ```
 
 #### Without the package - exact HTML and CSS
@@ -843,9 +823,7 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
 
-.material-symbols-outlined,
-.material-symbols-rounded,
-.material-symbols-sharp {
+.material-symbols-outlined {
   font-weight: normal;
   font-style: normal;
   line-height: 1;
@@ -859,11 +837,8 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
   -webkit-font-feature-settings: 'liga';
   -moz-font-feature-settings: 'liga';
   user-select: none;
+  font-family: 'Material Symbols Outlined';
 }
-
-.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
-.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
-.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
 ```
 
 #### Without the package - exact HTML and CSS
@@ -1068,9 +1043,7 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
 
-.material-symbols-outlined,
-.material-symbols-rounded,
-.material-symbols-sharp {
+.material-symbols-outlined {
   font-weight: normal;
   font-style: normal;
   line-height: 1;
@@ -1084,11 +1057,8 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
   -webkit-font-feature-settings: 'liga';
   -moz-font-feature-settings: 'liga';
   user-select: none;
+  font-family: 'Material Symbols Outlined';
 }
-
-.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
-.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
-.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
 ```
 
 #### Without the package - exact HTML and CSS
@@ -1243,9 +1213,7 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
 
-.material-symbols-outlined,
-.material-symbols-rounded,
-.material-symbols-sharp {
+.material-symbols-outlined {
   font-weight: normal;
   font-style: normal;
   line-height: 1;
@@ -1259,11 +1227,8 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
   -webkit-font-feature-settings: 'liga';
   -moz-font-feature-settings: 'liga';
   user-select: none;
+  font-family: 'Material Symbols Outlined';
 }
-
-.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
-.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
-.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
 ```
 
 #### Without the package - exact HTML and CSS
@@ -1432,9 +1397,7 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
 
-.material-symbols-outlined,
-.material-symbols-rounded,
-.material-symbols-sharp {
+.material-symbols-outlined {
   font-weight: normal;
   font-style: normal;
   line-height: 1;
@@ -1448,11 +1411,8 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
   -webkit-font-feature-settings: 'liga';
   -moz-font-feature-settings: 'liga';
   user-select: none;
+  font-family: 'Material Symbols Outlined';
 }
-
-.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
-.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
-.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
 ```
 
 #### Without the package - exact HTML and CSS
@@ -1668,9 +1628,7 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
 
-.material-symbols-outlined,
-.material-symbols-rounded,
-.material-symbols-sharp {
+.material-symbols-outlined {
   font-weight: normal;
   font-style: normal;
   line-height: 1;
@@ -1684,11 +1642,8 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
   -webkit-font-feature-settings: 'liga';
   -moz-font-feature-settings: 'liga';
   user-select: none;
+  font-family: 'Material Symbols Outlined';
 }
-
-.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
-.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
-.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
 ```
 
 #### Without the package - exact HTML and CSS
@@ -1869,9 +1824,7 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
 
-.material-symbols-outlined,
-.material-symbols-rounded,
-.material-symbols-sharp {
+.material-symbols-outlined {
   font-weight: normal;
   font-style: normal;
   line-height: 1;
@@ -1885,11 +1838,8 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
   -webkit-font-feature-settings: 'liga';
   -moz-font-feature-settings: 'liga';
   user-select: none;
+  font-family: 'Material Symbols Outlined';
 }
-
-.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
-.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
-.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
 ```
 
 #### Without the package - exact HTML and CSS
@@ -2011,9 +1961,7 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
 
-.material-symbols-outlined,
-.material-symbols-rounded,
-.material-symbols-sharp {
+.material-symbols-outlined {
   font-weight: normal;
   font-style: normal;
   line-height: 1;
@@ -2027,11 +1975,8 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
   -webkit-font-feature-settings: 'liga';
   -moz-font-feature-settings: 'liga';
   user-select: none;
+  font-family: 'Material Symbols Outlined';
 }
-
-.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
-.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
-.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
 ```
 
 #### Without the package - exact HTML and CSS
@@ -2279,9 +2224,7 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
 
-.material-symbols-outlined,
-.material-symbols-rounded,
-.material-symbols-sharp {
+.material-symbols-outlined {
   font-weight: normal;
   font-style: normal;
   line-height: 1;
@@ -2295,11 +2238,8 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
   -webkit-font-feature-settings: 'liga';
   -moz-font-feature-settings: 'liga';
   user-select: none;
+  font-family: 'Material Symbols Outlined';
 }
-
-.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
-.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
-.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
 ```
 
 #### Without the package - exact HTML and CSS
@@ -2470,9 +2410,7 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
 
-.material-symbols-outlined,
-.material-symbols-rounded,
-.material-symbols-sharp {
+.material-symbols-outlined {
   font-weight: normal;
   font-style: normal;
   line-height: 1;
@@ -2486,11 +2424,8 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
   -webkit-font-feature-settings: 'liga';
   -moz-font-feature-settings: 'liga';
   user-select: none;
+  font-family: 'Material Symbols Outlined';
 }
-
-.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
-.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
-.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
 ```
 
 #### Without the package - exact HTML and CSS
@@ -2672,9 +2607,7 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
 
-.material-symbols-outlined,
-.material-symbols-rounded,
-.material-symbols-sharp {
+.material-symbols-outlined {
   font-weight: normal;
   font-style: normal;
   line-height: 1;
@@ -2688,11 +2621,8 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
   -webkit-font-feature-settings: 'liga';
   -moz-font-feature-settings: 'liga';
   user-select: none;
+  font-family: 'Material Symbols Outlined';
 }
-
-.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
-.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
-.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
 ```
 
 #### Without the package - exact HTML and CSS
@@ -2892,9 +2822,7 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
 
-.material-symbols-outlined,
-.material-symbols-rounded,
-.material-symbols-sharp {
+.material-symbols-outlined {
   font-weight: normal;
   font-style: normal;
   line-height: 1;
@@ -2908,11 +2836,8 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
   -webkit-font-feature-settings: 'liga';
   -moz-font-feature-settings: 'liga';
   user-select: none;
+  font-family: 'Material Symbols Outlined';
 }
-
-.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
-.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
-.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
 ```
 
 #### Without the package - exact HTML and CSS
@@ -3045,9 +2970,7 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
 
-.material-symbols-outlined,
-.material-symbols-rounded,
-.material-symbols-sharp {
+.material-symbols-outlined {
   font-weight: normal;
   font-style: normal;
   line-height: 1;
@@ -3061,11 +2984,8 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
   -webkit-font-feature-settings: 'liga';
   -moz-font-feature-settings: 'liga';
   user-select: none;
+  font-family: 'Material Symbols Outlined';
 }
-
-.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
-.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
-.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
 ```
 
 #### Without the package - exact HTML and CSS
@@ -3155,6 +3075,578 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 ```
 
 
+### Number Input
+
+Enter and adjust a numeric value with steppers. - category: `input-controls`.
+
+> `@inspera/kit` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library - build the markup from the HTML and CSS under
+> **Without the package** below, which is this component exactly.
+
+```tsx
+import { NumberInput } from '@inspera/kit'
+
+<NumberInput
+  label="Duration"
+  value={value}
+  onChange={setValue}
+  min={0}
+  max={240}
+  step={5}
+  size="Medium"
+  suffix="min"
+/>
+```
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `label` | `string` | `'Amount'` | Field label. |
+| `placeholder` | `string` | `'0'` | Hint shown when empty. |
+| `value` | `number` | - | Current value. Controlled - pair with onChange. |
+| `min` | `number` | - | Minimum allowed value. |
+| `max` | `number` | - | Maximum allowed value. |
+| `step` | `number` | `1` | Increment applied by the steppers and arrow keys. |
+| `state` | `'Default' \| 'Focused' \| 'Disabled' \| 'Error' \| 'ReadOnly'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Focused` is presentation-only. `Error`, `Disabled` and `ReadOnly` are real application state. |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Control height. |
+| `showLabel` | `boolean` | `true` | Render the field label. |
+| `suffix` | `string` | - | Unit suffix shown inside the field, e.g. "min" or "%". |
+| `helpText` | `string` | - | Helper text. |
+| `errorText` | `string` | - | Error message, shown when state is Error. |
+| `onChange` | `(value: number) => void` | - | Fired with the new numeric value. |
+
+**Accessibility** - role `spinbutton`, keyboard operable. Input carries aria-invalid in the error state; Up / Down arrows increment and decrement by step; Stepper buttons have aria-labels and are disabled at min / max.
+
+**Do:** Clamp values between min and max; Show the unit as an inline suffix; Use a sensible step for the quantity.
+**Don't:** Do not use for codes or IDs - use a text field; Do not hide the steppers when precise adjustment matters.
+
+**Deprecated aliases** (do not use): `Stepper`, `Spinner input`, `Quantity picker`
+
+#### One-time setup
+
+Paste this once, at the root of the project. Without it the component inherits
+the host tool's fonts and any icon renders as its own name instead of a glyph.
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+.material-symbols-outlined {
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  user-select: none;
+  font-family: 'Material Symbols Outlined';
+}
+```
+
+#### Without the package - exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. It is the same
+component, and it is complete: do not substitute a radius, colour, spacing or
+font weight of your own, and do not restyle it with a UI kit's defaults.
+
+- The border belongs to the `__field` wrapper, not the `<input>`; the input and both steppers are unstyled so they share one border.
+- Hide the native spinner (`appearance: textfield` plus the `-webkit` pseudo-elements) or it doubles up with the custom steppers.
+- Steppers are 28px square, `--radius-sm`, `--action-active`, and go `--action-disabled` at min / max. Up / Down arrows do the same as the buttons.
+- Resting border is `--border-control`, going `--border-control-strong` on hover and `--primary` with `--effect-state-focus` on `:focus-within`.
+- Clamp to min / max and emit a real `number`, not a string.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --primary:                #004080;
+  --white:                  #ffffff;
+  --gray-600:               #7A7A7A;
+  --blue-300:               #B3D9FF;
+  --action-active:          rgba(0, 0, 0, 0.56);
+  --action-disabled:        rgba(0, 0, 0, 0.38);
+  --text-primary:           rgba(0, 0, 0, 0.87);
+  --border-control:         #C4C4C4;
+  --border-control-strong:  #8C8C8C;
+  --muted-foreground:       var(--gray-600);
+  --radius-sm:              4px;
+  --radius-md:              8px;
+  --effect-state-focus:     0px 0px 0px 3px var(--blue-300);
+  --border-width-default:   1px;
+  --font-sans:              'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-number {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  font-family: var(--font-sans);
+}
+
+.inspera-number__label {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+/* The border is on the wrapper. Steppers and input sit inside it unstyled. */
+.inspera-number__field {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 4px 0 12px;
+  border-radius: var(--radius-md);
+  border: var(--border-width-default) solid var(--border-control);
+  background: var(--white);
+}
+
+.inspera-number--small .inspera-number__field { height: 32px; }
+
+.inspera-number__field:hover { border-color: var(--border-control-strong); }
+.inspera-number__field:focus-within {
+  border-color: var(--primary);
+  box-shadow: var(--effect-state-focus);
+}
+
+/* The input carries no chrome; the UA spinner is hidden so it never doubles
+   up with our own steppers. */
+.inspera-number__control {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  color: var(--text-primary);
+  appearance: textfield;
+  -webkit-appearance: textfield;
+}
+.inspera-number__control::-webkit-outer-spin-button,
+.inspera-number__control::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+.inspera-number__suffix {
+  font-size: 14px;
+  color: var(--muted-foreground);
+}
+
+.inspera-number__steppers { display: inline-flex; }
+
+.inspera-number__step {
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  border-radius: var(--radius-sm);
+  color: var(--action-active);
+  cursor: pointer;
+}
+.inspera-number__step:disabled { color: var(--action-disabled); cursor: not-allowed; }
+.inspera-number__step .material-symbols-outlined { font-size: 20px; }
+```
+
+```html
+<div class="inspera-number">
+  <label class="inspera-number__label" for="duration">Duration</label>
+  <div class="inspera-number__field">
+    <input class="inspera-number__control" id="duration" type="number"
+           inputmode="numeric" aria-label="Duration" />
+    <span class="inspera-number__suffix">min</span>
+    <span class="inspera-number__steppers">
+      <button type="button" class="inspera-number__step" aria-label="Decrease Duration">
+        <span class="material-symbols-outlined" aria-hidden="true">remove</span>
+      </button>
+      <button type="button" class="inspera-number__step" aria-label="Increase Duration">
+        <span class="material-symbols-outlined" aria-hidden="true">add</span>
+      </button>
+    </span>
+  </div>
+</div>
+```
+
+
+### Combobox
+
+Filter a list of options by typing to select one. - category: `input-controls`.
+
+> `@inspera/kit` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library - build the markup from the HTML and CSS under
+> **Without the package** below, which is this component exactly.
+
+```tsx
+import { Combobox } from '@inspera/kit'
+
+<Combobox
+  label="Assessment"
+  value={value}
+  onChange={setValue}
+  options={[
+    { value: 'algebra', label: 'Algebra Quiz', icon: 'quiz' },
+    { value: 'biology', label: 'Biology Final', icon: 'science' },
+  ]}
+/>
+```
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `label` | `string` | `'Assessment'` | Field label. |
+| `placeholder` | `string` | `'Search assessments...'` | Shown when nothing is typed or selected. |
+| `options` | `ComboboxOption[]` | `defaultOptions` | The full option list. Filtered as the user types. |
+| `value` | `string` | - | Selected value. Controlled - pair with onChange. |
+| `state` | `'Default' \| 'Focused' \| 'Disabled' \| 'Error'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Focused` is presentation-only. `Error` and `Disabled` are real state. |
+| `showLabel` | `boolean` | `true` | Render the field label. |
+| `allowCustomValue` | `boolean` | `false` | Allow a typed value that matches no option to be committed. |
+| `emptyText` | `string` | `'No matches'` | Text shown when no option matches the query. |
+| `onChange` | `(value: string) => void` | - | Fired with the chosen value (or free text when allowCustomValue). |
+
+```ts
+export interface ComboboxOption {
+  /** Value returned on select. */
+  value: string
+  /** Text shown in the list and field. Defaults to the value. */
+  label?: string
+  /** Optional Material Symbols icon shown before the label. */
+  icon?: string
+}
+```
+
+**Accessibility** - role `combobox`, keyboard operable. Input uses role="combobox" with aria-expanded and aria-controls; Options use role="option" with aria-selected; aria-activedescendant tracks the highlighted option; Up / Down / Enter navigate.
+
+**Do:** Filter options as the user types; Allow custom values only when free text is valid; Show an empty state when nothing matches.
+**Don't:** Do not use for a handful of fixed options - use Select; Do not commit a value the user has not confirmed.
+
+**Deprecated aliases** (do not use): `Autocomplete`, `Typeahead`, `Search select`
+
+#### One-time setup
+
+Paste this once, at the root of the project. Without it the component inherits
+the host tool's fonts and any icon renders as its own name instead of a glyph.
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+.material-symbols-outlined {
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  user-select: none;
+  font-family: 'Material Symbols Outlined';
+}
+```
+
+#### Without the package - exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. It is the same
+component, and it is complete: do not substitute a radius, colour, spacing or
+font weight of your own, and do not restyle it with a UI kit's defaults.
+
+- The resting element is the closed field only - a search icon, an unstyled input, and a chevron. The listbox mounts on focus and unmounts on blur or Escape.
+- The input is `role="combobox"` with `aria-expanded` and `aria-controls`; each option is `role="option"` with `aria-selected`, and `aria-activedescendant` tracks the highlighted one.
+- Field chrome is identical to the text input: 40px, `--radius-md`, `--border-control` to `--primary` on focus with `--effect-state-focus`.
+- The active option is filled `--blue-100`. Up / Down move it, Enter commits, Escape closes.
+- Only allow a typed value that matches no option when free text is genuinely valid; otherwise force a choice from the list.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --primary:                #004080;
+  --white:                  #ffffff;
+  --gray-200:               #EDEDED;
+  --blue-100:               #F0F7FF;
+  --blue-300:               #B3D9FF;
+  --action-active:          rgba(0, 0, 0, 0.56);
+  --text-primary:           rgba(0, 0, 0, 0.87);
+  --border-control:         #C4C4C4;
+  --border-control-strong:  #8C8C8C;
+  --surface:                var(--white);
+  --border:                 var(--gray-200);
+  --radius-sm:              4px;
+  --radius-md:              8px;
+  --shadow-200:             0px 8px 8px rgba(39, 39, 39, 0.08), 0px 4px 6px rgba(39, 39, 39, 0.12);
+  --effect-state-focus:     0px 0px 0px 3px var(--blue-300);
+  --border-width-default:   1px;
+  --z-dropdown:             300;
+  --font-sans:              'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-combobox {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  position: relative;
+  font-family: var(--font-sans);
+}
+
+.inspera-combobox__label {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.inspera-combobox__field {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  border-radius: var(--radius-md);
+  border: var(--border-width-default) solid var(--border-control);
+  background: var(--white);
+}
+
+.inspera-combobox__field:hover { border-color: var(--border-control-strong); }
+.inspera-combobox__field:focus-within {
+  border-color: var(--primary);
+  box-shadow: var(--effect-state-focus);
+}
+
+.inspera-combobox__control {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  color: var(--text-primary);
+}
+
+.inspera-combobox__icon {
+  font-size: 20px;
+  color: var(--action-active);
+}
+/* The chevron rotates when the listbox is open. */
+.inspera-combobox__chevron { cursor: pointer; transition: transform 140ms ease; }
+.inspera-combobox__field[aria-expanded='true'] .inspera-combobox__chevron { transform: rotate(180deg); }
+
+/* Rendered only while open, anchored under the field. */
+.inspera-combobox__list {
+  position: absolute;
+  top: 74px;
+  left: 0;
+  right: 0;
+  z-index: var(--z-dropdown, 20);
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-200);
+}
+
+.inspera-combobox__option {
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 16px;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+.inspera-combobox__option[aria-selected='true'] { background: var(--blue-100); }
+```
+
+```html
+<div class="inspera-combobox">
+  <label class="inspera-combobox__label" for="country">Country</label>
+  <div class="inspera-combobox__field">
+    <span class="material-symbols-outlined inspera-combobox__icon" aria-hidden="true">search</span>
+    <input class="inspera-combobox__control" id="country" role="combobox"
+           aria-expanded="false" aria-controls="country-list" aria-autocomplete="list"
+           placeholder="Search countries" />
+    <span class="material-symbols-outlined inspera-combobox__icon inspera-combobox__chevron" aria-hidden="true">expand_more</span>
+  </div>
+
+  <!-- Rendered only while open. -->
+  <ul class="inspera-combobox__list" id="country-list" role="listbox">
+    <li class="inspera-combobox__option" role="option" aria-selected="true">Norway</li>
+    <li class="inspera-combobox__option" role="option" aria-selected="false">Sweden</li>
+  </ul>
+</div>
+```
+
+
+### Date Range Picker
+
+Select a start and end date from a calendar. - category: `input-controls`.
+
+> `@inspera/kit` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library - build the markup from the HTML and CSS under
+> **Without the package** below, which is this component exactly.
+
+```tsx
+import { DateRangePicker } from '@inspera/kit'
+
+<DateRangePicker
+  label="Test window"
+  value={range}
+  onChange={setRange}
+/>
+```
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `label` | `string` | `'Date range'` | Field label. |
+| `value` | `DateRange` | - | Selected range. Controlled - pair with onChange. |
+| `placeholder` | `string` | `'Select a range'` | Trigger placeholder. |
+| `state` | `'Default' \| 'Focused' \| 'Disabled' \| 'Error'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Focused` is presentation-only. `Error` and `Disabled` are real state. |
+| `showLabel` | `boolean` | `true` | Show the field label. |
+| `defaultOpen` | `boolean` | `false` | Open the calendar initially. |
+| `onChange` | `(range: DateRange) => void` | - | Fired with the range once both ends are chosen. |
+
+```ts
+export interface DateRange {
+  /** Range start (YYYY-MM-DD) or null. */
+  start: string | null
+  /** Range end (YYYY-MM-DD) or null. */
+  end: string | null
+}
+```
+
+**Accessibility** - role `dialog`, keyboard operable. Trigger uses aria-haspopup and aria-expanded; Calendar opens in a role="dialog" popover; Day cells use aria-pressed to mark the selected range.
+
+**Do:** Show two months for cross-month ranges; Highlight the full span between endpoints; Confirm the range only once both ends are chosen.
+**Don't:** Do not use for a single date - use Date Picker; Do not allow an end date before the start date.
+
+**Deprecated aliases** (do not use): `Range calendar`, `Date range`, `Period picker`
+
+#### One-time setup
+
+Paste this once, at the root of the project. Without it the component inherits
+the host tool's fonts and any icon renders as its own name instead of a glyph.
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+.material-symbols-outlined {
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  user-select: none;
+  font-family: 'Material Symbols Outlined';
+}
+```
+
+#### Without the package - exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. It is the same
+component, and it is complete: do not substitute a radius, colour, spacing or
+font weight of your own, and do not restyle it with a UI kit's defaults.
+
+- The reusable surface is the closed trigger; the calendar it opens is a `role="dialog"` popover on `--surface` with `--shadow-200`, anchored under the trigger.
+- The popover shows two months side by side (each a `repeat(7, 1fr)` grid) so a range that crosses a month boundary is visible without paging.
+- The two endpoints are filled `--primary` with white text; every day between them is filled `--blue-100`. First click sets the start, second click sets the end and closes.
+- The trigger shows "start - end" once both are chosen (`__value--set`), placeholder text otherwise. Store and emit ISO `YYYY-MM-DD`.
+- Trigger chrome matches the other fields: 40px, `--radius-md`, `--border-control` to `--primary` with `--effect-state-focus`.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --primary:                #004080;
+  --white:                  #ffffff;
+  --blue-300:               #B3D9FF;
+  --action-active:          rgba(0, 0, 0, 0.56);
+  --text-primary:           rgba(0, 0, 0, 0.87);
+  --border-control:         #C4C4C4;
+  --border-control-strong:  #8C8C8C;
+  --text-placeholder:       #8C8C8C;
+  --radius-md:              8px;
+  --effect-state-focus:     0px 0px 0px 3px var(--blue-300);
+  --border-width-default:   1px;
+  --font-sans:              'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-daterange {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  position: relative;
+  font-family: var(--font-sans);
+}
+
+.inspera-daterange__label {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.inspera-daterange__trigger {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  border-radius: var(--radius-md);
+  border: var(--border-width-default) solid var(--border-control);
+  background: var(--white);
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+}
+
+.inspera-daterange__trigger:hover { border-color: var(--border-control-strong); }
+.inspera-daterange__trigger:focus-visible,
+.inspera-daterange__trigger[aria-expanded='true'] {
+  border-color: var(--primary);
+  box-shadow: var(--effect-state-focus);
+  outline: none;
+}
+
+.inspera-daterange__value {
+  flex: 1;
+  font-size: 16px;
+  color: var(--text-placeholder);
+}
+.inspera-daterange__value--set { color: var(--text-primary); }
+
+.inspera-daterange__trigger .material-symbols-outlined {
+  font-size: 20px;
+  color: var(--action-active);
+}
+```
+
+```html
+<div class="inspera-daterange">
+  <label class="inspera-daterange__label" for="period">Reporting period</label>
+  <button class="inspera-daterange__trigger" id="period" type="button"
+          aria-haspopup="dialog" aria-expanded="false">
+    <span class="inspera-daterange__value">Select date range</span>
+    <span class="material-symbols-outlined" aria-hidden="true">date_range</span>
+  </button>
+</div>
+```
+
+
 ## data-display
 
 ### Card
@@ -3200,9 +3692,7 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
 
-.material-symbols-outlined,
-.material-symbols-rounded,
-.material-symbols-sharp {
+.material-symbols-outlined {
   font-weight: normal;
   font-style: normal;
   line-height: 1;
@@ -3216,11 +3706,8 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
   -webkit-font-feature-settings: 'liga';
   -moz-font-feature-settings: 'liga';
   user-select: none;
+  font-family: 'Material Symbols Outlined';
 }
-
-.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
-.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
-.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
 ```
 
 #### Without the package - exact HTML and CSS
@@ -3359,9 +3846,7 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
 
-.material-symbols-outlined,
-.material-symbols-rounded,
-.material-symbols-sharp {
+.material-symbols-outlined {
   font-weight: normal;
   font-style: normal;
   line-height: 1;
@@ -3375,11 +3860,8 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
   -webkit-font-feature-settings: 'liga';
   -moz-font-feature-settings: 'liga';
   user-select: none;
+  font-family: 'Material Symbols Outlined';
 }
-
-.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
-.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
-.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
 ```
 
 #### Without the package - exact HTML and CSS
@@ -3505,9 +3987,7 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
 
-.material-symbols-outlined,
-.material-symbols-rounded,
-.material-symbols-sharp {
+.material-symbols-outlined {
   font-weight: normal;
   font-style: normal;
   line-height: 1;
@@ -3521,11 +4001,8 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
   -webkit-font-feature-settings: 'liga';
   -moz-font-feature-settings: 'liga';
   user-select: none;
+  font-family: 'Material Symbols Outlined';
 }
-
-.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
-.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
-.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
 ```
 
 #### Without the package - exact HTML and CSS
@@ -3688,9 +4165,7 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
 
-.material-symbols-outlined,
-.material-symbols-rounded,
-.material-symbols-sharp {
+.material-symbols-outlined {
   font-weight: normal;
   font-style: normal;
   line-height: 1;
@@ -3704,11 +4179,8 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
   -webkit-font-feature-settings: 'liga';
   -moz-font-feature-settings: 'liga';
   user-select: none;
+  font-family: 'Material Symbols Outlined';
 }
-
-.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
-.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
-.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
 ```
 
 #### Without the package - exact HTML and CSS
@@ -3886,6 +4358,471 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 ```
 
 
+### Data Grid
+
+Display large datasets with sorting, selection and paging. - category: `data-display`.
+
+> `@inspera/kit` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library - build the markup from the HTML and CSS under
+> **Without the package** below, which is this component exactly.
+
+```tsx
+import { DataGrid } from '@inspera/kit'
+
+<DataGrid
+  size="Default"
+  selectable
+  footer
+  columns={[
+    { key: 'name', header: 'Test', sortable: true },
+    { key: 'status', header: 'Status' },
+  ]}
+  rows={rows}
+  getRowId={(row) => row.id}
+  onSelectionChange={setSelected}
+  total={242}
+  page={page}
+  pageCount={13}
+  onPageChange={setPage}
+/>
+```
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `columns` | `DataGridColumn[]` | `defaultColumns` | Column definitions. |
+| `rows` | `Record<string, ReactNode>[]` | `defaultRows` | Row data keyed by column. |
+| `getRowId` | `(row: Record<string, ReactNode>, index: number) => string` | - | Stable id per row. Defaults to the row index. |
+| `size` | `'Compact' \| 'Default'` | `'Default'` | Row height density. |
+| `striped` | `boolean` | `false` | Zebra-stripe rows. |
+| `hoverable` | `boolean` | `true` | Highlight rows on hover. |
+| `caption` | `string` | - | Describes the grid for screen readers. |
+| `selectable` | `boolean` | `false` | Add a leading selection column with a select-all header box. |
+| `selectedIds` | `string[]` | - | Controlled set of selected row ids. Pair with onSelectionChange. |
+| `onSelectionChange` | `(ids: string[]) => void` | - | Fired with the full set of selected ids after any change. |
+| `sortBy` | `string` | - | Controlled sort column key. Pair with onSortChange for server sorting. |
+| `sortDirection` | `'Ascending' \| 'Descending'` | - | Controlled sort direction. |
+| `onSortChange` | `(key: string, direction: DataGridSortDirection) => void` | - | Fired when a sortable header is activated. Enables controlled sorting. |
+| `rowActions` | `(row: Record<string, ReactNode>, index: number) => ReactNode` | - | Trailing per-row actions, revealed on row hover. |
+| `onRowClick` | `(row: Record<string, ReactNode>, index: number) => void` | - | Fired with the row data and its index. |
+| `footer` | `boolean` | `false` | Show the footer with the range summary, pager and page-size select. |
+| `total` | `number` | - | Total row count across all pages. Defaults to the rendered row count. |
+| `page` | `number` | `1` | Current page (1-based). |
+| `pageCount` | `number` | `1` | Total number of pages. |
+| `pageSize` | `number` | `20` | Rows shown per page, used for the range summary and the size select. |
+| `pageSizeOptions` | `number[]` | `[10, 20, 50, 100]` | Selectable page sizes. |
+| `onPageChange` | `(page: number) => void` | - | Fired with the requested page. |
+| `onPageSizeChange` | `(size: number) => void` | - | Fired with the requested page size. |
+
+```ts
+export interface DataGridColumn {
+  /** Key into each row's data object. */
+  key: string
+  /** Column header text. */
+  header: string
+  /** Cell + header alignment. */
+  align?: 'left' | 'right' | 'center'
+  /** Fixed column width. */
+  width?: string | number
+  /** Allow the column to sort. A caret appears in the header. */
+  sortable?: boolean
+  /**
+   * Value used for sorting when the cell renders a non-primitive node. Return a
+   * string or number; without it a sortable column falls back to `row[key]`.
+   */
+  sortValue?: (row: Record<string, ReactNode>) => string | number
+}
+```
+
+**Accessibility** - role `table`, keyboard operable. Sortable headers expose aria-sort and toggle on activation; The selection column uses labelled checkboxes with a select-all header; Built on semantic table markup with a caption or aria-label.
+
+**Do:** Use for dense, sortable, selectable datasets; Page long lists rather than rendering everything; Right-align numeric columns.
+**Don't:** Do not use for a few static rows - use Table; Do not overload every row with competing actions.
+
+**Deprecated aliases** (do not use): `Data table`, `Advanced table`, `Grid`
+
+#### One-time setup
+
+Paste this once, at the root of the project. Without it the component inherits
+the host tool's fonts and any icon renders as its own name instead of a glyph.
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+.material-symbols-outlined {
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  user-select: none;
+  font-family: 'Material Symbols Outlined';
+}
+```
+
+#### Without the package - exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. It is the same
+component, and it is complete: do not substitute a radius, colour, spacing or
+font weight of your own, and do not restyle it with a UI kit's defaults.
+
+- A data grid is a Table plus three things: a leading selection column, sortable headers, and a footer pager. Each is a documented component - Checkbox, Pagination and Select - so reach for those rather than rebuilding them.
+- The header row is `--gray-100`; cells are 52px tall (40px compact), 14px, with a `--border` bottom rule. Right-align numeric columns.
+- A sortable header is a bare `<button>` carrying the label and an arrow; it sets `aria-sort` on the `<th>` and tints `--primary` when active. The arrow sits at 0.35 opacity until then.
+- Selected rows fill `--blue-100`; zebra striping fills alternate rows `--gray-100`. A row cannot be both - selection wins.
+- The footer shows "start - end of total", the pager, and a rows-per-page Select. Page long datasets rather than rendering every row.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --primary:                #004080;
+  --error:                  #D32F2F;
+  --white:                  #ffffff;
+  --gray-100:               #F7F7F7;
+  --gray-200:               #EDEDED;
+  --gray-600:               #7A7A7A;
+  --gray-700:               #595959;
+  --blue-100:               #F0F7FF;
+  --action-hover:           rgba(0, 0, 0, 0.04);
+  --action-disabled:        rgba(0, 0, 0, 0.38);
+  --text-primary:           rgba(0, 0, 0, 0.87);
+  --border-control-strong:  #8C8C8C;
+  --border:                 var(--gray-200);
+  --muted-foreground:       var(--gray-600);
+  --radius-xs:              2px;
+  --radius-md:              8px;
+  --focus-ring-width:       2px;
+  --focus-ring-offset:      2px;
+  --focus-ring-color:       var(--primary);
+  --duration-fast:          100ms;
+  --easing-standard:        cubic-bezier(0.2, 0, 0, 1);
+  --font-sans:              'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-table {
+  border-collapse: collapse;
+  width: 100%;
+  font-family: var(--font-sans);
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.inspera-table caption {
+  caption-side: top;
+  text-align: left;
+  padding: 0 0 8px;
+  font-size: 13px;
+  color: var(--muted-foreground);
+}
+
+.inspera-table th,
+.inspera-table td {
+  padding: 0 16px;
+  font-size: 14px;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+  text-align: left;
+}
+
+.inspera-table th {
+  font-weight: 600;
+  color: var(--gray-700);
+}
+
+.inspera-table thead tr {
+  background: var(--gray-100);
+  height: 52px;
+}
+
+.inspera-table tbody tr {
+  height: 52px;
+  cursor: default;
+  /* The stripe is the row's resting fill, passed as a variable. Setting it as
+     a plain background would outrank the hover rule below. */
+  background: var(--inspera-row-bg, var(--white));
+  transition: background var(--duration-fast) var(--easing-standard);
+}
+
+.inspera-table--compact thead tr,
+.inspera-table--compact tbody tr { height: 40px; }
+
+.inspera-table--striped tbody tr:nth-child(even) { --inspera-row-bg: var(--gray-100); }
+
+.inspera-table--hoverable tbody tr:hover { background: var(--action-hover); }
+
+/* Numbers right-align so the digits line up; text never does. Scoped through
+   the table so it outranks the "th, td" rule above, which is more specific
+   than a bare class on its own. */
+.inspera-table th.inspera-table__cell--right,
+.inspera-table td.inspera-table__cell--right { text-align: right; }
+
+.inspera-table th.inspera-table__select,
+.inspera-table td.inspera-table__select {
+  width: 44px;
+  text-align: center;
+}
+.inspera-table__select input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--primary);
+  cursor: pointer;
+}
+
+.inspera-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  cursor: pointer;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 16px;
+}
+
+/* Hidden, but still in the DOM, still focusable, still submitted with the
+   form. "display: none" or "visibility: hidden" would break all three. */
+.inspera-checkbox__input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.inspera-checkbox__box {
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-xs);
+  border: 2px solid var(--border-control-strong);
+  background: var(--white);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--white);
+  flex-shrink: 0;
+  transition: all 120ms ease;
+}
+
+.inspera-checkbox--small .inspera-checkbox__box { width: 16px; height: 16px; }
+
+/* The tick is a Material Symbol at the box size minus 4. */
+.inspera-checkbox__box .material-symbols-outlined {
+  font-size: 16px;
+  font-variation-settings: 'wght' 600;
+}
+.inspera-checkbox--small .inspera-checkbox__box .material-symbols-outlined { font-size: 12px; }
+
+.inspera-checkbox__input:checked + .inspera-checkbox__box,
+.inspera-checkbox__input:indeterminate + .inspera-checkbox__box,
+/* "indeterminate" is a DOM property with no HTML attribute, so static markup
+   cannot trigger :indeterminate. The modifier lets server-rendered markup show
+   the state; script that sets el.indeterminate gets the pseudo-class. */
+.inspera-checkbox--mixed .inspera-checkbox__box {
+  border-color: var(--primary);
+  background: var(--primary);
+}
+
+.inspera-checkbox:hover .inspera-checkbox__box { border-color: var(--primary); background: rgba(0, 64, 128, 0.04); }
+.inspera-checkbox:hover .inspera-checkbox__input:checked + .inspera-checkbox__box,
+.inspera-checkbox:hover .inspera-checkbox__input:indeterminate + .inspera-checkbox__box,
+.inspera-checkbox--mixed:hover .inspera-checkbox__box {
+  border-color: var(--primary);
+  background: var(--primary);
+}
+
+/* The ring goes on the drawn box: the real input is 0x0, so a ring on it is
+   invisible. This is the single most-missed detail in a custom checkbox. */
+.inspera-checkbox__input:focus-visible + .inspera-checkbox__box {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.inspera-checkbox:active .inspera-checkbox__box { transform: scale(0.92); }
+
+.inspera-checkbox--error .inspera-checkbox__box { border-color: var(--error); }
+.inspera-checkbox--error:hover .inspera-checkbox__box { border-color: var(--error); }
+
+.inspera-checkbox--disabled {
+  cursor: not-allowed;
+  opacity: 0.38;
+}
+.inspera-checkbox--disabled:hover .inspera-checkbox__box {
+  border-color: var(--border-control-strong);
+  background: var(--white);
+}
+
+.inspera-pagination__list {
+  display: flex;
+  align-items: center;
+  /* Wrap rather than overflow: a long pager has to degrade in a narrow column,
+     not spill out of it. */
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.inspera-pagination__item {
+  min-width: 40px;
+  height: 40px;
+  padding: 0 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  border: none;
+  background: transparent;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 120ms ease, color 120ms ease;
+}
+
+.inspera-pagination--small .inspera-pagination__item {
+  min-width: 32px;
+  height: 32px;
+  font-size: 14px;
+}
+
+.inspera-pagination__item:hover:not(:disabled):not([aria-current='page']) {
+  background: var(--action-hover);
+}
+
+.inspera-pagination__item[aria-current='page'] {
+  background: var(--primary);
+  color: var(--white);
+}
+
+.inspera-pagination__item:disabled {
+  color: var(--action-disabled);
+  cursor: not-allowed;
+}
+
+.inspera-pagination__item .material-symbols-outlined { font-size: 20px; }
+.inspera-pagination--small .inspera-pagination__item .material-symbols-outlined { font-size: 18px; }
+
+/* The gap marker is not a control: a span, hidden from assistive tech. */
+.inspera-pagination__ellipsis {
+  cursor: default;
+  color: var(--muted-foreground);
+}
+
+.inspera-datagrid { width: 100%; font-family: var(--font-sans); }
+
+.inspera-datagrid__table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.inspera-datagrid__head-row { background: var(--gray-100); }
+
+.inspera-datagrid__th,
+.inspera-datagrid__td {
+  padding: 0 16px;
+  height: 52px;
+  font-size: 14px;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+  text-align: left;
+}
+.inspera-datagrid--compact .inspera-datagrid__th,
+.inspera-datagrid--compact .inspera-datagrid__td { height: 40px; }
+
+.inspera-datagrid__th {
+  font-weight: 600;
+  color: var(--gray-700);
+}
+.inspera-datagrid__select { width: 44px; text-align: center; }
+
+/* The sortable header is a bare button carrying the arrow. */
+.inspera-datagrid__sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border: none;
+  background: none;
+  padding: 0;
+  font: inherit;
+  font-weight: 600;
+  color: var(--gray-700);
+  cursor: pointer;
+}
+.inspera-datagrid__sort[aria-pressed='true'] { color: var(--primary); }
+.inspera-datagrid__sort .material-symbols-outlined { font-size: 18px; opacity: 0.35; }
+.inspera-datagrid__sort[aria-pressed='true'] .material-symbols-outlined { opacity: 1; }
+
+.inspera-datagrid__row--selected { background: var(--blue-100); }
+.inspera-datagrid__row--striped { background: var(--gray-100); }
+
+.inspera-datagrid__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 12px 4px 0;
+}
+.inspera-datagrid__range,
+.inspera-datagrid__pagesize-label { font-size: 14px; color: var(--muted-foreground); }
+.inspera-datagrid__pagesize { display: flex; align-items: center; gap: 8px; }
+```
+
+```html
+<div class="inspera-datagrid">
+  <table class="inspera-datagrid__table">
+    <thead>
+      <tr class="inspera-datagrid__head-row">
+        <th class="inspera-datagrid__th inspera-datagrid__select" scope="col">
+          <!-- select-all checkbox, see the Checkbox recipe -->
+        </th>
+        <th class="inspera-datagrid__th" scope="col" aria-sort="ascending">
+          <button type="button" class="inspera-datagrid__sort" aria-pressed="true">
+            Candidate
+            <span class="material-symbols-outlined" aria-hidden="true">arrow_upward</span>
+          </button>
+        </th>
+        <th class="inspera-datagrid__th" scope="col">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="inspera-datagrid__td inspera-datagrid__select"><!-- row checkbox --></td>
+        <td class="inspera-datagrid__td">Ada Lovelace</td>
+        <td class="inspera-datagrid__td">Submitted</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="inspera-datagrid__footer">
+    <span class="inspera-datagrid__range">1 - 10 of 42</span>
+    <!-- Pagination, see the Pagination recipe -->
+    <div class="inspera-datagrid__pagesize">
+      <span class="inspera-datagrid__pagesize-label">Rows per page</span>
+      <!-- Select, see the Select recipe -->
+    </div>
+  </div>
+</div>
+```
+
+
 ### Accordion
 
 Show and hide sections of related content. - category: `data-display`.
@@ -3909,6 +4846,7 @@ import { Accordion } from '@inspera/kit'
 | `items` | `AccordionItem[]` | `defaultItems` | Accordion sections. |
 | `type` | `'Single' \| 'Multiple'` | `'Single'` | Allow one or many open at once. |
 | `defaultOpenIndex` | `number` | `0` | Initially open section. |
+| `defaultOpenIndexes` | `number[]` | - | Initially open sections, for `type="Multiple"`. Wins over defaultOpenIndex. |
 | `iconPosition` | `'Left' \| 'Right'` | `'Right'` | Chevron placement. |
 
 ```ts
@@ -3934,9 +4872,7 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
 
-.material-symbols-outlined,
-.material-symbols-rounded,
-.material-symbols-sharp {
+.material-symbols-outlined {
   font-weight: normal;
   font-style: normal;
   line-height: 1;
@@ -3950,11 +4886,8 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
   -webkit-font-feature-settings: 'liga';
   -moz-font-feature-settings: 'liga';
   user-select: none;
+  font-family: 'Material Symbols Outlined';
 }
-
-.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
-.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
-.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
 ```
 
 #### Without the package - exact HTML and CSS
@@ -4122,9 +5055,7 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
 
-.material-symbols-outlined,
-.material-symbols-rounded,
-.material-symbols-sharp {
+.material-symbols-outlined {
   font-weight: normal;
   font-style: normal;
   line-height: 1;
@@ -4138,11 +5069,8 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
   -webkit-font-feature-settings: 'liga';
   -moz-font-feature-settings: 'liga';
   user-select: none;
+  font-family: 'Material Symbols Outlined';
 }
-
-.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
-.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
-.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
 ```
 
 #### Without the package - exact HTML and CSS
@@ -4287,9 +5215,7 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
 
-.material-symbols-outlined,
-.material-symbols-rounded,
-.material-symbols-sharp {
+.material-symbols-outlined {
   font-weight: normal;
   font-style: normal;
   line-height: 1;
@@ -4303,11 +5229,8 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
   -webkit-font-feature-settings: 'liga';
   -moz-font-feature-settings: 'liga';
   user-select: none;
+  font-family: 'Material Symbols Outlined';
 }
-
-.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
-.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
-.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
 ```
 
 #### Without the package - exact HTML and CSS
@@ -4444,9 +5367,7 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
 
-.material-symbols-outlined,
-.material-symbols-rounded,
-.material-symbols-sharp {
+.material-symbols-outlined {
   font-weight: normal;
   font-style: normal;
   line-height: 1;
@@ -4460,11 +5381,8 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
   -webkit-font-feature-settings: 'liga';
   -moz-font-feature-settings: 'liga';
   user-select: none;
+  font-family: 'Material Symbols Outlined';
 }
-
-.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
-.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
-.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
 ```
 
 #### Without the package - exact HTML and CSS
@@ -4696,9 +5614,7 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
 
-.material-symbols-outlined,
-.material-symbols-rounded,
-.material-symbols-sharp {
+.material-symbols-outlined {
   font-weight: normal;
   font-style: normal;
   line-height: 1;
@@ -4712,11 +5628,8 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
   -webkit-font-feature-settings: 'liga';
   -moz-font-feature-settings: 'liga';
   user-select: none;
+  font-family: 'Material Symbols Outlined';
 }
-
-.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
-.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
-.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
 ```
 
 #### Without the package - exact HTML and CSS
@@ -4903,9 +5816,7 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
 
-.material-symbols-outlined,
-.material-symbols-rounded,
-.material-symbols-sharp {
+.material-symbols-outlined {
   font-weight: normal;
   font-style: normal;
   line-height: 1;
@@ -4919,11 +5830,8 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
   -webkit-font-feature-settings: 'liga';
   -moz-font-feature-settings: 'liga';
   user-select: none;
+  font-family: 'Material Symbols Outlined';
 }
-
-.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
-.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
-.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
 ```
 
 #### Without the package - exact HTML and CSS
@@ -5075,9 +5983,7 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
 
-.material-symbols-outlined,
-.material-symbols-rounded,
-.material-symbols-sharp {
+.material-symbols-outlined {
   font-weight: normal;
   font-style: normal;
   line-height: 1;
@@ -5091,11 +5997,8 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
   -webkit-font-feature-settings: 'liga';
   -moz-font-feature-settings: 'liga';
   user-select: none;
+  font-family: 'Material Symbols Outlined';
 }
-
-.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
-.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
-.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
 ```
 
 #### Without the package - exact HTML and CSS
@@ -5281,9 +6184,7 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
 
-.material-symbols-outlined,
-.material-symbols-rounded,
-.material-symbols-sharp {
+.material-symbols-outlined {
   font-weight: normal;
   font-style: normal;
   line-height: 1;
@@ -5297,11 +6198,8 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
   -webkit-font-feature-settings: 'liga';
   -moz-font-feature-settings: 'liga';
   user-select: none;
+  font-family: 'Material Symbols Outlined';
 }
-
-.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
-.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
-.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
 ```
 
 #### Without the package - exact HTML and CSS
@@ -5488,9 +6386,7 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
 
-.material-symbols-outlined,
-.material-symbols-rounded,
-.material-symbols-sharp {
+.material-symbols-outlined {
   font-weight: normal;
   font-style: normal;
   line-height: 1;
@@ -5504,11 +6400,8 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
   -webkit-font-feature-settings: 'liga';
   -moz-font-feature-settings: 'liga';
   user-select: none;
+  font-family: 'Material Symbols Outlined';
 }
-
-.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
-.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
-.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
 ```
 
 #### Without the package - exact HTML and CSS
@@ -5704,9 +6597,7 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
 
-.material-symbols-outlined,
-.material-symbols-rounded,
-.material-symbols-sharp {
+.material-symbols-outlined {
   font-weight: normal;
   font-style: normal;
   line-height: 1;
@@ -5720,11 +6611,8 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
   -webkit-font-feature-settings: 'liga';
   -moz-font-feature-settings: 'liga';
   user-select: none;
+  font-family: 'Material Symbols Outlined';
 }
-
-.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
-.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
-.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
 ```
 
 #### Without the package - exact HTML and CSS
@@ -5822,6 +6710,386 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 ```
 
 
+### Toast
+
+Fire transient notifications imperatively from anywhere. - category: `feedback`.
+
+> `@inspera/kit` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library - build the markup from the HTML and CSS under
+> **Without the package** below, which is this component exactly.
+
+```tsx
+import { ToastProvider } from '@inspera/kit'
+
+// Mount once near your app root:
+<ToastProvider position="bottom-right" />
+
+// Then call from anywhere:
+toast("Assessment saved.", {
+  intent: "Success",
+})
+```
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `position` | `'top-left' \| 'top-center' \| 'top-right' \| 'bottom-left' \| 'bottom-center' \| 'bottom-right'` | `'bottom-right'` | Where the stack anchors on screen. |
+| `max` | `number` | `4` | Cap on simultaneously visible toasts. Oldest is dropped past the limit. |
+
+**Accessibility** - role `region`, keyboard operable. The stack is a role="region" labelled "Notifications" with aria-live; Each toast is announced when it appears; Action and dismiss buttons are focusable.
+
+**Do:** Mount ToastProvider once near the app root; Call toast() for brief, dismissible feedback; Give errors a longer or manual timeout.
+**Don't:** Do not use for blocking confirmation - use Dialog; Do not stack more toasts than the screen can show.
+
+**Deprecated aliases** (do not use): `Notification`, `Flash message`, `Snackbar stack`
+
+#### One-time setup
+
+Paste this once, at the root of the project. Without it the component inherits
+the host tool's fonts and any icon renders as its own name instead of a glyph.
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+.material-symbols-outlined {
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  user-select: none;
+  font-family: 'Material Symbols Outlined';
+}
+```
+
+#### Without the package - exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. It is the same
+component, and it is complete: do not substitute a radius, colour, spacing or
+font weight of your own, and do not restyle it with a UI kit's defaults.
+
+- A toast is a Snackbar: `--gray-900` bar, white text, the intent tinting only the icon and the action. See the Snackbar recipe for the bar itself.
+- Mount one `ToastProvider` near the app root; it owns the fixed stack. Call `toast(message, { intent, actionLabel, onAction })` from anywhere - the point is firing them imperatively, not rendering them in place.
+- `position` (bottom-right, bottom-center, top-right, top-center) sets where the stack anchors; new toasts push on and old ones auto-dismiss on a timer, so give errors a longer or manual timeout.
+- Each toast is announced through the stack `role="region"` labelled "Notifications"; the bar itself stays `role="status"` / `aria-live="polite"` so it never interrupts.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --white:       #ffffff;
+  --gray-900:    #272727;
+  --blue-400:    #7ABDFF;
+  --green-400:   #8DECC5;
+  --red-400:     #F58484;
+  --orange-400:  #FED27C;
+  --radius-md:   8px;
+  --shadow-300:  0px 8px 16px rgba(39, 39, 39, 0.08), 0px 6px 8px rgba(39, 39, 39, 0.12);
+  --font-sans:   'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-snackbar {
+  /* The accent tints the icon and the action, not the bar. */
+  --snackbar-accent: var(--white);
+
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 300px;
+  max-width: 480px;
+  height: 48px;
+  padding: 0 8px 0 16px;
+  border-radius: var(--radius-md);
+  background: var(--gray-900);
+  color: var(--white);
+  box-shadow: var(--shadow-300);
+  font-family: var(--font-sans);
+}
+
+.inspera-snackbar--neutral { --snackbar-accent: var(--white); }
+.inspera-snackbar--info    { --snackbar-accent: var(--blue-400); }
+.inspera-snackbar--success { --snackbar-accent: var(--green-400); }
+.inspera-snackbar--warning { --snackbar-accent: var(--orange-400); }
+.inspera-snackbar--error   { --snackbar-accent: var(--red-400); }
+
+.inspera-snackbar__icon {
+  flex-shrink: 0;
+  font-size: 20px;
+  color: var(--snackbar-accent);
+  font-variation-settings: 'FILL' 1;
+}
+
+.inspera-snackbar__message {
+  flex: 1;
+  font-size: 16px;
+}
+
+.inspera-snackbar__action {
+  padding: 0 8px;
+  border: none;
+  background: none;
+  color: var(--snackbar-accent);
+  font-weight: 600;
+  font-size: 16px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.inspera-snackbar__close {
+  padding: 4px;
+  border: none;
+  background: none;
+  color: rgba(255, 255, 255, 0.7);
+  display: inline-flex;
+  cursor: pointer;
+}
+.inspera-snackbar__close .material-symbols-outlined { font-size: 20px; }
+
+
+```
+
+```html
+<!-- A toast is a Snackbar the provider mounts into a fixed stack. -->
+<div class="inspera-snackbar inspera-snackbar--success" role="status" aria-live="polite">
+  <span class="material-symbols-outlined inspera-snackbar__icon" aria-hidden="true">check_circle</span>
+  <span class="inspera-snackbar__message">Assessment saved.</span>
+  <button type="button" class="inspera-snackbar__action">Undo</button>
+  <button type="button" class="inspera-snackbar__close" aria-label="Dismiss">
+    <span class="material-symbols-outlined" aria-hidden="true">close</span>
+  </button>
+</div>
+```
+
+
+### Command Palette
+
+Search and run commands from a keyboard-driven overlay. - category: `feedback`.
+
+> `@inspera/kit` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library - build the markup from the HTML and CSS under
+> **Without the package** below, which is this component exactly.
+
+```tsx
+import { CommandPalette } from '@inspera/kit'
+
+<CommandPalette
+  hotkey={true}
+  open={open}
+  onOpenChange={setOpen}
+  commands={[
+    { id: 'new-test', label: 'Create new test', icon: 'add_circle', group: 'Actions', onSelect: createTest },
+    { id: 'go-monitor', label: 'Go to Monitor', icon: 'monitor_heart', group: 'Navigate', onSelect: () => navigate('/monitor') },
+  ]}
+/>
+```
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `commands` | `Command[]` | `defaultCommands` | The commands to search. |
+| `open` | `boolean` | - | Controlled open state. Omit to let the component manage its own. |
+| `defaultOpen` | `boolean` | `false` | Open initially (uncontrolled). |
+| `hotkey` | `boolean` | `true` | Bind Cmd/Ctrl+K to toggle the palette. |
+| `embedded` | `boolean` | `false` | Render the panel inline without the portal or dimmed overlay. Used by the docs to show the palette on the page (and by the recipe audit, which cannot see through a portal). Mirrors the `embedded` prop on Dialog and Drawer. |
+| `placeholder` | `string` | `'Type a command or search...'` | Search field placeholder. |
+| `emptyText` | `string` | `'No matching commands'` | Shown when nothing matches. |
+| `onOpenChange` | `(open: boolean) => void` | - | Fired when the open state should change. |
+| `onSelect` | `(command: Command) => void` | - | Fired with the chosen command. |
+
+```ts
+export interface Command {
+  /** Stable id. */
+  id: string
+  /** Primary label shown in the list. */
+  label: string
+  /** Optional Material Symbols icon. */
+  icon?: string
+  /** Optional grouping heading. */
+  group?: string
+  /** Right-aligned hint, e.g. a shortcut or section name. */
+  hint?: string
+  /** Extra words to match against beyond the label. */
+  keywords?: string
+  /** Fired when the command is chosen. */
+  onSelect?: () => void
+}
+```
+
+**Accessibility** - role `dialog`, keyboard operable. Panel is a role="dialog" with aria-modal; The list uses role="listbox" and items role="option"; Cmd/Ctrl+K toggles it; Up / Down / Enter navigate and run.
+
+**Do:** Group commands by section; Bind a discoverable hotkey (Cmd/Ctrl+K); Filter commands as the user types.
+**Don't:** Do not bury primary navigation only here; Do not leave focus trapped when it closes.
+
+**Deprecated aliases** (do not use): `Command menu`, `Quick actions`, `Spotlight`
+
+#### One-time setup
+
+Paste this once, at the root of the project. Without it the component inherits
+the host tool's fonts and any icon renders as its own name instead of a glyph.
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+.material-symbols-outlined {
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  user-select: none;
+  font-family: 'Material Symbols Outlined';
+}
+```
+
+#### Without the package - exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. It is the same
+component, and it is complete: do not substitute a radius, colour, spacing or
+font weight of your own, and do not restyle it with a UI kit's defaults.
+
+- On the page the panel sits inside a fixed, dimmed overlay (`position: fixed; inset: 0`) centred horizontally and pushed down ~12vh. `embedded` renders just the panel for documentation.
+- The panel is `--radius-lg` on `--white` with `--shadow-300`; the 52px search row is divided from the list by a `--border` rule.
+- Commands group under uppercase 12px headings; the heading renders inline as the list is walked so grouped and ungrouped commands share one keyboard index.
+- The active option is filled `--blue-100` and starts on the first row. Up / Down move it, Enter runs it, Escape closes; Cmd/Ctrl+K toggles the whole palette.
+- It is a `role="dialog"` with `aria-modal`; the input is `role="combobox"` over a `role="listbox"`. Return focus to the trigger when it closes.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --white:             #ffffff;
+  --gray-200:          #EDEDED;
+  --gray-600:          #7A7A7A;
+  --blue-100:          #F0F7FF;
+  --action-active:     rgba(0, 0, 0, 0.56);
+  --text-primary:      rgba(0, 0, 0, 0.87);
+  --border:            var(--gray-200);
+  --muted-foreground:  var(--gray-600);
+  --radius-xs:         2px;
+  --radius-sm:         4px;
+  --radius-lg:         12px;
+  --shadow-300:        0px 8px 16px rgba(39, 39, 39, 0.08), 0px 6px 8px rgba(39, 39, 39, 0.12);
+  --font-sans:         'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-cmdk {
+  width: min(560px, calc(100vw - 32px));
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-300);
+  overflow: hidden;
+  font-family: var(--font-sans);
+}
+
+.inspera-cmdk__search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 52px;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.inspera-cmdk__search-icon { font-size: 22px; color: var(--muted-foreground); }
+
+.inspera-cmdk__input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 18px;
+  color: var(--text-primary);
+}
+
+.inspera-cmdk__kbd {
+  font-size: 12px;
+  color: var(--muted-foreground);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xs);
+  padding: 2px 6px;
+}
+
+.inspera-cmdk__list {
+  list-style: none;
+  margin: 0;
+  padding: 8px;
+  max-height: 360px;
+  overflow-y: auto;
+}
+
+.inspera-cmdk__group {
+  padding: 10px 16px 4px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted-foreground);
+}
+
+.inspera-cmdk__option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  background: transparent;
+  color: var(--text-primary);
+  font-size: 16px;
+}
+.inspera-cmdk__option[aria-selected='true'] { background: var(--blue-100); }
+
+.inspera-cmdk__option-icon { font-size: 22px; color: var(--action-active); }
+.inspera-cmdk__option-label { flex: 1; }
+.inspera-cmdk__option-hint { font-size: 13px; color: var(--muted-foreground); }
+```
+
+```html
+<!-- The panel lives inside a fixed, dimmed overlay centred near the top. -->
+<div class="inspera-cmdk" role="dialog" aria-modal="true" aria-label="Command palette">
+  <div class="inspera-cmdk__search">
+    <span class="material-symbols-outlined inspera-cmdk__search-icon" aria-hidden="true">search</span>
+    <input class="inspera-cmdk__input" role="combobox" aria-expanded="true"
+           aria-controls="cmdk-list" aria-autocomplete="list"
+           placeholder="Type a command or search..." />
+    <kbd class="inspera-cmdk__kbd">Esc</kbd>
+  </div>
+  <ul class="inspera-cmdk__list" id="cmdk-list" role="listbox">
+    <li>
+      <div class="inspera-cmdk__group">Actions</div>
+      <div class="inspera-cmdk__option" role="option" aria-selected="true">
+        <span class="material-symbols-outlined inspera-cmdk__option-icon" aria-hidden="true">add_circle</span>
+        <span class="inspera-cmdk__option-label">Create new test</span>
+        <span class="inspera-cmdk__option-hint">C then T</span>
+      </div>
+    </li>
+    <li>
+      <div class="inspera-cmdk__group">Navigate</div>
+      <div class="inspera-cmdk__option" role="option" aria-selected="false">
+        <span class="material-symbols-outlined inspera-cmdk__option-icon" aria-hidden="true">send</span>
+        <span class="inspera-cmdk__option-label">Go to Deliver</span>
+      </div>
+    </li>
+  </ul>
+</div>
+```
+
+
 ### Tooltip
 
 Provide contextual help on hover or focus. - category: `feedback`.
@@ -5868,9 +7136,7 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
 
-.material-symbols-outlined,
-.material-symbols-rounded,
-.material-symbols-sharp {
+.material-symbols-outlined {
   font-weight: normal;
   font-style: normal;
   line-height: 1;
@@ -5884,11 +7150,8 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
   -webkit-font-feature-settings: 'liga';
   -moz-font-feature-settings: 'liga';
   user-select: none;
+  font-family: 'Material Symbols Outlined';
 }
-
-.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
-.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
-.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
 ```
 
 #### Without the package - exact HTML and CSS
@@ -6085,9 +7348,7 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
 
-.material-symbols-outlined,
-.material-symbols-rounded,
-.material-symbols-sharp {
+.material-symbols-outlined {
   font-weight: normal;
   font-style: normal;
   line-height: 1;
@@ -6101,11 +7362,8 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
   -webkit-font-feature-settings: 'liga';
   -moz-font-feature-settings: 'liga';
   user-select: none;
+  font-family: 'Material Symbols Outlined';
 }
-
-.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
-.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
-.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
 ```
 
 #### Without the package - exact HTML and CSS
@@ -6267,9 +7525,7 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
 
-.material-symbols-outlined,
-.material-symbols-rounded,
-.material-symbols-sharp {
+.material-symbols-outlined {
   font-weight: normal;
   font-style: normal;
   line-height: 1;
@@ -6283,11 +7539,8 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
   -webkit-font-feature-settings: 'liga';
   -moz-font-feature-settings: 'liga';
   user-select: none;
+  font-family: 'Material Symbols Outlined';
 }
-
-.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
-.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
-.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
 ```
 
 #### Without the package - exact HTML and CSS
@@ -6397,9 +7650,7 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
 
-.material-symbols-outlined,
-.material-symbols-rounded,
-.material-symbols-sharp {
+.material-symbols-outlined {
   font-weight: normal;
   font-style: normal;
   line-height: 1;
@@ -6413,11 +7664,8 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
   -webkit-font-feature-settings: 'liga';
   -moz-font-feature-settings: 'liga';
   user-select: none;
+  font-family: 'Material Symbols Outlined';
 }
-
-.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
-.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
-.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
 ```
 
 #### Without the package - exact HTML and CSS
@@ -6547,9 +7795,7 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
 
-.material-symbols-outlined,
-.material-symbols-rounded,
-.material-symbols-sharp {
+.material-symbols-outlined {
   font-weight: normal;
   font-style: normal;
   line-height: 1;
@@ -6563,11 +7809,8 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
   -webkit-font-feature-settings: 'liga';
   -moz-font-feature-settings: 'liga';
   user-select: none;
+  font-family: 'Material Symbols Outlined';
 }
-
-.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
-.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
-.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
 ```
 
 #### Without the package - exact HTML and CSS
@@ -6753,9 +7996,7 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
 
-.material-symbols-outlined,
-.material-symbols-rounded,
-.material-symbols-sharp {
+.material-symbols-outlined {
   font-weight: normal;
   font-style: normal;
   line-height: 1;
@@ -6769,11 +8010,8 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
   -webkit-font-feature-settings: 'liga';
   -moz-font-feature-settings: 'liga';
   user-select: none;
+  font-family: 'Material Symbols Outlined';
 }
-
-.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
-.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
-.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
 ```
 
 #### Without the package - exact HTML and CSS
@@ -6947,9 +8185,7 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
 
-.material-symbols-outlined,
-.material-symbols-rounded,
-.material-symbols-sharp {
+.material-symbols-outlined {
   font-weight: normal;
   font-style: normal;
   line-height: 1;
@@ -6963,11 +8199,8 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
   -webkit-font-feature-settings: 'liga';
   -moz-font-feature-settings: 'liga';
   user-select: none;
+  font-family: 'Material Symbols Outlined';
 }
-
-.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
-.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
-.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
 ```
 
 #### Without the package - exact HTML and CSS
@@ -7123,9 +8356,7 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
 
-.material-symbols-outlined,
-.material-symbols-rounded,
-.material-symbols-sharp {
+.material-symbols-outlined {
   font-weight: normal;
   font-style: normal;
   line-height: 1;
@@ -7139,11 +8370,8 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
   -webkit-font-feature-settings: 'liga';
   -moz-font-feature-settings: 'liga';
   user-select: none;
+  font-family: 'Material Symbols Outlined';
 }
-
-.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
-.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
-.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
 ```
 
 #### Without the package - exact HTML and CSS
@@ -7282,9 +8510,7 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
 
-.material-symbols-outlined,
-.material-symbols-rounded,
-.material-symbols-sharp {
+.material-symbols-outlined {
   font-weight: normal;
   font-style: normal;
   line-height: 1;
@@ -7298,11 +8524,8 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
   -webkit-font-feature-settings: 'liga';
   -moz-font-feature-settings: 'liga';
   user-select: none;
+  font-family: 'Material Symbols Outlined';
 }
-
-.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
-.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
-.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
 ```
 
 #### Without the package - exact HTML and CSS
@@ -7464,9 +8687,7 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
 
-.material-symbols-outlined,
-.material-symbols-rounded,
-.material-symbols-sharp {
+.material-symbols-outlined {
   font-weight: normal;
   font-style: normal;
   line-height: 1;
@@ -7480,11 +8701,8 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
   -webkit-font-feature-settings: 'liga';
   -moz-font-feature-settings: 'liga';
   user-select: none;
+  font-family: 'Material Symbols Outlined';
 }
-
-.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
-.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
-.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
 ```
 
 #### Without the package - exact HTML and CSS
@@ -7682,9 +8900,7 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
 
-.material-symbols-outlined,
-.material-symbols-rounded,
-.material-symbols-sharp {
+.material-symbols-outlined {
   font-weight: normal;
   font-style: normal;
   line-height: 1;
@@ -7698,11 +8914,8 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
   -webkit-font-feature-settings: 'liga';
   -moz-font-feature-settings: 'liga';
   user-select: none;
+  font-family: 'Material Symbols Outlined';
 }
-
-.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
-.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
-.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
 ```
 
 #### Without the package - exact HTML and CSS
@@ -7946,9 +9159,7 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
 
-.material-symbols-outlined,
-.material-symbols-rounded,
-.material-symbols-sharp {
+.material-symbols-outlined {
   font-weight: normal;
   font-style: normal;
   line-height: 1;
@@ -7962,11 +9173,8 @@ the host tool's fonts and any icon renders as its own name instead of a glyph.
   -webkit-font-feature-settings: 'liga';
   -moz-font-feature-settings: 'liga';
   user-select: none;
+  font-family: 'Material Symbols Outlined';
 }
-
-.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
-.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
-.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
 ```
 
 #### Without the package - exact HTML and CSS

@@ -22,9 +22,9 @@ const items: Searchable[] = componentList.map((c) => ({
 /** [query, expected top hit] */
 const CASES: [string, string][] = [
   // Synonyms - the main reason this exists.
-  ['modal', 'Dialog'], ['popup', 'Dialog'], ['toast', 'Snackbar'],
-  ['dropdown', 'Select'], ['combobox', 'Select'], ['switch', 'Toggle'],
-  ['wizard', 'Stepper'], ['chip', 'Badge'], ['datagrid', 'Table'],
+  ['modal', 'Dialog'], ['popup', 'Dialog'], ['toast', 'Toast'],
+  ['dropdown', 'Select'], ['combobox', 'Combobox'], ['switch', 'Toggle'],
+  ['wizard', 'Stepper'], ['chip', 'Badge'], ['datagrid', 'Data Grid'],
   ['calendar', 'Date Picker'], ['faq', 'Accordion'], ['kpi', 'Stat'],
   ['facepile', 'Avatar Group'], ['no results', 'Empty State'],
   ['2fa', 'OTP Input'], ['pager', 'Pagination'], ['side panel', 'Drawer'],
@@ -32,7 +32,7 @@ const CASES: [string, string][] = [
   ['loader', 'Spinner'], ['dropzone', 'File Upload'], ['anchor', 'Link'],
   // Typos.
   ['dilaog', 'Dialog'], ['slect', 'Select'], ['togle', 'Toggle'],
-  ['snakbar', 'Snackbar'], ['breadcrum', 'Breadcrumb'], ['acordion', 'Accordion'],
+  ['snakbar', 'Snackbar'], ['autocomplete', 'Combobox'], ['breadcrum', 'Breadcrumb'], ['acordion', 'Accordion'],
   ['tooltp', 'Tooltip'], ['paginaton', 'Pagination'],
   // Abbreviations and partials.
   ['txtinput', 'Text Input'], ['textinput', 'Text Input'], ['btn', 'Button'],

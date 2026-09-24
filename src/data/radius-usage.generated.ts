@@ -5,15 +5,20 @@ export const radiusUsage: Record<string, string[]> = {
   "none": [],
   "xs": [
     "Checkbox",
+    "CommandPalette",
     "Link",
     "Rating"
   ],
   "sm": [
     "Button",
+    "Combobox",
+    "CommandPalette",
     "DatePicker",
+    "DateRangePicker",
     "Dialog",
     "List",
     "Menu",
+    "NumberInput",
     "Popover",
     "SegmentedControl",
     "Select",
@@ -24,11 +29,15 @@ export const radiusUsage: Record<string, string[]> = {
   "md": [
     "Accordion",
     "Alert",
+    "Combobox",
+    "DataGrid",
     "DatePicker",
+    "DateRangePicker",
     "Drawer",
     "FileUpload",
     "List",
     "Menu",
+    "NumberInput",
     "OtpInput",
     "Pagination",
     "Popover",
@@ -43,6 +52,7 @@ export const radiusUsage: Record<string, string[]> = {
   ],
   "lg": [
     "Card",
+    "CommandPalette",
     "Dialog",
     "Stat"
   ],

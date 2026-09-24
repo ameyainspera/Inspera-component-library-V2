@@ -30,6 +30,12 @@ export const componentApi: Record<string, ComponentApi> = {
         "description": "Initially open section."
       },
       {
+        "name": "defaultOpenIndexes",
+        "type": "number[]",
+        "required": false,
+        "description": "Initially open sections, for `type=\"Multiple\"`. Wins over defaultOpenIndex."
+      },
+      {
         "name": "iconPosition",
         "type": "'Left' | 'Right'",
         "required": false,
@@ -455,6 +461,297 @@ export const componentApi: Record<string, ComponentApi> = {
       "CheckboxOption": "export interface CheckboxOption {\n  label: string\n  value: string\n}"
     }
   },
+  "Combobox": {
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "default": "'Assessment'",
+        "description": "Field label."
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "required": false,
+        "default": "'Search assessments...'",
+        "description": "Shown when nothing is typed or selected."
+      },
+      {
+        "name": "options",
+        "type": "ComboboxOption[]",
+        "required": false,
+        "default": "defaultOptions",
+        "description": "The full option list. Filtered as the user types."
+      },
+      {
+        "name": "value",
+        "type": "string",
+        "required": false,
+        "description": "Selected value. Controlled - pair with onChange."
+      },
+      {
+        "name": "state",
+        "type": "'Default' | 'Focused' | 'Disabled' | 'Error'",
+        "required": false,
+        "default": "'Default'",
+        "description": "Freezes a visual state so documentation can show it without a pointer. `Focused` is presentation-only. `Error` and `Disabled` are real state."
+      },
+      {
+        "name": "showLabel",
+        "type": "boolean",
+        "required": false,
+        "default": "true",
+        "description": "Render the field label."
+      },
+      {
+        "name": "allowCustomValue",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Allow a typed value that matches no option to be committed."
+      },
+      {
+        "name": "emptyText",
+        "type": "string",
+        "required": false,
+        "default": "'No matches'",
+        "description": "Text shown when no option matches the query."
+      },
+      {
+        "name": "onChange",
+        "type": "(value: string) => void",
+        "required": false,
+        "description": "Fired with the chosen value (or free text when allowCustomValue)."
+      }
+    ],
+    "relatedTypes": {
+      "ComboboxOption": "export interface ComboboxOption {\n  /** Value returned on select. */\n  value: string\n  /** Text shown in the list and field. Defaults to the value. */\n  label?: string\n  /** Optional Material Symbols icon shown before the label. */\n  icon?: string\n}"
+    }
+  },
+  "CommandPalette": {
+    "props": [
+      {
+        "name": "commands",
+        "type": "Command[]",
+        "required": false,
+        "default": "defaultCommands",
+        "description": "The commands to search."
+      },
+      {
+        "name": "open",
+        "type": "boolean",
+        "required": false,
+        "description": "Controlled open state. Omit to let the component manage its own."
+      },
+      {
+        "name": "defaultOpen",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Open initially (uncontrolled)."
+      },
+      {
+        "name": "hotkey",
+        "type": "boolean",
+        "required": false,
+        "default": "true",
+        "description": "Bind Cmd/Ctrl+K to toggle the palette."
+      },
+      {
+        "name": "embedded",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Render the panel inline without the portal or dimmed overlay. Used by the docs to show the palette on the page (and by the recipe audit, which cannot see through a portal). Mirrors the `embedded` prop on Dialog and Drawer."
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "required": false,
+        "default": "'Type a command or search...'",
+        "description": "Search field placeholder."
+      },
+      {
+        "name": "emptyText",
+        "type": "string",
+        "required": false,
+        "default": "'No matching commands'",
+        "description": "Shown when nothing matches."
+      },
+      {
+        "name": "onOpenChange",
+        "type": "(open: boolean) => void",
+        "required": false,
+        "description": "Fired when the open state should change."
+      },
+      {
+        "name": "onSelect",
+        "type": "(command: Command) => void",
+        "required": false,
+        "description": "Fired with the chosen command."
+      }
+    ],
+    "relatedTypes": {
+      "Command": "export interface Command {\n  /** Stable id. */\n  id: string\n  /** Primary label shown in the list. */\n  label: string\n  /** Optional Material Symbols icon. */\n  icon?: string\n  /** Optional grouping heading. */\n  group?: string\n  /** Right-aligned hint, e.g. a shortcut or section name. */\n  hint?: string\n  /** Extra words to match against beyond the label. */\n  keywords?: string\n  /** Fired when the command is chosen. */\n  onSelect?: () => void\n}"
+    }
+  },
+  "DataGrid": {
+    "props": [
+      {
+        "name": "columns",
+        "type": "DataGridColumn[]",
+        "required": false,
+        "default": "defaultColumns",
+        "description": "Column definitions."
+      },
+      {
+        "name": "rows",
+        "type": "Record<string, ReactNode>[]",
+        "required": false,
+        "default": "defaultRows",
+        "description": "Row data keyed by column."
+      },
+      {
+        "name": "getRowId",
+        "type": "(row: Record<string, ReactNode>, index: number) => string",
+        "required": false,
+        "description": "Stable id per row. Defaults to the row index."
+      },
+      {
+        "name": "size",
+        "type": "'Compact' | 'Default'",
+        "required": false,
+        "default": "'Default'",
+        "description": "Row height density."
+      },
+      {
+        "name": "striped",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Zebra-stripe rows."
+      },
+      {
+        "name": "hoverable",
+        "type": "boolean",
+        "required": false,
+        "default": "true",
+        "description": "Highlight rows on hover."
+      },
+      {
+        "name": "caption",
+        "type": "string",
+        "required": false,
+        "description": "Describes the grid for screen readers."
+      },
+      {
+        "name": "selectable",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Add a leading selection column with a select-all header box."
+      },
+      {
+        "name": "selectedIds",
+        "type": "string[]",
+        "required": false,
+        "description": "Controlled set of selected row ids. Pair with onSelectionChange."
+      },
+      {
+        "name": "onSelectionChange",
+        "type": "(ids: string[]) => void",
+        "required": false,
+        "description": "Fired with the full set of selected ids after any change."
+      },
+      {
+        "name": "sortBy",
+        "type": "string",
+        "required": false,
+        "description": "Controlled sort column key. Pair with onSortChange for server sorting."
+      },
+      {
+        "name": "sortDirection",
+        "type": "'Ascending' | 'Descending'",
+        "required": false,
+        "description": "Controlled sort direction."
+      },
+      {
+        "name": "onSortChange",
+        "type": "(key: string, direction: DataGridSortDirection) => void",
+        "required": false,
+        "description": "Fired when a sortable header is activated. Enables controlled sorting."
+      },
+      {
+        "name": "rowActions",
+        "type": "(row: Record<string, ReactNode>, index: number) => ReactNode",
+        "required": false,
+        "description": "Trailing per-row actions, revealed on row hover."
+      },
+      {
+        "name": "onRowClick",
+        "type": "(row: Record<string, ReactNode>, index: number) => void",
+        "required": false,
+        "description": "Fired with the row data and its index."
+      },
+      {
+        "name": "footer",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Show the footer with the range summary, pager and page-size select."
+      },
+      {
+        "name": "total",
+        "type": "number",
+        "required": false,
+        "description": "Total row count across all pages. Defaults to the rendered row count."
+      },
+      {
+        "name": "page",
+        "type": "number",
+        "required": false,
+        "default": "1",
+        "description": "Current page (1-based)."
+      },
+      {
+        "name": "pageCount",
+        "type": "number",
+        "required": false,
+        "default": "1",
+        "description": "Total number of pages."
+      },
+      {
+        "name": "pageSize",
+        "type": "number",
+        "required": false,
+        "default": "20",
+        "description": "Rows shown per page, used for the range summary and the size select."
+      },
+      {
+        "name": "pageSizeOptions",
+        "type": "number[]",
+        "required": false,
+        "default": "[10, 20, 50, 100]",
+        "description": "Selectable page sizes."
+      },
+      {
+        "name": "onPageChange",
+        "type": "(page: number) => void",
+        "required": false,
+        "description": "Fired with the requested page."
+      },
+      {
+        "name": "onPageSizeChange",
+        "type": "(size: number) => void",
+        "required": false,
+        "description": "Fired with the requested page size."
+      }
+    ],
+    "relatedTypes": {
+      "DataGridColumn": "export interface DataGridColumn {\n  /** Key into each row's data object. */\n  key: string\n  /** Column header text. */\n  header: string\n  /** Cell + header alignment. */\n  align?: 'left' | 'right' | 'center'\n  /** Fixed column width. */\n  width?: string | number\n  /** Allow the column to sort. A caret appears in the header. */\n  sortable?: boolean\n  /**\n   * Value used for sorting when the cell renders a non-primitive node. Return a\n   * string or number; without it a sortable column falls back to `row[key]`.\n   */\n  sortValue?: (row: Record<string, ReactNode>) => string | number\n}"
+    }
+  },
   "DatePicker": {
     "props": [
       {
@@ -506,6 +803,60 @@ export const componentApi: Record<string, ComponentApi> = {
       }
     ],
     "relatedTypes": {}
+  },
+  "DateRangePicker": {
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "default": "'Date range'",
+        "description": "Field label."
+      },
+      {
+        "name": "value",
+        "type": "DateRange",
+        "required": false,
+        "description": "Selected range. Controlled - pair with onChange."
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "required": false,
+        "default": "'Select a range'",
+        "description": "Trigger placeholder."
+      },
+      {
+        "name": "state",
+        "type": "'Default' | 'Focused' | 'Disabled' | 'Error'",
+        "required": false,
+        "default": "'Default'",
+        "description": "Freezes a visual state so documentation can show it without a pointer. `Focused` is presentation-only. `Error` and `Disabled` are real state."
+      },
+      {
+        "name": "showLabel",
+        "type": "boolean",
+        "required": false,
+        "default": "true",
+        "description": "Show the field label."
+      },
+      {
+        "name": "defaultOpen",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Open the calendar initially."
+      },
+      {
+        "name": "onChange",
+        "type": "(range: DateRange) => void",
+        "required": false,
+        "description": "Fired with the range once both ends are chosen."
+      }
+    ],
+    "relatedTypes": {
+      "DateRange": "export interface DateRange {\n  /** Range start (YYYY-MM-DD) or null. */\n  start: string | null\n  /** Range end (YYYY-MM-DD) or null. */\n  end: string | null\n}"
+    }
   },
   "Dialog": {
     "props": [
@@ -1052,6 +1403,95 @@ export const componentApi: Record<string, ComponentApi> = {
     "relatedTypes": {
       "MenuItem": "export interface MenuItem {\n  label: string\n  icon?: string\n  danger?: boolean\n  disabled?: boolean\n  divider?: boolean\n}"
     }
+  },
+  "NumberInput": {
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "default": "'Amount'",
+        "description": "Field label."
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "required": false,
+        "default": "'0'",
+        "description": "Hint shown when empty."
+      },
+      {
+        "name": "value",
+        "type": "number",
+        "required": false,
+        "description": "Current value. Controlled - pair with onChange."
+      },
+      {
+        "name": "min",
+        "type": "number",
+        "required": false,
+        "description": "Minimum allowed value."
+      },
+      {
+        "name": "max",
+        "type": "number",
+        "required": false,
+        "description": "Maximum allowed value."
+      },
+      {
+        "name": "step",
+        "type": "number",
+        "required": false,
+        "default": "1",
+        "description": "Increment applied by the steppers and arrow keys."
+      },
+      {
+        "name": "state",
+        "type": "'Default' | 'Focused' | 'Disabled' | 'Error' | 'ReadOnly'",
+        "required": false,
+        "default": "'Default'",
+        "description": "Freezes a visual state so documentation can show it without a pointer. `Focused` is presentation-only. `Error`, `Disabled` and `ReadOnly` are real application state."
+      },
+      {
+        "name": "size",
+        "type": "'Small' | 'Medium'",
+        "required": false,
+        "default": "'Medium'",
+        "description": "Control height."
+      },
+      {
+        "name": "showLabel",
+        "type": "boolean",
+        "required": false,
+        "default": "true",
+        "description": "Render the field label."
+      },
+      {
+        "name": "suffix",
+        "type": "string",
+        "required": false,
+        "description": "Unit suffix shown inside the field, e.g. \"min\" or \"%\"."
+      },
+      {
+        "name": "helpText",
+        "type": "string",
+        "required": false,
+        "description": "Helper text."
+      },
+      {
+        "name": "errorText",
+        "type": "string",
+        "required": false,
+        "description": "Error message, shown when state is Error."
+      },
+      {
+        "name": "onChange",
+        "type": "(value: number) => void",
+        "required": false,
+        "description": "Fired with the new numeric value."
+      }
+    ],
+    "relatedTypes": {}
   },
   "OtpInput": {
     "props": [
@@ -2062,6 +2502,25 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "(value: string) => void",
         "required": false,
         "description": "Fired with the new value on every keystroke."
+      }
+    ],
+    "relatedTypes": {}
+  },
+  "ToastProvider": {
+    "props": [
+      {
+        "name": "position",
+        "type": "'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right'",
+        "required": false,
+        "default": "'bottom-right'",
+        "description": "Where the stack anchors on screen."
+      },
+      {
+        "name": "max",
+        "type": "number",
+        "required": false,
+        "default": "4",
+        "description": "Cap on simultaneously visible toasts. Oldest is dropped past the limit."
       }
     ],
     "relatedTypes": {}

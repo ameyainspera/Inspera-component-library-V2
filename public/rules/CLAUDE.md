@@ -62,7 +62,6 @@ this list.
 | Token | CSS variable | Value | Use |
 | --- | --- | --- | --- |
 | `primary.main` | `var(--primary)` | #004080 | Primary brand / interactive |
-| `secondary.main` | `var(--secondary)` | #322060 | Secondary brand, used sparingly |
 | `error` | `var(--error)` | #D32F2F | Use only for its meaning (error) |
 | `warning` | `var(--warning)` | #EF6C00 | Use only for its meaning (warning) |
 | `info` | `var(--info)` | #0288D1 | Use only for its meaning (info) |
@@ -209,10 +208,10 @@ actually does rather than what this document claims.
 | Token | CSS variable | Value | When to use | Used by |
 | --- | --- | --- | --- | --- |
 | `none` | `var(--radius-none)` | 0px | Flush edges - table cells, full-bleed surfaces, anything that meets another edge. | - |
-| `xs` | `var(--radius-xs)` | 2px | The smallest indicators, where 4px would read as a visible curve. | Checkbox, Link, Rating |
-| `sm` | `var(--radius-sm)` | 4px | Controls: buttons, tags, segments, menu items. | Button, DatePicker, Dialog, List, Menu, Popover, SegmentedControl, Select, Skeleton, Tabs, Tooltip |
-| `md` | `var(--radius-md)` | 8px | Inputs, alerts and floating panels - the system default. | Accordion, Alert, DatePicker, Drawer, FileUpload, List, Menu, OtpInput, Pagination, Popover, SegmentedControl, Select, Skeleton, Snackbar, Table, Tabs, TextInput, Textarea |
-| `lg` | `var(--radius-lg)` | 12px | Large surfaces that contain other components: cards, dialogs, drawers. | Card, Dialog, Stat |
+| `xs` | `var(--radius-xs)` | 2px | The smallest indicators, where 4px would read as a visible curve. | Checkbox, CommandPalette, Link, Rating |
+| `sm` | `var(--radius-sm)` | 4px | Controls: buttons, tags, segments, menu items. | Button, Combobox, CommandPalette, DatePicker, DateRangePicker, Dialog, List, Menu, NumberInput, Popover, SegmentedControl, Select, Skeleton, Tabs, Tooltip |
+| `md` | `var(--radius-md)` | 8px | Inputs, alerts and floating panels - the system default. | Accordion, Alert, Combobox, DataGrid, DatePicker, DateRangePicker, Drawer, FileUpload, List, Menu, NumberInput, OtpInput, Pagination, Popover, SegmentedControl, Select, Skeleton, Snackbar, Table, Tabs, TextInput, Textarea |
+| `lg` | `var(--radius-lg)` | 12px | Large surfaces that contain other components: cards, dialogs, drawers. | Card, CommandPalette, Dialog, Stat |
 | `xl` | `var(--radius-xl)` | 16px | Reserved for oversized surfaces. Nothing uses it today; prefer lg. | - |
 | `pill` | `var(--radius-pill)` | fully round | Only for shapes that are conceptually round: toggles, badges, radios, avatars. | Avatar, Badge, Dialog, Progress, RadioButton, Skeleton, Slider, Stepper, Tag, Toggle, Tooltip |
 

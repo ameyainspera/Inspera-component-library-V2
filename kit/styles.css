@@ -1,10 +1,9 @@
 /* Inspera Design System - GENERATED FILE, DO NOT EDIT.
-   Source: src/data/tokens.ts + src/runtime.css. Regenerate with `pnpm generate`. */
+   Source: src/data/tokens.ts + src/imports/runtime.css. Regenerate with `pnpm generate`. */
 
 :root {
   /* Brand */
   --primary: #004080; /* Primary brand / interactive */
-  --secondary: #322060; /* Secondary brand, used sparingly */
 
   /* Semantic */
   --error: #D32F2F;
@@ -522,9 +521,11 @@
   line-height: var(--documentation-line-height);
 }
 
-.material-symbols-outlined,
-.material-symbols-rounded,
-.material-symbols-sharp {
+/* Outlined is the only approved face. Rounded and Sharp classes used to ship
+   here too, but the setup stylesheet imports Outlined alone - so a consumer who
+   used one got a silent fallback to the body font, and the spec's "Material
+   Symbols Outlined only" rule contradicted the CSS shipped beside it. */
+.material-symbols-outlined {
   font-weight: normal;
   font-style: normal;
   line-height: 1;
@@ -538,11 +539,8 @@
   -webkit-font-feature-settings: 'liga';
   -moz-font-feature-settings: 'liga';
   user-select: none;
+  font-family: 'Material Symbols Outlined';
 }
-
-.material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
-.material-symbols-rounded  { font-family: 'Material Symbols Rounded'; }
-.material-symbols-sharp    { font-family: 'Material Symbols Sharp'; }
 
 /* Animations used by the feedback components (Skeleton, Progress, Spinner). */
 @keyframes inspera-spin {
@@ -725,6 +723,20 @@
 .inspera-row:hover:not([data-disabled='true']),
 .inspera-row[data-force-state='Hover'] {
   background: var(--action-hover);
+}
+
+/* Per-row actions (DataGrid) stay out of the way until the row is hovered or
+   holds keyboard focus. They remain in the accessibility tree throughout, so a
+   keyboard user reaches them; only the resting opacity changes. */
+.inspera-row-actions {
+  opacity: 0;
+  transition: opacity var(--duration-fast) var(--easing-standard);
+}
+
+.inspera-row:hover .inspera-row-actions,
+.inspera-row:focus-within .inspera-row-actions,
+.inspera-row[data-force-state='Hover'] .inspera-row-actions {
+  opacity: 1;
 }
 
 @media (prefers-reduced-motion: reduce) {
