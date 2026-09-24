@@ -1,0 +1,354 @@
+// SOURCE OF TRUTH for every Inspera token.
+//
+// This file generates src/tokens.css, packages/components/tokens.css,
+// kit/styles.css and public/tokens.w3c.json via scripts/build-portable.ts.
+// Add a token here and it appears everywhere; never edit a generated file.
+
+export const brandColors = [
+  { name: 'primary.main', value: '#004080', note: 'Primary brand / interactive' },
+]
+
+export const semanticColors = [
+  { name: 'error', value: '#D32F2F' },
+  { name: 'warning', value: '#EF6C00' },
+  { name: 'info', value: '#0288D1' },
+  { name: 'success', value: '#2E7D32' },
+]
+
+export const brandAccents = [
+  { name: 'zest', value: '#FA5101' },
+  { name: 'berry', value: '#89239A' },
+  { name: 'algae', value: '#00A788' },
+]
+
+export const palette: Record<string, Record<string, string>> = {
+  gray: {
+    100: '#F7F7F7', 200: '#EDEDED', 300: '#D9D9D9', 400: '#BCBCBC', 500: '#949494',
+    600: '#7A7A7A', 700: '#595959', 800: '#404040', 900: '#272727',
+  },
+  blue: {
+    100: '#F0F7FF', 200: '#DBEDFF', 300: '#B3D9FF', 400: '#7ABDFF', 500: '#3399FF',
+    600: '#007AF5', 700: '#0059B3', 800: '#004080', 900: '#002E5C',
+  },
+  green: {
+    100: '#F2FDF8', 200: '#E0FAEF', 300: '#BDF4DD', 400: '#8DECC5', 500: '#50E2A5',
+    600: '#1BA76D', 700: '#147B50', 800: '#106542', 900: '#0D4F33',
+  },
+  red: {
+    100: '#FEF1F1', 200: '#FCDEDE', 300: '#F9B8B8', 400: '#F58484', 500: '#F04242',
+    600: '#E21212', 700: '#A50D0D', 800: '#760A0A', 900: '#550707',
+  },
+  yellow: {
+    100: '#FFFCF0', 200: '#FFF8DC', 300: '#FEF0B3', 400: '#FEE67C', 500: '#FDD835',
+    600: '#F2C602', 700: '#B19102', 800: '#7E6701', 900: '#5B4A01',
+  },
+  orange: {
+    100: '#FFFAF0', 200: '#FFF3DC', 300: '#FEE5B3', 400: '#FED27C', 500: '#FDBA35',
+    600: '#F2A202', 700: '#D99102', 800: '#7E5501', 900: '#5B3D01',
+  },
+  purple: {
+    100: '#F6F4FB', 200: '#E9E4F6', 300: '#D0C6EC', 400: '#9F88D7', 500: '#8366CC',
+    600: '#603DB8', 700: '#462D86', 800: '#322060', 900: '#241745',
+  },
+  pink: {
+    100: '#FEF1F5', 200: '#FCDFE8', 300: '#F8B9CE', 400: '#F386AB', 500: '#ED457D',
+    600: '#DF1659', 700: '#A21041', 800: '#740B2E', 900: '#540821',
+  },
+}
+
+export const spacing = [
+  { token: '0', value: 0 }, { token: '1', value: 4 }, { token: '2', value: 8 },
+  { token: '3', value: 12 }, { token: '4', value: 16 }, { token: '5', value: 20 },
+  { token: '6', value: 24 }, { token: '8', value: 32 }, { token: '10', value: 40 },
+  { token: '12', value: 48 }, { token: '16', value: 64 },
+]
+
+/**
+ * Corner radius. The system is deliberately restrained: small-to-medium radii
+ * everywhere, and pills reserved for controls that are conceptually round.
+ * `usage` says when to reach for each; which components actually use it is
+ * derived from the code, not asserted here - see radius-usage.generated.ts.
+ */
+export const radius = [
+  { token: 'none', value: 0, usage: 'Flush edges - table cells, full-bleed surfaces, anything that meets another edge.' },
+  { token: 'xs', value: 2, usage: 'The smallest indicators, where 4px would read as a visible curve.' },
+  { token: 'sm', value: 4, usage: 'Controls: buttons, tags, segments, menu items.' },
+  { token: 'md', value: 8, usage: 'Inputs, alerts and floating panels - the system default.' },
+  { token: 'lg', value: 12, usage: 'Large surfaces that contain other components: cards, dialogs, drawers.' },
+  { token: 'xl', value: 16, usage: 'Reserved for oversized surfaces. Nothing uses it today; prefer lg.' },
+  { token: 'pill', value: 9999, usage: 'Only for shapes that are conceptually round: toggles, badges, radios, avatars.' },
+]
+
+export const shadows = [
+  { token: '100', value: '0px 4px 4px rgba(39, 39, 39, 0.08), 0px 2px 4px rgba(39, 39, 39, 0.12)' },
+  { token: '200', value: '0px 8px 8px rgba(39, 39, 39, 0.08), 0px 4px 6px rgba(39, 39, 39, 0.12)' },
+  { token: '300', value: '0px 8px 16px rgba(39, 39, 39, 0.08), 0px 6px 8px rgba(39, 39, 39, 0.12)' },
+  { token: '400', value: '0px 8px 24px rgba(39, 39, 39, 0.08), 0px 6px 12px rgba(39, 39, 39, 0.12)' },
+  { token: '500', value: '0px 10px 32px rgba(39, 39, 39, 0.1), 0px 6px 14px rgba(39, 39, 39, 0.12)' },
+  { token: '600', value: '0px 12px 42px rgba(39, 39, 39, 0.12), 0px 8px 18px rgba(39, 39, 39, 0.12)' },
+]
+
+/**
+ * Type scale - the real Figma text styles, exported from the library.
+ *
+ * Sizes are exact, straight from Figma (28.83 and 22.78 arrive as float32:
+ * 28.829999923706055). Weights are read from the style names, which state them
+ * literally - "Regular", "Medium", "Semi Bold".
+ *
+ * Figma's CSS export carries font-size ONLY. Line height, letter spacing and a
+ * few weights are therefore taken from the V3 spec where it covers the style,
+ * and marked `pending` where nothing confirms them. See PENDING_TYPE_FIELDS.
+ */
+export interface TypeToken {
+  /** Figma style name, reconstructed from the exported variable. */
+  token: string
+  /** CSS custom-property and utility-class suffix. */
+  name: string
+  /** Figma group, used for ordering and display. */
+  group: 'Default' | 'Regular' | 'Medium' | 'Heading' | 'Extended' | 'Paragraph' | 'Extra' | 'Documentation'
+  size: number
+  weight: number
+  /** Unitless line-height. */
+  lineHeight: number
+  /** Letter spacing in px. */
+  tracking?: number
+  transform?: 'uppercase'
+  decoration?: 'underline'
+  /** Overrides --font-sans for this style. */
+  fontFamily?: string
+  /** Fields not present in the Figma export, needing confirmation. */
+  pending?: string[]
+  note?: string
+}
+
+const HEADING_LH = 1.12 // V3 section 4.5: 112%
+const RAMP_LH = 1.4 // not in the export - see PENDING_TYPE_FIELDS
+
+const ramp = (group: 'Regular' | 'Medium', weight: number): TypeToken[] =>
+  [14, 18, 20, 22, 26].map((size) => ({
+    token: `${group}/${size} px/${group}`,
+    name: `${group.toLowerCase()}-${size}`,
+    group,
+    size,
+    weight,
+    lineHeight: RAMP_LH,
+    pending: ['lineHeight'],
+  }))
+
+export const typeScale: TypeToken[] = [
+  // Default - the 16px workhorses.
+  { token: 'Default/Default 16 px/Regular', name: 'default-16-regular', group: 'Default', size: 16, weight: 400, lineHeight: 20 / 16, note: 'V3 body.mdRegular - line height fixed at 20px' },
+  { token: 'Default/16 px/Medium', name: 'default-16-medium', group: 'Default', size: 16, weight: 500, lineHeight: 20 / 16, note: 'V3 body.mdMedium - line height fixed at 20px' },
+  { token: 'Default/Link 16 px', name: 'link-16', group: 'Default', size: 16, weight: 500, lineHeight: 20 / 16, decoration: 'underline', pending: ['weight', 'lineHeight'] },
+
+  ...ramp('Regular', 400),
+  ...ramp('Medium', 500),
+
+  { token: 'Heading/H1', name: 'h1', group: 'Heading', size: 28.83, weight: 600, lineHeight: HEADING_LH },
+  { token: 'Heading/H2', name: 'h2', group: 'Heading', size: 22.78, weight: 500, lineHeight: HEADING_LH },
+  { token: 'Heading/H3', name: 'h3', group: 'Heading', size: 20.25, weight: 500, lineHeight: HEADING_LH },
+  { token: 'Heading/H4', name: 'h4', group: 'Heading', size: 18, weight: 500, lineHeight: HEADING_LH },
+  { token: 'Heading/H5', name: 'h5', group: 'Heading', size: 16, weight: 500, lineHeight: HEADING_LH },
+  { token: 'Heading/H6', name: 'h6', group: 'Heading', size: 12, weight: 500, lineHeight: HEADING_LH, tracking: 1.6, transform: 'uppercase' },
+
+  { token: 'Extended/Semi Bold 16 px', name: 'semibold-16', group: 'Extended', size: 16, weight: 600, lineHeight: 20 / 16, pending: ['lineHeight'] },
+  { token: 'Extended/Inter Semi Bold 12 px/ALL CAPS', name: 'allcaps-12', group: 'Extended', size: 12, weight: 600, lineHeight: HEADING_LH, tracking: 1.6, transform: 'uppercase', pending: ['lineHeight', 'tracking'] },
+
+  { token: 'Paragraph/Default', name: 'paragraph-default', group: 'Paragraph', size: 16, weight: 400, lineHeight: 1.5, note: 'V3 body.paragraph - 150%' },
+  { token: 'Paragraph/Content', name: 'paragraph-content', group: 'Paragraph', size: 16, weight: 400, lineHeight: 1.5, pending: ['lineHeight'] },
+  { token: 'Paragraph/Captions', name: 'paragraph-captions', group: 'Paragraph', size: 12, weight: 400, lineHeight: 1.2, note: 'V3 body.caption - 120%' },
+  { token: 'Paragraph/Heading', name: 'paragraph-heading', group: 'Paragraph', size: 20.25, weight: 500, lineHeight: HEADING_LH, pending: ['weight', 'lineHeight'] },
+
+  { token: 'Extra/Noto Sans Mono', name: 'mono-16', group: 'Extra', size: 16, weight: 400, lineHeight: 1.5, fontFamily: 'var(--font-mono)', pending: ['lineHeight'] },
+  { token: 'Extra/Noto Serif', name: 'serif-16', group: 'Extra', size: 16, weight: 400, lineHeight: 1.5, fontFamily: 'var(--font-serif)', pending: ['lineHeight'] },
+
+  { token: 'Documentation', name: 'documentation', group: 'Documentation', size: 14, weight: 300, lineHeight: 1.4, pending: ['weight', 'lineHeight'], note: 'Inter Light per the specimen sheet' },
+]
+
+/**
+ * What the Figma CSS export could not tell us. Figma exports font-size only for
+ * text styles, so anything below is inferred and needs confirming against the
+ * style panel.
+ */
+export const PENDING_TYPE_FIELDS = typeScale
+  .filter((t) => t.pending?.length)
+  .map((t) => ({ token: t.token, unconfirmed: t.pending as string[] }))
+
+/**
+ * Sizes the components render that the scale still has no token for. The ramp
+ * now covers 14/18/20/22/26, so only 13px remains - five uses, all of which
+ * should probably become 14px, but that is a Figma decision, not a guess.
+ */
+export const TYPE_SCALE_GAPS = [
+  { size: 13, usedBy: ['Divider label', 'List secondary', 'Stat delta', 'Stepper label', 'Table caption'] },
+]
+
+/** Weights the stylesheet must load. 300 only for Documentation. */
+export const fontWeights = [300, 400, 500, 600]
+
+// ---------------------------------------------------------------------------
+// System tokens - the derived / semantic layer. These are not part of the raw
+// palette; they name a *role* and point at a palette value. Components should
+// prefer these over raw palette shades wherever a role exists.
+// ---------------------------------------------------------------------------
+export interface SystemToken {
+  /** CSS custom property name, without the leading `--`. */
+  name: string
+  value: string
+  note?: string
+}
+
+// ---------------------------------------------------------------------------
+// Control & status tokens.
+//
+// These values are rendered by the components today but were never defined as
+// tokens, so the spec told AI "never hardcode an off-palette colour" while the
+// reference components used ten of them. They are a second neutral ramp,
+// distinct from palette.gray - #C4C4C4 borders, not #BCBCBC.
+//
+// VALUES ARE AS-SHIPPED, NOT YET CONFIRMED AGAINST FIGMA. They are named and
+// centralised so that confirming them is a one-line edit here rather than a
+// hunt through 23 component files.
+// ---------------------------------------------------------------------------
+const PENDING = 'Pending Figma verification'
+
+export const statusSurfaces: SystemToken[] = [
+  { name: 'info-surface', value: '#E1F5FE', note: `Info Alert/Badge/Tag fill. ${PENDING}` },
+  { name: 'success-surface', value: '#E8F5E9', note: `Success fill. ${PENDING}` },
+  { name: 'warning-surface', value: '#FFF3E0', note: `Warning fill. ${PENDING}` },
+  { name: 'error-surface', value: '#FFEBEE', note: `Error fill. ${PENDING}` },
+]
+
+export const controlTokens: SystemToken[] = [
+  { name: 'border-control', value: '#C4C4C4', note: `Resting border on inputs, select, toggle track. ${PENDING}` },
+  { name: 'border-control-strong', value: '#8C8C8C', note: `Hover border; checkbox and radio resting border. ${PENDING}` },
+  { name: 'text-placeholder', value: '#8C8C8C', note: `Placeholder text. ${PENDING}` },
+  { name: 'surface-disabled', value: '#F5F5F5', note: `Disabled control fill. ${PENDING}` },
+  { name: 'surface-readonly', value: 'var(--gray-100)', note: 'Read-only control fill' },
+  { name: 'surface-neutral', value: '#F0F0F0', note: `Neutral Badge/Tag fill. ${PENDING}` },
+  { name: 'avatar-surface', value: '#E0E0E0', note: `Avatar fallback fill. ${PENDING}` },
+]
+
+// ---------------------------------------------------------------------------
+// Non-colour tokens. Without these an AI invents its own - z-index 99999,
+// a one-off 350ms transition, a breakpoint nobody else uses.
+// ---------------------------------------------------------------------------
+/**
+ * Effect styles, exported from the Figma library.
+ *
+ * The five `state-*` rings are focus and validation indicators. Figma's CSS
+ * export drops the spread radius - every one arrives as `0px 0px 0px`, which
+ * paints nothing - so the spread here is the value the components already
+ * render (3px), marked pending until the Figma panel confirms it.
+ *
+ * Their colours are palette colours: focus is blue-300, error red-300,
+ * hover-light gray-500, focus-on-dark green-300.
+ */
+export interface EffectToken {
+  name: string
+  value: string
+  note?: string
+  pending?: string[]
+}
+
+export const effects: EffectToken[] = [
+  { name: 'state-focus', value: '0px 0px 0px 3px var(--blue-300)', note: 'Standard input focus ring', pending: ['spread'] },
+  { name: 'state-focus-standalone', value: '0px 0px 0px 3px var(--blue-600)', note: 'High-contrast standalone focus', pending: ['spread'] },
+  { name: 'state-error', value: '0px 0px 0px 3px var(--red-300)', note: 'Error ring', pending: ['spread'] },
+  { name: 'state-hover-light', value: '0px 0px 0px 3px var(--gray-500)', note: 'Hover outline', pending: ['spread'] },
+  { name: 'state-focus-on-dark', value: '0px 0px 0px 3px var(--green-300)', note: 'Focus ring on a dark container', pending: ['spread'] },
+
+  { name: 'button-shadow', value: 'inset 0px -1px 0px rgba(0, 0, 0, 0.2), 0px 1px 0px rgba(0, 0, 0, 0.08)', note: 'Standard button elevation highlight' },
+
+  { name: 'link-underline-dark', value: 'inset 0px -1px 0px var(--gray-700)', note: 'Link underline on light ground' },
+  { name: 'link-underline-blue', value: 'inset 0px -1px 0px var(--blue-800)', note: 'Primary link underline' },
+  { name: 'link-underline-light', value: 'inset 0px -1px 0px var(--white)', note: 'Link underline on dark ground' },
+
+  { name: 'invert-hack', value: 'inset 1000px 0px 0px var(--white)', note: 'Overrides the browser autofill background on inputs' },
+]
+
+export const borderWidths = [
+  { token: 'default', value: '1px' },
+  { token: 'strong', value: '2px' },
+]
+
+export const focusRing = [
+  { name: 'focus-ring-width', value: '2px' },
+  { name: 'focus-ring-offset', value: '2px' },
+  { name: 'focus-ring-color', value: 'var(--primary)' },
+]
+
+export const motion = {
+  duration: [
+    { token: 'instant', value: '0ms', note: 'No transition' },
+    { token: 'fast', value: '100ms', note: 'Hover and focus' },
+    { token: 'normal', value: '200ms', note: 'Menus, popovers' },
+    { token: 'slow', value: '300ms', note: 'Dialogs, drawers' },
+  ],
+  easing: [
+    { token: 'standard', value: 'cubic-bezier(0.2, 0, 0, 1)', note: 'Default' },
+    { token: 'enter', value: 'cubic-bezier(0, 0, 0.2, 1)', note: 'Entering the screen' },
+    { token: 'exit', value: 'cubic-bezier(0.4, 0, 1, 1)', note: 'Leaving the screen' },
+  ],
+}
+
+/** Layering scale. Never use an arbitrary value such as 99999. */
+export const zIndex = [
+  { token: 'base', value: 0 },
+  { token: 'sticky', value: 100, note: 'Sticky headers and toolbars' },
+  { token: 'dropdown', value: 300, note: 'Select and Menu panels' },
+  { token: 'popover', value: 400 },
+  { token: 'overlay', value: 500, note: 'Dialog and Drawer scrim' },
+  { token: 'modal', value: 600, note: 'Dialog and Drawer surface' },
+  { token: 'toast', value: 700, note: 'Snackbar' },
+  { token: 'tooltip', value: 800 },
+]
+
+/**
+ * Shared layout thresholds, not device names. Components should respond to the
+ * space they are given rather than to a user-agent guess.
+ */
+export const breakpoints = [
+  { token: 'sm', value: 640 },
+  { token: 'md', value: 768 },
+  { token: 'lg', value: 1024 },
+  { token: 'xl', value: 1280 },
+  { token: '2xl', value: 1440 },
+]
+
+export const systemTokens: Record<string, SystemToken[]> = {
+  Interaction: [
+    { name: 'primary-hover-overlay', value: 'rgba(0, 64, 128, 0.04)', note: 'Primary tint on hover' },
+    { name: 'primary-focus-ring', value: 'rgba(0, 64, 128, 0.3)', note: 'Focus ring on primary controls' },
+    { name: 'action-active', value: 'rgba(0, 0, 0, 0.56)', note: 'Icon / control glyph' },
+    { name: 'action-hover', value: 'rgba(0, 0, 0, 0.04)', note: 'Neutral hover wash' },
+    { name: 'action-focus', value: 'rgba(0, 0, 0, 0.12)', note: 'Neutral focus wash' },
+    { name: 'action-disabled', value: 'rgba(0, 0, 0, 0.38)', note: 'Disabled foreground' },
+  ],
+  Text: [
+    { name: 'text-primary', value: 'rgba(0, 0, 0, 0.87)', note: 'Body and heading text' },
+    { name: 'text-secondary', value: 'var(--gray-600)', note: 'Supporting and helper text' },
+    { name: 'text-disabled', value: 'var(--action-disabled)', note: 'Disabled text' },
+    { name: 'text-on-primary', value: '#ffffff', note: 'Text on a primary-filled surface' },
+  ],
+  Status: statusSurfaces,
+  Controls: controlTokens,
+  Surface: [
+    { name: 'background', value: 'var(--gray-100)', note: 'App canvas' },
+    { name: 'surface', value: 'var(--white)', note: 'Raised surface (cards, panels, inputs)' },
+    { name: 'surface-sunken', value: 'var(--gray-100)', note: 'Recessed surface (wells, read-only fields)' },
+    { name: 'border', value: 'var(--gray-200)', note: 'Hairline separator' },
+    { name: 'border-strong', value: 'var(--gray-300)', note: 'Control outline' },
+    { name: 'border-interactive', value: 'var(--gray-500)', note: 'Control outline on hover' },
+    { name: 'muted-foreground', value: 'var(--gray-600)', note: 'De-emphasised label text' },
+  ],
+}
+
+export const fonts = [
+  { name: 'font-sans', value: "'Inter', system-ui, -apple-system, sans-serif", note: 'All UI text' },
+  { name: 'font-mono', value: "'Noto Sans Mono', ui-monospace, SFMono-Regular, monospace", note: 'Code, identifiers, token values' },
+  { name: 'font-serif', value: "'Noto Serif', Georgia, serif", note: 'Long-form or editorial content' },
+]
+
+/** Base white, kept alongside the palette so `var(--white)` always resolves. */
+export const baseColors = [{ name: 'white', value: '#ffffff' }]

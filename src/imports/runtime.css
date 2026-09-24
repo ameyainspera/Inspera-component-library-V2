@@ -1,0 +1,236 @@
+/*
+  Inspera Design System - runtime CSS.
+
+  Everything a consumer needs beyond the token custom properties: the Material
+  Symbols helper classes and the keyframes the feedback components animate with.
+
+  This file is hand-written and is copied verbatim into the distributed
+  stylesheet by scripts/build-portable.ts. It previously lived in index.css and
+  was scraped out with a regex, which silently dropped the base rule (ligature
+  rendering, font-variation-settings) and two of the three keyframes from every
+  published build.
+*/
+
+/* Outlined is the only approved face. Rounded and Sharp classes used to ship
+   here too, but the setup stylesheet imports Outlined alone - so a consumer who
+   used one got a silent fallback to the body font, and the spec's "Material
+   Symbols Outlined only" rule contradicted the CSS shipped beside it. */
+.material-symbols-outlined {
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  user-select: none;
+  font-family: 'Material Symbols Outlined';
+}
+
+/* Animations used by the feedback components (Skeleton, Progress, Spinner). */
+@keyframes inspera-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes inspera-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes inspera-indeterminate {
+  0% {
+    left: -40%;
+    width: 40%;
+  }
+  50% {
+    width: 55%;
+  }
+  100% {
+    left: 100%;
+    width: 40%;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Interaction states.
+
+   Inline styles cannot express :hover or :focus-visible, so the components
+   carried a `state` prop that froze a look instead - which meant a Button
+   never responded to the mouse in a real application, only in the docs.
+
+   Behaviour lives here. Every rule pairs a real pseudo-class with a
+   [data-force-state] attribute, so the documentation gallery can still show
+   Hover or Pressed without a pointer, and the same declaration drives both.
+   Components supply their own colours through the --inspera-* custom
+   properties so one rule set covers every variant.
+   --------------------------------------------------------------------------- */
+
+.inspera-interactive {
+  transition:
+    background var(--duration-fast) var(--easing-standard),
+    border-color var(--duration-fast) var(--easing-standard),
+    box-shadow var(--duration-fast) var(--easing-standard),
+    transform var(--duration-fast) var(--easing-standard);
+}
+
+/* Focus is never removed, only made visible on keyboard navigation. */
+.inspera-interactive:focus-visible,
+.inspera-interactive[data-force-state='Focused'] {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* --- Button -------------------------------------------------------------
+   The resting values live here, not inline. An inline `background` outranks
+   any class selector, so setting it on the element silently defeated the
+   :hover rule below - the component looked wired up and did nothing. */
+
+.inspera-button {
+  background: var(--inspera-bg);
+  color: var(--inspera-fg);
+  border-color: var(--inspera-border);
+  box-shadow: var(--inspera-shadow);
+}
+
+.inspera-button:hover:not(:disabled),
+.inspera-button[data-force-state='Hover'] {
+  background: var(--inspera-bg-hover);
+  box-shadow: var(--inspera-shadow-hover);
+}
+
+.inspera-button:active:not(:disabled),
+.inspera-button[data-force-state='Pressed'] {
+  background: var(--inspera-bg-active);
+  box-shadow: var(--inspera-shadow-active);
+  transform: translateY(1px);
+}
+
+/* --- Fields: input, textarea, select, date picker, OTP -------------------
+   Resting border lives here so the hover and focus rules can win. Fields ring
+   with a box-shadow rather than an outline, which is what the library draws. */
+
+.inspera-field {
+  border-color: var(--border-control);
+}
+
+.inspera-field:hover:not([data-disabled='true']):not([data-readonly='true']),
+.inspera-field[data-force-state='Hover'] {
+  border-color: var(--border-control-strong);
+}
+
+/* The :not() guards are repeated here deliberately. Without them the hover
+   rule above is more specific, so a focused field that still had the pointer
+   over it kept the hover border instead of the focus one. */
+.inspera-field:focus-within:not([data-disabled='true']),
+.inspera-field[data-force-state='Focused']:not([data-disabled='true']),
+.inspera-field[data-force-state='Open']:not([data-disabled='true']) {
+  border-color: var(--primary);
+  box-shadow: var(--effect-state-focus);
+}
+
+/* A field draws its ring as a box-shadow, so on the ones that are themselves
+   focusable - Select's trigger, the date picker's button, an OTP box - the
+   generic .inspera-interactive outline would sit outside it and ring twice.
+   The box-shadow replaces the outline rather than removing it. */
+.inspera-field:focus-visible {
+  outline: none;
+}
+
+/* Invalid wins over hover and focus - the error must stay legible. */
+.inspera-field[data-invalid='true'],
+.inspera-field[data-invalid='true']:hover,
+.inspera-field[data-invalid='true']:focus-within {
+  border-color: var(--error);
+  box-shadow: var(--effect-state-error);
+}
+
+/* --- Selection controls: checkbox, radio, toggle -------------------------
+   The indicator's resting colours live here rather than inline, for the same
+   reason Button's do: an inline `background` or `border-color` outranks any
+   class selector, so the hover rule below could never win. Each component
+   supplies its own values through the --inspera-indicator-* properties, which
+   keeps the per-variant logic in TypeScript and the behaviour here. */
+
+.inspera-control-indicator {
+  border-color: var(--inspera-indicator-border);
+  background: var(--inspera-indicator-bg);
+}
+
+.inspera-control:hover:not([data-disabled='true']) .inspera-control-indicator,
+.inspera-control[data-force-state='Hover'] .inspera-control-indicator {
+  border-color: var(--inspera-indicator-border-hover);
+  background: var(--inspera-indicator-bg-hover);
+}
+
+/* The real control is a visually hidden input, so the ring has to be drawn on
+   the indicator standing in for it. Without this, keyboard focus on a
+   checkbox, radio or toggle was invisible - the only thing the browser had to
+   ring was a 0x0 element. */
+.inspera-control:has(:focus-visible) .inspera-control-indicator,
+.inspera-control[data-force-state='Focused'] .inspera-control-indicator {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* A box or a dot dips under the pointer; a toggle track does not, so it opts
+   out with .inspera-control-track. */
+.inspera-control:active:not([data-disabled='true']) .inspera-control-indicator:not(.inspera-control-track),
+.inspera-control[data-force-state='Pressed'] .inspera-control-indicator:not(.inspera-control-track) {
+  transform: scale(0.92);
+}
+
+/* Toggle's thumb lifts under the pointer; the track carries the ring. The
+   resting shadow lives here so the hover rule can outrank it. */
+.inspera-control-thumb {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.inspera-control:hover:not([data-disabled='true']) .inspera-control-thumb,
+.inspera-control[data-force-state='Hover'] .inspera-control-thumb {
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* --- Rows and items that respond to the pointer -------------------------
+   The resting fill lives here too. A row is often a <button>, whose UA
+   background would otherwise show through, and setting `transparent` inline to
+   cover that would outrank the hover rule below - the same trap as Button. */
+
+.inspera-row {
+  background: var(--inspera-row-bg, transparent);
+}
+
+.inspera-row:hover:not([data-disabled='true']),
+.inspera-row[data-force-state='Hover'] {
+  background: var(--action-hover);
+}
+
+/* Per-row actions (DataGrid) stay out of the way until the row is hovered or
+   holds keyboard focus. They remain in the accessibility tree throughout, so a
+   keyboard user reaches them; only the resting opacity changes. */
+.inspera-row-actions {
+  opacity: 0;
+  transition: opacity var(--duration-fast) var(--easing-standard);
+}
+
+.inspera-row:hover .inspera-row-actions,
+.inspera-row:focus-within .inspera-row-actions,
+.inspera-row[data-force-state='Hover'] .inspera-row-actions {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .inspera-interactive {
+    transition: none;
+  }
+}

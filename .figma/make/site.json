@@ -1,0 +1,10 @@
+{
+  "description": "Access an interactive online component library showcasing defined components and their states, enhancing collaboration for AI mockup projects.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}

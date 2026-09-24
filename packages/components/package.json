@@ -1,0 +1,30 @@
+{
+  "name": "@inspera/components",
+  "version": "1.0.0",
+  "description": "Canonical Inspera Design System components and tokens for React.",
+  "type": "module",
+  "sideEffects": ["*.css"],
+  "files": ["dist", "tokens.css", "README.md"],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./tokens": {
+      "types": "./dist/tokens.d.ts",
+      "import": "./dist/tokens.js"
+    },
+    "./tokens.css": "./tokens.css"
+  },
+  "scripts": {
+    "build": "tsup"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
+  "devDependencies": {
+    "tsup": "^8.5.1",
+    "typescript": "^5.7.0"
+  }
+}

@@ -1,0 +1,101 @@
+import { type CSSProperties } from 'react'
+
+export type AlertIntent = 'Info' | 'Success' | 'Warning' | 'Error'
+export type AlertLayout = 'Simple' | 'With CTA' | 'With Close' | 'With CTA + Close'
+
+export interface AlertProps {
+  /** Short headline stating what happened. */
+  title?: string
+  /** Supporting detail. Keep it to one or two sentences. */
+  message?: string
+  /** Severity / color. */
+  intent?: AlertIntent
+  /** Action affordances. */
+  layout?: AlertLayout
+  /** Tinted fill vs. left-accent only. */
+  background?: boolean
+  /** Label for the inline action. Only rendered by the "With CTA" layouts. */
+  ctaLabel?: string
+  /** Fired when the inline action is activated. */
+  onCta?: () => void
+  /** Fired when the alert is dismissed. Only rendered by the "With Close" layouts. */
+  onClose?: () => void
+}
+
+const intentMap: Record<AlertIntent, { bg: string; fg: string; icon: string }> = {
+  Info: { bg: 'var(--info-surface)', fg: 'var(--info)', icon: 'info' },
+  Success: { bg: 'var(--success-surface)', fg: 'var(--success)', icon: 'check_circle' },
+  Warning: { bg: 'var(--warning-surface)', fg: 'var(--warning)', icon: 'warning' },
+  Error: { bg: 'var(--error-surface)', fg: 'var(--error)', icon: 'error' },
+}
+
+export default function Alert({
+  title = 'Heads up',
+  message = 'This is a contextual inline message that matches the intent severity.',
+  intent = 'Info',
+  layout = 'Simple',
+  background = true,
+  ctaLabel = 'View details',
+  onCta,
+  onClose,
+}: AlertProps) {
+  const c = intentMap[intent]
+  const hasCta = layout === 'With CTA' || layout === 'With CTA + Close'
+  const hasClose = layout === 'With Close' || layout === 'With CTA + Close'
+
+  const style: CSSProperties = {
+    display: 'flex',
+    alignItems: 'flex-start',
+    gap: 12,
+    width: '100%',
+    maxWidth: '100%',
+    padding: '12px 16px',
+    borderRadius: 'var(--radius-md)',
+    background: background ? c.bg : 'transparent',
+    borderStyle: 'solid',
+    borderColor: c.fg,
+    borderTopWidth: 1,
+    borderRightWidth: 1,
+    borderBottomWidth: 1,
+    borderLeftWidth: background ? 1 : 4,
+    color: 'var(--text-primary)',
+    fontFamily: 'var(--font-sans)',
+  }
+
+  // role="alert" already implies aria-live="assertive", so pairing it with
+  // "polite" asked the screen reader for two different things at once. The spec
+  // says important messages get role="alert" and non-critical ones a polite
+  // live region, so the severity decides which - rather than both at once.
+  const urgent = intent === 'Error' || intent === 'Warning'
+
+  return (
+    <div style={style} {...(urgent ? { role: 'alert' } : { role: 'status', 'aria-live': 'polite' as const })}>
+      <span className="material-symbols-outlined" style={{ fontSize: 20, color: c.fg, flexShrink: 0, marginTop: 1, fontVariationSettings: "'FILL' 1" }} aria-hidden>
+        {c.icon}
+      </span>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 2 }}>
+        <span style={{ fontSize: 16, fontWeight: 500 }}>{title}</span>
+        <span style={{ fontSize: 16, lineHeight: 1.4, color: 'var(--gray-700)' }}>{message}</span>
+        {hasCta && (
+          <button
+            type="button"
+            onClick={onCta}
+            style={{ alignSelf: 'flex-start', marginTop: 8, background: 'none', border: 'none', padding: 0, color: c.fg, fontWeight: 600, fontSize: 14, cursor: 'pointer', textDecoration: 'underline' }}
+          >
+            {ctaLabel}
+          </button>
+        )}
+      </div>
+      {hasClose && (
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Close alert"
+          style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', color: 'var(--action-active)', display: 'inline-flex' }}
+        >
+          <span className="material-symbols-outlined" style={{ fontSize: 20 }} aria-hidden>close</span>
+        </button>
+      )}
+    </div>
+  )
+}

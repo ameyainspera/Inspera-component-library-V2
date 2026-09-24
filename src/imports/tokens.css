@@ -1,0 +1,522 @@
+/* Inspera Design System - GENERATED FILE, DO NOT EDIT.
+   Source: src/data/tokens.ts. Regenerate with `pnpm generate`. */
+
+:root {
+  /* Brand */
+  --primary: #004080; /* Primary brand / interactive */
+
+  /* Semantic */
+  --error: #D32F2F;
+  --warning: #EF6C00;
+  --info: #0288D1;
+  --success: #2E7D32;
+
+  /* Brand accents */
+  --accent-zest: #FA5101;
+  --accent-berry: #89239A;
+  --accent-algae: #00A788;
+
+  /* Base */
+  --white: #ffffff;
+
+  /* Palette - gray */
+  --gray-100: #F7F7F7;
+  --gray-200: #EDEDED;
+  --gray-300: #D9D9D9;
+  --gray-400: #BCBCBC;
+  --gray-500: #949494;
+  --gray-600: #7A7A7A;
+  --gray-700: #595959;
+  --gray-800: #404040;
+  --gray-900: #272727;
+
+  /* Palette - blue */
+  --blue-100: #F0F7FF;
+  --blue-200: #DBEDFF;
+  --blue-300: #B3D9FF;
+  --blue-400: #7ABDFF;
+  --blue-500: #3399FF;
+  --blue-600: #007AF5;
+  --blue-700: #0059B3;
+  --blue-800: #004080;
+  --blue-900: #002E5C;
+
+  /* Palette - green */
+  --green-100: #F2FDF8;
+  --green-200: #E0FAEF;
+  --green-300: #BDF4DD;
+  --green-400: #8DECC5;
+  --green-500: #50E2A5;
+  --green-600: #1BA76D;
+  --green-700: #147B50;
+  --green-800: #106542;
+  --green-900: #0D4F33;
+
+  /* Palette - red */
+  --red-100: #FEF1F1;
+  --red-200: #FCDEDE;
+  --red-300: #F9B8B8;
+  --red-400: #F58484;
+  --red-500: #F04242;
+  --red-600: #E21212;
+  --red-700: #A50D0D;
+  --red-800: #760A0A;
+  --red-900: #550707;
+
+  /* Palette - yellow */
+  --yellow-100: #FFFCF0;
+  --yellow-200: #FFF8DC;
+  --yellow-300: #FEF0B3;
+  --yellow-400: #FEE67C;
+  --yellow-500: #FDD835;
+  --yellow-600: #F2C602;
+  --yellow-700: #B19102;
+  --yellow-800: #7E6701;
+  --yellow-900: #5B4A01;
+
+  /* Palette - orange */
+  --orange-100: #FFFAF0;
+  --orange-200: #FFF3DC;
+  --orange-300: #FEE5B3;
+  --orange-400: #FED27C;
+  --orange-500: #FDBA35;
+  --orange-600: #F2A202;
+  --orange-700: #D99102;
+  --orange-800: #7E5501;
+  --orange-900: #5B3D01;
+
+  /* Palette - purple */
+  --purple-100: #F6F4FB;
+  --purple-200: #E9E4F6;
+  --purple-300: #D0C6EC;
+  --purple-400: #9F88D7;
+  --purple-500: #8366CC;
+  --purple-600: #603DB8;
+  --purple-700: #462D86;
+  --purple-800: #322060;
+  --purple-900: #241745;
+
+  /* Palette - pink */
+  --pink-100: #FEF1F5;
+  --pink-200: #FCDFE8;
+  --pink-300: #F8B9CE;
+  --pink-400: #F386AB;
+  --pink-500: #ED457D;
+  --pink-600: #DF1659;
+  --pink-700: #A21041;
+  --pink-800: #740B2E;
+  --pink-900: #540821;
+
+  /* Interaction */
+  --primary-hover-overlay: rgba(0, 64, 128, 0.04); /* Primary tint on hover */
+  --primary-focus-ring: rgba(0, 64, 128, 0.3); /* Focus ring on primary controls */
+  --action-active: rgba(0, 0, 0, 0.56); /* Icon / control glyph */
+  --action-hover: rgba(0, 0, 0, 0.04); /* Neutral hover wash */
+  --action-focus: rgba(0, 0, 0, 0.12); /* Neutral focus wash */
+  --action-disabled: rgba(0, 0, 0, 0.38); /* Disabled foreground */
+
+  /* Text */
+  --text-primary: rgba(0, 0, 0, 0.87); /* Body and heading text */
+  --text-secondary: var(--gray-600); /* Supporting and helper text */
+  --text-disabled: var(--action-disabled); /* Disabled text */
+  --text-on-primary: #ffffff; /* Text on a primary-filled surface */
+
+  /* Status */
+  --info-surface: #E1F5FE;  /* Info Alert/Badge/Tag fill. Pending Figma verification */
+  --success-surface: #E8F5E9; /* Success fill. Pending Figma verification */
+  --warning-surface: #FFF3E0; /* Warning fill. Pending Figma verification */
+  --error-surface: #FFEBEE; /* Error fill. Pending Figma verification */
+
+  /* Controls */
+  --border-control: #C4C4C4;      /* Resting border on inputs, select, toggle track. Pending Figma verification */
+  --border-control-strong: #8C8C8C; /* Hover border; checkbox and radio resting border. Pending Figma verification */
+  --text-placeholder: #8C8C8C;    /* Placeholder text. Pending Figma verification */
+  --surface-disabled: #F5F5F5;    /* Disabled control fill. Pending Figma verification */
+  --surface-readonly: var(--gray-100); /* Read-only control fill */
+  --surface-neutral: #F0F0F0;     /* Neutral Badge/Tag fill. Pending Figma verification */
+  --avatar-surface: #E0E0E0;      /* Avatar fallback fill. Pending Figma verification */
+
+  /* Surface */
+  --background: var(--gray-100); /* App canvas */
+  --surface: var(--white);     /* Raised surface (cards, panels, inputs) */
+  --surface-sunken: var(--gray-100); /* Recessed surface (wells, read-only fields) */
+  --border: var(--gray-200);   /* Hairline separator */
+  --border-strong: var(--gray-300); /* Control outline */
+  --border-interactive: var(--gray-500); /* Control outline on hover */
+  --muted-foreground: var(--gray-600); /* De-emphasised label text */
+
+  /* Spacing */
+  --space-0: 0px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* Radius */
+  --radius-none: 0px;
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-pill: 9999px;
+
+  /* Elevation */
+  --shadow-100: 0px 4px 4px rgba(39, 39, 39, 0.08), 0px 2px 4px rgba(39, 39, 39, 0.12);
+  --shadow-200: 0px 8px 8px rgba(39, 39, 39, 0.08), 0px 4px 6px rgba(39, 39, 39, 0.12);
+  --shadow-300: 0px 8px 16px rgba(39, 39, 39, 0.08), 0px 6px 8px rgba(39, 39, 39, 0.12);
+  --shadow-400: 0px 8px 24px rgba(39, 39, 39, 0.08), 0px 6px 12px rgba(39, 39, 39, 0.12);
+  --shadow-500: 0px 10px 32px rgba(39, 39, 39, 0.1), 0px 6px 14px rgba(39, 39, 39, 0.12);
+  --shadow-600: 0px 12px 42px rgba(39, 39, 39, 0.12), 0px 8px 18px rgba(39, 39, 39, 0.12);
+
+  /* Effects */
+  --effect-state-focus: 0px 0px 0px 3px var(--blue-300); /* Standard input focus ring */
+  --effect-state-focus-standalone: 0px 0px 0px 3px var(--blue-600); /* High-contrast standalone focus */
+  --effect-state-error: 0px 0px 0px 3px var(--red-300); /* Error ring */
+  --effect-state-hover-light: 0px 0px 0px 3px var(--gray-500); /* Hover outline */
+  --effect-state-focus-on-dark: 0px 0px 0px 3px var(--green-300); /* Focus ring on a dark container */
+  --effect-button-shadow: inset 0px -1px 0px rgba(0, 0, 0, 0.2), 0px 1px 0px rgba(0, 0, 0, 0.08); /* Standard button elevation highlight */
+  --effect-link-underline-dark: inset 0px -1px 0px var(--gray-700); /* Link underline on light ground */
+  --effect-link-underline-blue: inset 0px -1px 0px var(--blue-800); /* Primary link underline */
+  --effect-link-underline-light: inset 0px -1px 0px var(--white); /* Link underline on dark ground */
+  --effect-invert-hack: inset 1000px 0px 0px var(--white); /* Overrides the browser autofill background on inputs */
+
+  /* Border width */
+  --border-width-default: 1px;
+  --border-width-strong: 2px;
+
+  /* Focus ring */
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
+  --focus-ring-color: var(--primary);
+
+  /* Motion - duration */
+  --duration-instant: 0ms;   /* No transition */
+  --duration-fast: 100ms;    /* Hover and focus */
+  --duration-normal: 200ms;  /* Menus, popovers */
+  --duration-slow: 300ms;    /* Dialogs, drawers */
+
+  /* Motion - easing */
+  --easing-standard: cubic-bezier(0.2, 0, 0, 1); /* Default */
+  --easing-enter: cubic-bezier(0, 0, 0.2, 1); /* Entering the screen */
+  --easing-exit: cubic-bezier(0.4, 0, 1, 1); /* Leaving the screen */
+
+  /* Layering */
+  --z-base: 0;
+  --z-sticky: 100;     /* Sticky headers and toolbars */
+  --z-dropdown: 300;   /* Select and Menu panels */
+  --z-popover: 400;
+  --z-overlay: 500;    /* Dialog and Drawer scrim */
+  --z-modal: 600;      /* Dialog and Drawer surface */
+  --z-toast: 700;      /* Snackbar */
+  --z-tooltip: 800;
+
+  /* Breakpoints */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1440px;
+
+  /* Typography - family */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif; /* All UI text */
+  --font-mono: 'Noto Sans Mono', ui-monospace, SFMono-Regular, monospace; /* Code, identifiers, token values */
+  --font-serif: 'Noto Serif', Georgia, serif; /* Long-form or editorial content */
+
+  /* Typography - scale */
+  --default-16-regular-size: 16px;
+  --default-16-regular-weight: 400;
+  --default-16-regular-line-height: 1.25;
+  --default-16-medium-size: 16px;
+  --default-16-medium-weight: 500;
+  --default-16-medium-line-height: 1.25;
+  --link-16-size: 16px;
+  --link-16-weight: 500;
+  --link-16-line-height: 1.25;
+  --regular-14-size: 14px;
+  --regular-14-weight: 400;
+  --regular-14-line-height: 1.4;
+  --regular-18-size: 18px;
+  --regular-18-weight: 400;
+  --regular-18-line-height: 1.4;
+  --regular-20-size: 20px;
+  --regular-20-weight: 400;
+  --regular-20-line-height: 1.4;
+  --regular-22-size: 22px;
+  --regular-22-weight: 400;
+  --regular-22-line-height: 1.4;
+  --regular-26-size: 26px;
+  --regular-26-weight: 400;
+  --regular-26-line-height: 1.4;
+  --medium-14-size: 14px;
+  --medium-14-weight: 500;
+  --medium-14-line-height: 1.4;
+  --medium-18-size: 18px;
+  --medium-18-weight: 500;
+  --medium-18-line-height: 1.4;
+  --medium-20-size: 20px;
+  --medium-20-weight: 500;
+  --medium-20-line-height: 1.4;
+  --medium-22-size: 22px;
+  --medium-22-weight: 500;
+  --medium-22-line-height: 1.4;
+  --medium-26-size: 26px;
+  --medium-26-weight: 500;
+  --medium-26-line-height: 1.4;
+  --h1-size: 28.83px;
+  --h1-weight: 600;
+  --h1-line-height: 1.12;
+  --h2-size: 22.78px;
+  --h2-weight: 500;
+  --h2-line-height: 1.12;
+  --h3-size: 20.25px;
+  --h3-weight: 500;
+  --h3-line-height: 1.12;
+  --h4-size: 18px;
+  --h4-weight: 500;
+  --h4-line-height: 1.12;
+  --h5-size: 16px;
+  --h5-weight: 500;
+  --h5-line-height: 1.12;
+  --h6-size: 12px;
+  --h6-weight: 500;
+  --h6-line-height: 1.12;
+  --h6-tracking: 1.6px;
+  --semibold-16-size: 16px;
+  --semibold-16-weight: 600;
+  --semibold-16-line-height: 1.25;
+  --allcaps-12-size: 12px;
+  --allcaps-12-weight: 600;
+  --allcaps-12-line-height: 1.12;
+  --allcaps-12-tracking: 1.6px;
+  --paragraph-default-size: 16px;
+  --paragraph-default-weight: 400;
+  --paragraph-default-line-height: 1.5;
+  --paragraph-content-size: 16px;
+  --paragraph-content-weight: 400;
+  --paragraph-content-line-height: 1.5;
+  --paragraph-captions-size: 12px;
+  --paragraph-captions-weight: 400;
+  --paragraph-captions-line-height: 1.2;
+  --paragraph-heading-size: 20.25px;
+  --paragraph-heading-weight: 500;
+  --paragraph-heading-line-height: 1.12;
+  --mono-16-size: 16px;
+  --mono-16-weight: 400;
+  --mono-16-line-height: 1.5;
+  --serif-16-size: 16px;
+  --serif-16-weight: 400;
+  --serif-16-line-height: 1.5;
+  --documentation-size: 14px;
+  --documentation-weight: 300;
+  --documentation-line-height: 1.4;
+}
+
+/* Type styles - one class per Figma style (28 total). */
+
+.inspera-default-16-regular {
+  font-family: var(--font-sans);
+  font-size: var(--default-16-regular-size);
+  font-weight: var(--default-16-regular-weight);
+  line-height: var(--default-16-regular-line-height);
+}
+
+.inspera-default-16-medium {
+  font-family: var(--font-sans);
+  font-size: var(--default-16-medium-size);
+  font-weight: var(--default-16-medium-weight);
+  line-height: var(--default-16-medium-line-height);
+}
+
+.inspera-link-16 {
+  font-family: var(--font-sans);
+  font-size: var(--link-16-size);
+  font-weight: var(--link-16-weight);
+  line-height: var(--link-16-line-height);
+  text-decoration: underline;
+}
+
+.inspera-regular-14 {
+  font-family: var(--font-sans);
+  font-size: var(--regular-14-size);
+  font-weight: var(--regular-14-weight);
+  line-height: var(--regular-14-line-height);
+}
+
+.inspera-regular-18 {
+  font-family: var(--font-sans);
+  font-size: var(--regular-18-size);
+  font-weight: var(--regular-18-weight);
+  line-height: var(--regular-18-line-height);
+}
+
+.inspera-regular-20 {
+  font-family: var(--font-sans);
+  font-size: var(--regular-20-size);
+  font-weight: var(--regular-20-weight);
+  line-height: var(--regular-20-line-height);
+}
+
+.inspera-regular-22 {
+  font-family: var(--font-sans);
+  font-size: var(--regular-22-size);
+  font-weight: var(--regular-22-weight);
+  line-height: var(--regular-22-line-height);
+}
+
+.inspera-regular-26 {
+  font-family: var(--font-sans);
+  font-size: var(--regular-26-size);
+  font-weight: var(--regular-26-weight);
+  line-height: var(--regular-26-line-height);
+}
+
+.inspera-medium-14 {
+  font-family: var(--font-sans);
+  font-size: var(--medium-14-size);
+  font-weight: var(--medium-14-weight);
+  line-height: var(--medium-14-line-height);
+}
+
+.inspera-medium-18 {
+  font-family: var(--font-sans);
+  font-size: var(--medium-18-size);
+  font-weight: var(--medium-18-weight);
+  line-height: var(--medium-18-line-height);
+}
+
+.inspera-medium-20 {
+  font-family: var(--font-sans);
+  font-size: var(--medium-20-size);
+  font-weight: var(--medium-20-weight);
+  line-height: var(--medium-20-line-height);
+}
+
+.inspera-medium-22 {
+  font-family: var(--font-sans);
+  font-size: var(--medium-22-size);
+  font-weight: var(--medium-22-weight);
+  line-height: var(--medium-22-line-height);
+}
+
+.inspera-medium-26 {
+  font-family: var(--font-sans);
+  font-size: var(--medium-26-size);
+  font-weight: var(--medium-26-weight);
+  line-height: var(--medium-26-line-height);
+}
+
+.inspera-h1 {
+  font-family: var(--font-sans);
+  font-size: var(--h1-size);
+  font-weight: var(--h1-weight);
+  line-height: var(--h1-line-height);
+}
+
+.inspera-h2 {
+  font-family: var(--font-sans);
+  font-size: var(--h2-size);
+  font-weight: var(--h2-weight);
+  line-height: var(--h2-line-height);
+}
+
+.inspera-h3 {
+  font-family: var(--font-sans);
+  font-size: var(--h3-size);
+  font-weight: var(--h3-weight);
+  line-height: var(--h3-line-height);
+}
+
+.inspera-h4 {
+  font-family: var(--font-sans);
+  font-size: var(--h4-size);
+  font-weight: var(--h4-weight);
+  line-height: var(--h4-line-height);
+}
+
+.inspera-h5 {
+  font-family: var(--font-sans);
+  font-size: var(--h5-size);
+  font-weight: var(--h5-weight);
+  line-height: var(--h5-line-height);
+}
+
+.inspera-h6 {
+  font-family: var(--font-sans);
+  font-size: var(--h6-size);
+  font-weight: var(--h6-weight);
+  line-height: var(--h6-line-height);
+  letter-spacing: var(--h6-tracking);
+  text-transform: uppercase;
+}
+
+.inspera-semibold-16 {
+  font-family: var(--font-sans);
+  font-size: var(--semibold-16-size);
+  font-weight: var(--semibold-16-weight);
+  line-height: var(--semibold-16-line-height);
+}
+
+.inspera-allcaps-12 {
+  font-family: var(--font-sans);
+  font-size: var(--allcaps-12-size);
+  font-weight: var(--allcaps-12-weight);
+  line-height: var(--allcaps-12-line-height);
+  letter-spacing: var(--allcaps-12-tracking);
+  text-transform: uppercase;
+}
+
+.inspera-paragraph-default {
+  font-family: var(--font-sans);
+  font-size: var(--paragraph-default-size);
+  font-weight: var(--paragraph-default-weight);
+  line-height: var(--paragraph-default-line-height);
+}
+
+.inspera-paragraph-content {
+  font-family: var(--font-sans);
+  font-size: var(--paragraph-content-size);
+  font-weight: var(--paragraph-content-weight);
+  line-height: var(--paragraph-content-line-height);
+}
+
+.inspera-paragraph-captions {
+  font-family: var(--font-sans);
+  font-size: var(--paragraph-captions-size);
+  font-weight: var(--paragraph-captions-weight);
+  line-height: var(--paragraph-captions-line-height);
+}
+
+.inspera-paragraph-heading {
+  font-family: var(--font-sans);
+  font-size: var(--paragraph-heading-size);
+  font-weight: var(--paragraph-heading-weight);
+  line-height: var(--paragraph-heading-line-height);
+}
+
+.inspera-mono-16 {
+  font-family: var(--font-mono);
+  font-size: var(--mono-16-size);
+  font-weight: var(--mono-16-weight);
+  line-height: var(--mono-16-line-height);
+}
+
+.inspera-serif-16 {
+  font-family: var(--font-serif);
+  font-size: var(--serif-16-size);
+  font-weight: var(--serif-16-weight);
+  line-height: var(--serif-16-line-height);
+}
+
+.inspera-documentation {
+  font-family: var(--font-sans);
+  font-size: var(--documentation-size);
+  font-weight: var(--documentation-weight);
+  line-height: var(--documentation-line-height);
+}

@@ -1,0 +1,79 @@
+/* Font imports must precede all other CSS statements (including the Tailwind
+   import, which Lightning CSS inlines into real rules). Placed after it, these
+   @import rules are invalid and get dropped - which silently breaks the fonts. */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-25..200&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-25..200&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-25..200&display=swap');
+@import 'tailwindcss';
+
+/* Generated from src/data/tokens.ts by `pnpm generate` - every Inspera token
+   as a CSS custom property. Consumers of the npm package or the Figma Make kit
+   get exactly this block, plus runtime.css, in their single stylesheet. */
+@import './imports/tokens.css';
+
+/* Icon helper classes + component keyframes. Shipped verbatim to consumers. */
+@import './imports/runtime.css';
+
+/* ---------------------------------------------------------------------------
+   Reference-site chrome only - not part of the distributed design system.
+   --------------------------------------------------------------------------- */
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  color: var(--text-primary);
+  background-color: var(--background);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Form controls do not inherit the document font. Without this every <button>
+   in the docs chrome falls back to the UA system font instead of Inter. */
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 8px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+/* Scrollbars: hidden until scroll (aesthetic craft rule 11) */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+*:hover {
+  scrollbar-color: var(--gray-300) transparent;
+}
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 9999px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+*:hover::-webkit-scrollbar-thumb {
+  background: var(--gray-300);
+  background-clip: content-box;
+}

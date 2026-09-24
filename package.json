@@ -1,0 +1,49 @@
+{
+  "name": "figma-make-app",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "packageManager": "pnpm@10.34.3",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview",
+    "generate": "tsx scripts/build-portable.ts",
+    "verify:generated": "bash scripts/verify-generated.sh",
+    "typecheck": "tsc --noEmit",
+    "audit:layout": "tsx scripts/audit-gallery.ts",
+    "audit:search": "tsx scripts/audit-search.ts",
+    "audit:recipes": "tsx scripts/audit-recipes.ts",
+    "audit:snippets": "tsx scripts/audit-snippets.ts",
+    "audit:ascii": "tsx scripts/audit-ascii.ts",
+    "audit:spec": "tsx scripts/audit-spec-standalone.ts",
+    "test:visual": "tsx scripts/test-visual.ts",
+    "test:visual:update": "tsx scripts/test-visual.ts --update",
+    "test:a11y": "tsx scripts/test-a11y.ts",
+    "test": "pnpm test:a11y && pnpm test:visual",
+    "build:pkg": "cd packages/components && tsup",
+    "format": "oxfmt"
+  },
+  "dependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.0.0",
+    "@types/node": "^22.0.0",
+    "@types/pngjs": "^6.0.5",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^6.0.0",
+    "axe-core": "^4.10.2",
+    "oxfmt": "^0.2.0",
+    "pixelmatch": "^6.0.0",
+    "playwright-core": "^1.62.1",
+    "pngjs": "^7.0.0",
+    "tailwindcss": "^4.0.0",
+    "tsup": "^8.5.1",
+    "tsx": "^4.23.12",
+    "typescript": "^5.7.0",
+    "vite": "^8.0.0"
+  }
+}

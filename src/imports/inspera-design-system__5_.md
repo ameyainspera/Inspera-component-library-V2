@@ -1,0 +1,8216 @@
+# Inspera Design System - complete AI build guide
+
+> Version 1.0.0. Everything needed to generate on-brand Inspera UI, in one
+> document: the foundations, then all 42 components with
+> their real prop APIs.
+>
+> This is the full text, sized for an uploaded context file. A tool that
+> re-sends its context on every message should use llms.txt instead, which
+> links a spec per component.
+>
+> Some foundational values are not yet confirmed against Figma. See Foundations
+> -> Value status for which ones, and use them exactly as written.
+
+> **`@inspera/components` is NOT published.** The package builds from this repo, but the @inspera scope is unclaimed, so `npm i @inspera/components` currently fails with a 404.
+> Do not tell anyone to install it, and do not assume it resolves.
+>
+> Use the portable spec below - llms.txt and the per-component files. Once a registry is chosen the package becomes the strictest option, but it will need authentication, which most AI builders cannot do.
+
+Follow the definitions in this document verbatim. Import paths shown per
+component (`import { Button } from '@inspera/components'`) are the
+canonical names for when the package ships - today, implement the component
+from its spec instead.
+
+## Rules
+
+1. Do not invent design decisions. Never invent a colour, spacing value, radius, shadow, font size, weight, icon library, focus style, breakpoint, or component variant that this document defines.
+2. Use a canonical component before building a lookalike. If one exists for the job, use it.
+3. Never emit an import from a design system package you have not confirmed is installed in the target project. If the import cannot resolve, do not substitute another UI library - build the component from the HTML and CSS under "Without the package".
+4. Never rename a canonical component or prop. A deprecated alias may be understood as input, but output must use the canonical name.
+5. Consume tokens, not literals. Raw values here define what a token resolves to; application code references `var(--token)`.
+6. Do not introduce another design system. No Material UI, Bootstrap, Ant, Chakra, shadcn default styling, Tailwind default palette, or Radix Themes look. Headless behaviour libraries are fine if restyled entirely to this spec.
+7. No arbitrary Tailwind values where a token exists. Never `bg-[#004080]` - use the token.
+8. Inter for product UI. Noto Sans Mono only for code, identifiers and technical values; Noto Serif only for long-form content.
+9. Material Symbols Outlined only. Do not mix in Lucide, Heroicons, or Font Awesome.
+10. Accessibility is part of the component contract, not an enhancement. Keyboard operation, visible focus, labels, roles, names, and states are required.
+11. Never use colour alone to carry meaning. Pair it with text, an icon, or shape.
+12. Respect `prefers-reduced-motion: reduce` - drop non-essential motion.
+13. Compose rather than invent. If a pattern is not a canonical component, build it from canonical components using the patterns below.
+14. Do not silently add a component. If the system genuinely cannot express something, emit `DESIGN_SYSTEM_GAP` in your output and use the closest documented composition.
+15. No decoration that competes with hierarchy: no gradients, glassmorphism, oversized radii, decorative shadows, or animated backgrounds.
+
+**Prop names are camelCase and case-sensitive** (`intent`, not `Intent`). React
+silently ignores an unknown prop, so a capitalised name renders the default
+variant with no error at all. Variant *values* are Capitalised
+(`intent="Primary"`, `size="Medium"`).
+
+**When two instructions conflict**, this order wins:
+
+1. Accessibility and safety requirements
+2. The rules above
+3. Token definitions
+4. Canonical component specifications
+5. Composition patterns
+6. Product requirements supplied with the task
+7. Examples
+
+**When the spec does not answer your question:**
+
+- Reuse the nearest canonical component or composition.
+- Reuse an existing token.
+- Preserve the established density and hierarchy.
+- Do not infer a brand colour or visual style from framework defaults.
+- Mark a genuinely missing primitive `DESIGN_SYSTEM_GAP` rather than presenting it as canonical.
+
+## Setup
+
+Paste these three blocks once, at the root of the project, before using any
+component below. Without them the components inherit the host tool's fonts and
+every icon renders as its own name.
+
+**1. Fonts.** `'Inter'` (all ui text), `'Noto Sans Mono'` (code, identifiers, token values), `'Noto Serif'` (long-form or editorial content).
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+Mono:wght@400;500&family=Noto+Serif:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+```
+
+**2. The icon class.** Every component that shows an icon writes
+`<span class="material-symbols-outlined">icon_name</span>`. That class needs
+this rule, or the span shows the literal text instead of the glyph. Icon names
+are lowercase with underscores (`arrow_forward`, `more_vert`); the full set is
+at fonts.google.com/icons, Outlined style only.
+
+```css
+.material-symbols-outlined {
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  user-select: none;
+  font-family: 'Material Symbols Outlined';
+}
+```
+
+**3. The tokens.** Every value in this document resolves through one of these.
+Component sections below repeat the subset each one needs, so pasting this block
+makes those repeats redundant - either is fine, this one covers everything
+including the spacing and type scales that the component blocks do not carry.
+
+```css
+:root {
+  /* Brand */
+  --primary: #004080; /* Primary brand / interactive */
+  --secondary: #322060; /* Secondary brand, used sparingly */
+
+  /* Semantic */
+  --error: #D32F2F;
+  --warning: #EF6C00;
+  --info: #0288D1;
+  --success: #2E7D32;
+
+  /* Brand accents */
+  --accent-zest: #FA5101;
+  --accent-berry: #89239A;
+  --accent-algae: #00A788;
+
+  /* Base */
+  --white: #ffffff;
+
+  /* Palette - gray */
+  --gray-100: #F7F7F7;
+  --gray-200: #EDEDED;
+  --gray-300: #D9D9D9;
+  --gray-400: #BCBCBC;
+  --gray-500: #949494;
+  --gray-600: #7A7A7A;
+  --gray-700: #595959;
+  --gray-800: #404040;
+  --gray-900: #272727;
+
+  /* Palette - blue */
+  --blue-100: #F0F7FF;
+  --blue-200: #DBEDFF;
+  --blue-300: #B3D9FF;
+  --blue-400: #7ABDFF;
+  --blue-500: #3399FF;
+  --blue-600: #007AF5;
+  --blue-700: #0059B3;
+  --blue-800: #004080;
+  --blue-900: #002E5C;
+
+  /* Palette - green */
+  --green-100: #F2FDF8;
+  --green-200: #E0FAEF;
+  --green-300: #BDF4DD;
+  --green-400: #8DECC5;
+  --green-500: #50E2A5;
+  --green-600: #1BA76D;
+  --green-700: #147B50;
+  --green-800: #106542;
+  --green-900: #0D4F33;
+
+  /* Palette - red */
+  --red-100: #FEF1F1;
+  --red-200: #FCDEDE;
+  --red-300: #F9B8B8;
+  --red-400: #F58484;
+  --red-500: #F04242;
+  --red-600: #E21212;
+  --red-700: #A50D0D;
+  --red-800: #760A0A;
+  --red-900: #550707;
+
+  /* Palette - yellow */
+  --yellow-100: #FFFCF0;
+  --yellow-200: #FFF8DC;
+  --yellow-300: #FEF0B3;
+  --yellow-400: #FEE67C;
+  --yellow-500: #FDD835;
+  --yellow-600: #F2C602;
+  --yellow-700: #B19102;
+  --yellow-800: #7E6701;
+  --yellow-900: #5B4A01;
+
+  /* Palette - orange */
+  --orange-100: #FFFAF0;
+  --orange-200: #FFF3DC;
+  --orange-300: #FEE5B3;
+  --orange-400: #FED27C;
+  --orange-500: #FDBA35;
+  --orange-600: #F2A202;
+  --orange-700: #D99102;
+  --orange-800: #7E5501;
+  --orange-900: #5B3D01;
+
+  /* Palette - purple */
+  --purple-100: #F6F4FB;
+  --purple-200: #E9E4F6;
+  --purple-300: #D0C6EC;
+  --purple-400: #9F88D7;
+  --purple-500: #8366CC;
+  --purple-600: #603DB8;
+  --purple-700: #462D86;
+  --purple-800: #322060;
+  --purple-900: #241745;
+
+  /* Palette - pink */
+  --pink-100: #FEF1F5;
+  --pink-200: #FCDFE8;
+  --pink-300: #F8B9CE;
+  --pink-400: #F386AB;
+  --pink-500: #ED457D;
+  --pink-600: #DF1659;
+  --pink-700: #A21041;
+  --pink-800: #740B2E;
+  --pink-900: #540821;
+
+  /* Interaction */
+  --primary-hover-overlay: rgba(0, 64, 128, 0.04); /* Primary tint on hover */
+  --primary-focus-ring: rgba(0, 64, 128, 0.3); /* Focus ring on primary controls */
+  --action-active: rgba(0, 0, 0, 0.56); /* Icon / control glyph */
+  --action-hover: rgba(0, 0, 0, 0.04); /* Neutral hover wash */
+  --action-focus: rgba(0, 0, 0, 0.12); /* Neutral focus wash */
+  --action-disabled: rgba(0, 0, 0, 0.38); /* Disabled foreground */
+
+  /* Text */
+  --text-primary: rgba(0, 0, 0, 0.87); /* Body and heading text */
+  --text-secondary: var(--gray-600); /* Supporting and helper text */
+  --text-disabled: var(--action-disabled); /* Disabled text */
+  --text-on-primary: #ffffff; /* Text on a primary-filled surface */
+
+  /* Status */
+  --info-surface: #E1F5FE;  /* Info Alert/Badge/Tag fill. Pending Figma verification */
+  --success-surface: #E8F5E9; /* Success fill. Pending Figma verification */
+  --warning-surface: #FFF3E0; /* Warning fill. Pending Figma verification */
+  --error-surface: #FFEBEE; /* Error fill. Pending Figma verification */
+
+  /* Controls */
+  --border-control: #C4C4C4;      /* Resting border on inputs, select, toggle track. Pending Figma verification */
+  --border-control-strong: #8C8C8C; /* Hover border; checkbox and radio resting border. Pending Figma verification */
+  --text-placeholder: #8C8C8C;    /* Placeholder text. Pending Figma verification */
+  --surface-disabled: #F5F5F5;    /* Disabled control fill. Pending Figma verification */
+  --surface-readonly: var(--gray-100); /* Read-only control fill */
+  --surface-neutral: #F0F0F0;     /* Neutral Badge/Tag fill. Pending Figma verification */
+  --avatar-surface: #E0E0E0;      /* Avatar fallback fill. Pending Figma verification */
+
+  /* Surface */
+  --background: var(--gray-100); /* App canvas */
+  --surface: var(--white);     /* Raised surface (cards, panels, inputs) */
+  --surface-sunken: var(--gray-100); /* Recessed surface (wells, read-only fields) */
+  --border: var(--gray-200);   /* Hairline separator */
+  --border-strong: var(--gray-300); /* Control outline */
+  --border-interactive: var(--gray-500); /* Control outline on hover */
+  --muted-foreground: var(--gray-600); /* De-emphasised label text */
+
+  /* Spacing */
+  --space-0: 0px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* Radius */
+  --radius-none: 0px;
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-pill: 9999px;
+
+  /* Elevation */
+  --shadow-100: 0px 4px 4px rgba(39, 39, 39, 0.08), 0px 2px 4px rgba(39, 39, 39, 0.12);
+  --shadow-200: 0px 8px 8px rgba(39, 39, 39, 0.08), 0px 4px 6px rgba(39, 39, 39, 0.12);
+  --shadow-300: 0px 8px 16px rgba(39, 39, 39, 0.08), 0px 6px 8px rgba(39, 39, 39, 0.12);
+  --shadow-400: 0px 8px 24px rgba(39, 39, 39, 0.08), 0px 6px 12px rgba(39, 39, 39, 0.12);
+  --shadow-500: 0px 10px 32px rgba(39, 39, 39, 0.1), 0px 6px 14px rgba(39, 39, 39, 0.12);
+  --shadow-600: 0px 12px 42px rgba(39, 39, 39, 0.12), 0px 8px 18px rgba(39, 39, 39, 0.12);
+
+  /* Effects */
+  --effect-state-focus: 0px 0px 0px 3px var(--blue-300); /* Standard input focus ring */
+  --effect-state-focus-standalone: 0px 0px 0px 3px var(--blue-600); /* High-contrast standalone focus */
+  --effect-state-error: 0px 0px 0px 3px var(--red-300); /* Error ring */
+  --effect-state-hover-light: 0px 0px 0px 3px var(--gray-500); /* Hover outline */
+  --effect-state-focus-on-dark: 0px 0px 0px 3px var(--green-300); /* Focus ring on a dark container */
+  --effect-button-shadow: inset 0px -1px 0px rgba(0, 0, 0, 0.2), 0px 1px 0px rgba(0, 0, 0, 0.08); /* Standard button elevation highlight */
+  --effect-link-underline-dark: inset 0px -1px 0px var(--gray-700); /* Link underline on light ground */
+  --effect-link-underline-blue: inset 0px -1px 0px var(--blue-800); /* Primary link underline */
+  --effect-link-underline-light: inset 0px -1px 0px var(--white); /* Link underline on dark ground */
+  --effect-invert-hack: inset 1000px 0px 0px var(--white); /* Overrides the browser autofill background on inputs */
+
+  /* Border width */
+  --border-width-default: 1px;
+  --border-width-strong: 2px;
+
+  /* Focus ring */
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
+  --focus-ring-color: var(--primary);
+
+  /* Motion - duration */
+  --duration-instant: 0ms;   /* No transition */
+  --duration-fast: 100ms;    /* Hover and focus */
+  --duration-normal: 200ms;  /* Menus, popovers */
+  --duration-slow: 300ms;    /* Dialogs, drawers */
+
+  /* Motion - easing */
+  --easing-standard: cubic-bezier(0.2, 0, 0, 1); /* Default */
+  --easing-enter: cubic-bezier(0, 0, 0.2, 1); /* Entering the screen */
+  --easing-exit: cubic-bezier(0.4, 0, 1, 1); /* Leaving the screen */
+
+  /* Layering */
+  --z-base: 0;
+  --z-sticky: 100;     /* Sticky headers and toolbars */
+  --z-dropdown: 300;   /* Select and Menu panels */
+  --z-popover: 400;
+  --z-overlay: 500;    /* Dialog and Drawer scrim */
+  --z-modal: 600;      /* Dialog and Drawer surface */
+  --z-toast: 700;      /* Snackbar */
+  --z-tooltip: 800;
+
+  /* Breakpoints */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1440px;
+
+  /* Typography - family */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif; /* All UI text */
+  --font-mono: 'Noto Sans Mono', ui-monospace, SFMono-Regular, monospace; /* Code, identifiers, token values */
+  --font-serif: 'Noto Serif', Georgia, serif; /* Long-form or editorial content */
+
+  /* Typography - scale */
+  --default-16-regular-size: 16px;
+  --default-16-regular-weight: 400;
+  --default-16-regular-line-height: 1.25;
+  --default-16-medium-size: 16px;
+  --default-16-medium-weight: 500;
+  --default-16-medium-line-height: 1.25;
+  --link-16-size: 16px;
+  --link-16-weight: 500;
+  --link-16-line-height: 1.25;
+  --regular-14-size: 14px;
+  --regular-14-weight: 400;
+  --regular-14-line-height: 1.4;
+  --regular-18-size: 18px;
+  --regular-18-weight: 400;
+  --regular-18-line-height: 1.4;
+  --regular-20-size: 20px;
+  --regular-20-weight: 400;
+  --regular-20-line-height: 1.4;
+  --regular-22-size: 22px;
+  --regular-22-weight: 400;
+  --regular-22-line-height: 1.4;
+  --regular-26-size: 26px;
+  --regular-26-weight: 400;
+  --regular-26-line-height: 1.4;
+  --medium-14-size: 14px;
+  --medium-14-weight: 500;
+  --medium-14-line-height: 1.4;
+  --medium-18-size: 18px;
+  --medium-18-weight: 500;
+  --medium-18-line-height: 1.4;
+  --medium-20-size: 20px;
+  --medium-20-weight: 500;
+  --medium-20-line-height: 1.4;
+  --medium-22-size: 22px;
+  --medium-22-weight: 500;
+  --medium-22-line-height: 1.4;
+  --medium-26-size: 26px;
+  --medium-26-weight: 500;
+  --medium-26-line-height: 1.4;
+  --h1-size: 28.83px;
+  --h1-weight: 600;
+  --h1-line-height: 1.12;
+  --h2-size: 22.78px;
+  --h2-weight: 500;
+  --h2-line-height: 1.12;
+  --h3-size: 20.25px;
+  --h3-weight: 500;
+  --h3-line-height: 1.12;
+  --h4-size: 18px;
+  --h4-weight: 500;
+  --h4-line-height: 1.12;
+  --h5-size: 16px;
+  --h5-weight: 500;
+  --h5-line-height: 1.12;
+  --h6-size: 12px;
+  --h6-weight: 500;
+  --h6-line-height: 1.12;
+  --h6-tracking: 1.6px;
+  --semibold-16-size: 16px;
+  --semibold-16-weight: 600;
+  --semibold-16-line-height: 1.25;
+  --allcaps-12-size: 12px;
+  --allcaps-12-weight: 600;
+  --allcaps-12-line-height: 1.12;
+  --allcaps-12-tracking: 1.6px;
+  --paragraph-default-size: 16px;
+  --paragraph-default-weight: 400;
+  --paragraph-default-line-height: 1.5;
+  --paragraph-content-size: 16px;
+  --paragraph-content-weight: 400;
+  --paragraph-content-line-height: 1.5;
+  --paragraph-captions-size: 12px;
+  --paragraph-captions-weight: 400;
+  --paragraph-captions-line-height: 1.2;
+  --paragraph-heading-size: 20.25px;
+  --paragraph-heading-weight: 500;
+  --paragraph-heading-line-height: 1.12;
+  --mono-16-size: 16px;
+  --mono-16-weight: 400;
+  --mono-16-line-height: 1.5;
+  --serif-16-size: 16px;
+  --serif-16-weight: 400;
+  --serif-16-line-height: 1.5;
+  --documentation-size: 14px;
+  --documentation-weight: 300;
+  --documentation-line-height: 1.4;
+}
+
+```
+
+
+## Foundations
+
+Every value below is a CSS custom property, declared in the `:root` block under
+Setup. Paste that block once, then reference tokens as `var(--primary)`,
+`var(--space-4)`, `var(--radius-md)`. Never hardcode a colour that is not in
+this list.
+
+### Value status
+
+Read this before treating a value as final.
+
+**Verified** - exported from the Figma library and safe to treat as canonical:
+the full colour palette, the brand and semantic colours, every font size, the
+weights named in the style names, and the spacing, radius and elevation scales.
+
+**Pending Figma verification** - these ship today but have not been read back from the
+Figma style panel. Figma's CSS export carries font-size only for a text style
+and drops the spread from a shadow, so line height, letter spacing, a few
+weights and every ring spread are taken from the V3 spec or from what the
+components already render.
+
+- **10 role colours** - `--info-surface`, `--success-surface`, `--warning-surface`, `--error-surface`, `--border-control`, `--border-control-strong`, `--text-placeholder`, `--surface-disabled`, `--surface-neutral`, `--avatar-surface`
+- **18 type styles** - `Default/Link 16 px` (weight, lineHeight); `Regular/14 px/Regular` (lineHeight); `Regular/18 px/Regular` (lineHeight); `Regular/20 px/Regular` (lineHeight); `Regular/22 px/Regular` (lineHeight); `Regular/26 px/Regular` (lineHeight); `Medium/14 px/Medium` (lineHeight); `Medium/18 px/Medium` (lineHeight); `Medium/20 px/Medium` (lineHeight); `Medium/22 px/Medium` (lineHeight); `Medium/26 px/Medium` (lineHeight); `Extended/Semi Bold 16 px` (lineHeight); `Extended/Inter Semi Bold 12 px/ALL CAPS` (lineHeight, tracking); `Paragraph/Content` (lineHeight); `Paragraph/Heading` (weight, lineHeight); `Extra/Noto Sans Mono` (lineHeight); `Extra/Noto Serif` (lineHeight); `Documentation` (weight, lineHeight)
+- **5 effect rings** - spread on `--effect-state-focus`, `--effect-state-focus-standalone`, `--effect-state-error`, `--effect-state-hover-light`, `--effect-state-focus-on-dark`
+
+**Known gap** - a size the components render that the scale has no token for: 13px, rendered by Divider label, List secondary, Stat delta, Stepper label, Table caption. Do not invent a token for it.
+
+**What to do with a pending value:** use it exactly as written. It is the value
+the library ships today, so it is the value that matches the existing product.
+Do not substitute one of your own, do not round it, and do not treat the label
+as licence to pick a different colour. It may change when Figma confirms it,
+which is why it is labelled rather than silently presented as final.
+
+### Colour - brand & semantic
+
+| Token | CSS variable | Value | Use |
+| --- | --- | --- | --- |
+| `primary.main` | `var(--primary)` | #004080 | Primary brand / interactive |
+| `secondary.main` | `var(--secondary)` | #322060 | Secondary brand, used sparingly |
+| `error` | `var(--error)` | #D32F2F | Use only for its meaning (error) |
+| `warning` | `var(--warning)` | #EF6C00 | Use only for its meaning (warning) |
+| `info` | `var(--info)` | #0288D1 | Use only for its meaning (info) |
+| `success` | `var(--success)` | #2E7D32 | Use only for its meaning (success) |
+| `accent.zest` | `var(--accent-zest)` | #FA5101 | Sparingly, for accent moments |
+| `accent.berry` | `var(--accent-berry)` | #89239A | Sparingly, for accent moments |
+| `accent.algae` | `var(--accent-algae)` | #00A788 | Sparingly, for accent moments |
+
+### Colour - palette
+
+Each family runs 100 (lightest) to 900 (darkest). 600-900 are safe for text on
+a light background; 100-300 are surface tints.
+
+#### gray
+
+| Shade | CSS variable | Value |
+| --- | --- | --- |
+| 100 | `var(--gray-100)` | #F7F7F7 |
+| 200 | `var(--gray-200)` | #EDEDED |
+| 300 | `var(--gray-300)` | #D9D9D9 |
+| 400 | `var(--gray-400)` | #BCBCBC |
+| 500 | `var(--gray-500)` | #949494 |
+| 600 | `var(--gray-600)` | #7A7A7A |
+| 700 | `var(--gray-700)` | #595959 |
+| 800 | `var(--gray-800)` | #404040 |
+| 900 | `var(--gray-900)` | #272727 |
+
+#### blue
+
+| Shade | CSS variable | Value |
+| --- | --- | --- |
+| 100 | `var(--blue-100)` | #F0F7FF |
+| 200 | `var(--blue-200)` | #DBEDFF |
+| 300 | `var(--blue-300)` | #B3D9FF |
+| 400 | `var(--blue-400)` | #7ABDFF |
+| 500 | `var(--blue-500)` | #3399FF |
+| 600 | `var(--blue-600)` | #007AF5 |
+| 700 | `var(--blue-700)` | #0059B3 |
+| 800 | `var(--blue-800)` | #004080 |
+| 900 | `var(--blue-900)` | #002E5C |
+
+#### green
+
+| Shade | CSS variable | Value |
+| --- | --- | --- |
+| 100 | `var(--green-100)` | #F2FDF8 |
+| 200 | `var(--green-200)` | #E0FAEF |
+| 300 | `var(--green-300)` | #BDF4DD |
+| 400 | `var(--green-400)` | #8DECC5 |
+| 500 | `var(--green-500)` | #50E2A5 |
+| 600 | `var(--green-600)` | #1BA76D |
+| 700 | `var(--green-700)` | #147B50 |
+| 800 | `var(--green-800)` | #106542 |
+| 900 | `var(--green-900)` | #0D4F33 |
+
+#### red
+
+| Shade | CSS variable | Value |
+| --- | --- | --- |
+| 100 | `var(--red-100)` | #FEF1F1 |
+| 200 | `var(--red-200)` | #FCDEDE |
+| 300 | `var(--red-300)` | #F9B8B8 |
+| 400 | `var(--red-400)` | #F58484 |
+| 500 | `var(--red-500)` | #F04242 |
+| 600 | `var(--red-600)` | #E21212 |
+| 700 | `var(--red-700)` | #A50D0D |
+| 800 | `var(--red-800)` | #760A0A |
+| 900 | `var(--red-900)` | #550707 |
+
+#### yellow
+
+| Shade | CSS variable | Value |
+| --- | --- | --- |
+| 100 | `var(--yellow-100)` | #FFFCF0 |
+| 200 | `var(--yellow-200)` | #FFF8DC |
+| 300 | `var(--yellow-300)` | #FEF0B3 |
+| 400 | `var(--yellow-400)` | #FEE67C |
+| 500 | `var(--yellow-500)` | #FDD835 |
+| 600 | `var(--yellow-600)` | #F2C602 |
+| 700 | `var(--yellow-700)` | #B19102 |
+| 800 | `var(--yellow-800)` | #7E6701 |
+| 900 | `var(--yellow-900)` | #5B4A01 |
+
+#### orange
+
+| Shade | CSS variable | Value |
+| --- | --- | --- |
+| 100 | `var(--orange-100)` | #FFFAF0 |
+| 200 | `var(--orange-200)` | #FFF3DC |
+| 300 | `var(--orange-300)` | #FEE5B3 |
+| 400 | `var(--orange-400)` | #FED27C |
+| 500 | `var(--orange-500)` | #FDBA35 |
+| 600 | `var(--orange-600)` | #F2A202 |
+| 700 | `var(--orange-700)` | #D99102 |
+| 800 | `var(--orange-800)` | #7E5501 |
+| 900 | `var(--orange-900)` | #5B3D01 |
+
+#### purple
+
+| Shade | CSS variable | Value |
+| --- | --- | --- |
+| 100 | `var(--purple-100)` | #F6F4FB |
+| 200 | `var(--purple-200)` | #E9E4F6 |
+| 300 | `var(--purple-300)` | #D0C6EC |
+| 400 | `var(--purple-400)` | #9F88D7 |
+| 500 | `var(--purple-500)` | #8366CC |
+| 600 | `var(--purple-600)` | #603DB8 |
+| 700 | `var(--purple-700)` | #462D86 |
+| 800 | `var(--purple-800)` | #322060 |
+| 900 | `var(--purple-900)` | #241745 |
+
+#### pink
+
+| Shade | CSS variable | Value |
+| --- | --- | --- |
+| 100 | `var(--pink-100)` | #FEF1F5 |
+| 200 | `var(--pink-200)` | #FCDFE8 |
+| 300 | `var(--pink-300)` | #F8B9CE |
+| 400 | `var(--pink-400)` | #F386AB |
+| 500 | `var(--pink-500)` | #ED457D |
+| 600 | `var(--pink-600)` | #DF1659 |
+| 700 | `var(--pink-700)` | #A21041 |
+| 800 | `var(--pink-800)` | #740B2E |
+| 900 | `var(--pink-900)` | #540821 |
+
+### Colour - roles
+
+Prefer a role token over a raw palette shade wherever one exists.
+
+**Interaction**
+
+| CSS variable | Value | Use | Status |
+| --- | --- | --- | --- |
+| `var(--primary-hover-overlay)` | rgba(0, 64, 128, 0.04) | Primary tint on hover | Verified |
+| `var(--primary-focus-ring)` | rgba(0, 64, 128, 0.3) | Focus ring on primary controls | Verified |
+| `var(--action-active)` | rgba(0, 0, 0, 0.56) | Icon / control glyph | Verified |
+| `var(--action-hover)` | rgba(0, 0, 0, 0.04) | Neutral hover wash | Verified |
+| `var(--action-focus)` | rgba(0, 0, 0, 0.12) | Neutral focus wash | Verified |
+| `var(--action-disabled)` | rgba(0, 0, 0, 0.38) | Disabled foreground | Verified |
+
+**Text**
+
+| CSS variable | Value | Use | Status |
+| --- | --- | --- | --- |
+| `var(--text-primary)` | rgba(0, 0, 0, 0.87) | Body and heading text | Verified |
+| `var(--text-secondary)` | var(--gray-600) | Supporting and helper text | Verified |
+| `var(--text-disabled)` | var(--action-disabled) | Disabled text | Verified |
+| `var(--text-on-primary)` | #ffffff | Text on a primary-filled surface | Verified |
+
+**Status**
+
+| CSS variable | Value | Use | Status |
+| --- | --- | --- | --- |
+| `var(--info-surface)` | #E1F5FE | Info Alert/Badge/Tag fill | Pending Figma verification |
+| `var(--success-surface)` | #E8F5E9 | Success fill | Pending Figma verification |
+| `var(--warning-surface)` | #FFF3E0 | Warning fill | Pending Figma verification |
+| `var(--error-surface)` | #FFEBEE | Error fill | Pending Figma verification |
+
+**Controls**
+
+| CSS variable | Value | Use | Status |
+| --- | --- | --- | --- |
+| `var(--border-control)` | #C4C4C4 | Resting border on inputs, select, toggle track | Pending Figma verification |
+| `var(--border-control-strong)` | #8C8C8C | Hover border; checkbox and radio resting border | Pending Figma verification |
+| `var(--text-placeholder)` | #8C8C8C | Placeholder text | Pending Figma verification |
+| `var(--surface-disabled)` | #F5F5F5 | Disabled control fill | Pending Figma verification |
+| `var(--surface-readonly)` | var(--gray-100) | Read-only control fill | Verified |
+| `var(--surface-neutral)` | #F0F0F0 | Neutral Badge/Tag fill | Pending Figma verification |
+| `var(--avatar-surface)` | #E0E0E0 | Avatar fallback fill | Pending Figma verification |
+
+**Surface**
+
+| CSS variable | Value | Use | Status |
+| --- | --- | --- | --- |
+| `var(--background)` | var(--gray-100) | App canvas | Verified |
+| `var(--surface)` | var(--white) | Raised surface (cards, panels, inputs) | Verified |
+| `var(--surface-sunken)` | var(--gray-100) | Recessed surface (wells, read-only fields) | Verified |
+| `var(--border)` | var(--gray-200) | Hairline separator | Verified |
+| `var(--border-strong)` | var(--gray-300) | Control outline | Verified |
+| `var(--border-interactive)` | var(--gray-500) | Control outline on hover | Verified |
+| `var(--muted-foreground)` | var(--gray-600) | De-emphasised label text | Verified |
+
+### Typography
+
+Inter for all UI text (weights 300, 400, 500, 600). Noto Sans Mono for
+code, identifiers and token values. Noto Serif for long-form content. Material
+Symbols Outlined for icons.
+
+Every style below has a ready-made class - prefer `class="inspera-h1"` over
+setting four properties by hand.
+
+Sizes are exact, exported from Figma. Figma exports font-size only for text
+styles, so a row marked *unconfirmed* has a line height or weight inferred from
+the V3 spec rather than measured.
+
+#### Default
+
+| Style | Class | Size | Weight | Line height | Notes |
+| --- | --- | --- | --- | --- | --- |
+| `Default/Default 16 px/Regular` | `.inspera-default-16-regular` | 16px | 400 | 1.25 | V3 body.mdRegular - line height fixed at 20px |
+| `Default/16 px/Medium` | `.inspera-default-16-medium` | 16px | 500 | 1.25 | V3 body.mdMedium - line height fixed at 20px |
+| `Default/Link 16 px` | `.inspera-link-16` | 16px | 500 | 1.25 | underline, unconfirmed: weight, lineHeight |
+
+#### Regular
+
+| Style | Class | Size | Weight | Line height | Notes |
+| --- | --- | --- | --- | --- | --- |
+| `Regular/14 px/Regular` | `.inspera-regular-14` | 14px | 400 | 1.4 | unconfirmed: lineHeight |
+| `Regular/18 px/Regular` | `.inspera-regular-18` | 18px | 400 | 1.4 | unconfirmed: lineHeight |
+| `Regular/20 px/Regular` | `.inspera-regular-20` | 20px | 400 | 1.4 | unconfirmed: lineHeight |
+| `Regular/22 px/Regular` | `.inspera-regular-22` | 22px | 400 | 1.4 | unconfirmed: lineHeight |
+| `Regular/26 px/Regular` | `.inspera-regular-26` | 26px | 400 | 1.4 | unconfirmed: lineHeight |
+
+#### Medium
+
+| Style | Class | Size | Weight | Line height | Notes |
+| --- | --- | --- | --- | --- | --- |
+| `Medium/14 px/Medium` | `.inspera-medium-14` | 14px | 500 | 1.4 | unconfirmed: lineHeight |
+| `Medium/18 px/Medium` | `.inspera-medium-18` | 18px | 500 | 1.4 | unconfirmed: lineHeight |
+| `Medium/20 px/Medium` | `.inspera-medium-20` | 20px | 500 | 1.4 | unconfirmed: lineHeight |
+| `Medium/22 px/Medium` | `.inspera-medium-22` | 22px | 500 | 1.4 | unconfirmed: lineHeight |
+| `Medium/26 px/Medium` | `.inspera-medium-26` | 26px | 500 | 1.4 | unconfirmed: lineHeight |
+
+#### Heading
+
+| Style | Class | Size | Weight | Line height | Notes |
+| --- | --- | --- | --- | --- | --- |
+| `Heading/H1` | `.inspera-h1` | 28.83px | 600 | 1.12 |  |
+| `Heading/H2` | `.inspera-h2` | 22.78px | 500 | 1.12 |  |
+| `Heading/H3` | `.inspera-h3` | 20.25px | 500 | 1.12 |  |
+| `Heading/H4` | `.inspera-h4` | 18px | 500 | 1.12 |  |
+| `Heading/H5` | `.inspera-h5` | 16px | 500 | 1.12 |  |
+| `Heading/H6` | `.inspera-h6` | 12px | 500 | 1.12 | +1.6px tracking, uppercase |
+
+#### Extended
+
+| Style | Class | Size | Weight | Line height | Notes |
+| --- | --- | --- | --- | --- | --- |
+| `Extended/Semi Bold 16 px` | `.inspera-semibold-16` | 16px | 600 | 1.25 | unconfirmed: lineHeight |
+| `Extended/Inter Semi Bold 12 px/ALL CAPS` | `.inspera-allcaps-12` | 12px | 600 | 1.12 | +1.6px tracking, uppercase, unconfirmed: lineHeight, tracking |
+
+#### Paragraph
+
+| Style | Class | Size | Weight | Line height | Notes |
+| --- | --- | --- | --- | --- | --- |
+| `Paragraph/Default` | `.inspera-paragraph-default` | 16px | 400 | 1.5 | V3 body.paragraph - 150% |
+| `Paragraph/Content` | `.inspera-paragraph-content` | 16px | 400 | 1.5 | unconfirmed: lineHeight |
+| `Paragraph/Captions` | `.inspera-paragraph-captions` | 12px | 400 | 1.2 | V3 body.caption - 120% |
+| `Paragraph/Heading` | `.inspera-paragraph-heading` | 20.25px | 500 | 1.12 | unconfirmed: weight, lineHeight |
+
+#### Extra
+
+| Style | Class | Size | Weight | Line height | Notes |
+| --- | --- | --- | --- | --- | --- |
+| `Extra/Noto Sans Mono` | `.inspera-mono-16` | 16px | 400 | 1.5 | unconfirmed: lineHeight |
+| `Extra/Noto Serif` | `.inspera-serif-16` | 16px | 400 | 1.5 | unconfirmed: lineHeight |
+
+#### Documentation
+
+| Style | Class | Size | Weight | Line height | Notes |
+| --- | --- | --- | --- | --- | --- |
+| `Documentation` | `.inspera-documentation` | 14px | 300 | 1.4 | Inter Light per the specimen sheet, unconfirmed: weight, lineHeight |
+
+### Spacing
+
+Use the scale - no arbitrary pixel values.
+
+| Token | CSS variable | Value |
+| --- | --- | --- |
+| `0` | `var(--space-0)` | 0px |
+| `1` | `var(--space-1)` | 4px |
+| `2` | `var(--space-2)` | 8px |
+| `3` | `var(--space-3)` | 12px |
+| `4` | `var(--space-4)` | 16px |
+| `5` | `var(--space-5)` | 20px |
+| `6` | `var(--space-6)` | 24px |
+| `8` | `var(--space-8)` | 32px |
+| `10` | `var(--space-10)` | 40px |
+| `12` | `var(--space-12)` | 48px |
+| `16` | `var(--space-16)` | 64px |
+
+### Radius
+
+Small-to-medium radii: `sm` for controls, `md` for inputs and alerts,
+`lg` for cards and dialogs. Pills only for shapes that are conceptually round.
+
+"Used by" is read from the component source, so it reflects what the library
+actually does rather than what this document claims.
+
+| Token | CSS variable | Value | When to use | Used by |
+| --- | --- | --- | --- | --- |
+| `none` | `var(--radius-none)` | 0px | Flush edges - table cells, full-bleed surfaces, anything that meets another edge. | - |
+| `xs` | `var(--radius-xs)` | 2px | The smallest indicators, where 4px would read as a visible curve. | Checkbox, Link, Rating |
+| `sm` | `var(--radius-sm)` | 4px | Controls: buttons, tags, segments, menu items. | Button, DatePicker, Dialog, List, Menu, Popover, SegmentedControl, Select, Skeleton, Tabs, Tooltip |
+| `md` | `var(--radius-md)` | 8px | Inputs, alerts and floating panels - the system default. | Accordion, Alert, DatePicker, Drawer, FileUpload, List, Menu, OtpInput, Pagination, Popover, SegmentedControl, Select, Skeleton, Snackbar, Table, Tabs, TextInput, Textarea |
+| `lg` | `var(--radius-lg)` | 12px | Large surfaces that contain other components: cards, dialogs, drawers. | Card, Dialog, Stat |
+| `xl` | `var(--radius-xl)` | 16px | Reserved for oversized surfaces. Nothing uses it today; prefer lg. | - |
+| `pill` | `var(--radius-pill)` | fully round | Only for shapes that are conceptually round: toggles, badges, radios, avatars. | Avatar, Badge, Dialog, Progress, RadioButton, Skeleton, Slider, Stepper, Tag, Toggle, Tooltip |
+
+### Depth / elevation
+
+Flat by default. Prefer a border over a shadow for separation; use `200` for
+cards and `500` for dialogs.
+
+| Token | CSS variable | Value |
+| --- | --- | --- |
+| `shadow.100` | `var(--shadow-100)` | `0px 4px 4px rgba(39, 39, 39, 0.08), 0px 2px 4px rgba(39, 39, 39, 0.12)` |
+| `shadow.200` | `var(--shadow-200)` | `0px 8px 8px rgba(39, 39, 39, 0.08), 0px 4px 6px rgba(39, 39, 39, 0.12)` |
+| `shadow.300` | `var(--shadow-300)` | `0px 8px 16px rgba(39, 39, 39, 0.08), 0px 6px 8px rgba(39, 39, 39, 0.12)` |
+| `shadow.400` | `var(--shadow-400)` | `0px 8px 24px rgba(39, 39, 39, 0.08), 0px 6px 12px rgba(39, 39, 39, 0.12)` |
+| `shadow.500` | `var(--shadow-500)` | `0px 10px 32px rgba(39, 39, 39, 0.1), 0px 6px 14px rgba(39, 39, 39, 0.12)` |
+| `shadow.600` | `var(--shadow-600)` | `0px 12px 42px rgba(39, 39, 39, 0.12), 0px 8px 18px rgba(39, 39, 39, 0.12)` |
+
+### Effects
+
+Focus rings, validation rings, the button highlight and link underlines. Apply
+as `box-shadow`. Their colours are palette colours.
+
+| Token | CSS variable | Value | Use |
+| --- | --- | --- | --- |
+| `state-focus` | `var(--effect-state-focus)` | `0px 0px 0px 3px var(--blue-300)` | Standard input focus ring | unconfirmed: spread |
+| `state-focus-standalone` | `var(--effect-state-focus-standalone)` | `0px 0px 0px 3px var(--blue-600)` | High-contrast standalone focus | unconfirmed: spread |
+| `state-error` | `var(--effect-state-error)` | `0px 0px 0px 3px var(--red-300)` | Error ring | unconfirmed: spread |
+| `state-hover-light` | `var(--effect-state-hover-light)` | `0px 0px 0px 3px var(--gray-500)` | Hover outline | unconfirmed: spread |
+| `state-focus-on-dark` | `var(--effect-state-focus-on-dark)` | `0px 0px 0px 3px var(--green-300)` | Focus ring on a dark container | unconfirmed: spread |
+| `button-shadow` | `var(--effect-button-shadow)` | `inset 0px -1px 0px rgba(0, 0, 0, 0.2), 0px 1px 0px rgba(0, 0, 0, 0.08)` | Standard button elevation highlight |
+| `link-underline-dark` | `var(--effect-link-underline-dark)` | `inset 0px -1px 0px var(--gray-700)` | Link underline on light ground |
+| `link-underline-blue` | `var(--effect-link-underline-blue)` | `inset 0px -1px 0px var(--blue-800)` | Primary link underline |
+| `link-underline-light` | `var(--effect-link-underline-light)` | `inset 0px -1px 0px var(--white)` | Link underline on dark ground |
+| `invert-hack` | `var(--effect-invert-hack)` | `inset 1000px 0px 0px var(--white)` | Overrides the browser autofill background on inputs |
+
+### Motion
+
+Motion explains a state change; it does not decorate. Under
+`prefers-reduced-motion: reduce`, drop non-essential transitions.
+
+| Token | CSS variable | Value | Use |
+| --- | --- | --- | --- |
+| `duration.instant` | `var(--duration-instant)` | 0ms | No transition |
+| `duration.fast` | `var(--duration-fast)` | 100ms | Hover and focus |
+| `duration.normal` | `var(--duration-normal)` | 200ms | Menus, popovers |
+| `duration.slow` | `var(--duration-slow)` | 300ms | Dialogs, drawers |
+| `easing.standard` | `var(--easing-standard)` | `cubic-bezier(0.2, 0, 0, 1)` | Default |
+| `easing.enter` | `var(--easing-enter)` | `cubic-bezier(0, 0, 0.2, 1)` | Entering the screen |
+| `easing.exit` | `var(--easing-exit)` | `cubic-bezier(0.4, 0, 1, 1)` | Leaving the screen |
+
+### Layering
+
+Use the scale. Never an arbitrary value such as `99999`.
+
+| Token | CSS variable | Value | Use |
+| --- | --- | --- | --- |
+| `z.base` | `var(--z-base)` | 0 |  |
+| `z.sticky` | `var(--z-sticky)` | 100 | Sticky headers and toolbars |
+| `z.dropdown` | `var(--z-dropdown)` | 300 | Select and Menu panels |
+| `z.popover` | `var(--z-popover)` | 400 |  |
+| `z.overlay` | `var(--z-overlay)` | 500 | Dialog and Drawer scrim |
+| `z.modal` | `var(--z-modal)` | 600 | Dialog and Drawer surface |
+| `z.toast` | `var(--z-toast)` | 700 | Snackbar |
+| `z.tooltip` | `var(--z-tooltip)` | 800 |  |
+
+### Breakpoints
+
+Shared layout thresholds, not device names. Prefer responding to available
+space over user-agent detection.
+
+| Token | CSS variable | Min width |
+| --- | --- | --- |
+| `sm` | `var(--breakpoint-sm)` | 640px |
+| `md` | `var(--breakpoint-md)` | 768px |
+| `lg` | `var(--breakpoint-lg)` | 1024px |
+| `xl` | `var(--breakpoint-xl)` | 1280px |
+| `2xl` | `var(--breakpoint-2xl)` | 1440px |
+
+### Borders & focus
+
+| Token | CSS variable | Value |
+| --- | --- | --- |
+| `border-width.default` | `var(--border-width-default)` | 1px |
+| `border-width.strong` | `var(--border-width-strong)` | 2px |
+| `focus-ring-width` | `var(--focus-ring-width)` | 2px |
+| `focus-ring-offset` | `var(--focus-ring-offset)` | 2px |
+| `focus-ring-color` | `var(--focus-ring-color)` | var(--primary) |
+
+Focus is never removed, only replaced by something at least as visible:
+
+```css
+:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+```
+
+
+## Composition patterns
+
+These are **compositions, not new components**. They do not authorise a new
+export - they say how to arrange the canonical ones. If a requested pattern is
+not here and not a canonical component, build it from canonical components and
+say so; do not invent a new one.
+
+#### Search field
+
+Build from: `TextInput`.
+
+- A `TextInput` with a leading `search` icon, plus a trailing clear action when there is a value.
+- Keep a visible label unless surrounding UI makes the purpose unambiguous and provides a programmatic label.
+- The clear control needs an accessible name such as "Clear search".
+- Do not give it a different border, radius, or focus treatment from a normal TextInput.
+
+#### Page header
+
+Build from: `Breadcrumb`, `Button`, `Menu`, `Tabs`.
+
+- Order: breadcrumb (if a hierarchy exists), H1 title, optional supporting description or status, then actions.
+- Exactly one primary action. Everything else is Secondary, Outline, Text, or inside a Menu.
+- Tabs belong below the title region, and only when they switch sibling views of the same object.
+- Collapse actions beneath the title when width is constrained rather than shrinking them.
+
+#### Side navigation
+
+Build from: `Link`, `Badge`, `Tooltip`.
+
+- The selected item must be distinguished by more than colour - weight, a rule, or a background.
+- Collapsed icon-only items require accessible names and a Tooltip.
+- Preserve DOM and keyboard order when collapsing.
+
+#### Toolbar / action bar
+
+Build from: `Button`, `Menu`, `Select`, `TextInput`, `Divider`.
+
+- Order by frequency and importance; keep one local primary action.
+- Push low-frequency actions into a Menu rather than shrinking targets to fit.
+
+#### Filter bar
+
+Build from: `Select`, `DatePicker`, `TextInput`, `Tag`, `Button`.
+
+- Show active criteria as removable `Tag`s, so the current filter state is readable as text and not only as colour.
+- Show a reset action only when at least one non-default filter is active.
+
+#### Table toolbar
+
+Build from: `TextInput`, `Select`, `Button`, `Table`, `Pagination`.
+
+- Search and filter controls come before table actions.
+- Keep table context visible while filtering; never swap the table for a bare spinner.
+
+#### Settings row
+
+Build from: `Toggle`, `Checkbox`, `Select`, `Divider`.
+
+- Order: setting title, supporting description, then the control.
+- Do not place the control between title and description - it breaks reading order.
+- The control's accessible name must map to the setting title.
+- Use a Divider only where it genuinely improves grouping.
+
+#### Status indicator
+
+Build from: `Badge`, `Tag`.
+
+- Always pair the colour with a label or icon. A bare coloured dot is not a status.
+- Use `Badge` for state that is read, `Tag` for something the user can remove or filter by.
+
+#### Empty results
+
+Build from: `EmptyState`, `Button`.
+
+- Use `EmptyState` when a search or filter legitimately returns nothing.
+- Say what happened and offer the next step - usually clearing the filters.
+- A zero-result query is not an error. Do not show a failure state for it.
+
+## Forms
+
+- Wrap each control in `FormField` for consistent label, help, and error layout.
+- One visible label per field. A placeholder is not a label.
+- Show help text or an error, not both; when invalid, the error must be programmatically associated with the control.
+- Use `RadioGroup` for mutually exclusive choices and `CheckboxGroup` for multi-select.
+- Use `Select` for a compact choice; enable its search mode for long lists.
+- Use `FileUpload` for files - never a text input styled to look like one.
+- Keep required/optional wording consistent within a form.
+- Never clear user input when validation fails.
+- Do not make a disabled submit button the only signal that something is wrong.
+
+## Data tables
+
+- Right-align numeric columns; keep headers short.
+- Expose sort direction programmatically, not just with an arrow glyph.
+- Use `Checkbox` for row selection and show a selected count.
+- Use `Skeleton` for initial load and `Spinner` for a user-triggered refresh.
+- An empty dataset and a no-results-for-this-filter state are different - say which.
+- Page long tables with `Pagination`.
+- Do not shrink text or targets to fit more columns; prioritise columns or scroll the table.
+
+## Which feedback component
+
+| Scope | Use |
+| --- | --- |
+| A single invalid field | Error text on the field itself, via FormField |
+| A section or the whole form | Alert, placed near the affected content |
+| Confirming something just happened | Snackbar |
+| A decision that must block progress | Dialog - only when it genuinely must block |
+| A secondary task or detail panel | Drawer |
+| Known-duration work | Progress |
+| Unknown-duration work | Spinner |
+| Initial page or table load | Skeleton |
+| Nothing to show | EmptyState |
+
+Never put something the user must retain or act on later in a Snackbar.
+
+## A complete screen
+
+A page header, a filter bar, a table with status badges, and pagination. Built from Breadcrumb, Button, Select, DatePicker, Tag, Table, Badge and Pagination - no new components.
+
+- The page owns exactly one Primary button. Everything else is Secondary, Outline or Text.
+- Active filters appear as removable Tags, so the current state is readable as text and not only as colour.
+- Status is a Badge with a word in it. A bare coloured dot is not a status.
+- The numeric column is right-aligned; the header stays short.
+- Spacing is the scale: 24px page padding, 16px between regions, 8px inside a control cluster.
+
+```tsx
+import {
+  Breadcrumb, Button, Select, DatePicker, Tag, Table, Badge, Pagination,
+} from '@inspera/components'
+
+export function AssessmentList() {
+  return (
+    <div style={{ padding: 'var(--space-6)', display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
+      <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Assessments' }]} />
+
+      <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 'var(--space-4)' }}>
+        <h1 className="inspera-h1" style={{ margin: 0 }}>Assessments</h1>
+        <Button label="New assessment" intent="Primary" content="Icon + Text" icon="add" />
+      </header>
+
+      <div style={{ display: 'flex', alignItems: 'flex-end', gap: 'var(--space-2)', flexWrap: 'wrap' }}>
+        <Select label="Status" options={['All', 'Live', 'Draft', 'Scheduled']} value="All" />
+        <DatePicker label="Created after" value="2026-01-01" />
+        <Button label="Reset" intent="Text" />
+      </div>
+
+      <div style={{ display: 'flex', gap: 'var(--space-2)', flexWrap: 'wrap' }}>
+        <Tag label="Status: Live" removable />
+        <Tag label="Created after 1 Jan" removable />
+      </div>
+
+      <Table
+        columns={[
+          { key: 'name', header: 'Assessment' },
+          { key: 'items', header: 'Items', align: 'right' },
+          { key: 'status', header: 'Status' },
+        ]}
+        rows={[
+          { name: 'Algebra Quiz', items: 24, status: <Badge label="Live" intent="Success" /> },
+          { name: 'History Midterm', items: 40, status: <Badge label="Draft" intent="Neutral" /> },
+          { name: 'Biology Final', items: 60, status: <Badge label="Scheduled" intent="Info" /> },
+        ]}
+      />
+
+      <Pagination page={1} totalPages={8} />
+    </div>
+  )
+}
+```
+
+Same screen without the package:
+
+```html
+<!-- Requires the one-time setup block and the tokens from Setup. -->
+<div class="page">
+  <nav class="inspera-breadcrumb" aria-label="Breadcrumb">
+    <ol>
+      <li><a class="inspera-breadcrumb__link" href="/">Home</a></li>
+      <li aria-current="page">Assessments</li>
+    </ol>
+  </nav>
+
+  <header class="page__header">
+    <h1 class="inspera-h1">Assessments</h1>
+    <button type="button" class="inspera-btn inspera-btn--primary">
+      <span class="material-symbols-outlined" aria-hidden="true">add</span>
+      <span>New assessment</span>
+    </button>
+  </header>
+
+  <div class="page__filters">
+    <!-- Select and DatePicker markup: see their own sections. -->
+    <button type="button" class="inspera-btn inspera-btn--text">Reset</button>
+  </div>
+
+  <div class="page__tags">
+    <span class="inspera-tag">Status: Live
+      <button type="button" class="inspera-tag__remove" aria-label="Remove status filter">
+        <span class="material-symbols-outlined" aria-hidden="true">close</span>
+      </button>
+    </span>
+  </div>
+
+  <table class="inspera-table">
+    <thead>
+      <tr>
+        <th scope="col">Assessment</th>
+        <th scope="col" class="inspera-table__num">Items</th>
+        <th scope="col">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Algebra Quiz</td>
+        <td class="inspera-table__num">24</td>
+        <td><span class="inspera-badge inspera-badge--success">Live</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<style>
+  .page          { padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-4); }
+  .page__header  { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); }
+  .page__filters { display: flex; align-items: flex-end; gap: var(--space-2); flex-wrap: wrap; }
+  .page__tags    { display: flex; gap: var(--space-2); flex-wrap: wrap; }
+</style>
+```
+
+## Before you call it done
+
+**Visual system**
+
+- [ ] Every colour resolves to a token - no hex literals in application code.
+- [ ] Spacing, radius and shadow values come from the scales.
+- [ ] Typography uses Inter and the documented type scale.
+- [ ] Icons are Material Symbols Outlined.
+- [ ] No framework default styling leaked through.
+
+**Components**
+
+- [ ] Canonical components were used where one exists.
+- [ ] No component or prop was renamed; prop names are camelCase, variant values Capitalised.
+- [ ] No undocumented variant was invented.
+- [ ] Any genuine gap is marked DESIGN_SYSTEM_GAP.
+
+**Accessibility**
+
+- [ ] Every interactive element is reachable and operable by keyboard.
+- [ ] Focus is always visible, and focus order follows reading order.
+- [ ] Labels, roles, names and states are programmatically available.
+- [ ] Errors are associated with their field and announced.
+- [ ] Overlays move focus in, keep it inside while modal, and restore it on close.
+- [ ] Components built from the package-free HTML also implement their documented keyboard and focus behaviour - the markup alone does not provide it.
+- [ ] No status is conveyed by colour alone.
+- [ ] prefers-reduced-motion is respected.
+
+**Responsive**
+
+- [ ] No horizontal page scroll at standard zoom.
+- [ ] Action areas wrap or collapse rather than shrink.
+- [ ] Forms stay readable on a narrow viewport.
+- [ ] Tables have a deliberate small-screen strategy.
+- [ ] Reading and focus order still make sense after reflow.
+
+
+## Components - input-controls
+
+### Button
+
+Trigger an action. - category: `input-controls`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library - build the markup from the HTML and CSS under
+> **Without the package** below, which is this component's exact appearance.
+
+```tsx
+import { Button } from '@inspera/components'
+
+<Button
+  label="Button"
+  intent="Primary"
+  size="Medium"
+  content="Text"
+/>
+```
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `label` | `string` | `'Button'` | The button text. Start with a verb - "Save", not "OK". |
+| `intent` | `'Primary' \| 'Secondary' \| 'Outline' \| 'Text' \| 'Success' \| 'Warning' \| 'Destructive'` | `'Primary'` | Visual role / semantic weight. |
+| `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Height 32 / 40 / 48. |
+| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Pressed' \| 'Disabled'` | - | Freezes a visual state so documentation can show it without a pointer. Leave unset in application code - hover, focus and active are handled in CSS and work on their own. |
+| `content` | `'Text' \| 'Icon + Text' \| 'Text + Icon' \| 'Text + Disclosure'` | `'Text'` | Label / icon composition. |
+| `icon` | `string` | `'add'` | Material Symbols name. Only rendered by the icon-bearing content variants. |
+| `onClick` | `() => void` | - | Fired on click and on Enter or Space. |
+
+**Accessibility** - role `button`, keyboard operable. Icon-only buttons must have an accessible label.
+
+**Do:** Use Primary for main actions; Use Secondary for alternative actions; Use Destructive only for destructive flows.
+**Don't:** Do not create separate component files per intent; Do not use deprecated alias names.
+
+**Deprecated aliases** (do not use): `Primary button`, `Secondary button`, `Outline button`, `Text button`, `Success button`, `Warning button`
+
+#### Without the package - exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. This is the
+component's exact structure and appearance: do not substitute a radius, colour,
+spacing or font weight of your own, and do not restyle it with a UI kit's
+defaults.
+
+It is not the whole component. HTML and CSS cannot provide focus trapping,
+Escape handling, outside-click dismissal or a roving tabindex, so the
+accessibility contract and any behaviour listed above must still be implemented
+in JavaScript before this component is finished.
+
+- Corner radius is 4px (`--radius-sm`). Not 6, not 8, not `rounded-lg`.
+- Type is 16px/600 at every size - Small and Large change height, padding and gap only.
+- Primary is `--primary` #004080, a deep navy. It is not a mid blue and never a gradient.
+- Every solid intent carries the inset top-light button shadow; Outline and Text carry none.
+- Hover darkens the fill to 90% and pressed to 82%, both mixed toward black - no separate hover token.
+- Minimum width is 80px, so short labels still read as buttons.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --primary:               #004080;
+  --error:                 #D32F2F;
+  --warning:               #EF6C00;
+  --success:               #2E7D32;
+  --white:                 #ffffff;
+  --gray-100:              #F7F7F7;
+  --gray-700:              #595959;
+  --gray-900:              #272727;
+  --radius-sm:             4px;
+  --effect-button-shadow:  inset 0px -1px 0px rgba(0, 0, 0, 0.2), 0px 1px 0px rgba(0, 0, 0, 0.08);
+  --border-width-default:  1px;
+  --focus-ring-width:      2px;
+  --focus-ring-offset:     2px;
+  --focus-ring-color:      var(--primary);
+  --duration-fast:         100ms;
+  --easing-standard:       cubic-bezier(0.2, 0, 0, 1);
+  --font-sans:             'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-btn {
+  /* Fill, text and border come from the intent modifier below. */
+  --btn-bg: var(--primary);
+  --btn-fg: var(--white);
+  --btn-border: transparent;
+  --btn-shadow: var(--effect-button-shadow);
+  --btn-bg-hover: color-mix(in srgb, var(--btn-bg) 90%, black);
+  --btn-bg-active: color-mix(in srgb, var(--btn-bg) 82%, black);
+  --btn-shadow-hover: inset 0 -1px 0 rgba(0, 0, 0, 0.2), 0 2px 6px rgba(0, 64, 128, 0.24);
+  --btn-shadow-active: inset 0 1px 2px rgba(0, 0, 0, 0.24);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 40px;
+  min-width: 80px;
+  padding: 0 16px;
+  border-radius: var(--radius-sm);
+  border: var(--border-width-default) solid var(--btn-border);
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  box-shadow: var(--btn-shadow);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background var(--duration-fast) var(--easing-standard),
+    border-color var(--duration-fast) var(--easing-standard),
+    box-shadow var(--duration-fast) var(--easing-standard),
+    transform var(--duration-fast) var(--easing-standard);
+}
+
+/* Sizes change height, padding and gap only - never the 16px type. */
+.inspera-btn--small { height: 32px; padding: 0 12px; gap: 6px; }
+.inspera-btn--large { height: 48px; padding: 0 24px; gap: 10px; }
+
+/* Solid intents differ only in fill; hover and pressed derive from it. */
+.inspera-btn--primary     { --btn-bg: var(--primary); }
+.inspera-btn--success     { --btn-bg: var(--success); }
+.inspera-btn--warning     { --btn-bg: var(--warning); }
+.inspera-btn--destructive { --btn-bg: var(--error); }
+.inspera-btn--secondary {
+  --btn-bg: var(--gray-100);
+  --btn-fg: var(--gray-900);
+  --btn-border: var(--gray-700);
+}
+
+/* Outline and Text carry no fill and no shadow; they tint on interaction. */
+.inspera-btn--outline,
+.inspera-btn--text {
+  --btn-bg: transparent;
+  --btn-fg: var(--primary);
+  --btn-shadow: none;
+  --btn-shadow-hover: none;
+  --btn-shadow-active: none;
+  --btn-bg-hover: color-mix(in srgb, var(--primary) 8%, transparent);
+  --btn-bg-active: color-mix(in srgb, var(--primary) 12%, transparent);
+}
+.inspera-btn--outline { --btn-border: var(--primary); }
+
+.inspera-btn:hover:not(:disabled) {
+  background: var(--btn-bg-hover);
+  box-shadow: var(--btn-shadow-hover);
+}
+.inspera-btn:active:not(:disabled) {
+  background: var(--btn-bg-active);
+  box-shadow: var(--btn-shadow-active);
+  transform: translateY(1px);
+}
+.inspera-btn:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+.inspera-btn:disabled { opacity: 0.38; cursor: not-allowed; }
+
+.inspera-btn .material-symbols-outlined { font-size: 20px; }
+```
+
+```html
+<button type="button" class="inspera-btn inspera-btn--primary">Save</button>
+
+<button type="button" class="inspera-btn inspera-btn--secondary inspera-btn--small">Cancel</button>
+
+<button type="button" class="inspera-btn inspera-btn--destructive">Delete test</button>
+
+<!-- Icon + Text. The icon is Material Symbols Outlined, never another set. -->
+<button type="button" class="inspera-btn inspera-btn--primary">
+  <span class="material-symbols-outlined" aria-hidden="true">add</span>
+  <span>Add question</span>
+</button>
+
+<!-- Icon-only still needs an accessible name. -->
+<button type="button" class="inspera-btn inspera-btn--text" aria-label="More options">
+  <span class="material-symbols-outlined" aria-hidden="true">more_vert</span>
+</button>
+```
+
+
+### Text Input
+
+Collect single-line text input. - category: `input-controls`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library - build the markup from the HTML and CSS under
+> **Without the package** below, which is this component's exact appearance.
+
+```tsx
+import { TextInput } from '@inspera/components'
+
+<TextInput
+  label="Email address"
+  placeholder="jane@inspera.com"
+  size="Medium"
+/>
+```
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `label` | `string` | `'Label'` | Show the field label. |
+| `placeholder` | `string` | `'Placeholder text'` | Hint shown when empty. Not a substitute for the label. |
+| `value` | `string` | - | Current value. Controlled - pair with onChange. |
+| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Disabled' \| 'Error' \| 'Filled' \| 'ReadOnly'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Filled` are presentation-only - leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Error`, `Disabled` and `ReadOnly` are real application state and belong in your code. |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Control height. |
+| `leadingIcon` | `string` | - | Show a leading icon. |
+| `trailingIcon` | `string` | - | Show a trailing icon. |
+| `showLabel` | `boolean` | `true` | Render the visible label. Hiding it still requires an accessible name. |
+| `helpText` | `string` | - | Show helper text. |
+| `errorText` | `string` | - | Show error message. |
+| `onChange` | `(value: string) => void` | - | Fired with the new value on every keystroke. |
+
+**Accessibility** - role `textbox`, keyboard operable. Always associate label with input using htmlFor/id; Error text must be linked via aria-describedby; Required fields must use aria-required.
+
+**Do:** Always include a visible label; Provide clear placeholder text as a hint; Show error messages below the input.
+**Don't:** Do not use placeholder as the only label; Do not disable inputs without explanation.
+
+**Deprecated aliases** (do not use): `Text inputs`, `Content`, `Content (small)`
+
+#### Without the package - exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. This is the
+component's exact structure and appearance: do not substitute a radius, colour,
+spacing or font weight of your own, and do not restyle it with a UI kit's
+defaults.
+
+It is not the whole component. HTML and CSS cannot provide focus trapping,
+Escape handling, outside-click dismissal or a roving tabindex, so the
+accessibility contract and any behaviour listed above must still be implemented
+in JavaScript before this component is finished.
+
+- The border belongs to the wrapper, not the `<input>`. The input itself has no border, no outline and no background - otherwise icons cannot sit inside the field.
+- Focus is `:focus-within` on the wrapper, drawn as `--effect-state-focus` (a 3px box-shadow) plus a `--primary` border. Fields ring with a shadow; buttons ring with an outline.
+- Height is 40px (32px small), radius `--radius-md`, resting border `--border-control` #C4C4C4 going to `--border-control-strong` on hover.
+- Help and error text are 12px. Only one shows at a time, and `aria-describedby` points at whichever it is.
+- A visible `<label>` with `for` is required. A placeholder is not a label.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --primary:                #004080;
+  --error:                  #D32F2F;
+  --white:                  #ffffff;
+  --gray-100:               #F7F7F7;
+  --gray-600:               #7A7A7A;
+  --blue-300:               #B3D9FF;
+  --red-300:                #F9B8B8;
+  --action-active:          rgba(0, 0, 0, 0.56);
+  --text-primary:           rgba(0, 0, 0, 0.87);
+  --border-control:         #C4C4C4;
+  --border-control-strong:  #8C8C8C;
+  --surface-disabled:       #F5F5F5;
+  --muted-foreground:       var(--gray-600);
+  --radius-md:              8px;
+  --effect-state-focus:     0px 0px 0px 3px var(--blue-300);
+  --effect-state-error:     0px 0px 0px 3px var(--red-300);
+  --border-width-default:   1px;
+  --duration-fast:          100ms;
+  --easing-standard:        cubic-bezier(0.2, 0, 0, 1);
+  --font-sans:              'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-input {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  font-family: var(--font-sans);
+}
+
+.inspera-input__label {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+/* The bordered box is the wrapper, not the <input>. That is what lets a
+   leading or trailing icon sit inside the border. */
+.inspera-input__field {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  border-radius: var(--radius-md);
+  border: var(--border-width-default) solid var(--border-control);
+  background: var(--white);
+  transition:
+    border-color var(--duration-fast) var(--easing-standard),
+    box-shadow var(--duration-fast) var(--easing-standard);
+}
+
+.inspera-input--small .inspera-input__field { height: 32px; }
+
+.inspera-input__field:hover { border-color: var(--border-control-strong); }
+
+/* :focus-within, not :focus - the focusable element is the <input> inside. */
+.inspera-input__field:focus-within {
+  border-color: var(--primary);
+  box-shadow: var(--effect-state-focus);
+}
+
+/* The control itself is unstyled: no border, no outline, no background. All of
+   that belongs to the wrapper, or you get a box inside a box. */
+.inspera-input__control {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  color: var(--text-primary);
+}
+
+.inspera-input__field .material-symbols-outlined {
+  font-size: 20px;
+  color: var(--action-active);
+}
+
+.inspera-input__help {
+  font-size: 12px;
+  color: var(--muted-foreground);
+}
+
+.inspera-input__error {
+  font-size: 12px;
+  color: var(--error);
+}
+
+/* Invalid outranks hover and focus - the error has to stay legible. */
+.inspera-input__field[data-invalid='true'],
+.inspera-input__field[data-invalid='true']:hover,
+.inspera-input__field[data-invalid='true']:focus-within {
+  border-color: var(--error);
+  box-shadow: var(--effect-state-error);
+}
+
+.inspera-input__field[data-disabled='true'] {
+  background: var(--surface-disabled);
+  opacity: 0.6;
+}
+
+.inspera-input__field[data-readonly='true'] {
+  background: var(--gray-100);
+}
+.inspera-input__field[data-readonly='true']:hover { border-color: var(--border-control); }
+```
+
+```html
+<div class="inspera-input">
+  <label class="inspera-input__label" for="email">Email address</label>
+  <div class="inspera-input__field">
+    <input class="inspera-input__control" id="email" type="email"
+           placeholder="jane@inspera.com" aria-describedby="email-help" />
+  </div>
+  <span class="inspera-input__help" id="email-help">We'll never share your email.</span>
+</div>
+
+<!-- Invalid. aria-invalid and aria-describedby both point at the message. -->
+<div class="inspera-input">
+  <label class="inspera-input__label" for="email2">Email address</label>
+  <div class="inspera-input__field" data-invalid="true">
+    <span class="material-symbols-outlined" aria-hidden="true">mail</span>
+    <input class="inspera-input__control" id="email2" type="email"
+           aria-invalid="true" aria-describedby="email2-err" />
+  </div>
+  <span class="inspera-input__error" id="email2-err">Enter a valid email address.</span>
+</div>
+```
+
+
+### Checkbox
+
+Allow multiple selection. - category: `input-controls`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library - build the markup from the HTML and CSS under
+> **Without the package** below, which is this component's exact appearance.
+
+```tsx
+import { Checkbox } from '@inspera/components'
+
+<Checkbox
+  label="Send me product updates"
+  checked={checked}
+  onChange={setChecked}
+  size="Medium"
+/>
+```
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `label` | `string` | `'Checkbox label'` | Text beside the box. Always provide one. |
+| `checked` | `boolean` | - | Checked state. |
+| `indeterminate` | `boolean` | `false` | Partially-selected state, for a parent whose children are mixed. Wins over `checked` visually and announces as `aria-checked="mixed"`. |
+| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Pressed' \| 'Disabled' \| 'Error'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Pressed` are presentation-only - leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Error` and `Disabled` are real application state and belong in your code. |
+| `withLabel` | `boolean` | `true` | Render the label. |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Indicator size. |
+| `onChange` | `(checked: boolean) => void` | - | Fired with the new checked state. |
+
+**Accessibility** - role `checkbox`, keyboard operable. Use aria-checked to reflect state; Group related checkboxes with fieldset and legend.
+
+**Do:** Use for multi-select scenarios; Always provide a label for each checkbox; Group related options together.
+**Don't:** Do not use for mutually exclusive options - use Radio Button instead; Do not use without a label.
+
+**Deprecated aliases** (do not use): `Checkbox/Unchecked`, `Checkbox/Checked`, `Checkbox with label`, `Checkbox (fill width)`, `Checkbox (Cards)`
+
+#### Without the package - exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. This is the
+component's exact structure and appearance: do not substitute a radius, colour,
+spacing or font weight of your own, and do not restyle it with a UI kit's
+defaults.
+
+It is not the whole component. HTML and CSS cannot provide focus trapping,
+Escape handling, outside-click dismissal or a roving tabindex, so the
+accessibility contract and any behaviour listed above must still be implemented
+in JavaScript before this component is finished.
+
+- Keep the native `<input type="checkbox">` in the DOM, visually hidden with `position: absolute; opacity: 0; width: 0; height: 0`. `display: none` removes it from the tab order and from form submission.
+- Draw the focus ring on the box via `:focus-visible + .box`. A ring on a 0x0 input is invisible - this is the detail custom checkboxes miss most often.
+- The box is 20px (16px small) with a 2px border and `--radius-xs`. Unchecked is `--border-control-strong`; checked fills with `--primary`.
+- Indeterminate is a DOM property (`el.indeterminate = true`), not an HTML attribute, and it announces as `aria-checked="mixed"`. Its glyph is `remove`, not a tick. Static markup that cannot run script uses the `inspera-checkbox--mixed` class instead.
+- The whole row is the `<label>`, so the text is part of the hit target.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --primary:                #004080;
+  --error:                  #D32F2F;
+  --white:                  #ffffff;
+  --text-primary:           rgba(0, 0, 0, 0.87);
+  --border-control-strong:  #8C8C8C;
+  --radius-xs:              2px;
+  --focus-ring-width:       2px;
+  --focus-ring-offset:      2px;
+  --focus-ring-color:       var(--primary);
+  --font-sans:              'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  cursor: pointer;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 16px;
+}
+
+/* Hidden, but still in the DOM, still focusable, still submitted with the
+   form. "display: none" or "visibility: hidden" would break all three. */
+.inspera-checkbox__input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.inspera-checkbox__box {
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-xs);
+  border: 2px solid var(--border-control-strong);
+  background: var(--white);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--white);
+  flex-shrink: 0;
+  transition: all 120ms ease;
+}
+
+.inspera-checkbox--small .inspera-checkbox__box { width: 16px; height: 16px; }
+
+/* The tick is a Material Symbol at the box size minus 4. */
+.inspera-checkbox__box .material-symbols-outlined {
+  font-size: 16px;
+  font-variation-settings: 'wght' 600;
+}
+.inspera-checkbox--small .inspera-checkbox__box .material-symbols-outlined { font-size: 12px; }
+
+.inspera-checkbox__input:checked + .inspera-checkbox__box,
+.inspera-checkbox__input:indeterminate + .inspera-checkbox__box,
+/* "indeterminate" is a DOM property with no HTML attribute, so static markup
+   cannot trigger :indeterminate. The modifier lets server-rendered markup show
+   the state; script that sets el.indeterminate gets the pseudo-class. */
+.inspera-checkbox--mixed .inspera-checkbox__box {
+  border-color: var(--primary);
+  background: var(--primary);
+}
+
+.inspera-checkbox:hover .inspera-checkbox__box { border-color: var(--primary); background: rgba(0, 64, 128, 0.04); }
+.inspera-checkbox:hover .inspera-checkbox__input:checked + .inspera-checkbox__box,
+.inspera-checkbox:hover .inspera-checkbox__input:indeterminate + .inspera-checkbox__box,
+.inspera-checkbox--mixed:hover .inspera-checkbox__box {
+  border-color: var(--primary);
+  background: var(--primary);
+}
+
+/* The ring goes on the drawn box: the real input is 0x0, so a ring on it is
+   invisible. This is the single most-missed detail in a custom checkbox. */
+.inspera-checkbox__input:focus-visible + .inspera-checkbox__box {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.inspera-checkbox:active .inspera-checkbox__box { transform: scale(0.92); }
+
+.inspera-checkbox--error .inspera-checkbox__box { border-color: var(--error); }
+.inspera-checkbox--error:hover .inspera-checkbox__box { border-color: var(--error); }
+
+.inspera-checkbox--disabled {
+  cursor: not-allowed;
+  opacity: 0.38;
+}
+.inspera-checkbox--disabled:hover .inspera-checkbox__box {
+  border-color: var(--border-control-strong);
+  background: var(--white);
+}
+```
+
+```html
+<label class="inspera-checkbox" for="updates">
+  <input class="inspera-checkbox__input" id="updates" type="checkbox" />
+  <span class="inspera-checkbox__box" aria-hidden="true">
+    <span class="material-symbols-outlined">check</span>
+  </span>
+  <span>Send me product updates</span>
+</label>
+
+<!-- Indeterminate is a DOM property, not an attribute. Set it in script:
+     document.getElementById('all').indeterminate = true -->
+<label class="inspera-checkbox" for="all">
+  <input class="inspera-checkbox__input" id="all" type="checkbox" aria-checked="mixed" />
+  <span class="inspera-checkbox__box" aria-hidden="true">
+    <span class="material-symbols-outlined">remove</span>
+  </span>
+  <span>Select all</span>
+</label>
+```
+
+
+### Radio Button
+
+Allow single selection. - category: `input-controls`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library - build the markup from the HTML and CSS under
+> **Without the package** below, which is this component's exact appearance.
+
+```tsx
+import { RadioButton } from '@inspera/components'
+
+<RadioButton
+  label="Standard delivery"
+  name="delivery"
+  selected={value === 'standard'}
+  onChange={() => setValue('standard')}
+/>
+```
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `label` | `string` | `'Radio option'` | Text beside the control. Always provide one. |
+| `selected` | `boolean` | - | Selected state. |
+| `name` | `string` | - | Shared form name. Every radio in a group must use the same value. Left unset, each radio gets its own generated name and stands alone - this used to default to the literal `"radio"`, which silently put every unrelated RadioButton on a page into one mutually exclusive group. |
+| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Pressed' \| 'Disabled' \| 'Error'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Pressed` are presentation-only - leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Error` and `Disabled` are real application state and belong in your code. |
+| `withLabel` | `boolean` | `true` | Render the label. |
+| `onChange` | `(selected: boolean) => void` | - | Fired when this option becomes selected. |
+
+**Accessibility** - role `radio`, keyboard operable. Use role="radiogroup" for the group container; Use aria-checked to indicate selected state; Arrow keys navigate between options in the group.
+
+**Do:** Use for mutually exclusive options; Always group inside a radiogroup; Pre-select a default when appropriate.
+**Don't:** Do not use for multi-select - use Checkbox instead; Do not use a single radio button alone.
+
+**Deprecated aliases** (do not use): `Radiobutton`, `Radiobuttons`, `Radio Button New-BonW`, `Radio Button New-BonY`, `Radio Button New-WonB`, `Radio Button New-YonB`
+
+#### Without the package - exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. This is the
+component's exact structure and appearance: do not substitute a radius, colour,
+spacing or font weight of your own, and do not restyle it with a UI kit's
+defaults.
+
+It is not the whole component. HTML and CSS cannot provide focus trapping,
+Escape handling, outside-click dismissal or a roving tabindex, so the
+accessibility contract and any behaviour listed above must still be implemented
+in JavaScript before this component is finished.
+
+- Identical structure to Checkbox: a visually hidden native `<input type="radio">` plus a drawn circle, with the ring on the circle.
+- The circle is 20px with a 2px border and `--radius-pill`; the selected dot is a 10px child element, not a background, so it stays centred while the circle scales on press.
+- Grouping is the `name` attribute. Every radio in one question shares it, and unrelated questions must not - two groups sharing a name become one.
+- For a set of options prefer the Radio Group component, which owns the name and the group label for you.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --primary:                #004080;
+  --error:                  #D32F2F;
+  --white:                  #ffffff;
+  --text-primary:           rgba(0, 0, 0, 0.87);
+  --border-control-strong:  #8C8C8C;
+  --radius-pill:            9999px;
+  --focus-ring-width:       2px;
+  --focus-ring-offset:      2px;
+  --focus-ring-color:       var(--primary);
+  --font-sans:              'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-radio {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  cursor: pointer;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 16px;
+}
+
+.inspera-radio__input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.inspera-radio__circle {
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-pill);
+  border: 2px solid var(--border-control-strong);
+  background: var(--white);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 120ms ease;
+}
+
+/* The dot is a child element, not a background - it has to stay centred as the
+   circle scales on press. */
+.inspera-radio__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+  background: var(--primary);
+}
+
+.inspera-radio__input:checked + .inspera-radio__circle { border-color: var(--primary); }
+
+.inspera-radio:hover .inspera-radio__circle { border-color: var(--primary); background: rgba(0, 64, 128, 0.04); }
+
+.inspera-radio__input:focus-visible + .inspera-radio__circle {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.inspera-radio:active .inspera-radio__circle { transform: scale(0.92); }
+
+.inspera-radio--error .inspera-radio__circle { border-color: var(--error); }
+.inspera-radio--error:hover .inspera-radio__circle { border-color: var(--error); }
+
+.inspera-radio--disabled { cursor: not-allowed; opacity: 0.38; }
+```
+
+```html
+<!-- Every radio in one group shares a name. Radios with no name, or with
+     a shared generic name across unrelated questions, will fight each other. -->
+<label class="inspera-radio" for="standard">
+  <input class="inspera-radio__input" id="standard" type="radio" name="delivery" />
+  <span class="inspera-radio__circle" aria-hidden="true">
+    <span class="inspera-radio__dot"></span>
+  </span>
+  <span>Standard delivery</span>
+</label>
+
+<label class="inspera-radio" for="express">
+  <input class="inspera-radio__input" id="express" type="radio" name="delivery" />
+  <span class="inspera-radio__circle" aria-hidden="true"></span>
+  <span>Express delivery</span>
+</label>
+```
+
+
+### Select
+
+Select one option from a list. - category: `input-controls`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library - build the markup from the HTML and CSS under
+> **Without the package** below, which is this component's exact appearance.
+
+```tsx
+import { Select } from '@inspera/components'
+
+<Select
+  label="Country"
+  widthMode="Fixed"
+  search={false}
+  options={['Norway', 'Sweden', 'Denmark']}
+/>
+```
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `label` | `string` | `'Country'` | Render the label. |
+| `placeholder` | `string` | `'Select an option'` | Shown when nothing is selected. Not a substitute for the label. |
+| `options` | `string[]` | `defaultOptions` | The selectable values, in the order they should appear. |
+| `value` | `string` | - | Selected value. Controlled - pair with onChange. |
+| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Disabled' \| 'Error' \| 'Open'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Open` are presentation-only - leave them unset in application code, where CSS and the component's own state drive them. `Error` and `Disabled` are real application state and belong in your code. |
+| `widthMode` | `'Fixed' \| 'Content Adaptable'` | `'Fixed'` | Trigger sizing. |
+| `showLabel` | `boolean` | `true` | Render the visible label. Hiding it still requires an accessible name. |
+| `search` | `boolean` | `false` | Filterable option list. |
+| `onChange` | `(value: string) => void` | - | Fired with the selected value. |
+
+**Accessibility** - role `combobox`, keyboard operable. Use aria-expanded to indicate open state; Use aria-activedescendant for highlighted option; Support arrow key navigation through options.
+
+**Behaviour you must implement** - the HTML and CSS below are structure and
+appearance only. This component is not finished until it also does:
+
+- Open on click, Enter, Space or Down arrow; close on Escape, on outside click, and on selection.
+- Move the highlight with Up/Down and commit with Enter, keeping aria-activedescendant on the highlighted option.
+- Restore focus to the trigger whenever the listbox closes.
+- In search mode, filter as the user types without losing the highlight.
+
+**Do:** Use for 5+ options where space is limited; Always provide a label; Show a clear placeholder when no option is selected.
+**Don't:** Do not use for fewer than 3 options - use Radio Button instead; Do not nest selects inside other selects.
+
+**Deprecated aliases** (do not use): `Select / Fixed width`, `Select / Content adaptable`, `Dropdown`, `Dropdown with Label`
+
+#### Without the package - exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. This is the
+component's exact structure and appearance: do not substitute a radius, colour,
+spacing or font weight of your own, and do not restyle it with a UI kit's
+defaults.
+
+It is not the whole component. HTML and CSS cannot provide focus trapping,
+Escape handling, outside-click dismissal or a roving tabindex, so the
+accessibility contract and any behaviour listed above must still be implemented
+in JavaScript before this component is finished.
+
+- The trigger is a `role="combobox"` element with `tabindex="0"`, `aria-expanded`, `aria-haspopup="listbox"` and `aria-controls` pointing at the list. None of that comes free - this is not a native `<select>`.
+- The list is `role="listbox"` with `role="option"` children carrying `aria-selected`; it is positioned against the trigger, not appended to the body.
+- Keep the keyboard cursor and the selected value as two different states. The highlighted option (`--active`, `--blue-100`) is where the arrows are; `aria-selected` is what has been chosen.
+- The chevron rotates 180deg while open, driven off `aria-expanded` so the attribute and the visual cannot disagree.
+- Keyboard: Down opens and moves, Up moves back, Enter commits, Escape closes.
+- Fixed width is 220px; Content Adaptable drops to `auto` with a 120px floor.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --primary:                #004080;
+  --white:                  #ffffff;
+  --gray-300:               #D9D9D9;
+  --gray-600:               #7A7A7A;
+  --blue-100:               #F0F7FF;
+  --blue-300:               #B3D9FF;
+  --text-primary:           rgba(0, 0, 0, 0.87);
+  --border-control:         #C4C4C4;
+  --border-control-strong:  #8C8C8C;
+  --border-strong:          var(--gray-300);
+  --muted-foreground:       var(--gray-600);
+  --radius-sm:              4px;
+  --radius-md:              8px;
+  --shadow-200:             0px 8px 8px rgba(39, 39, 39, 0.08), 0px 4px 6px rgba(39, 39, 39, 0.12);
+  --effect-state-focus:     0px 0px 0px 3px var(--blue-300);
+  --border-width-default:   1px;
+  --duration-fast:          100ms;
+  --easing-standard:        cubic-bezier(0.2, 0, 0, 1);
+  --z-dropdown:             300;
+  --font-sans:              'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-select {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 220px;
+  font-family: var(--font-sans);
+}
+
+/* Content-adaptable: the trigger grows with the longest value instead of
+   holding a fixed 220px. */
+.inspera-select--auto { width: auto; }
+
+.inspera-select__label {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.inspera-select__anchor { position: relative; }
+
+.inspera-select__trigger {
+  height: 40px;
+  width: 220px;
+  min-width: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0 12px;
+  border-radius: var(--radius-md);
+  border: var(--border-width-default) solid var(--border-control);
+  background: var(--white);
+  /* Muted while showing the placeholder; --text-primary once a value is set. */
+  color: var(--muted-foreground);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  cursor: pointer;
+  transition:
+    border-color var(--duration-fast) var(--easing-standard),
+    box-shadow var(--duration-fast) var(--easing-standard);
+}
+
+.inspera-select--auto .inspera-select__trigger { width: auto; }
+
+.inspera-select__trigger--filled { color: var(--text-primary); }
+
+.inspera-select__trigger:hover { border-color: var(--border-control-strong); }
+
+.inspera-select__trigger:focus-visible,
+.inspera-select__trigger[aria-expanded='true'] {
+  border-color: var(--primary);
+  box-shadow: var(--effect-state-focus);
+  outline: none;
+}
+
+.inspera-select__trigger .material-symbols-outlined {
+  font-size: 20px;
+  transition: transform 140ms ease;
+}
+.inspera-select__trigger[aria-expanded='true'] .material-symbols-outlined { transform: rotate(180deg); }
+
+/* The list is anchored to the trigger, not appended to the body. */
+.inspera-select__list {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  margin: 0;
+  padding: 4px;
+  list-style: none;
+  background: var(--white);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-200);
+  z-index: var(--z-dropdown, 20);
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.inspera-select__option {
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 16px;
+  cursor: pointer;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Two different things: --active is the keyboard cursor, [aria-selected] is
+   the committed value. Collapsing them loses the arrow-key position. */
+.inspera-select__option--active { background: var(--blue-100); }
+.inspera-select__option[aria-selected='true'] { color: var(--primary); font-weight: 500; }
+
+.inspera-select__empty {
+  padding: 8px 12px;
+  color: var(--muted-foreground);
+  font-size: 14px;
+}
+```
+
+```html
+<div class="inspera-select">
+  <label class="inspera-select__label" for="country">Country</label>
+  <div class="inspera-select__anchor">
+    <div class="inspera-select__trigger" id="country" role="combobox" tabindex="0"
+         aria-expanded="false" aria-haspopup="listbox" aria-controls="country-list">
+      <span>Select an option</span>
+      <span class="material-symbols-outlined" aria-hidden="true">expand_more</span>
+    </div>
+    <!-- Rendered only while open. -->
+    <ul class="inspera-select__list" id="country-list" role="listbox">
+      <li class="inspera-select__option inspera-select__option--active" role="option" aria-selected="false">Norway</li>
+      <li class="inspera-select__option" role="option" aria-selected="false">Sweden</li>
+    </ul>
+  </div>
+</div>
+```
+
+
+### Toggle
+
+Switch a setting on or off instantly. - category: `input-controls`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library - build the markup from the HTML and CSS under
+> **Without the package** below, which is this component's exact appearance.
+
+```tsx
+import { Toggle } from '@inspera/components'
+
+<Toggle
+  label="Enable notifications"
+  checked={enabled}
+  onChange={setEnabled}
+  size="Medium"
+/>
+```
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `label` | `string` | `'Toggle setting'` | Text beside the switch describing the setting. |
+| `checked` | `boolean` | - | On / off state. |
+| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Disabled'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Hover` and `Focused` are presentation-only - leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Disabled` is real application state and belongs in your code. |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Track / thumb size. |
+| `withLabel` | `boolean` | `true` | Render the label. |
+| `onChange` | `(checked: boolean) => void` | - | Fired with the new on/off state. |
+
+**Accessibility** - role `switch`, keyboard operable. Use role="switch" for the toggle; Use aria-checked to reflect on/off state; Space key toggles the switch.
+
+**Do:** Use for immediate on/off settings; Provide a clear label describing the setting; Show the current state visually.
+**Don't:** Do not use for form submissions - use Checkbox instead; Do not use without a visible label.
+
+**Deprecated aliases** (do not use): `Switch`, `Toggle switch`
+
+#### Without the package - exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. This is the
+component's exact structure and appearance: do not substitute a radius, colour,
+spacing or font weight of your own, and do not restyle it with a UI kit's
+defaults.
+
+It is not the whole component. HTML and CSS cannot provide focus trapping,
+Escape handling, outside-click dismissal or a roving tabindex, so the
+accessibility contract and any behaviour listed above must still be implemented
+in JavaScript before this component is finished.
+
+- The input carries `role="switch"`. Without it the control announces as a checkbox, which promises a form value rather than an immediate change.
+- Track 44x24 (36x20 small), thumb 20px (16px), 2px padding. Thumb travel is track - thumb - 2xpadding: 20px, or 16px when small.
+- The track fill is `--border-control` off and `--primary` on. It does not tint on hover - only the thumb shadow deepens.
+- The focus ring goes on the track, since the real input is 0x0.
+- A toggle applies immediately. If the change needs a Save button, use a Checkbox instead.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --primary:            #004080;
+  --white:              #ffffff;
+  --text-primary:       rgba(0, 0, 0, 0.87);
+  --border-control:     #C4C4C4;
+  --radius-pill:        9999px;
+  --focus-ring-width:   2px;
+  --focus-ring-offset:  2px;
+  --focus-ring-color:   var(--primary);
+  --font-sans:          'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 16px;
+}
+
+.inspera-toggle__input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.inspera-toggle__track {
+  width: 44px;
+  height: 24px;
+  border-radius: var(--radius-pill);
+  background: var(--border-control);
+  padding: 2px;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  transition: background 140ms ease;
+}
+
+.inspera-toggle--small .inspera-toggle__track { width: 36px; height: 20px; }
+
+.inspera-toggle__thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 9999px;
+  background: var(--white);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  transform: translateX(0);
+  transition: transform 160ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 120ms ease;
+}
+
+.inspera-toggle--small .inspera-toggle__thumb { width: 16px; height: 16px; }
+
+.inspera-toggle__input:checked + .inspera-toggle__track { background: var(--primary); }
+
+/* Travel is track - thumb - (2 x padding). */
+.inspera-toggle__input:checked + .inspera-toggle__track .inspera-toggle__thumb {
+  transform: translateX(20px);
+}
+.inspera-toggle--small .inspera-toggle__input:checked + .inspera-toggle__track .inspera-toggle__thumb {
+  transform: translateX(16px);
+}
+
+.inspera-toggle:hover .inspera-toggle__thumb { box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3); }
+
+.inspera-toggle__input:focus-visible + .inspera-toggle__track {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.inspera-toggle--disabled { cursor: not-allowed; opacity: 0.38; }
+```
+
+```html
+<label class="inspera-toggle" for="notify">
+  <input class="inspera-toggle__input" id="notify" type="checkbox" role="switch" />
+  <span class="inspera-toggle__track" aria-hidden="true">
+    <span class="inspera-toggle__thumb"></span>
+  </span>
+  <span>Enable notifications</span>
+</label>
+```
+
+
+### Textarea
+
+Collect multi-line text input. - category: `input-controls`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library - build the markup from the HTML and CSS under
+> **Without the package** below, which is this component's exact appearance.
+
+```tsx
+import { Textarea } from '@inspera/components'
+
+<Textarea
+  label="Feedback"
+  placeholder="Share your thoughts..."
+  size="Medium"
+  showCount={false}
+  maxLength={280}
+  helpText="Keep it constructive."
+/>
+```
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `label` | `string` | `'Description'` | Field label. |
+| `placeholder` | `string` | `'Placeholder text'` | Hint shown when empty. Not a substitute for the label. |
+| `value` | `string` | - | Current value. Controlled - pair with onChange. |
+| `rows` | `number` | `4` | Visible text rows. |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Vertical padding density. |
+| `state` | `'Default' \| 'Hover' \| 'Focused' \| 'Filled' \| 'Error' \| 'Disabled' \| 'ReadOnly'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Hover`, `Focused` and `Filled` are presentation-only - leave them unset in application code, where CSS drives them from the real pointer and keyboard. `Error`, `Disabled` and `ReadOnly` are real application state and belong in your code. |
+| `showLabel` | `boolean` | `true` | Show the field label. |
+| `helpText` | `string` | - | Guidance shown below the field. Replaced by errorText when invalid. |
+| `errorText` | `string` | - | Validation message. Linked to the control via aria-describedby. |
+| `maxLength` | `number` | - | Maximum character length. |
+| `showCount` | `boolean` | `false` | Show character counter. |
+| `onChange` | `(value: string) => void` | - | Fired with the new value on every keystroke. |
+
+**Accessibility** - role `textbox`, keyboard operable. Always associate label with textarea using htmlFor/id; Error text must be linked via aria-describedby; aria-invalid reflects the error state.
+
+**Do:** Always include a visible label; Use rows to hint expected length; Show a character counter when a max length applies.
+**Don't:** Do not use for single-line input - use Text Input instead; Do not disable resize without reason.
+
+**Deprecated aliases** (do not use): `Text area`, `Multiline input`, `Comment box`
+
+#### Without the package - exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. This is the
+component's exact structure and appearance: do not substitute a radius, colour,
+spacing or font weight of your own, and do not restyle it with a UI kit's
+defaults.
+
+It is not the whole component. HTML and CSS cannot provide focus trapping,
+Escape handling, outside-click dismissal or a roving tabindex, so the
+accessibility contract and any behaviour listed above must still be implemented
+in JavaScript before this component is finished.
+
+- Same field treatment as Text Input, but the wrapper is a column so the counter sits inside the border, under the text.
+- Vertical padding is 8px (6px small); horizontal stays 12px at both sizes.
+- `resize: vertical` only. Free resize lets the user drag the field out of the layout.
+- The counter is presentational - pair `maxlength` on the control with it, and do not rely on the counter to enforce the limit.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --primary:                #004080;
+  --error:                  #D32F2F;
+  --white:                  #ffffff;
+  --gray-600:               #7A7A7A;
+  --blue-300:               #B3D9FF;
+  --red-300:                #F9B8B8;
+  --text-primary:           rgba(0, 0, 0, 0.87);
+  --border-control:         #C4C4C4;
+  --border-control-strong:  #8C8C8C;
+  --surface-disabled:       #F5F5F5;
+  --muted-foreground:       var(--gray-600);
+  --radius-md:              8px;
+  --effect-state-focus:     0px 0px 0px 3px var(--blue-300);
+  --effect-state-error:     0px 0px 0px 3px var(--red-300);
+  --border-width-default:   1px;
+  --duration-fast:          100ms;
+  --easing-standard:        cubic-bezier(0.2, 0, 0, 1);
+  --font-sans:              'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-textarea {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  font-family: var(--font-sans);
+}
+
+.inspera-textarea__label {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+/* Column, not row: the counter sits under the text, inside the border. */
+.inspera-textarea__field {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 12px;
+  border-radius: var(--radius-md);
+  border: var(--border-width-default) solid var(--border-control);
+  background: var(--white);
+  transition:
+    border-color var(--duration-fast) var(--easing-standard),
+    box-shadow var(--duration-fast) var(--easing-standard);
+}
+
+.inspera-textarea--small .inspera-textarea__field { padding: 6px 12px; }
+
+.inspera-textarea__field:hover { border-color: var(--border-control-strong); }
+
+.inspera-textarea__field:focus-within {
+  border-color: var(--primary);
+  box-shadow: var(--effect-state-focus);
+}
+
+.inspera-textarea__control {
+  width: 100%;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  /* Vertical only. Free resize lets the user drag it out of the layout. */
+  resize: vertical;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  color: var(--text-primary);
+}
+
+.inspera-textarea__count {
+  align-self: flex-end;
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--muted-foreground);
+}
+
+.inspera-textarea__help  { font-size: 12px; color: var(--muted-foreground); }
+.inspera-textarea__error { font-size: 12px; color: var(--error); }
+
+.inspera-textarea__field[data-invalid='true'],
+.inspera-textarea__field[data-invalid='true']:hover,
+.inspera-textarea__field[data-invalid='true']:focus-within {
+  border-color: var(--error);
+  box-shadow: var(--effect-state-error);
+}
+
+.inspera-textarea__field[data-disabled='true'] {
+  background: var(--surface-disabled);
+  opacity: 0.6;
+}
+```
+
+```html
+<div class="inspera-textarea">
+  <label class="inspera-textarea__label" for="feedback">Feedback</label>
+  <div class="inspera-textarea__field">
+    <textarea class="inspera-textarea__control" id="feedback" rows="4"
+              maxlength="280" placeholder="Share your thoughts..."
+              aria-describedby="feedback-help"></textarea>
+    <span class="inspera-textarea__count">0/280</span>
+  </div>
+  <span class="inspera-textarea__help" id="feedback-help">Keep it constructive.</span>
+</div>
+```
+
+
+### Form Field
+
+Standardize label, control, and help/error layout around any input. - category: `input-controls`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library - build the markup from the HTML and CSS under
+> **Without the package** below, which is this component's exact appearance.
+
+```tsx
+import { FormField } from '@inspera/components'
+
+<FormField
+  label="Email address"
+  htmlFor="email"
+  required={false}
+  helpText="We'll never share your email."
+>
+  <TextInput id="email" showLabel={false} />
+</FormField>
+```
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `label` | `string` | - | Field label text. |
+| `htmlFor` | `string` | - | id of the wrapped control for label association. |
+| `required` | `boolean` | `false` | Show a required asterisk. |
+| `helpText` | `string` | - | Helper text shown below the control. |
+| `errorText` | `string` | - | Error message; replaces help text when present. |
+| `children` **(required)** | `ReactNode` | - | The control this field wraps. Exactly one. |
+
+**Accessibility** - role `group`, keyboard operable. Associate the label with the control via htmlFor/id; Link error and help text with aria-describedby on the control; Required fields should set aria-required on the control.
+
+**Do:** Wrap any single control for consistent spacing; Use htmlFor to link the label to the control; Show only one of help or error at a time.
+**Don't:** Do not wrap multiple unrelated controls; Do not omit the label for accessibility.
+
+**Deprecated aliases** (do not use): `Field wrapper`, `Input group`
+
+#### Without the package - exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. This is the
+component's exact structure and appearance: do not substitute a radius, colour,
+spacing or font weight of your own, and do not restyle it with a UI kit's
+defaults.
+
+It is not the whole component. HTML and CSS cannot provide focus trapping,
+Escape handling, outside-click dismissal or a roving tabindex, so the
+accessibility contract and any behaviour listed above must still be implemented
+in JavaScript before this component is finished.
+
+- The wrapper owns three links the control cannot make for itself: `for` -> the control id, `aria-describedby` -> the message id, and `aria-invalid` when the message is an error.
+- Only one message shows at a time. When there is an error it replaces the help text; it does not stack under it.
+- The red asterisk is `aria-hidden` decoration. Requiredness is announced from the control's own `required` attribute - the asterisk alone tells a screen reader nothing.
+- Gap between label, control and message is 6px; message text is 12px.
+- The nested control keeps its own label markup off (there is already one here) but still needs an accessible name via the outer `for`.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --primary:                #004080;
+  --error:                  #D32F2F;
+  --white:                  #ffffff;
+  --gray-100:               #F7F7F7;
+  --gray-600:               #7A7A7A;
+  --blue-300:               #B3D9FF;
+  --red-300:                #F9B8B8;
+  --action-active:          rgba(0, 0, 0, 0.56);
+  --text-primary:           rgba(0, 0, 0, 0.87);
+  --border-control:         #C4C4C4;
+  --border-control-strong:  #8C8C8C;
+  --surface-disabled:       #F5F5F5;
+  --muted-foreground:       var(--gray-600);
+  --radius-md:              8px;
+  --effect-state-focus:     0px 0px 0px 3px var(--blue-300);
+  --effect-state-error:     0px 0px 0px 3px var(--red-300);
+  --border-width-default:   1px;
+  --duration-fast:          100ms;
+  --easing-standard:        cubic-bezier(0.2, 0, 0, 1);
+  --font-sans:              'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-input {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  font-family: var(--font-sans);
+}
+
+.inspera-input__label {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+/* The bordered box is the wrapper, not the <input>. That is what lets a
+   leading or trailing icon sit inside the border. */
+.inspera-input__field {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  border-radius: var(--radius-md);
+  border: var(--border-width-default) solid var(--border-control);
+  background: var(--white);
+  transition:
+    border-color var(--duration-fast) var(--easing-standard),
+    box-shadow var(--duration-fast) var(--easing-standard);
+}
+
+.inspera-input--small .inspera-input__field { height: 32px; }
+
+.inspera-input__field:hover { border-color: var(--border-control-strong); }
+
+/* :focus-within, not :focus - the focusable element is the <input> inside. */
+.inspera-input__field:focus-within {
+  border-color: var(--primary);
+  box-shadow: var(--effect-state-focus);
+}
+
+/* The control itself is unstyled: no border, no outline, no background. All of
+   that belongs to the wrapper, or you get a box inside a box. */
+.inspera-input__control {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  color: var(--text-primary);
+}
+
+.inspera-input__field .material-symbols-outlined {
+  font-size: 20px;
+  color: var(--action-active);
+}
+
+.inspera-input__help {
+  font-size: 12px;
+  color: var(--muted-foreground);
+}
+
+.inspera-input__error {
+  font-size: 12px;
+  color: var(--error);
+}
+
+/* Invalid outranks hover and focus - the error has to stay legible. */
+.inspera-input__field[data-invalid='true'],
+.inspera-input__field[data-invalid='true']:hover,
+.inspera-input__field[data-invalid='true']:focus-within {
+  border-color: var(--error);
+  box-shadow: var(--effect-state-error);
+}
+
+.inspera-input__field[data-disabled='true'] {
+  background: var(--surface-disabled);
+  opacity: 0.6;
+}
+
+.inspera-input__field[data-readonly='true'] {
+  background: var(--gray-100);
+}
+.inspera-input__field[data-readonly='true']:hover { border-color: var(--border-control); }
+
+.inspera-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  font-family: var(--font-sans);
+}
+
+.inspera-field-group__label {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+/* The asterisk is decorative: requiredness is carried by the control's own
+   "required" attribute, which is what a screen reader announces. */
+.inspera-field-group__required {
+  color: var(--error);
+  margin-left: 2px;
+}
+
+.inspera-field-group__help  { font-size: 12px; color: var(--muted-foreground); }
+.inspera-field-group__error { font-size: 12px; color: var(--error); }
+```
+
+```html
+<div class="inspera-field-group">
+  <label class="inspera-field-group__label" for="email">
+    Email address<span class="inspera-field-group__required" aria-hidden="true">*</span>
+  </label>
+  <div class="inspera-input">
+    <div class="inspera-input__field">
+      <input class="inspera-input__control" id="email" type="email" required
+             aria-describedby="email-msg" />
+    </div>
+  </div>
+  <span class="inspera-field-group__help" id="email-msg">We'll never share your email.</span>
+</div>
+```
+
+
+### Slider
+
+Select a numeric value from a continuous range. - category: `input-controls`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library - build the markup from the HTML and CSS under
+> **Without the package** below, which is this component's exact appearance.
+
+```tsx
+import { Slider } from '@inspera/components'
+
+<Slider
+  label="Volume"
+  min={0}
+  max={100}
+  value={volume}
+  onChange={setVolume}
+  showValue={true}
+/>
+```
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `label` | `string` | `'Value'` | Field label describing what is being adjusted. |
+| `min` | `number` | `0` | Minimum value. |
+| `max` | `number` | `100` | Maximum value. |
+| `value` | `number` | - | Current value. Controlled - pair with onChange. |
+| `step` | `number` | `1` | Increment granularity. |
+| `state` | `'Default' \| 'Focused' \| 'Disabled'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Focused` is presentation-only - leave it unset in application code, where CSS drives it from the real pointer and keyboard. `Disabled` is real application state and belongs in your code. |
+| `showValue` | `boolean` | `true` | Show the current value. |
+| `showLabel` | `boolean` | `true` | Show the field label. |
+| `onChange` | `(value: number) => void` | - | Fired as the value changes, by drag or arrow key. |
+
+**Accessibility** - role `slider`, keyboard operable. Use role="slider" with aria-valuemin / aria-valuemax / aria-valuenow; Provide an accessible label via aria-label; Arrow keys adjust the value.
+
+**Behaviour you must implement** - the HTML and CSS below are structure and
+appearance only. This component is not finished until it also does:
+
+- Arrow keys adjust by one step, PageUp/PageDown by a larger step, Home/End to the minimum and maximum.
+- Support pointer drag as well as keyboard, keeping aria-valuenow in step with the thumb.
+
+**Do:** Use for adjustable numeric ranges; Show the current value for precision; Provide a clear label.
+**Don't:** Do not use for exact numeric entry - use Text Input instead; Do not use without min/max bounds.
+
+**Deprecated aliases** (do not use): `Range`, `Range slider`
+
+#### Without the package - exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. This is the
+component's exact structure and appearance: do not substitute a radius, colour,
+spacing or font weight of your own, and do not restyle it with a UI kit's
+defaults.
+
+It is not the whole component. HTML and CSS cannot provide focus trapping,
+Escape handling, outside-click dismissal or a roving tabindex, so the
+accessibility contract and any behaviour listed above must still be implemented
+in JavaScript before this component is finished.
+
+- Keep a real `<input type="range">`, made invisible with `opacity: 0` over the drawn track. Arrows, Home/End, Page Up/Down and touch drag all come free; a div rebuild loses every one of them.
+- The thumb takes `pointer-events: none` so the input underneath receives the drag.
+- Track is 4px `--gray-300`, fill is `--primary`, thumb is 20px white with a 2px `--primary` border.
+- Position the thumb with `left: <pct>%` and `transform: translate(-50%, -50%)`, so it centres on the value rather than hanging off the end.
+- The focus ring goes on the drawn thumb, since the real input is invisible.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --primary:            #004080;
+  --white:              #ffffff;
+  --gray-300:           #D9D9D9;
+  --gray-600:           #7A7A7A;
+  --text-primary:       rgba(0, 0, 0, 0.87);
+  --muted-foreground:   var(--gray-600);
+  --radius-pill:        9999px;
+  --focus-ring-width:   2px;
+  --focus-ring-offset:  2px;
+  --focus-ring-color:   var(--primary);
+  --font-sans:          'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono:          'Noto Sans Mono', ui-monospace, SFMono-Regular, monospace;
+}
+
+.inspera-slider {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  font-family: var(--font-sans);
+}
+
+.inspera-slider__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.inspera-slider__label {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.inspera-slider__value {
+  font-size: 14px;
+  color: var(--muted-foreground);
+  font-family: var(--font-mono);
+}
+
+.inspera-slider__control {
+  position: relative;
+  height: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.inspera-slider__track {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 4px;
+  border-radius: var(--radius-pill);
+  background: var(--gray-300);
+}
+
+.inspera-slider__fill {
+  position: absolute;
+  left: 0;
+  height: 4px;
+  border-radius: var(--radius-pill);
+  background: var(--primary);
+}
+
+/* Drawn, and deliberately not hit-testable - the real input above it takes
+   every pointer event, so drag, click-to-seek and touch all still work. */
+.inspera-slider__thumb {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 20px;
+  height: 20px;
+  border-radius: 9999px;
+  background: var(--white);
+  border: 2px solid var(--primary);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  pointer-events: none;
+}
+
+/* The native input, invisible but fully functional: arrows, Home/End, Page
+   Up/Down and touch drag all come free. Rebuilding this with a div loses them. */
+.inspera-slider__input {
+  position: absolute;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 20px;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.inspera-slider__input:focus-visible + .inspera-slider__thumb,
+.inspera-slider__control:has(:focus-visible) .inspera-slider__thumb {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.inspera-slider--disabled { opacity: 0.5; }
+.inspera-slider--disabled .inspera-slider__input { cursor: not-allowed; }
+```
+
+```html
+<div class="inspera-slider">
+  <div class="inspera-slider__head">
+    <label class="inspera-slider__label" for="volume">Volume</label>
+    <span class="inspera-slider__value">50</span>
+  </div>
+  <div class="inspera-slider__control">
+    <div class="inspera-slider__track"></div>
+    <div class="inspera-slider__fill" style="width: 50%"></div>
+    <span class="inspera-slider__thumb" style="left: 50%"></span>
+    <input class="inspera-slider__input" id="volume" type="range"
+           min="0" max="100" value="50" aria-label="Volume" />
+  </div>
+</div>
+```
+
+
+### Segmented Control
+
+Choose one option from a small set of mutually exclusive segments. - category: `input-controls`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library - build the markup from the HTML and CSS under
+> **Without the package** below, which is this component's exact appearance.
+
+```tsx
+import { SegmentedControl } from '@inspera/components'
+
+<SegmentedControl
+  items={['Day', 'Week', 'Month']}
+  value={range}
+  onChange={setRange}
+  size="Medium"
+  fullWidth={false}
+/>
+```
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `items` | `string[]` | `['Day', 'Week', 'Month']` | Segment labels. |
+| `value` | `number` | - | Active segment index. |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Segment height. |
+| `fullWidth` | `boolean` | `false` | Stretch to fill the row. |
+| `onChange` | `(index: number) => void` | - | Fired with the index of the chosen segment. |
+
+**Accessibility** - role `radiogroup`, keyboard operable. Container uses role="radiogroup"; Each segment uses role="radio" with aria-checked; Arrow keys move between segments.
+
+**Behaviour you must implement** - the HTML and CSS below are structure and
+appearance only. This component is not finished until it also does:
+
+- Roving tabindex across the segments - the control is one tab stop.
+- Arrow keys move and select in a single step, wrapping at the ends.
+
+**Do:** Use for 2-4 mutually exclusive views; Keep labels short and parallel; Show the active segment clearly.
+**Don't:** Do not use for more than 4 options - use Tabs or Select; Do not use for multi-select.
+
+**Deprecated aliases** (do not use): `Segment control`, `Toggle group`, `Button group`
+
+#### Without the package - exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. This is the
+component's exact structure and appearance: do not substitute a radius, colour,
+spacing or font weight of your own, and do not restyle it with a UI kit's
+defaults.
+
+It is not the whole component. HTML and CSS cannot provide focus trapping,
+Escape handling, outside-click dismissal or a roving tabindex, so the
+accessibility contract and any behaviour listed above must still be implemented
+in JavaScript before this component is finished.
+
+- The track is `--gray-100` with 4px padding and `--radius-md`; segments are `--radius-sm` inside it.
+- The selected segment becomes a white `--surface` card with `--shadow-100` and `--primary` text at 600 weight. Colour alone is not enough at 14px.
+- Segment height is 40px (32px small) and the type stays 14px at both.
+- Use `role="radiogroup"` with `role="radio"` children and a roving tabindex: the selected item is the only tab stop, and arrows move between them.
+- For more than about four options, or for anything not mutually exclusive, use Tabs or a Select instead.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --primary:           #004080;
+  --white:             #ffffff;
+  --gray-100:          #F7F7F7;
+  --gray-600:          #7A7A7A;
+  --surface:           var(--white);
+  --muted-foreground:  var(--gray-600);
+  --radius-sm:         4px;
+  --radius-md:         8px;
+  --shadow-100:        0px 4px 4px rgba(39, 39, 39, 0.08), 0px 2px 4px rgba(39, 39, 39, 0.12);
+  --font-sans:         'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-segmented {
+  display: inline-flex;
+  gap: 2px;
+  padding: 4px;
+  background: var(--gray-100);
+  border-radius: var(--radius-md);
+}
+
+.inspera-segmented--full { width: 100%; }
+
+.inspera-segmented__item {
+  height: 40px;
+  padding: 0 16px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  box-shadow: none;
+  color: var(--muted-foreground);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 120ms ease;
+}
+
+.inspera-segmented--small .inspera-segmented__item { height: 32px; }
+.inspera-segmented--full .inspera-segmented__item { flex: 1; }
+
+/* Selected: a raised white card on the tinted track. Colour alone is not
+   enough separation at 14px. */
+.inspera-segmented__item[aria-checked='true'] {
+  background: var(--surface);
+  box-shadow: var(--shadow-100);
+  color: var(--primary);
+  font-weight: 600;
+}
+```
+
+```html
+<!-- Roving tabindex: the group is one tab stop and the arrows move inside it. -->
+<div class="inspera-segmented" role="radiogroup" aria-label="Date range">
+  <button type="button" class="inspera-segmented__item" role="radio" aria-checked="true" tabindex="0">Day</button>
+  <button type="button" class="inspera-segmented__item" role="radio" aria-checked="false" tabindex="-1">Week</button>
+  <button type="button" class="inspera-segmented__item" role="radio" aria-checked="false" tabindex="-1">Month</button>
+</div>
+```
+
+
+### Date Picker
+
+Select a calendar date from a popover. - category: `input-controls`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library - build the markup from the HTML and CSS under
+> **Without the package** below, which is this component's exact appearance.
+
+```tsx
+import { DatePicker } from '@inspera/components'
+
+<DatePicker
+  label="Due date"
+  value="2026-08-19"
+  onChange={setDate}
+/>
+```
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `label` | `string` | `'Date'` | Field label. |
+| `value` | `string` | - | Selected date (YYYY-MM-DD). |
+| `placeholder` | `string` | `'Select date'` | Trigger placeholder. |
+| `state` | `'Default' \| 'Focused' \| 'Disabled' \| 'Error'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Focused` is presentation-only - leave it unset in application code, where CSS drives it from the real pointer and keyboard. `Error` and `Disabled` are real application state and belong in your code. |
+| `showLabel` | `boolean` | `true` | Show the field label. |
+| `defaultOpen` | `boolean` | `false` | Open the calendar initially. |
+| `onChange` | `(iso: string) => void` | - | Fired with the selected date as an ISO string (YYYY-MM-DD). |
+
+**Accessibility** - role `dialog`, keyboard operable. Trigger uses aria-haspopup="dialog" and aria-expanded; Popover uses role="dialog" with a label; Day cells are buttons with descriptive aria-labels; Escape closes the popover.
+
+**Behaviour you must implement** - the HTML and CSS below are structure and
+appearance only. This component is not finished until it also does:
+
+- Open the popover on trigger activation and place focus on the focused day.
+- Arrow keys move by day, PageUp/PageDown by month, Home/End to the ends of the week.
+- Close on Escape or on selection, restore focus to the trigger, and write the chosen date back to the field.
+
+**Do:** Use for selecting a single calendar date; Highlight today and the selected day; Provide clear month navigation.
+**Don't:** Do not use for free-form date typing without validation; Do not trap keyboard focus without an escape.
+
+**Deprecated aliases** (do not use): `Calendar input`, `Date field`
+
+#### Without the package - exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. This is the
+component's exact structure and appearance: do not substitute a radius, colour,
+spacing or font weight of your own, and do not restyle it with a UI kit's
+defaults.
+
+It is not the whole component. HTML and CSS cannot provide focus trapping,
+Escape handling, outside-click dismissal or a roving tabindex, so the
+accessibility contract and any behaviour listed above must still be implemented
+in JavaScript before this component is finished.
+
+- The grid is `repeat(7, 1fr)` and always padded to 42 cells with empty spans. A grid sized to the month makes the panel jump height as you page through it.
+- Leading blanks come from the first of the month's weekday index - they are empty `<span>`s, not disabled buttons, so they are skipped by the keyboard.
+- Every day button needs a full `aria-label` ("March 1, 2026"). A bare "1" tells a screen reader nothing.
+- Today is outlined with a 1px `--primary` border; the selected day is filled with `--primary`. A day that is both shows only the fill.
+- The panel is anchored under the trigger, `--radius-md` on `--surface` with `--shadow-200`, and closes on Escape and on an outside click.
+- Store and emit ISO `YYYY-MM-DD`, never a locale-formatted string.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --primary:                #004080;
+  --white:                  #ffffff;
+  --gray-200:               #EDEDED;
+  --gray-600:               #7A7A7A;
+  --blue-300:               #B3D9FF;
+  --action-active:          rgba(0, 0, 0, 0.56);
+  --text-primary:           rgba(0, 0, 0, 0.87);
+  --border-control:         #C4C4C4;
+  --border-control-strong:  #8C8C8C;
+  --text-placeholder:       #8C8C8C;
+  --surface:                var(--white);
+  --border:                 var(--gray-200);
+  --muted-foreground:       var(--gray-600);
+  --radius-sm:              4px;
+  --radius-md:              8px;
+  --shadow-200:             0px 8px 8px rgba(39, 39, 39, 0.08), 0px 4px 6px rgba(39, 39, 39, 0.12);
+  --effect-state-focus:     0px 0px 0px 3px var(--blue-300);
+  --border-width-default:   1px;
+  --duration-fast:          100ms;
+  --easing-standard:        cubic-bezier(0.2, 0, 0, 1);
+  --z-dropdown:             300;
+  --font-sans:              'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-datepicker {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  position: relative;
+  font-family: var(--font-sans);
+}
+
+.inspera-datepicker__label {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.inspera-datepicker__trigger {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  border-radius: var(--radius-md);
+  border: var(--border-width-default) solid var(--border-control);
+  background: var(--white);
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+  transition:
+    border-color var(--duration-fast) var(--easing-standard),
+    box-shadow var(--duration-fast) var(--easing-standard);
+}
+
+.inspera-datepicker__trigger:hover { border-color: var(--border-control-strong); }
+
+.inspera-datepicker__trigger:focus-visible,
+.inspera-datepicker__trigger[aria-expanded='true'] {
+  border-color: var(--primary);
+  box-shadow: var(--effect-state-focus);
+  outline: none;
+}
+
+.inspera-datepicker__value {
+  flex: 1;
+  font-size: 16px;
+  color: var(--text-placeholder);
+}
+.inspera-datepicker__value--set { color: var(--text-primary); }
+
+.inspera-datepicker__trigger .material-symbols-outlined {
+  font-size: 20px;
+  color: var(--action-active);
+}
+
+.inspera-datepicker__panel {
+  position: absolute;
+  top: 74px;
+  left: 0;
+  z-index: var(--z-dropdown, 20);
+  width: 280px;
+  padding: 12px;
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-200);
+  border: 1px solid var(--border);
+}
+
+.inspera-datepicker__nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.inspera-datepicker__nav-btn {
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  color: var(--text-primary);
+}
+.inspera-datepicker__nav-btn .material-symbols-outlined { font-size: 20px; }
+
+.inspera-datepicker__month {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.inspera-datepicker__grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+.inspera-datepicker__weekday {
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted-foreground);
+  padding: 4px 0;
+}
+
+.inspera-datepicker__day {
+  height: 32px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* Today is outlined; the selection is filled. Both at once would read as two
+   selected days. */
+.inspera-datepicker__day--today { border: 1px solid var(--primary); }
+
+.inspera-datepicker__day--selected {
+  background: var(--primary);
+  color: var(--white);
+  border: none;
+}
+```
+
+```html
+<div class="inspera-datepicker">
+  <label class="inspera-datepicker__label" for="due">Due date</label>
+  <button class="inspera-datepicker__trigger" id="due" type="button"
+          aria-haspopup="dialog" aria-expanded="false">
+    <span class="inspera-datepicker__value">Select date</span>
+    <span class="material-symbols-outlined" aria-hidden="true">calendar_today</span>
+  </button>
+
+  <!-- Rendered only while open. -->
+  <div class="inspera-datepicker__panel" role="dialog" aria-label="Choose date">
+    <div class="inspera-datepicker__nav">
+      <button class="inspera-datepicker__nav-btn" type="button" aria-label="Previous month">
+        <span class="material-symbols-outlined" aria-hidden="true">chevron_left</span>
+      </button>
+      <span class="inspera-datepicker__month">March 2026</span>
+      <button class="inspera-datepicker__nav-btn" type="button" aria-label="Next month">
+        <span class="material-symbols-outlined" aria-hidden="true">chevron_right</span>
+      </button>
+    </div>
+    <div class="inspera-datepicker__grid">
+      <span class="inspera-datepicker__weekday">Su</span>
+      <!-- ...Mo through Sa... -->
+      <span></span><!-- leading blanks to the first weekday -->
+      <button class="inspera-datepicker__day" type="button" aria-label="March 1, 2026">1</button>
+      <!-- ...padded to 42 cells so the panel height never changes... -->
+    </div>
+  </div>
+</div>
+```
+
+
+### File Upload
+
+Upload files via drag-and-drop or browse. - category: `input-controls`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library - build the markup from the HTML and CSS under
+> **Without the package** below, which is this component's exact appearance.
+
+```tsx
+import { FileUpload } from '@inspera/components'
+
+<FileUpload
+  label="Attachments"
+  accept="image/*,.pdf"
+  multiple={false}
+  onFiles={handleFiles}
+/>
+```
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `label` | `string` | `'Upload files'` | Field label describing what to upload. |
+| `accept` | `string` | - | Accepted MIME types / extensions. |
+| `multiple` | `boolean` | `false` | Allow multiple files. |
+| `state` | `'Default' \| 'Dragging' \| 'Disabled' \| 'Error'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
+| `helpText` | `string` | `'PNG, JPG or PDF up to 10MB'` | Constraint hint text. |
+| `onFiles` | `(files: File[]) => void` | - | Fired with the selected files, from both drop and browse. |
+
+**Accessibility** - role `button`, keyboard operable. Dropzone uses role="button" and is keyboard focusable; Enter / Space open the file browser; Provide an accessible label describing the action.
+
+**Behaviour you must implement** - the HTML and CSS below are structure and
+appearance only. This component is not finished until it also does:
+
+- Enter or Space on the dropzone opens the file browser.
+- Handle drag-and-drop as well as the browse dialog, and announce the selected files after a drop.
+
+**Do:** Support both drag-and-drop and click-to-browse; State accepted file types and size limits; Give visible drag feedback.
+**Don't:** Do not hide the browse affordance; Do not omit constraint help text.
+
+**Deprecated aliases** (do not use): `Dropzone`, `File dropzone`, `Uploader`
+
+#### Without the package - exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. This is the
+component's exact structure and appearance: do not substitute a radius, colour,
+spacing or font weight of your own, and do not restyle it with a UI kit's
+defaults.
+
+It is not the whole component. HTML and CSS cannot provide focus trapping,
+Escape handling, outside-click dismissal or a roving tabindex, so the
+accessibility contract and any behaviour listed above must still be implemented
+in JavaScript before this component is finished.
+
+- The zone carries `role="button"`, `tabindex="0"` and an Enter/Space handler that clicks the hidden input. Drag and drop alone is not an accessible way to upload.
+- Keep the native `<input type="file">` in the DOM, visually hidden - the zone triggers it with `.click()`.
+- Border is 2px dashed `--gray-400`; a 1px dash reads as a table rule at this size.
+- The drag state and hover share one look: `--primary` border on a `--blue-100` wash. Handle `dragover`, `dragleave` and `drop`, and `preventDefault` on dragover or the browser opens the file instead.
+- Always state the constraint ("PNG, JPG or PDF up to 10MB") - a bare drop zone gives no way to know what will be rejected.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --primary:            #004080;
+  --error:              #D32F2F;
+  --white:              #ffffff;
+  --gray-400:           #BCBCBC;
+  --gray-600:           #7A7A7A;
+  --blue-100:           #F0F7FF;
+  --text-primary:       rgba(0, 0, 0, 0.87);
+  --surface:            var(--white);
+  --muted-foreground:   var(--gray-600);
+  --radius-md:          8px;
+  --focus-ring-width:   2px;
+  --focus-ring-offset:  2px;
+  --focus-ring-color:   var(--primary);
+  --font-sans:          'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 32px 24px;
+  /* Dashed, and 2px - a 1px dashed border reads as a table rule at this size. */
+  border: 2px dashed var(--gray-400);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  cursor: pointer;
+  text-align: center;
+  font-family: var(--font-sans);
+  transition: all 120ms ease;
+}
+
+/* Both the real drag state and the pointer share one look. */
+.inspera-upload:hover,
+.inspera-upload--dragging {
+  border-color: var(--primary);
+  background: var(--blue-100);
+}
+
+.inspera-upload:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.inspera-upload__icon {
+  font-size: 40px;
+  color: var(--primary);
+}
+
+.inspera-upload__prompt {
+  font-size: 16px;
+  color: var(--text-primary);
+}
+
+.inspera-upload__browse {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.inspera-upload__help {
+  font-size: 12px;
+  color: var(--muted-foreground);
+}
+
+/* The native input stays in the DOM so the zone can click() it. */
+.inspera-upload__input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.inspera-upload--error {
+  border-color: var(--error);
+}
+.inspera-upload--error .inspera-upload__icon,
+.inspera-upload--error .inspera-upload__help { color: var(--error); }
+
+.inspera-upload--disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+```
+
+```html
+<!-- role="button" + tabindex + a key handler, because a div is not focusable
+     and Enter/Space do not activate it on their own. -->
+<div class="inspera-upload" role="button" tabindex="0" aria-label="Attachments">
+  <span class="material-symbols-outlined inspera-upload__icon" aria-hidden="true">upload_file</span>
+  <div class="inspera-upload__prompt">
+    Drag &amp; drop or <span class="inspera-upload__browse">browse</span>
+  </div>
+  <span class="inspera-upload__help">PNG, JPG or PDF up to 10MB</span>
+  <input class="inspera-upload__input" type="file" accept="image/*,.pdf" multiple />
+</div>
+```
+
+
+### Radio Group
+
+Group mutually exclusive radio options. - category: `input-controls`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library - build the markup from the HTML and CSS under
+> **Without the package** below, which is this component's exact appearance.
+
+```tsx
+import { RadioGroup } from '@inspera/components'
+
+<RadioGroup
+  label="Delivery speed"
+  name="delivery"
+  value="standard"
+  orientation="Vertical"
+  options={[{ label: 'Standard', value: 'standard' }]}
+/>
+```
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `label` | `string` | - | Group label, announced as the radiogroup name. |
+| `name` | `string` | - | Shared input name for the group. |
+| `options` | `RadioOption[]` | `DEFAULT_OPTIONS` | Radio options. |
+| `value` | `string` | - | Selected option value. |
+| `orientation` | `'Vertical' \| 'Horizontal'` | `'Vertical'` | Layout direction. |
+| `state` | `'Default' \| 'Disabled' \| 'Error'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
+| `onChange` | `(value: string) => void` | - | Fired with the newly selected value. |
+
+```ts
+export interface RadioOption {
+  label: string
+  value: string
+}
+```
+
+**Accessibility** - role `radiogroup`, keyboard operable. Container uses role="radiogroup" with an accessible label; Each option is a radio with aria-checked; Arrow keys navigate between options.
+
+**Behaviour you must implement** - the HTML and CSS below are structure and
+appearance only. This component is not finished until it also does:
+
+- Roving tabindex across the group - the group is one tab stop, not one per option.
+- Arrow keys move and select in a single step, wrapping at the ends.
+- Keep exactly one option checked and aria-checked in step with it.
+
+**Do:** Use for single selection among 2-6 options; Provide a group label; Pre-select a sensible default.
+**Don't:** Do not use for multi-select - use Checkbox Group; Do not use a single radio alone.
+
+**Deprecated aliases** (do not use): `Radio list`, `Option group`
+
+#### Without the package - exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. This is the
+component's exact structure and appearance: do not substitute a radius, colour,
+spacing or font weight of your own, and do not restyle it with a UI kit's
+defaults.
+
+It is not the whole component. HTML and CSS cannot provide focus trapping,
+Escape handling, outside-click dismissal or a roving tabindex, so the
+accessibility contract and any behaviour listed above must still be implemented
+in JavaScript before this component is finished.
+
+- The group label is a `<span>` with an id, linked by `aria-labelledby` on the `role="radiogroup"` element. A bare `<label>` cannot name a group.
+- Every option shares one `name`, and no other question on the page may reuse it.
+- Vertical options have no gap - each row carries its own 8px vertical padding. Horizontal adds a 24px gap.
+- Group-level state (error, disabled) is applied to each option, not drawn once on the wrapper.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --primary:                #004080;
+  --error:                  #D32F2F;
+  --white:                  #ffffff;
+  --text-primary:           rgba(0, 0, 0, 0.87);
+  --border-control-strong:  #8C8C8C;
+  --radius-pill:            9999px;
+  --focus-ring-width:       2px;
+  --focus-ring-offset:      2px;
+  --focus-ring-color:       var(--primary);
+  --font-sans:              'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-radio {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  cursor: pointer;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 16px;
+}
+
+.inspera-radio__input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.inspera-radio__circle {
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-pill);
+  border: 2px solid var(--border-control-strong);
+  background: var(--white);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 120ms ease;
+}
+
+/* The dot is a child element, not a background - it has to stay centred as the
+   circle scales on press. */
+.inspera-radio__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+  background: var(--primary);
+}
+
+.inspera-radio__input:checked + .inspera-radio__circle { border-color: var(--primary); }
+
+.inspera-radio:hover .inspera-radio__circle { border-color: var(--primary); background: rgba(0, 64, 128, 0.04); }
+
+.inspera-radio__input:focus-visible + .inspera-radio__circle {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.inspera-radio:active .inspera-radio__circle { transform: scale(0.92); }
+
+.inspera-radio--error .inspera-radio__circle { border-color: var(--error); }
+.inspera-radio--error:hover .inspera-radio__circle { border-color: var(--error); }
+
+.inspera-radio--disabled { cursor: not-allowed; opacity: 0.38; }
+
+.inspera-radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-family: var(--font-sans);
+}
+
+.inspera-radio-group__label {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.inspera-radio-group__options {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* Horizontal needs real separation; the vertical stack relies on each row's
+   own 8px padding instead. */
+.inspera-radio-group--horizontal .inspera-radio-group__options {
+  flex-direction: row;
+  gap: 24px;
+}
+```
+
+```html
+<div class="inspera-radio-group">
+  <span class="inspera-radio-group__label" id="delivery-label">Delivery speed</span>
+  <div class="inspera-radio-group__options" role="radiogroup" aria-labelledby="delivery-label">
+    <label class="inspera-radio" for="d-standard">
+      <input class="inspera-radio__input" id="d-standard" type="radio" name="delivery" />
+      <span class="inspera-radio__circle" aria-hidden="true"></span>
+      <span>Standard</span>
+    </label>
+    <label class="inspera-radio" for="d-express">
+      <input class="inspera-radio__input" id="d-express" type="radio" name="delivery" />
+      <span class="inspera-radio__circle" aria-hidden="true"></span>
+      <span>Express</span>
+    </label>
+  </div>
+</div>
+```
+
+
+### Checkbox Group
+
+Group related multi-select checkboxes. - category: `input-controls`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library - build the markup from the HTML and CSS under
+> **Without the package** below, which is this component's exact appearance.
+
+```tsx
+import { CheckboxGroup } from '@inspera/components'
+
+<CheckboxGroup
+  label="Notifications"
+  value={['email']}
+  orientation="Vertical"
+  options={[{ label: 'Email', value: 'email' }]}
+/>
+```
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `label` | `string` | - | Group label, announced as the fieldset legend. |
+| `options` | `CheckboxOption[]` | `DEFAULT_OPTIONS` | Checkbox options. |
+| `value` | `string[]` | - | Selected option values. |
+| `orientation` | `'Vertical' \| 'Horizontal'` | `'Vertical'` | Layout direction. |
+| `state` | `'Default' \| 'Disabled' \| 'Error'` | `'Default'` | Forces a visual state for documentation. Omit for real interactivity. |
+| `onChange` | `(value: string[]) => void` | - | Fired with the full array of selected values. |
+
+```ts
+export interface CheckboxOption {
+  label: string
+  value: string
+}
+```
+
+**Accessibility** - role `group`, keyboard operable. Container uses role="group" with aria-labelledby; Each option is a checkbox with aria-checked; Group related options under a shared legend/label.
+
+**Do:** Use for selecting multiple related options; Provide a group label; Keep options parallel and concise.
+**Don't:** Do not use for mutually exclusive options - use Radio Group; Do not omit the group label.
+
+**Deprecated aliases** (do not use): `Checkbox list`, `Multi-select group`
+
+#### Without the package - exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. This is the
+component's exact structure and appearance: do not substitute a radius, colour,
+spacing or font weight of your own, and do not restyle it with a UI kit's
+defaults.
+
+It is not the whole component. HTML and CSS cannot provide focus trapping,
+Escape handling, outside-click dismissal or a roving tabindex, so the
+accessibility contract and any behaviour listed above must still be implemented
+in JavaScript before this component is finished.
+
+- Checkboxes take `role="group"`, not `radiogroup`, and they do **not** share a `name` - each carries its own value.
+- The group label is a `<span>` with an id, linked by `aria-labelledby`.
+- Same spacing as Radio Group: no gap vertically (rows carry their own padding), 24px horizontally.
+- A "select all" control on top of a group is the natural place for the indeterminate checkbox state.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --primary:                #004080;
+  --error:                  #D32F2F;
+  --white:                  #ffffff;
+  --text-primary:           rgba(0, 0, 0, 0.87);
+  --border-control-strong:  #8C8C8C;
+  --radius-xs:              2px;
+  --focus-ring-width:       2px;
+  --focus-ring-offset:      2px;
+  --focus-ring-color:       var(--primary);
+  --font-sans:              'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  cursor: pointer;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 16px;
+}
+
+/* Hidden, but still in the DOM, still focusable, still submitted with the
+   form. "display: none" or "visibility: hidden" would break all three. */
+.inspera-checkbox__input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.inspera-checkbox__box {
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-xs);
+  border: 2px solid var(--border-control-strong);
+  background: var(--white);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--white);
+  flex-shrink: 0;
+  transition: all 120ms ease;
+}
+
+.inspera-checkbox--small .inspera-checkbox__box { width: 16px; height: 16px; }
+
+/* The tick is a Material Symbol at the box size minus 4. */
+.inspera-checkbox__box .material-symbols-outlined {
+  font-size: 16px;
+  font-variation-settings: 'wght' 600;
+}
+.inspera-checkbox--small .inspera-checkbox__box .material-symbols-outlined { font-size: 12px; }
+
+.inspera-checkbox__input:checked + .inspera-checkbox__box,
+.inspera-checkbox__input:indeterminate + .inspera-checkbox__box,
+/* "indeterminate" is a DOM property with no HTML attribute, so static markup
+   cannot trigger :indeterminate. The modifier lets server-rendered markup show
+   the state; script that sets el.indeterminate gets the pseudo-class. */
+.inspera-checkbox--mixed .inspera-checkbox__box {
+  border-color: var(--primary);
+  background: var(--primary);
+}
+
+.inspera-checkbox:hover .inspera-checkbox__box { border-color: var(--primary); background: rgba(0, 64, 128, 0.04); }
+.inspera-checkbox:hover .inspera-checkbox__input:checked + .inspera-checkbox__box,
+.inspera-checkbox:hover .inspera-checkbox__input:indeterminate + .inspera-checkbox__box,
+.inspera-checkbox--mixed:hover .inspera-checkbox__box {
+  border-color: var(--primary);
+  background: var(--primary);
+}
+
+/* The ring goes on the drawn box: the real input is 0x0, so a ring on it is
+   invisible. This is the single most-missed detail in a custom checkbox. */
+.inspera-checkbox__input:focus-visible + .inspera-checkbox__box {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.inspera-checkbox:active .inspera-checkbox__box { transform: scale(0.92); }
+
+.inspera-checkbox--error .inspera-checkbox__box { border-color: var(--error); }
+.inspera-checkbox--error:hover .inspera-checkbox__box { border-color: var(--error); }
+
+.inspera-checkbox--disabled {
+  cursor: not-allowed;
+  opacity: 0.38;
+}
+.inspera-checkbox--disabled:hover .inspera-checkbox__box {
+  border-color: var(--border-control-strong);
+  background: var(--white);
+}
+
+.inspera-checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-family: var(--font-sans);
+}
+
+.inspera-checkbox-group__label {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.inspera-checkbox-group__options {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.inspera-checkbox-group--horizontal .inspera-checkbox-group__options {
+  flex-direction: row;
+  gap: 24px;
+}
+```
+
+```html
+<div class="inspera-checkbox-group">
+  <span class="inspera-checkbox-group__label" id="notify-label">Notifications</span>
+  <div class="inspera-checkbox-group__options" role="group" aria-labelledby="notify-label">
+    <label class="inspera-checkbox" for="n-email">
+      <input class="inspera-checkbox__input" id="n-email" type="checkbox" />
+      <span class="inspera-checkbox__box" aria-hidden="true"></span>
+      <span>Email</span>
+    </label>
+    <label class="inspera-checkbox" for="n-sms">
+      <input class="inspera-checkbox__input" id="n-sms" type="checkbox" />
+      <span class="inspera-checkbox__box" aria-hidden="true"></span>
+      <span>SMS</span>
+    </label>
+  </div>
+</div>
+```
+
+
+### Rating
+
+Capture or display a star rating. - category: `input-controls`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library - build the markup from the HTML and CSS under
+> **Without the package** below, which is this component's exact appearance.
+
+```tsx
+import { Rating } from '@inspera/components'
+
+<Rating
+  value={score}
+  onChange={setScore}
+  max={5}
+  size="Medium"
+  readOnly={false}
+/>
+```
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value` | `number` | - | Current rating. Controlled - pair with onChange. Omit it and the component tracks its own, the same contract Checkbox and Toggle use. |
+| `max` | `number` | `5` | Number of stars. |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Star size. |
+| `readOnly` | `boolean` | `false` | Display-only mode. |
+| `showValue` | `boolean` | `false` | Show numeric value. |
+| `onChange` | `(value: number) => void` | - | Fired with the chosen rating. Not fired when readOnly. |
+
+**Accessibility** - role `radiogroup`, keyboard operable. Container uses role="radiogroup" with an accessible label; Each star is a radio with aria-checked and an aria-label; Arrow keys adjust the rating.
+
+**Behaviour you must implement** - the HTML and CSS below are structure and
+appearance only. This component is not finished until it also does:
+
+- Arrow keys change the value; Home/End set the minimum and maximum.
+- Update on click and on keyboard alike, keeping aria-checked on the selected star.
+
+**Do:** Use for feedback and review scores; Show hover preview when interactive; Use read-only mode to display aggregate scores.
+**Don't:** Do not use for precise numeric input; Do not omit accessible labels on stars.
+
+**Deprecated aliases** (do not use): `Star rating`, `Stars`
+
+#### Without the package - exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. This is the
+component's exact structure and appearance: do not substitute a radius, colour,
+spacing or font weight of your own, and do not restyle it with a UI kit's
+defaults.
+
+It is not the whole component. HTML and CSS cannot provide focus trapping,
+Escape handling, outside-click dismissal or a roving tabindex, so the
+accessibility contract and any behaviour listed above must still be implemented
+in JavaScript before this component is finished.
+
+- One glyph - `star` - with the variable font's FILL axis at 0 or 1. Swapping to a different outline glyph changes the shape and makes the row jump on hover.
+- Filled stars are `--warning` #EF6C00; empty ones `--gray-400`. Stars are 28px (20px small) with a 2px gap.
+- `role="radiogroup"` with `role="radio"` stars, a roving tabindex, and arrow keys that both move focus and set the value.
+- Every star needs its own label ("3 stars"), or the control announces as five unlabelled radios.
+- Hovering previews the rating up to the pointer; leaving restores the committed value.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --primary:            #004080;
+  --warning:            #EF6C00;
+  --gray-400:           #BCBCBC;
+  --gray-600:           #7A7A7A;
+  --muted-foreground:   var(--gray-600);
+  --radius-xs:          2px;
+  --focus-ring-width:   2px;
+  --focus-ring-offset:  2px;
+  --focus-ring-color:   var(--primary);
+  --font-mono:          'Noto Sans Mono', ui-monospace, SFMono-Regular, monospace;
+}
+
+.inspera-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.inspera-rating__stars {
+  display: inline-flex;
+  gap: 2px;
+}
+
+.inspera-rating__star {
+  font-size: 28px;
+  line-height: 1;
+  color: var(--gray-400);
+  /* Same glyph, different fill axis. Swapping to a "star_outline" glyph shifts
+     the shape and makes the row jump as you hover across it. */
+  font-variation-settings: 'FILL' 0;
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+}
+
+.inspera-rating--small .inspera-rating__star { font-size: 20px; }
+
+.inspera-rating__star--filled {
+  color: var(--warning);
+  font-variation-settings: 'FILL' 1;
+}
+
+.inspera-rating__star:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.inspera-rating--readonly .inspera-rating__star { cursor: default; }
+
+.inspera-rating__value {
+  font-size: 14px;
+  color: var(--muted-foreground);
+  font-family: var(--font-mono);
+}
+```
+
+```html
+<!-- Roving tabindex again: one tab stop, arrows move and set the value. -->
+<div class="inspera-rating" role="radiogroup" aria-label="Rating">
+  <div class="inspera-rating__stars">
+    <span class="material-symbols-outlined inspera-rating__star inspera-rating__star--filled"
+          role="radio" aria-checked="false" aria-label="1 star" tabindex="-1">star</span>
+    <span class="material-symbols-outlined inspera-rating__star inspera-rating__star--filled"
+          role="radio" aria-checked="false" aria-label="2 stars" tabindex="-1">star</span>
+    <span class="material-symbols-outlined inspera-rating__star inspera-rating__star--filled"
+          role="radio" aria-checked="true" aria-label="3 stars" tabindex="0">star</span>
+    <span class="material-symbols-outlined inspera-rating__star"
+          role="radio" aria-checked="false" aria-label="4 stars" tabindex="-1">star</span>
+    <span class="material-symbols-outlined inspera-rating__star"
+          role="radio" aria-checked="false" aria-label="5 stars" tabindex="-1">star</span>
+  </div>
+</div>
+```
+
+
+### OTP Input
+
+Enter a one-time verification code. - category: `input-controls`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library - build the markup from the HTML and CSS under
+> **Without the package** below, which is this component's exact appearance.
+
+```tsx
+import { OtpInput } from '@inspera/components'
+
+<OtpInput
+  length={6}
+  value={code}
+  onChange={setCode}
+/>
+```
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `length` | `number` | `6` | Number of digit boxes. |
+| `value` | `string` | - | Current code value. |
+| `state` | `'Default' \| 'Focused' \| 'Error' \| 'Disabled'` | `'Default'` | Freezes a visual state so documentation can show it without a pointer. `Focused` is presentation-only - leave it unset in application code, where CSS drives it from the real pointer and keyboard. `Error` and `Disabled` are real application state and belong in your code. |
+| `onChange` | `(value: string) => void` | - | Fired with the full code as digits are entered or pasted. |
+
+**Accessibility** - role `textbox`, keyboard operable. Each box has an aria-label "Digit N"; aria-invalid reflects the error state; Backspace moves focus to the previous box; paste distributes digits.
+
+**Behaviour you must implement** - the HTML and CSS below are structure and
+appearance only. This component is not finished until it also does:
+
+- Advance focus to the next box as a digit is entered, and back on Backspace when the box is already empty.
+- Distribute a pasted string across the boxes and leave focus on the last one filled.
+- Accept only the permitted characters.
+
+**Do:** Auto-advance focus as digits are entered; Support paste of the full code; Use a monospace font for even alignment.
+**Don't:** Do not require manual box-by-box focus; Do not allow non-numeric characters.
+
+**Deprecated aliases** (do not use): `PIN input`, `Verification code`, `Code input`
+
+#### Without the package - exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. This is the
+component's exact structure and appearance: do not substitute a radius, colour,
+spacing or font weight of your own, and do not restyle it with a UI kit's
+defaults.
+
+It is not the whole component. HTML and CSS cannot provide focus trapping,
+Escape handling, outside-click dismissal or a roving tabindex, so the
+accessibility contract and any behaviour listed above must still be implemented
+in JavaScript before this component is finished.
+
+- One `<input>` per digit, 44x48, `--radius-md`, in `--font-mono` at 20px so the digits do not shift as they are typed.
+- `autocomplete="one-time-code"` goes on the first box only, and `off` on the rest. On every box the platform offers the code once per field.
+- Each box needs `aria-label="Digit N"` and `inputmode="numeric"`, plus `maxlength="1"`.
+- Wire the behaviour: typing advances focus, Backspace on an empty box moves back and clears, arrows move between boxes, and a paste on any box fills the rest.
+- Focus is per box - do not ring the whole row.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --primary:                #004080;
+  --error:                  #D32F2F;
+  --white:                  #ffffff;
+  --blue-300:               #B3D9FF;
+  --red-300:                #F9B8B8;
+  --text-primary:           rgba(0, 0, 0, 0.87);
+  --border-control:         #C4C4C4;
+  --border-control-strong:  #8C8C8C;
+  --surface-disabled:       #F5F5F5;
+  --radius-md:              8px;
+  --effect-state-focus:     0px 0px 0px 3px var(--blue-300);
+  --effect-state-error:     0px 0px 0px 3px var(--red-300);
+  --border-width-default:   1px;
+  --duration-fast:          100ms;
+  --easing-standard:        cubic-bezier(0.2, 0, 0, 1);
+  --font-mono:              'Noto Sans Mono', ui-monospace, SFMono-Regular, monospace;
+}
+
+.inspera-otp {
+  display: inline-flex;
+  gap: 8px;
+}
+
+.inspera-otp__box {
+  width: 44px;
+  height: 48px;
+  text-align: center;
+  border: var(--border-width-default) solid var(--border-control);
+  border-radius: var(--radius-md);
+  background: var(--white);
+  /* Monospace so the digits do not shift as they are typed. */
+  font-family: var(--font-mono);
+  font-size: 20px;
+  color: var(--text-primary);
+  outline: none;
+  transition:
+    border-color var(--duration-fast) var(--easing-standard),
+    box-shadow var(--duration-fast) var(--easing-standard);
+}
+
+.inspera-otp__box:hover { border-color: var(--border-control-strong); }
+
+.inspera-otp__box:focus {
+  border-color: var(--primary);
+  box-shadow: var(--effect-state-focus);
+}
+
+.inspera-otp__box[data-invalid='true'] {
+  border-color: var(--error);
+  box-shadow: var(--effect-state-error);
+}
+
+.inspera-otp__box[data-disabled='true'] {
+  background: var(--surface-disabled);
+  opacity: 0.6;
+}
+```
+
+```html
+<!-- autocomplete="one-time-code" on the FIRST box only, so the platform
+     offers the SMS code once rather than once per digit. -->
+<div class="inspera-otp">
+  <input class="inspera-otp__box" type="text" inputmode="numeric" maxlength="1"
+         autocomplete="one-time-code" aria-label="Digit 1" />
+  <input class="inspera-otp__box" type="text" inputmode="numeric" maxlength="1"
+         autocomplete="off" aria-label="Digit 2" />
+  <input class="inspera-otp__box" type="text" inputmode="numeric" maxlength="1"
+         autocomplete="off" aria-label="Digit 3" />
+</div>
+```
+
+
+## Components - data-display
+
+### Card
+
+Group related content in a contained surface. - category: `data-display`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library - build the markup from the HTML and CSS under
+> **Without the package** below, which is this component's exact appearance.
+
+```tsx
+import { Card } from '@inspera/components'
+
+<Card
+  title="Algebra Quiz"
+  elevation="Raised"
+  padding="Default"
+  interactive={false}
+/>
+```
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `title` | `string` | `'Card title'` | Optional heading for the card. |
+| `body` | `string` | `'Group related content in a contained surface using consistent padding and elevation.'` | Short body copy. For anything richer, pass children instead. |
+| `elevation` | `'Flat' \| 'Raised' \| 'Outlined'` | `'Raised'` | Surface treatment. |
+| `padding` | `'Compact' \| 'Default' \| 'Spacious'` | `'Default'` | Internal padding (12 / 16 / 24). |
+| `interactive` | `boolean` | `false` | Renders as a focusable button with hover elevation. |
+| `children` | `ReactNode` | - | Card contents. Takes precedence over title and body. |
+| `onClick` | `() => void` | - | Fired when an interactive card is activated. Set interactive as well, or there is no affordance. |
+
+**Accessibility** - role `article`, keyboard operable. Interactive cards should use role="button" or be wrapped in an anchor; Non-interactive cards use role="article" or a semantic section.
+
+**Do:** Use to group related content; Maintain consistent padding within a view; Use raised elevation for primary content cards.
+**Don't:** Do not nest cards inside other cards; Do not use cards for layout-only purposes without content.
+
+#### Without the package - exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. This is the
+component's exact structure and appearance: do not substitute a radius, colour,
+spacing or font weight of your own, and do not restyle it with a UI kit's
+defaults.
+
+It is not the whole component. HTML and CSS cannot provide focus trapping,
+Escape handling, outside-click dismissal or a roving tabindex, so the
+accessibility contract and any behaviour listed above must still be implemented
+in JavaScript before this component is finished.
+
+- Radius is `--radius-lg`. Padding is 12 / 16 / 24 for Compact / Default / Spacious.
+- Flat has neither border nor shadow, Raised adds `--shadow-200`, Outlined adds a 1px `--border-strong`. Never both a shadow and a strong border.
+- The transparent 1px border at rest is deliberate: without it, Outlined would be 2px wider than Flat.
+- An interactive card is a `<button>`. A `<div>` with a click handler is not keyboard operable and will fail review.
+- Title 16px/500, body 16px/1.4 in `--gray-700` - the body is not smaller than the title.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --primary:            #004080;
+  --white:              #ffffff;
+  --gray-300:           #D9D9D9;
+  --gray-700:           #595959;
+  --text-primary:       rgba(0, 0, 0, 0.87);
+  --border-strong:      var(--gray-300);
+  --radius-lg:          12px;
+  --shadow-200:         0px 8px 8px rgba(39, 39, 39, 0.08), 0px 4px 6px rgba(39, 39, 39, 0.12);
+  --shadow-300:         0px 8px 16px rgba(39, 39, 39, 0.08), 0px 6px 8px rgba(39, 39, 39, 0.12);
+  --focus-ring-width:   2px;
+  --focus-ring-offset:  2px;
+  --focus-ring-color:   var(--primary);
+  --font-sans:          'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  padding: 16px;
+  border-radius: var(--radius-lg);
+  background: var(--white);
+  color: var(--text-primary);
+  /* Stated, not inherited. An interactive card is a <button>, and a button
+     falls back to the UA font rather than the page's. */
+  font-family: var(--font-sans);
+  /* A transparent border at rest, so switching to Outlined does not resize the
+     card. Dropping it and adding a border only on the modifier shifts layout. */
+  border: 1px solid transparent;
+  box-shadow: none;
+  text-align: left;
+  cursor: default;
+}
+
+.inspera-card--compact  { padding: 12px; }
+.inspera-card--spacious { padding: 24px; }
+
+.inspera-card--raised   { box-shadow: var(--shadow-200); }
+.inspera-card--outlined { border-color: var(--border-strong); }
+
+/* Interactive cards are <button>, so they are focusable and operable by
+   keyboard for free. A div with onclick is not. */
+.inspera-card--interactive { cursor: pointer; }
+.inspera-card--interactive:hover { box-shadow: var(--shadow-300); }
+.inspera-card--interactive:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.inspera-card__title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.inspera-card__body {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.4;
+  color: var(--gray-700);
+}
+```
+
+```html
+<article class="inspera-card inspera-card--raised">
+  <h3 class="inspera-card__title">Algebra Quiz</h3>
+  <p class="inspera-card__body">24 questions | 45 minutes.</p>
+</article>
+
+<!-- Interactive: a real button, never a div with a click handler. -->
+<button type="button" class="inspera-card inspera-card--outlined inspera-card--interactive">
+  <h3 class="inspera-card__title">History Midterm</h3>
+  <p class="inspera-card__body">Open the assessment.</p>
+</button>
+```
+
+
+### Badge
+
+Display a short status label or count. - category: `data-display`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library - build the markup from the HTML and CSS under
+> **Without the package** below, which is this component's exact appearance.
+
+```tsx
+import { Badge } from '@inspera/components'
+
+<Badge
+  label="Neutral"
+  intent="Neutral"
+  size="Medium"
+  withIcon={false}
+/>
+```
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `label` | `string` | `'Badge'` | The badge text. One or two words. |
+| `intent` | `'Neutral' \| 'Info' \| 'Success' \| 'Warning' \| 'Error'` | `'Neutral'` | Semantic color. |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Height 20 / 24. |
+| `withIcon` | `boolean` | `false` | Show a leading status icon. |
+| `icon` | `string` | - | Material Symbols name shown before the label when withIcon is set. |
+
+**Accessibility** - role `status`. Use aria-label for icon-only badges; Use role="status" for dynamic count badges.
+
+**Do:** Use for status indicators and counts; Keep labels short - 1 to 2 words; Use intent colors consistently.
+**Don't:** Do not use for long text content; Do not make badges interactive without clear affordance.
+
+**Deprecated aliases** (do not use): `Status Badge`, `Tag`, `Chip`
+
+#### Without the package - exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. This is the
+component's exact structure and appearance: do not substitute a radius, colour,
+spacing or font weight of your own, and do not restyle it with a UI kit's
+defaults.
+
+It is not the whole component. HTML and CSS cannot provide focus trapping,
+Escape handling, outside-click dismissal or a roving tabindex, so the
+accessibility contract and any behaviour listed above must still be implemented
+in JavaScript before this component is finished.
+
+- Height is 24px (20px small) and the radius is a full pill - not `rounded-md`.
+- Type is 12px/500 at both sizes; Small changes height and padding only.
+- Neutral is `--surface-neutral` with `--gray-900` text, not a grey chip with white text.
+- Every intent pairs a `*-surface` tint with the matching solid as the text colour.
+- The icon is Material Symbols Outlined with `FILL 1`, at 16px (14px small).
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --error:            #D32F2F;
+  --warning:          #EF6C00;
+  --info:             #0288D1;
+  --success:          #2E7D32;
+  --gray-900:         #272727;
+  --info-surface:     #E1F5FE;
+  --success-surface:  #E8F5E9;
+  --warning-surface:  #FFF3E0;
+  --error-surface:    #FFEBEE;
+  --surface-neutral:  #F0F0F0;
+  --radius-pill:      9999px;
+  --font-sans:        'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-badge {
+  /* Fill and text come from the intent modifier below. */
+  --badge-bg: var(--surface-neutral);
+  --badge-fg: var(--gray-900);
+
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 24px;
+  padding: 0 8px;
+  border-radius: var(--radius-pill);
+  background: var(--badge-bg);
+  color: var(--badge-fg);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* Small changes height and padding only - never the 12px type. */
+.inspera-badge--small { height: 20px; padding: 0 6px; }
+
+/* Neutral is written out even though it matches the base, so the class name
+   stays correct if the default ever moves. */
+.inspera-badge--neutral { --badge-bg: var(--surface-neutral); --badge-fg: var(--gray-900); }
+.inspera-badge--info    { --badge-bg: var(--info-surface);    --badge-fg: var(--info); }
+.inspera-badge--success { --badge-bg: var(--success-surface); --badge-fg: var(--success); }
+.inspera-badge--warning { --badge-bg: var(--warning-surface); --badge-fg: var(--warning); }
+.inspera-badge--error   { --badge-bg: var(--error-surface);   --badge-fg: var(--error); }
+
+/* The icon is filled, not outlined, at 16px (14px in a small badge). */
+.inspera-badge .material-symbols-outlined {
+  font-size: 16px;
+  font-variation-settings: 'FILL' 1;
+}
+.inspera-badge--small .material-symbols-outlined { font-size: 14px; }
+```
+
+```html
+<span class="inspera-badge inspera-badge--success" role="status">Live</span>
+
+<span class="inspera-badge inspera-badge--neutral inspera-badge--small" role="status">Draft</span>
+
+<!-- With an icon. Material Symbols Outlined, filled - never another set. -->
+<span class="inspera-badge inspera-badge--error" role="status">
+  <span class="material-symbols-outlined" aria-hidden="true">error</span>
+  Failed
+</span>
+```
+
+
+### Avatar
+
+Represent a user or entity with an image or initials. - category: `data-display`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library - build the markup from the HTML and CSS under
+> **Without the package** below, which is this component's exact appearance.
+
+```tsx
+import { Avatar } from '@inspera/components'
+
+<Avatar
+  size="Medium"
+  content="Initials"
+  status="None"
+/>
+```
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Diameter 32 / 40 / 56. |
+| `content` | `'Image' \| 'Initials' \| 'Icon'` | `'Initials'` | What fills the avatar. |
+| `status` | `'None' \| 'Online' \| 'Offline' \| 'Busy'` | `'None'` | Presence indicator dot. |
+| `initials` | `string` | `'JC'` | One or two letters, used when content is Initials. Derive from the name rather than asking for them. |
+| `imageSrc` | `string` | `'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=112&h=112&fit=crop&auto=format'` | Image URL, used when content is Image. Falls back to initials if it fails to load. |
+| `alt` | `string` | `'User avatar'` | Alternative text for the image. Required whenever an image is shown. |
+| `icon` | `string` | `'person'` | Material Symbols name, used when content is Icon. |
+
+**Accessibility** - role `img`. Provide alt text for image avatars; Use aria-label for initials and icon variants.
+
+**Do:** Use for user profiles and participant lists; Provide meaningful alt text; Use consistent sizing within a context.
+**Don't:** Do not stretch or distort avatar images; Do not use random colors - use a deterministic palette.
+
+#### Without the package - exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. This is the
+component's exact structure and appearance: do not substitute a radius, colour,
+spacing or font weight of your own, and do not restyle it with a UI kit's
+defaults.
+
+It is not the whole component. HTML and CSS cannot provide focus trapping,
+Escape handling, outside-click dismissal or a roving tabindex, so the
+accessibility contract and any behaviour listed above must still be implemented
+in JavaScript before this component is finished.
+
+- Diameters are 32 / 40 / 56. Initials are 40% of that, the icon 55%, the status dot 28% - never a fixed size.
+- The surface uses `--avatar-surface`, not a random grey, and `--radius-pill`.
+- The status dot needs its 2px `--white` ring, or it disappears against a photo.
+- The accessible name lives on the surface (`role="img"`); the initials themselves are decorative text.
+- The wrapper is separate from the surface because the surface clips its image with `overflow: hidden`, which would cut the dot in half.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --error:           #D32F2F;
+  --success:         #2E7D32;
+  --white:           #ffffff;
+  --gray-500:        #949494;
+  --gray-600:        #7A7A7A;
+  --gray-900:        #272727;
+  --avatar-surface:  #E0E0E0;
+  --radius-pill:     9999px;
+  --font-sans:       'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* The wrapper exists so the status dot can be positioned against the
+   avatar without being clipped by its overflow: hidden. */
+.inspera-avatar {
+  position: relative;
+  display: inline-flex;
+}
+
+.inspera-avatar__surface {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-pill);
+  background: var(--avatar-surface);
+  color: var(--gray-900);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  /* Initials are 40% of the diameter, so they scale with the avatar. */
+  font-size: 16px;
+}
+
+.inspera-avatar--small .inspera-avatar__surface  { width: 32px; height: 32px; font-size: 12.8px; }
+.inspera-avatar--large .inspera-avatar__surface  { width: 56px; height: 56px; font-size: 22.4px; }
+
+.inspera-avatar__surface img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* The icon variant is 55% of the diameter, larger than the initials. */
+.inspera-avatar__surface .material-symbols-outlined {
+  font-size: 22px;
+  color: var(--gray-600);
+}
+.inspera-avatar--small .inspera-avatar__surface .material-symbols-outlined { font-size: 17.6px; }
+.inspera-avatar--large .inspera-avatar__surface .material-symbols-outlined { font-size: 30.8px; }
+
+/* The dot is 28% of the diameter, with a 2px white ring so it stays legible
+   against a photo. */
+.inspera-avatar__status {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 11.2px;
+  height: 11.2px;
+  border-radius: 9999px;
+  border: 2px solid var(--white);
+}
+.inspera-avatar--small .inspera-avatar__status { width: 8.96px; height: 8.96px; }
+.inspera-avatar--large .inspera-avatar__status { width: 15.68px; height: 15.68px; }
+
+.inspera-avatar__status--online  { background: var(--success); }
+.inspera-avatar__status--offline { background: var(--gray-500); }
+.inspera-avatar__status--busy    { background: var(--error); }
+```
+
+```html
+<!-- Initials. The accessible name carries them, since the text is decorative. -->
+<span class="inspera-avatar">
+  <span class="inspera-avatar__surface" role="img" aria-label="Jane Cooper (JC)">
+    <span>JC</span>
+  </span>
+</span>
+
+<!-- Photo, with a status dot. -->
+<span class="inspera-avatar">
+  <span class="inspera-avatar__surface" role="img" aria-label="Jane Cooper">
+    <img src="/avatar.jpg" alt="Jane Cooper" />
+  </span>
+  <span class="inspera-avatar__status inspera-avatar__status--online" aria-label="Online"></span>
+</span>
+```
+
+
+### Table
+
+Display structured data in rows and columns. - category: `data-display`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library - build the markup from the HTML and CSS under
+> **Without the package** below, which is this component's exact appearance.
+
+```tsx
+import { Table } from '@inspera/components'
+
+<Table
+  size="Default"
+  striped={false}
+  columns={[{ key: 'name', header: 'Assessment' }]}
+  rows={[{ name: 'Algebra Quiz' }]}
+/>
+```
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `columns` | `TableColumn[]` | `defaultColumns` | Column definitions. |
+| `rows` | `Record<string, ReactNode>[]` | `defaultRows` | Row data keyed by column. |
+| `size` | `'Compact' \| 'Default'` | `'Default'` | Row height density. |
+| `striped` | `boolean` | `false` | Zebra-stripe rows. |
+| `hoverable` | `boolean` | `true` | Highlight rows on hover. |
+| `selectable` | `boolean` | `false` | Add a row selection column. |
+| `caption` | `string` | - | Describes the table for screen readers. Provide one unless a heading already names it. |
+| `onRowClick` | `(row: Record<string, ReactNode>, index: number) => void` | - | Fired with the row data and its index. |
+
+```ts
+export interface TableColumn {
+  key: string
+  header: string
+  align?: 'left' | 'right' | 'center'
+  width?: string | number
+}
+```
+
+**Accessibility** - role `table`, keyboard operable. Use semantic table / thead / tbody markup; Header cells use scope="col"; Provide a caption or aria-label describing the table.
+
+**Behaviour you must implement** - the HTML and CSS below are structure and
+appearance only. This component is not finished until it also does:
+
+- A sortable header is a real button that cycles the sort and updates aria-sort on its header cell.
+- Row selection keeps the header checkbox in an indeterminate state while some but not all rows are selected.
+
+**Do:** Use for comparable, structured records; Right-align numeric columns; Keep headers concise.
+**Don't:** Do not use tables for page layout; Do not overload rows with unrelated actions.
+
+**Deprecated aliases** (do not use): `Data table`, `Grid`, `Datagrid`
+
+#### Without the package - exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. This is the
+component's exact structure and appearance: do not substitute a radius, colour,
+spacing or font weight of your own, and do not restyle it with a UI kit's
+defaults.
+
+It is not the whole component. HTML and CSS cannot provide focus trapping,
+Escape handling, outside-click dismissal or a roving tabindex, so the
+accessibility contract and any behaviour listed above must still be implemented
+in JavaScript before this component is finished.
+
+- Use a real `<table>` with `<thead>`, `<tbody>` and `scope="col"` on every header. A grid of divs loses row and column association completely.
+- Row height is 52px (40px compact) and the header sits on `--gray-100`. Cells are 14px with 16px horizontal padding.
+- Right-align numeric columns only, so digits line up. Never right-align text.
+- The stripe is passed as the row's resting fill (`--inspera-row-bg`) rather than a plain background, so the hover rule can still win on striped rows.
+- Selection checkboxes need a per-row `aria-label` ("Select row 3") and `accent-color: var(--primary)`.
+- Give the table a `<caption>` unless a heading immediately above already names it.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --primary:           #004080;
+  --error:             #D32F2F;
+  --warning:           #EF6C00;
+  --info:              #0288D1;
+  --success:           #2E7D32;
+  --white:             #ffffff;
+  --gray-100:          #F7F7F7;
+  --gray-200:          #EDEDED;
+  --gray-600:          #7A7A7A;
+  --gray-700:          #595959;
+  --gray-900:          #272727;
+  --action-hover:      rgba(0, 0, 0, 0.04);
+  --text-primary:      rgba(0, 0, 0, 0.87);
+  --info-surface:      #E1F5FE;
+  --success-surface:   #E8F5E9;
+  --warning-surface:   #FFF3E0;
+  --error-surface:     #FFEBEE;
+  --surface-neutral:   #F0F0F0;
+  --border:            var(--gray-200);
+  --muted-foreground:  var(--gray-600);
+  --radius-md:         8px;
+  --radius-pill:       9999px;
+  --duration-fast:     100ms;
+  --easing-standard:   cubic-bezier(0.2, 0, 0, 1);
+  --font-sans:         'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-badge {
+  /* Fill and text come from the intent modifier below. */
+  --badge-bg: var(--surface-neutral);
+  --badge-fg: var(--gray-900);
+
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 24px;
+  padding: 0 8px;
+  border-radius: var(--radius-pill);
+  background: var(--badge-bg);
+  color: var(--badge-fg);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* Small changes height and padding only - never the 12px type. */
+.inspera-badge--small { height: 20px; padding: 0 6px; }
+
+/* Neutral is written out even though it matches the base, so the class name
+   stays correct if the default ever moves. */
+.inspera-badge--neutral { --badge-bg: var(--surface-neutral); --badge-fg: var(--gray-900); }
+.inspera-badge--info    { --badge-bg: var(--info-surface);    --badge-fg: var(--info); }
+.inspera-badge--success { --badge-bg: var(--success-surface); --badge-fg: var(--success); }
+.inspera-badge--warning { --badge-bg: var(--warning-surface); --badge-fg: var(--warning); }
+.inspera-badge--error   { --badge-bg: var(--error-surface);   --badge-fg: var(--error); }
+
+/* The icon is filled, not outlined, at 16px (14px in a small badge). */
+.inspera-badge .material-symbols-outlined {
+  font-size: 16px;
+  font-variation-settings: 'FILL' 1;
+}
+.inspera-badge--small .material-symbols-outlined { font-size: 14px; }
+
+.inspera-table {
+  border-collapse: collapse;
+  width: 100%;
+  font-family: var(--font-sans);
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.inspera-table caption {
+  caption-side: top;
+  text-align: left;
+  padding: 0 0 8px;
+  font-size: 13px;
+  color: var(--muted-foreground);
+}
+
+.inspera-table th,
+.inspera-table td {
+  padding: 0 16px;
+  font-size: 14px;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+  text-align: left;
+}
+
+.inspera-table th {
+  font-weight: 600;
+  color: var(--gray-700);
+}
+
+.inspera-table thead tr {
+  background: var(--gray-100);
+  height: 52px;
+}
+
+.inspera-table tbody tr {
+  height: 52px;
+  cursor: default;
+  /* The stripe is the row's resting fill, passed as a variable. Setting it as
+     a plain background would outrank the hover rule below. */
+  background: var(--inspera-row-bg, var(--white));
+  transition: background var(--duration-fast) var(--easing-standard);
+}
+
+.inspera-table--compact thead tr,
+.inspera-table--compact tbody tr { height: 40px; }
+
+.inspera-table--striped tbody tr:nth-child(even) { --inspera-row-bg: var(--gray-100); }
+
+.inspera-table--hoverable tbody tr:hover { background: var(--action-hover); }
+
+/* Numbers right-align so the digits line up; text never does. Scoped through
+   the table so it outranks the "th, td" rule above, which is more specific
+   than a bare class on its own. */
+.inspera-table th.inspera-table__cell--right,
+.inspera-table td.inspera-table__cell--right { text-align: right; }
+
+.inspera-table th.inspera-table__select,
+.inspera-table td.inspera-table__select {
+  width: 44px;
+  text-align: center;
+}
+.inspera-table__select input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--primary);
+  cursor: pointer;
+}
+```
+
+```html
+<table class="inspera-table inspera-table--hoverable">
+  <caption>Candidate results, March 2026</caption>
+  <thead>
+    <tr>
+      <th scope="col">Assessment</th>
+      <th scope="col" class="inspera-table__cell--right">Items</th>
+      <th scope="col">Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Algebra Quiz</td>
+      <td class="inspera-table__cell--right">24</td>
+      <td><span class="inspera-badge inspera-badge--success" role="status">Live</span></td>
+    </tr>
+  </tbody>
+</table>
+```
+
+
+### Accordion
+
+Show and hide sections of related content. - category: `data-display`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library - build the markup from the HTML and CSS under
+> **Without the package** below, which is this component's exact appearance.
+
+```tsx
+import { Accordion } from '@inspera/components'
+
+<Accordion
+  type="Single"
+  iconPosition="Right"
+  items={[{ title: 'What is Inspera?', content: '...' }]}
+/>
+```
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `items` | `AccordionItem[]` | `defaultItems` | Accordion sections. |
+| `type` | `'Single' \| 'Multiple'` | `'Single'` | Allow one or many open at once. |
+| `defaultOpenIndex` | `number` | `0` | Initially open section. |
+| `iconPosition` | `'Left' \| 'Right'` | `'Right'` | Chevron placement. |
+
+```ts
+export interface AccordionItem {
+  title: string
+  content: ReactNode
+}
+```
+
+**Accessibility** - role `region`, keyboard operable. Header is a button with aria-expanded and aria-controls; Panel uses role="region" linked via aria-labelledby; Enter / Space toggle the section.
+
+**Behaviour you must implement** - the HTML and CSS below are structure and
+appearance only. This component is not finished until it also does:
+
+- Toggle the panel on Enter or Space and keep aria-expanded in step with it.
+- In single-open mode, close the previously open panel when another one opens.
+
+**Do:** Use to progressively disclose content; Keep section titles scannable; Use Single mode when only one section is relevant at a time.
+**Don't:** Do not nest accordions deeply; Do not hide critical content behind collapsed sections.
+
+**Deprecated aliases** (do not use): `Disclosure`, `Collapse`, `Expander`
+
+#### Without the package - exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. This is the
+component's exact structure and appearance: do not substitute a radius, colour,
+spacing or font weight of your own, and do not restyle it with a UI kit's
+defaults.
+
+It is not the whole component. HTML and CSS cannot provide focus trapping,
+Escape handling, outside-click dismissal or a roving tabindex, so the
+accessibility contract and any behaviour listed above must still be implemented
+in JavaScript before this component is finished.
+
+- Each header is a `<button>` inside an `<h3>`. The heading gives the section its place in the document outline; the button makes it operable.
+- `aria-expanded` on the trigger and `aria-controls` pointing at the panel, with the panel as `role="region"` labelled back by the trigger id. All four, or the pattern does not work.
+- Collapse with the `hidden` attribute so the panel leaves both the tab order and the accessibility tree.
+- The chevron rotates 180deg driven off `[aria-expanded="true"]`, so the attribute and the arrow cannot disagree.
+- Icon-left reverses the flex row rather than reordering the markup, so the title is still read first.
+- Single mode closes the open panel when another opens; multiple leaves them independent. Neither changes the markup.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --white:             #ffffff;
+  --gray-200:          #EDEDED;
+  --gray-600:          #7A7A7A;
+  --gray-700:          #595959;
+  --text-primary:      rgba(0, 0, 0, 0.87);
+  --border:            var(--gray-200);
+  --muted-foreground:  var(--gray-600);
+  --radius-md:         8px;
+  --font-sans:         'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-accordion {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  font-family: var(--font-sans);
+  background: var(--white);
+}
+
+/* Rules between items, not around them - the wrapper already has a border. */
+.inspera-accordion__item + .inspera-accordion__item {
+  border-top: 1px solid var(--border);
+}
+
+.inspera-accordion__heading { margin: 0; }
+
+.inspera-accordion__trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 16px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+/* Icon on the left: reverse the row rather than reordering the markup, so the
+   reading order still starts with the title. */
+.inspera-accordion--icon-left .inspera-accordion__trigger { flex-direction: row-reverse; }
+
+.inspera-accordion__title { flex: 1; text-align: left; }
+
+.inspera-accordion__chevron {
+  font-size: 24px;
+  color: var(--muted-foreground);
+  transition: transform 160ms ease;
+  transform: rotate(0deg);
+}
+
+.inspera-accordion__trigger[aria-expanded='true'] .inspera-accordion__chevron {
+  transform: rotate(180deg);
+}
+
+.inspera-accordion__panel {
+  padding: 0 16px 16px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--gray-700);
+}
+
+/* Collapsed panels use the "hidden" attribute, so they leave the tab order and
+   the accessibility tree. display:none via a class does the first but is
+   easier to get wrong. */
+.inspera-accordion__panel[hidden] { padding: 0 16px; }
+```
+
+```html
+<div class="inspera-accordion">
+  <div class="inspera-accordion__item">
+    <h3 class="inspera-accordion__heading">
+      <button type="button" class="inspera-accordion__trigger"
+              id="acc-h1" aria-expanded="true" aria-controls="acc-p1">
+        <span class="inspera-accordion__title">How is my exam graded?</span>
+        <span class="material-symbols-outlined inspera-accordion__chevron" aria-hidden="true">expand_more</span>
+      </button>
+    </h3>
+    <div class="inspera-accordion__panel" id="acc-p1" role="region" aria-labelledby="acc-h1">
+      Responses are marked against the rubric configured for each question.
+    </div>
+  </div>
+  <div class="inspera-accordion__item">
+    <h3 class="inspera-accordion__heading">
+      <button type="button" class="inspera-accordion__trigger"
+              id="acc-h2" aria-expanded="false" aria-controls="acc-p2">
+        <span class="inspera-accordion__title">Can I review my answers?</span>
+        <span class="material-symbols-outlined inspera-accordion__chevron" aria-hidden="true">expand_more</span>
+      </button>
+    </h3>
+    <div class="inspera-accordion__panel" id="acc-p2" role="region" aria-labelledby="acc-h2" hidden>
+      You can revisit any answered question before submitting.
+    </div>
+  </div>
+</div>
+```
+
+
+### Tag
+
+Label, categorize, or filter with a removable chip. - category: `data-display`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library - build the markup from the HTML and CSS under
+> **Without the package** below, which is this component's exact appearance.
+
+```tsx
+import { Tag } from '@inspera/components'
+
+<Tag
+  label="Neutral"
+  intent="Neutral"
+  size="Medium"
+  removable={false}
+/>
+```
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `label` **(required)** | `string` | - | Tag text. |
+| `intent` | `'Neutral' \| 'Info' \| 'Success' \| 'Warning' \| 'Error'` | `'Neutral'` | Semantic color. |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Tag height. |
+| `removable` | `boolean` | `false` | Show a remove affordance. |
+| `leadingIcon` | `string` | - | Optional leading icon. |
+| `onRemove` | `() => void` | - | Fired when the remove control is activated. Set removable as well. |
+| `onClick` | `() => void` | - | Fired when the tag itself is activated. |
+
+**Accessibility** - role `status`, keyboard operable. Removable tags expose a button with aria-label "Remove {label}"; Interactive tags must be keyboard focusable; Use aria-label for icon-only tags.
+
+**Behaviour you must implement** - the HTML and CSS below are structure and
+appearance only. This component is not finished until it also does:
+
+- Removing a tag must move focus to the next tag, or to the container when it was the last one - never leave focus on the detached button.
+
+**Do:** Use for filters, categories, and selections; Keep labels to 1-2 words; Provide a remove control when tags are dismissible.
+**Don't:** Do not use for status that never changes - use Badge; Do not pack long text into a tag.
+
+**Deprecated aliases** (do not use): `Chip`, `Pill`, `Label`
+
+#### Without the package - exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. This is the
+component's exact structure and appearance: do not substitute a radius, colour,
+spacing or font weight of your own, and do not restyle it with a UI kit's
+defaults.
+
+It is not the whole component. HTML and CSS cannot provide focus trapping,
+Escape handling, outside-click dismissal or a roving tabindex, so the
+accessibility contract and any behaviour listed above must still be implemented
+in JavaScript before this component is finished.
+
+- Identical geometry to Badge: 24px tall (20px small), full pill radius, 12px/500 type.
+- The remove control is a `<button>` with `aria-label="Remove <label>"` - never a bare icon span, and never just "close".
+- The leading icon is filled (`FILL 1`); the close icon is not.
+- A tag with no `onClick` is a `<span>` and takes `cursor: default`. Only a clickable tag becomes a `<button>`.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --error:            #D32F2F;
+  --warning:          #EF6C00;
+  --info:             #0288D1;
+  --success:          #2E7D32;
+  --gray-900:         #272727;
+  --info-surface:     #E1F5FE;
+  --success-surface:  #E8F5E9;
+  --warning-surface:  #FFF3E0;
+  --error-surface:    #FFEBEE;
+  --surface-neutral:  #F0F0F0;
+  --radius-pill:      9999px;
+  --font-sans:        'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-tag {
+  --tag-bg: var(--surface-neutral);
+  --tag-fg: var(--gray-900);
+
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 24px;
+  padding: 0 8px;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: var(--tag-bg);
+  color: var(--tag-fg);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: default;
+}
+
+.inspera-tag--small { height: 20px; padding: 0 6px; }
+
+/* Neutral is written out even though it matches the base, so the class name
+   stays correct if the default ever moves. */
+.inspera-tag--neutral { --tag-bg: var(--surface-neutral); --tag-fg: var(--gray-900); }
+.inspera-tag--info    { --tag-bg: var(--info-surface);    --tag-fg: var(--info); }
+.inspera-tag--success { --tag-bg: var(--success-surface); --tag-fg: var(--success); }
+.inspera-tag--warning { --tag-bg: var(--warning-surface); --tag-fg: var(--warning); }
+.inspera-tag--error   { --tag-bg: var(--error-surface);   --tag-fg: var(--error); }
+
+.inspera-tag .material-symbols-outlined {
+  font-size: 16px;
+  font-variation-settings: 'FILL' 1;
+}
+.inspera-tag--small .material-symbols-outlined { font-size: 14px; }
+
+/* The remove control. Square, inherits the tag's colour, and keeps its own
+   accessible name - "Remove <label>", not a bare "close". */
+.inspera-tag__remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  margin-left: 2px;
+  margin-right: -2px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+.inspera-tag--small .inspera-tag__remove { width: 16px; height: 16px; }
+
+.inspera-tag__remove .material-symbols-outlined {
+  font-variation-settings: 'FILL' 0;
+}
+```
+
+```html
+<span class="inspera-tag inspera-tag--neutral">Mathematics</span>
+
+<!-- With a leading icon and a remove control. -->
+<span class="inspera-tag inspera-tag--info">
+  <span class="material-symbols-outlined" aria-hidden="true">label</span>
+  Algebra
+  <button type="button" class="inspera-tag__remove" aria-label="Remove Algebra">
+    <span class="material-symbols-outlined" aria-hidden="true">close</span>
+  </button>
+</span>
+```
+
+
+### Divider
+
+Separate content with a thin rule. - category: `data-display`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library - build the markup from the HTML and CSS under
+> **Without the package** below, which is this component's exact appearance.
+
+```tsx
+import { Divider } from '@inspera/components'
+
+<Divider
+  orientation="Horizontal"
+  spacing="Default"
+/>
+```
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `orientation` | `'Horizontal' \| 'Vertical'` | `'Horizontal'` | Divider direction. |
+| `label` | `string` | - | Optional centered label (horizontal only). |
+| `spacing` | `'Compact' \| 'Default' \| 'Spacious'` | `'Default'` | Surrounding margin. |
+
+**Accessibility** - role `separator`. Use role="separator" with aria-orientation; Purely decorative dividers may be aria-hidden.
+
+**Do:** Use to group and separate related content; Use a labeled divider to introduce a section; Keep dividers hairline-thin.
+**Don't:** Do not overuse dividers where whitespace suffices; Do not use heavy rules.
+
+**Deprecated aliases** (do not use): `Separator`, `Rule`, `HR`
+
+#### Without the package - exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. This is the
+component's exact structure and appearance: do not substitute a radius, colour,
+spacing or font weight of your own, and do not restyle it with a UI kit's
+defaults.
+
+It is not the whole component. HTML and CSS cannot provide focus trapping,
+Escape handling, outside-click dismissal or a roving tabindex, so the
+accessibility contract and any behaviour listed above must still be implemented
+in JavaScript before this component is finished.
+
+- The rule is 1px of `--border` as a background, not a border. A bare `<hr>` keeps the browser default and renders as a grey groove.
+- Spacing is margin on the divider itself: 16px default, 8px compact, 24px spacious - on the block axis horizontally, the inline axis vertically.
+- A labelled divider is a flex row of rule / label / rule, with the label at 13px `--muted-foreground`. It is not text laid over a line.
+- Always carry `role="separator"` and `aria-orientation`; a labelled one also needs `aria-label`.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --gray-200:          #EDEDED;
+  --gray-600:          #7A7A7A;
+  --border:            var(--gray-200);
+  --muted-foreground:  var(--gray-600);
+  --font-sans:         'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* Horizontal, unlabelled. The border reset matters: a bare <hr> keeps the
+   browser's inset border and renders as a two-tone groove. */
+.inspera-divider {
+  border: none;
+  height: 1px;
+  width: 100%;
+  background: var(--border);
+  margin: 16px 0;
+}
+
+.inspera-divider--compact  { margin: 8px 0; }
+.inspera-divider--spacious { margin: 24px 0; }
+
+/* Vertical: a 1px column that stretches to its flex parent. */
+.inspera-divider--vertical {
+  display: inline-block;
+  width: 1px;
+  height: auto;
+  align-self: stretch;
+  min-height: 1em;
+  background: var(--border);
+  margin: 0 16px;
+}
+.inspera-divider--vertical.inspera-divider--compact  { margin: 0 8px; }
+.inspera-divider--vertical.inspera-divider--spacious { margin: 0 24px; }
+
+/* Labelled: a flex row whose rules grow to fill either side of the text. */
+.inspera-divider--labelled {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  height: auto;
+  background: none;
+  margin: 16px 0;
+  font-family: var(--font-sans);
+}
+.inspera-divider--labelled.inspera-divider--compact  { margin: 8px 0; }
+.inspera-divider--labelled.inspera-divider--spacious { margin: 24px 0; }
+
+.inspera-divider__rule {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.inspera-divider__label {
+  font-size: 13px;
+  color: var(--muted-foreground);
+  white-space: nowrap;
+}
+```
+
+```html
+<hr class="inspera-divider" role="separator" aria-orientation="horizontal" />
+
+<!-- Vertical, inside a flex row. -->
+<span class="inspera-divider inspera-divider--vertical" role="separator" aria-orientation="vertical"></span>
+
+<!-- Labelled: the label names the separator for assistive tech too. -->
+<div class="inspera-divider inspera-divider--labelled" role="separator" aria-orientation="horizontal" aria-label="OR">
+  <span class="inspera-divider__rule"></span>
+  <span class="inspera-divider__label">OR</span>
+  <span class="inspera-divider__rule"></span>
+</div>
+```
+
+
+### Empty State
+
+Communicate the absence of content and offer a next step. - category: `data-display`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library - build the markup from the HTML and CSS under
+> **Without the package** below, which is this component's exact appearance.
+
+```tsx
+import { EmptyState } from '@inspera/components'
+
+<EmptyState
+  icon="inbox"
+  title="No assessments yet"
+  description="Create your first assessment."
+  actionLabel="New assessment"
+  size="Medium"
+/>
+```
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `icon` | `string` | `'inbox'` | Material Symbols icon name. |
+| `title` | `string` | `'No results found'` | Primary message. |
+| `description` | `string` | `'Try adjusting your filters or search terms.'` | Supporting explanation. |
+| `actionLabel` | `string` | - | Optional primary action label. |
+| `onAction` | `() => void` | - | Fired when the action is activated. Only rendered when actionLabel is set. |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Overall scale. |
+
+**Accessibility** - role `status`, keyboard operable. Announce dynamically-appearing empty states with role="status"; The action must be a real focusable button; The illustration/icon is decorative (aria-hidden).
+
+**Do:** Explain why the area is empty; Offer a clear next action when possible; Keep the tone helpful.
+**Don't:** Do not leave empty areas blank with no guidance; Do not use for transient loading - use Skeleton.
+
+**Deprecated aliases** (do not use): `Blank slate`, `Zero state`, `No data`
+
+#### Without the package - exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. This is the
+component's exact structure and appearance: do not substitute a radius, colour,
+spacing or font weight of your own, and do not restyle it with a UI kit's
+defaults.
+
+It is not the whole component. HTML and CSS cannot provide focus trapping,
+Escape handling, outside-click dismissal or a roving tabindex, so the
+accessibility contract and any behaviour listed above must still be implemented
+in JavaScript before this component is finished.
+
+- The icon sits in an 80px circle of `--gray-100` (56px when small). Without the circle it reads as a broken image.
+- Title 18px/500, body 14px `--muted-foreground` capped at 320px so it wraps to two short lines rather than one long one.
+- The action is the ordinary Button component, not a bespoke link.
+- Carry `role="status"` so the empty result is announced when a filter clears the list.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --primary:               #004080;
+  --error:                 #D32F2F;
+  --warning:               #EF6C00;
+  --success:               #2E7D32;
+  --white:                 #ffffff;
+  --gray-100:              #F7F7F7;
+  --gray-600:              #7A7A7A;
+  --gray-700:              #595959;
+  --gray-900:              #272727;
+  --text-primary:          rgba(0, 0, 0, 0.87);
+  --muted-foreground:      var(--gray-600);
+  --radius-sm:             4px;
+  --effect-button-shadow:  inset 0px -1px 0px rgba(0, 0, 0, 0.2), 0px 1px 0px rgba(0, 0, 0, 0.08);
+  --border-width-default:  1px;
+  --focus-ring-width:      2px;
+  --focus-ring-offset:     2px;
+  --focus-ring-color:      var(--primary);
+  --duration-fast:         100ms;
+  --easing-standard:       cubic-bezier(0.2, 0, 0, 1);
+  --font-sans:             'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-btn {
+  /* Fill, text and border come from the intent modifier below. */
+  --btn-bg: var(--primary);
+  --btn-fg: var(--white);
+  --btn-border: transparent;
+  --btn-shadow: var(--effect-button-shadow);
+  --btn-bg-hover: color-mix(in srgb, var(--btn-bg) 90%, black);
+  --btn-bg-active: color-mix(in srgb, var(--btn-bg) 82%, black);
+  --btn-shadow-hover: inset 0 -1px 0 rgba(0, 0, 0, 0.2), 0 2px 6px rgba(0, 64, 128, 0.24);
+  --btn-shadow-active: inset 0 1px 2px rgba(0, 0, 0, 0.24);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 40px;
+  min-width: 80px;
+  padding: 0 16px;
+  border-radius: var(--radius-sm);
+  border: var(--border-width-default) solid var(--btn-border);
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  box-shadow: var(--btn-shadow);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background var(--duration-fast) var(--easing-standard),
+    border-color var(--duration-fast) var(--easing-standard),
+    box-shadow var(--duration-fast) var(--easing-standard),
+    transform var(--duration-fast) var(--easing-standard);
+}
+
+/* Sizes change height, padding and gap only - never the 16px type. */
+.inspera-btn--small { height: 32px; padding: 0 12px; gap: 6px; }
+.inspera-btn--large { height: 48px; padding: 0 24px; gap: 10px; }
+
+/* Solid intents differ only in fill; hover and pressed derive from it. */
+.inspera-btn--primary     { --btn-bg: var(--primary); }
+.inspera-btn--success     { --btn-bg: var(--success); }
+.inspera-btn--warning     { --btn-bg: var(--warning); }
+.inspera-btn--destructive { --btn-bg: var(--error); }
+.inspera-btn--secondary {
+  --btn-bg: var(--gray-100);
+  --btn-fg: var(--gray-900);
+  --btn-border: var(--gray-700);
+}
+
+/* Outline and Text carry no fill and no shadow; they tint on interaction. */
+.inspera-btn--outline,
+.inspera-btn--text {
+  --btn-bg: transparent;
+  --btn-fg: var(--primary);
+  --btn-shadow: none;
+  --btn-shadow-hover: none;
+  --btn-shadow-active: none;
+  --btn-bg-hover: color-mix(in srgb, var(--primary) 8%, transparent);
+  --btn-bg-active: color-mix(in srgb, var(--primary) 12%, transparent);
+}
+.inspera-btn--outline { --btn-border: var(--primary); }
+
+.inspera-btn:hover:not(:disabled) {
+  background: var(--btn-bg-hover);
+  box-shadow: var(--btn-shadow-hover);
+}
+.inspera-btn:active:not(:disabled) {
+  background: var(--btn-bg-active);
+  box-shadow: var(--btn-shadow-active);
+  transform: translateY(1px);
+}
+.inspera-btn:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+.inspera-btn:disabled { opacity: 0.38; cursor: not-allowed; }
+
+.inspera-btn .material-symbols-outlined { font-size: 20px; }
+
+.inspera-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+  padding: 32px;
+  font-family: var(--font-sans);
+  color: var(--text-primary);
+}
+
+.inspera-empty--small { padding: 16px; }
+
+/* The icon lives inside a filled circle, not on its own. */
+.inspera-empty__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  border-radius: 9999px;
+  background: var(--gray-100);
+  margin-bottom: 4px;
+}
+.inspera-empty--small .inspera-empty__icon { width: 56px; height: 56px; }
+
+.inspera-empty__icon .material-symbols-outlined {
+  font-size: 40px;
+  color: var(--muted-foreground);
+}
+.inspera-empty--small .inspera-empty__icon .material-symbols-outlined { font-size: 28px; }
+
+.inspera-empty__title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 500;
+}
+.inspera-empty--small .inspera-empty__title { font-size: 16px; }
+
+.inspera-empty__body {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--muted-foreground);
+  max-width: 320px;
+}
+
+/* The action is a normal Button, spaced away from the copy. */
+.inspera-empty__action { margin-top: 8px; }
+```
+
+```html
+<div class="inspera-empty" role="status">
+  <span class="inspera-empty__icon">
+    <span class="material-symbols-outlined" aria-hidden="true">inbox</span>
+  </span>
+  <h3 class="inspera-empty__title">No assessments yet</h3>
+  <p class="inspera-empty__body">Create your first assessment to get started.</p>
+  <div class="inspera-empty__action">
+    <button type="button" class="inspera-btn inspera-btn--primary">New assessment</button>
+  </div>
+</div>
+```
+
+
+### Avatar Group
+
+Show a set of users as overlapping avatars with an overflow count. - category: `data-display`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library - build the markup from the HTML and CSS under
+> **Without the package** below, which is this component's exact appearance.
+
+```tsx
+import { AvatarGroup } from '@inspera/components'
+
+<AvatarGroup
+  size="Medium"
+  max={4}
+  avatars={[{ name: 'Ada Lovelace' }, { name: 'Linus Torvalds' }]}
+/>
+```
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `avatars` | `AvatarGroupItem[]` | `defaultAvatars` | Avatars to display. |
+| `max` | `number` | `4` | Maximum shown before overflow. |
+| `size` | `AvatarSize` | `'Medium'` | Avatar diameter. |
+
+```ts
+export interface AvatarGroupItem {
+  content?: AvatarContent
+  name?: string
+}
+```
+
+**Accessibility** - role `group`. Wrap in a group with an aria-label describing the set; Each avatar keeps its own accessible label; The overflow chip states the hidden count.
+
+**Do:** Use for participant and collaborator lists; Cap visible avatars and show a +N overflow; Keep sizing consistent within a context.
+**Don't:** Do not show dozens of avatars inline; Do not omit the overflow count.
+
+**Deprecated aliases** (do not use): `Avatar stack`, `Facepile`
+
+#### Without the package - exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. This is the
+component's exact structure and appearance: do not substitute a radius, colour,
+spacing or font weight of your own, and do not restyle it with a UI kit's
+defaults.
+
+It is not the whole component. HTML and CSS cannot provide focus trapping,
+Escape handling, outside-click dismissal or a roving tabindex, so the
+accessibility contract and any behaviour listed above must still be implemented
+in JavaScript before this component is finished.
+
+- Overlap is 30% of the diameter as a negative left margin - 10 / 12 / 17px for small / medium / large - and the first item has none.
+- The separating ring is a `box-shadow`, not a border: a border would grow each avatar and break the spacing.
+- The overflow chip is `+N` on `--gray-200` at 34% of the diameter, sized identically to an avatar.
+- The group carries `role="group"` and a count in its label; the chip carries "N more". Overlapping avatars are meaningless to a screen reader without both.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --error:           #D32F2F;
+  --success:         #2E7D32;
+  --white:           #ffffff;
+  --gray-200:        #EDEDED;
+  --gray-500:        #949494;
+  --gray-600:        #7A7A7A;
+  --gray-700:        #595959;
+  --gray-900:        #272727;
+  --avatar-surface:  #E0E0E0;
+  --radius-pill:     9999px;
+  --font-sans:       'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* The wrapper exists so the status dot can be positioned against the
+   avatar without being clipped by its overflow: hidden. */
+.inspera-avatar {
+  position: relative;
+  display: inline-flex;
+}
+
+.inspera-avatar__surface {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-pill);
+  background: var(--avatar-surface);
+  color: var(--gray-900);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  /* Initials are 40% of the diameter, so they scale with the avatar. */
+  font-size: 16px;
+}
+
+.inspera-avatar--small .inspera-avatar__surface  { width: 32px; height: 32px; font-size: 12.8px; }
+.inspera-avatar--large .inspera-avatar__surface  { width: 56px; height: 56px; font-size: 22.4px; }
+
+.inspera-avatar__surface img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* The icon variant is 55% of the diameter, larger than the initials. */
+.inspera-avatar__surface .material-symbols-outlined {
+  font-size: 22px;
+  color: var(--gray-600);
+}
+.inspera-avatar--small .inspera-avatar__surface .material-symbols-outlined { font-size: 17.6px; }
+.inspera-avatar--large .inspera-avatar__surface .material-symbols-outlined { font-size: 30.8px; }
+
+/* The dot is 28% of the diameter, with a 2px white ring so it stays legible
+   against a photo. */
+.inspera-avatar__status {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 11.2px;
+  height: 11.2px;
+  border-radius: 9999px;
+  border: 2px solid var(--white);
+}
+.inspera-avatar--small .inspera-avatar__status { width: 8.96px; height: 8.96px; }
+.inspera-avatar--large .inspera-avatar__status { width: 15.68px; height: 15.68px; }
+
+.inspera-avatar__status--online  { background: var(--success); }
+.inspera-avatar__status--offline { background: var(--gray-500); }
+.inspera-avatar__status--busy    { background: var(--error); }
+
+.inspera-avatar-group {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-sans);
+}
+
+/* Each avatar sits in a ring and pulls left over the one before it. The ring
+   is a box-shadow, not a border, so it does not change the avatar's size. */
+.inspera-avatar-group__item {
+  display: inline-flex;
+  border-radius: 9999px;
+  box-shadow: 0 0 0 2px var(--white);
+  margin-left: -12px;
+}
+.inspera-avatar-group--small .inspera-avatar-group__item { margin-left: -10px; }
+.inspera-avatar-group--large .inspera-avatar-group__item { margin-left: -17px; }
+
+/* Last, so it outranks the size modifiers above: nothing overlaps the first. */
+.inspera-avatar-group__item:first-child { margin-left: 0; }
+
+/* The overflow chip is the same circle, filled and labelled +N. */
+.inspera-avatar-group__more {
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: var(--gray-200);
+  color: var(--gray-700);
+  font-size: 13.6px;
+  font-weight: 500;
+}
+.inspera-avatar-group--small .inspera-avatar-group__more { width: 32px; height: 32px; font-size: 10.88px; }
+.inspera-avatar-group--large .inspera-avatar-group__more { width: 56px; height: 56px; font-size: 19.04px; }
+```
+
+```html
+<div class="inspera-avatar-group" role="group" aria-label="6 participants">
+  <span class="inspera-avatar-group__item">
+    <span class="inspera-avatar">
+      <span class="inspera-avatar__surface" role="img" aria-label="Ada Lovelace (AL)"><span>AL</span></span>
+    </span>
+  </span>
+  <span class="inspera-avatar-group__item">
+    <span class="inspera-avatar">
+      <span class="inspera-avatar__surface" role="img" aria-label="Grace Hopper (GH)"><span>GH</span></span>
+    </span>
+  </span>
+  <span class="inspera-avatar-group__item inspera-avatar-group__more" aria-label="4 more">+4</span>
+</div>
+```
+
+
+### Stat
+
+Highlight a key metric with an optional trend. - category: `data-display`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library - build the markup from the HTML and CSS under
+> **Without the package** below, which is this component's exact appearance.
+
+```tsx
+import { Stat } from '@inspera/components'
+
+<Stat
+  label="Active candidates"
+  value="12,480"
+  delta="+8.2% vs last week"
+  deltaIntent="up"
+  icon="group"
+/>
+```
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `label` **(required)** | `string` | `'Average score'` | Metric name. |
+| `value` **(required)** | `string \| number` | `'84%'` | Metric value. |
+| `delta` | `string` | `'+4.2%'` | Change indicator text. |
+| `deltaIntent` | `'up' \| 'down' \| 'neutral'` | `'up'` | Trend direction / color. |
+| `icon` | `string` | - | Optional leading icon. |
+| `helpText` | `string` | - | Optional context below the value, such as the comparison period. |
+
+**Accessibility** - role `group`. Associate the value with its label for screen readers; Convey trend with text, not color alone; Use aria-label to summarize the metric and change.
+
+**Do:** Use for dashboard summaries; Pair a value with a clear label; Indicate trend direction with an icon and text.
+**Don't:** Do not rely on color alone for the delta; Do not crowd many stats without spacing.
+
+**Deprecated aliases** (do not use): `Metric`, `KPI`, `Stat card`
+
+#### Without the package - exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. This is the
+component's exact structure and appearance: do not substitute a radius, colour,
+spacing or font weight of your own, and do not restyle it with a UI kit's
+defaults.
+
+It is not the whole component. HTML and CSS cannot provide focus trapping,
+Escape handling, outside-click dismissal or a roving tabindex, so the
+accessibility contract and any behaviour listed above must still be implemented
+in JavaScript before this component is finished.
+
+- The label is 12px/600 uppercase with 0.04em tracking in `--muted-foreground` - not body text.
+- The value is 28px/600 at line-height 1.1. It is the only large type in the tile.
+- The tile uses `--radius-lg` and a 1px `--border`, with no shadow.
+- Trend colour is `--success` up, `--error` down, `--muted-foreground` flat, and always ships with the matching arrow so the direction is not colour-only.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --error:             #D32F2F;
+  --success:           #2E7D32;
+  --white:             #ffffff;
+  --gray-200:          #EDEDED;
+  --gray-600:          #7A7A7A;
+  --text-primary:      rgba(0, 0, 0, 0.87);
+  --border:            var(--gray-200);
+  --muted-foreground:  var(--gray-600);
+  --radius-lg:         12px;
+  --font-sans:         'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 200px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--white);
+  font-family: var(--font-sans);
+  color: var(--text-primary);
+}
+
+/* Label row: the metric name, with an optional icon pushed to the far end. */
+.inspera-stat__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.inspera-stat__label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+
+.inspera-stat__head .material-symbols-outlined {
+  font-size: 20px;
+  color: var(--muted-foreground);
+}
+
+.inspera-stat__value {
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+/* The delta carries the trend colour; the arrow is not decorative repetition,
+   it is the direction for anyone who cannot rely on the colour alone. */
+.inspera-stat__delta {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  font-weight: 500;
+}
+.inspera-stat__delta .material-symbols-outlined { font-size: 18px; }
+
+.inspera-stat__delta--up      { color: var(--success); }
+.inspera-stat__delta--down    { color: var(--error); }
+.inspera-stat__delta--neutral { color: var(--muted-foreground); }
+```
+
+```html
+<div class="inspera-stat">
+  <div class="inspera-stat__head">
+    <span class="inspera-stat__label">Active candidates</span>
+    <span class="material-symbols-outlined" aria-hidden="true">group</span>
+  </div>
+  <span class="inspera-stat__value">12,480</span>
+  <span class="inspera-stat__delta inspera-stat__delta--up">
+    <span class="material-symbols-outlined" aria-hidden="true">trending_up</span>
+    +8.2% vs last week
+  </span>
+</div>
+```
+
+
+### List
+
+Present a vertical series of related items. - category: `data-display`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library - build the markup from the HTML and CSS under
+> **Without the package** below, which is this component's exact appearance.
+
+```tsx
+import { List } from '@inspera/components'
+
+<List
+  size="Default"
+  divided={true}
+  interactive={false}
+  items={[{ primary: 'General settings', secondary: '...', leading: 'settings' }]}
+/>
+```
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `items` | `ListItem[]` | `defaultItems` | List rows. |
+| `divided` | `boolean` | `true` | Show dividers between rows. |
+| `interactive` | `boolean` | `false` | Make rows clickable. |
+| `size` | `'Compact' \| 'Default'` | `'Default'` | Row density. |
+| `onItemClick` | `(item: ListItem, index: number) => void` | - | Fired with the item and its index. Set interactive as well. |
+
+```ts
+export interface ListItem {
+  primary: string
+  secondary?: string
+  leading?: ReactNode
+  trailing?: ReactNode
+}
+```
+
+**Accessibility** - role `list`, keyboard operable. Use semantic list markup (ul / li); Interactive rows are buttons and keyboard focusable; Provide meaningful text for each item.
+
+**Do:** Use for settings, results, and simple records; Keep primary text scannable; Use secondary text for supporting detail.
+**Don't:** Do not use for comparable tabular data - use Table; Do not make only part of a row clickable.
+
+**Deprecated aliases** (do not use): `List view`, `Item list`
+
+#### Without the package - exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. This is the
+component's exact structure and appearance: do not substitute a radius, colour,
+spacing or font weight of your own, and do not restyle it with a UI kit's
+defaults.
+
+It is not the whole component. HTML and CSS cannot provide focus trapping,
+Escape handling, outside-click dismissal or a roving tabindex, so the
+accessibility contract and any behaviour listed above must still be implemented
+in JavaScript before this component is finished.
+
+- Set the four border longhands, never the `border` shorthand. A shorthand on the row wipes the bottom border that draws the divider - the exact bug this component shipped with.
+- Interactive rows are `<button>` inside the `<li>`, so focus and Enter/Space work without a keydown handler.
+- Row padding is 12px (8px compact) vertical, 16px horizontal; primary text 14px/500, secondary 13px `--muted-foreground`.
+- The divider is on every row but the last, drawn by `li:not(:last-child)` rather than by counting in script.
+- Leading and trailing icons are 20px (18px compact) and always `aria-hidden` - the row's text is the label.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --primary:           #004080;
+  --white:             #ffffff;
+  --gray-200:          #EDEDED;
+  --gray-600:          #7A7A7A;
+  --action-hover:      rgba(0, 0, 0, 0.04);
+  --text-primary:      rgba(0, 0, 0, 0.87);
+  --border:            var(--gray-200);
+  --muted-foreground:  var(--gray-600);
+  --radius-sm:         4px;
+  --radius-md:         8px;
+  --focus-ring-width:  2px;
+  --focus-ring-color:  var(--primary);
+  --duration-fast:     100ms;
+  --easing-standard:   cubic-bezier(0.2, 0, 0, 1);
+  --font-sans:         'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  font-family: var(--font-sans);
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.inspera-list__row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 16px;
+  /* Longhands, not the "border" shorthand: a shorthand here wipes the divider
+     that the row below sets on its bottom edge. */
+  border-top: none;
+  border-right: none;
+  border-left: none;
+  border-bottom: none;
+  font: inherit;
+  cursor: default;
+  background: transparent;
+}
+
+.inspera-list--compact .inspera-list__row { padding: 8px 16px; }
+
+.inspera-list--divided li:not(:last-child) > .inspera-list__row {
+  border-bottom: 1px solid var(--border);
+}
+
+/* Interactive rows are real buttons, so they focus and activate for free. */
+.inspera-list__row--interactive {
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background var(--duration-fast) var(--easing-standard);
+}
+.inspera-list__row--interactive:hover { background: var(--action-hover); }
+.inspera-list__row--interactive:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: -2px;
+}
+
+.inspera-list__slot {
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+.inspera-list__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+}
+
+.inspera-list__primary {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.inspera-list__secondary {
+  font-size: 13px;
+  color: var(--muted-foreground);
+}
+```
+
+```html
+<ul class="inspera-list inspera-list--divided" role="list">
+  <li>
+    <div class="inspera-list__row">
+      <span class="inspera-list__slot">
+        <span class="material-symbols-outlined" aria-hidden="true">settings</span>
+      </span>
+      <span class="inspera-list__text">
+        <span class="inspera-list__primary">General settings</span>
+        <span class="inspera-list__secondary">Language, timezone, theme</span>
+      </span>
+    </div>
+  </li>
+</ul>
+
+<!-- Interactive rows are <button>, not a div with onclick. -->
+<ul class="inspera-list inspera-list--divided" role="list">
+  <li>
+    <button type="button" class="inspera-list__row inspera-list__row--interactive">
+      <span class="inspera-list__text">
+        <span class="inspera-list__primary">Notifications</span>
+      </span>
+      <span class="inspera-list__slot">
+        <span class="material-symbols-outlined" aria-hidden="true">chevron_right</span>
+      </span>
+    </button>
+  </li>
+</ul>
+```
+
+
+## Components - feedback
+
+### Alert
+
+Display semantic inline feedback. - category: `feedback`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library - build the markup from the HTML and CSS under
+> **Without the package** below, which is this component's exact appearance.
+
+```tsx
+import { Alert } from '@inspera/components'
+
+<Alert
+  intent="Info"
+  title="Heads up"
+  message="..."
+  layout="Simple"
+  background={true}
+/>
+```
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `title` | `string` | `'Heads up'` | Short headline stating what happened. |
+| `message` | `string` | `'This is a contextual inline message that matches the intent severity.'` | Supporting detail. Keep it to one or two sentences. |
+| `intent` | `'Info' \| 'Success' \| 'Warning' \| 'Error'` | `'Info'` | Severity / color. |
+| `layout` | `'Simple' \| 'With CTA' \| 'With Close' \| 'With CTA + Close'` | `'Simple'` | Action affordances. |
+| `background` | `boolean` | `true` | Tinted fill vs. left-accent only. |
+| `ctaLabel` | `string` | `'View details'` | Label for the inline action. Only rendered by the "With CTA" layouts. |
+| `onCta` | `() => void` | - | Fired when the inline action is activated. |
+| `onClose` | `() => void` | - | Fired when the alert is dismissed. Only rendered by the "With Close" layouts. |
+
+**Accessibility** - role `alert`, keyboard operable. Error and Warning announce as role="alert"; Info and Success as a polite role="status" - never both on one element, since role="alert" already implies assertive; Close button must have aria-label="Close alert".
+
+**Behaviour you must implement** - the HTML and CSS below are structure and
+appearance only. This component is not finished until it also does:
+
+- A dismissible alert must remove itself on close and move focus somewhere sensible - never leave focus on the button it just removed.
+
+**Do:** Use for contextual inline messages; Match intent to message severity; Keep alert text concise.
+**Don't:** Do not stack more than 2 alerts in the same area; Do not use alerts for permanent content.
+
+#### Without the package - exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. This is the
+component's exact structure and appearance: do not substitute a radius, colour,
+spacing or font weight of your own, and do not restyle it with a UI kit's
+defaults.
+
+It is not the whole component. HTML and CSS cannot provide focus trapping,
+Escape handling, outside-click dismissal or a roving tabindex, so the
+accessibility contract and any behaviour listed above must still be implemented
+in JavaScript before this component is finished.
+
+- Each intent pairs the `*-surface` tint as background with the solid colour as both border and icon.
+- The live region follows severity: Error and Warning use `role="alert"`, Info and Success use `role="status"` with `aria-live="polite"`. Never put `role="alert"` and `aria-live="polite"` on the same element - alert already implies assertive.
+- The icon is filled (`FILL 1`) at 20px, nudged 1px down so it sits on the title baseline.
+- Without the tint, the accent becomes a 4px left border and the other three sides stay 1px.
+- The close button needs `aria-label="Close alert"` - an unlabelled x announces as nothing.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --error:            #D32F2F;
+  --warning:          #EF6C00;
+  --info:             #0288D1;
+  --success:          #2E7D32;
+  --gray-700:         #595959;
+  --action-active:    rgba(0, 0, 0, 0.56);
+  --text-primary:     rgba(0, 0, 0, 0.87);
+  --info-surface:     #E1F5FE;
+  --success-surface:  #E8F5E9;
+  --warning-surface:  #FFF3E0;
+  --error-surface:    #FFEBEE;
+  --radius-md:        8px;
+  --font-sans:        'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-alert {
+  --alert-bg: var(--info-surface);
+  --alert-fg: var(--info);
+
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+  max-width: 100%;
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  background: var(--alert-bg);
+  border: 1px solid var(--alert-fg);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+}
+
+.inspera-alert--info    { --alert-bg: var(--info-surface);    --alert-fg: var(--info); }
+.inspera-alert--success { --alert-bg: var(--success-surface); --alert-fg: var(--success); }
+.inspera-alert--warning { --alert-bg: var(--warning-surface); --alert-fg: var(--warning); }
+.inspera-alert--error   { --alert-bg: var(--error-surface);   --alert-fg: var(--error); }
+
+/* No tint: the accent moves to a 4px left edge instead. */
+.inspera-alert--plain {
+  background: transparent;
+  border-left-width: 4px;
+}
+
+.inspera-alert__icon {
+  flex-shrink: 0;
+  margin-top: 1px;
+  font-size: 20px;
+  color: var(--alert-fg);
+  font-variation-settings: 'FILL' 1;
+}
+
+.inspera-alert__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.inspera-alert__title {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.inspera-alert__message {
+  font-size: 16px;
+  line-height: 1.4;
+  color: var(--gray-700);
+}
+
+.inspera-alert__cta {
+  align-self: flex-start;
+  margin-top: 8px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--alert-fg);
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.inspera-alert__close {
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--action-active);
+  display: inline-flex;
+  cursor: pointer;
+}
+.inspera-alert__close .material-symbols-outlined { font-size: 20px; }
+```
+
+```html
+<!-- Error and Warning are urgent: role="alert" (already assertive). -->
+<div class="inspera-alert inspera-alert--error" role="alert">
+  <span class="material-symbols-outlined inspera-alert__icon" aria-hidden="true">error</span>
+  <div class="inspera-alert__content">
+    <span class="inspera-alert__title">Upload failed</span>
+    <span class="inspera-alert__message">The file exceeds the 10MB limit.</span>
+  </div>
+</div>
+
+<!-- Info and Success are not: a polite status region instead. Never both. -->
+<div class="inspera-alert inspera-alert--success" role="status" aria-live="polite">
+  <span class="material-symbols-outlined inspera-alert__icon" aria-hidden="true">check_circle</span>
+  <div class="inspera-alert__content">
+    <span class="inspera-alert__title">Saved</span>
+    <span class="inspera-alert__message">Your changes are published.</span>
+  </div>
+  <button type="button" class="inspera-alert__close" aria-label="Close alert">
+    <span class="material-symbols-outlined" aria-hidden="true">close</span>
+  </button>
+</div>
+```
+
+
+### Dialog
+
+Present content or actions that require user attention. - category: `feedback`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library - build the markup from the HTML and CSS under
+> **Without the package** below, which is this component's exact appearance.
+
+```tsx
+import { Dialog } from '@inspera/components'
+
+<Dialog
+  open={open}
+  size="Medium"
+  title="Dialog title"
+  hasCloseButton={true}
+  hasActions={true}
+  onClose={() => setOpen(false)}
+  onConfirm={handleConfirm}
+/>
+```
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `title` | `string` | `'Dialog title'` | Dialog heading. Also the accessible name. |
+| `body` | `ReactNode` | `'This is the dialog body. Provide context or a clear description of the action the user is about to take.'` | Dialog content. |
+| `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Panel width 400 / 480 / 560. |
+| `hasCloseButton` | `boolean` | `true` | Show the header close affordance. |
+| `hasActions` | `boolean` | `true` | Show the footer action buttons. |
+| `confirmLabel` | `string` | `'Continue'` | Label for the confirming action. Name the action - "Delete", not "OK". |
+| `cancelLabel` | `string` | `'Cancel'` | Label for the dismissing action. |
+| `open` | `boolean` | `true` | Whether the dialog is shown. Controlled - pair with onClose. |
+| `embedded` | `boolean` | `false` | Render just the panel (no overlay) - used for documentation previews. |
+| `onClose` | `() => void` | - | Fired on the close button, the overlay, and Escape. |
+| `onConfirm` | `() => void` | - | Fired when the confirming action is activated. |
+
+**Accessibility** - role `dialog`, keyboard operable. Use role="dialog" with aria-modal="true"; Set aria-labelledby to the dialog title; Trap focus inside the dialog when open; Return focus to trigger element on close; Escape key closes the dialog.
+
+**Behaviour you must implement** - the HTML and CSS below are structure and
+appearance only. This component is not finished until it also does:
+
+- Trap Tab and Shift+Tab inside the dialog for as long as it is open.
+- Move focus into the dialog when it opens and back to the trigger when it closes.
+- Close on Escape, and on scrim click only when the dialog is dismissible.
+- Lock background scroll while open.
+
+**Do:** Use for confirmations and critical decisions; Always provide a way to close the dialog; Keep dialog content focused and concise.
+**Don't:** Do not open dialogs from other dialogs; Do not use for non-blocking information - use Alert instead.
+
+**Deprecated aliases** (do not use): `Modal`, `Popup`
+
+#### Without the package - exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. This is the
+component's exact structure and appearance: do not substitute a radius, colour,
+spacing or font weight of your own, and do not restyle it with a UI kit's
+defaults.
+
+It is not the whole component. HTML and CSS cannot provide focus trapping,
+Escape handling, outside-click dismissal or a roving tabindex, so the
+accessibility contract and any behaviour listed above must still be implemented
+in JavaScript before this component is finished.
+
+- Widths are exactly 400 / 480 / 560 with `max-width: 100%`, `--radius-lg` and `--shadow-500`.
+- Wrap the panel in the scrim. `rgba(39,39,39,0.48)`, fixed, full-viewport, at `--z-modal`. Without it the page behind stays clickable and this is a floating card, not a modal.
+- `role="dialog"` with `aria-modal="true"` and `aria-labelledby` pointing at the title id. Generate a unique id - a hardcoded one collides the moment two dialogs exist on a page.
+- Behaviour the markup cannot express, and that you must add: move focus into the panel on open, trap Tab inside it, return focus to the trigger on close, close on Escape and on a scrim click, and lock body scroll while open.
+- The title is 22.78px/500 - an exact export from Figma, not a rounded 24.
+- Name the confirming action for what it does ("Delete"), never "OK".
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --primary:       #004080;
+  --white:         #ffffff;
+  --gray-200:      #EDEDED;
+  --gray-900:      #272727;
+  --text-primary:  rgba(0, 0, 0, 0.87);
+  --border:        var(--gray-200);
+  --radius-sm:     4px;
+  --radius-lg:     12px;
+  --radius-pill:   9999px;
+  --shadow-500:    0px 10px 32px rgba(39, 39, 39, 0.1), 0px 6px 14px rgba(39, 39, 39, 0.12);
+  --z-modal:       600;
+  --font-sans:     'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* The scrim. Fixed, full-viewport, and it closes the dialog when clicked. */
+.inspera-dialog-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(39, 39, 39, 0.48);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: var(--z-modal, 1000);
+}
+
+.inspera-dialog {
+  width: 480px;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius-lg);
+  background: var(--white);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-500);
+  font-family: var(--font-sans);
+}
+
+.inspera-dialog--small { width: 400px; }
+.inspera-dialog--large { width: 560px; }
+
+.inspera-dialog__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 24px;
+  border-bottom: 1px solid var(--border);
+  min-height: 64px;
+}
+
+.inspera-dialog__title {
+  margin: 0;
+  font-size: 22.78px;
+  font-weight: 500;
+  line-height: 1.12;
+  color: var(--gray-900);
+  letter-spacing: -0.2px;
+}
+
+.inspera-dialog__close {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  color: var(--gray-900);
+  display: inline-flex;
+  border-radius: var(--radius-pill);
+  line-height: 0;
+}
+.inspera-dialog__close .material-symbols-outlined { font-size: 24px; }
+
+.inspera-dialog__body {
+  padding: 32px;
+  font-size: 16px;
+  line-height: 20px;
+  color: var(--gray-900);
+}
+
+.inspera-dialog__footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 24px;
+  border-top: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.inspera-dialog__action {
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  border: none;
+  background: transparent;
+  color: var(--primary);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 20px;
+  cursor: pointer;
+}
+
+.inspera-dialog__action--confirm {
+  background: var(--primary);
+  color: var(--white);
+  box-shadow: 0px 1px 0px 0px rgba(0, 0, 0, 0.08), inset 0px -1px 0px 0px rgba(0, 0, 0, 0.2);
+}
+```
+
+```html
+<!-- The scrim is required. Without it the page behind stays clickable and
+     the "modal" is a floating card. -->
+<div class="inspera-dialog-overlay">
+  <div class="inspera-dialog" role="dialog" aria-modal="true"
+       aria-labelledby="dlg-title" tabindex="-1">
+    <div class="inspera-dialog__header">
+      <h2 class="inspera-dialog__title" id="dlg-title">Delete assessment?</h2>
+      <button type="button" class="inspera-dialog__close" aria-label="Close dialog">
+        <span class="material-symbols-outlined" aria-hidden="true">close</span>
+      </button>
+    </div>
+    <div class="inspera-dialog__body">This cannot be undone.</div>
+    <div class="inspera-dialog__footer">
+      <button type="button" class="inspera-dialog__action">Cancel</button>
+      <button type="button" class="inspera-dialog__action inspera-dialog__action--confirm">Delete</button>
+    </div>
+  </div>
+</div>
+```
+
+
+### Snackbar
+
+Show brief, non-blocking feedback at the bottom of the screen. - category: `feedback`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library - build the markup from the HTML and CSS under
+> **Without the package** below, which is this component's exact appearance.
+
+```tsx
+import { Snackbar } from '@inspera/components'
+
+<Snackbar
+  intent="Neutral"
+  message="Assessment saved."
+  hasAction={false}
+  hasClose={true}
+/>
+```
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `message` | `string` | `'Assessment saved successfully.'` | What happened. One short sentence. |
+| `intent` | `'Neutral' \| 'Info' \| 'Success' \| 'Warning' \| 'Error'` | `'Neutral'` | Accent icon color. |
+| `hasAction` | `boolean` | `false` | Show an inline action (e.g. Undo). |
+| `hasClose` | `boolean` | `true` | Show the dismiss button. |
+| `actionLabel` | `string` | `'Undo'` | Label for the inline action, typically "Undo". |
+| `onAction` | `() => void` | - | Fired when the inline action is activated. |
+| `onClose` | `() => void` | - | Fired when dismissed. |
+
+**Accessibility** - role `status`, keyboard operable. Use role="status" with aria-live="polite"; Action button must be focusable; Auto-dismiss timing must be generous (5s minimum).
+
+**Behaviour you must implement** - the HTML and CSS below are structure and
+appearance only. This component is not finished until it also does:
+
+- Auto-dismiss on a timer of at least 5 seconds, pausing that timer on hover and on focus.
+- Never move focus to the snackbar; the action stays reachable by keyboard while it is visible.
+
+**Do:** Use for brief confirmation messages; Include an undo action when appropriate; Limit to one snackbar at a time.
+**Don't:** Do not use for critical errors - use Alert or Dialog instead; Do not stack multiple snackbars.
+
+**Deprecated aliases** (do not use): `Toast`, `Notification bar`
+
+#### Without the package - exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. This is the
+component's exact structure and appearance: do not substitute a radius, colour,
+spacing or font weight of your own, and do not restyle it with a UI kit's
+defaults.
+
+It is not the whole component. HTML and CSS cannot provide focus trapping,
+Escape handling, outside-click dismissal or a roving tabindex, so the
+accessibility contract and any behaviour listed above must still be implemented
+in JavaScript before this component is finished.
+
+- The bar is always `--gray-900` with white text. The intent tints the icon and the action label only - a green snackbar is wrong.
+- Fixed 48px height, `--radius-md`, `--shadow-300`, and asymmetric padding (16px leading, 8px trailing) because the close button carries its own.
+- Accents are the 400 shade of each family, which reads on the dark bar; the 600 shades do not.
+- Always `role="status"` with `aria-live="polite"` - a snackbar must never interrupt, which is also why nothing the user has to act on later belongs here.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --white:       #ffffff;
+  --gray-900:    #272727;
+  --blue-400:    #7ABDFF;
+  --green-400:   #8DECC5;
+  --red-400:     #F58484;
+  --orange-400:  #FED27C;
+  --radius-md:   8px;
+  --shadow-300:  0px 8px 16px rgba(39, 39, 39, 0.08), 0px 6px 8px rgba(39, 39, 39, 0.12);
+  --font-sans:   'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-snackbar {
+  /* The accent tints the icon and the action, not the bar. */
+  --snackbar-accent: var(--white);
+
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 300px;
+  max-width: 480px;
+  height: 48px;
+  padding: 0 8px 0 16px;
+  border-radius: var(--radius-md);
+  background: var(--gray-900);
+  color: var(--white);
+  box-shadow: var(--shadow-300);
+  font-family: var(--font-sans);
+}
+
+.inspera-snackbar--neutral { --snackbar-accent: var(--white); }
+.inspera-snackbar--info    { --snackbar-accent: var(--blue-400); }
+.inspera-snackbar--success { --snackbar-accent: var(--green-400); }
+.inspera-snackbar--warning { --snackbar-accent: var(--orange-400); }
+.inspera-snackbar--error   { --snackbar-accent: var(--red-400); }
+
+.inspera-snackbar__icon {
+  flex-shrink: 0;
+  font-size: 20px;
+  color: var(--snackbar-accent);
+  font-variation-settings: 'FILL' 1;
+}
+
+.inspera-snackbar__message {
+  flex: 1;
+  font-size: 16px;
+}
+
+.inspera-snackbar__action {
+  padding: 0 8px;
+  border: none;
+  background: none;
+  color: var(--snackbar-accent);
+  font-weight: 600;
+  font-size: 16px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.inspera-snackbar__close {
+  padding: 4px;
+  border: none;
+  background: none;
+  color: rgba(255, 255, 255, 0.7);
+  display: inline-flex;
+  cursor: pointer;
+}
+.inspera-snackbar__close .material-symbols-outlined { font-size: 20px; }
+```
+
+```html
+<div class="inspera-snackbar inspera-snackbar--success" role="status" aria-live="polite">
+  <span class="material-symbols-outlined inspera-snackbar__icon" aria-hidden="true">check_circle</span>
+  <span class="inspera-snackbar__message">Assessment saved.</span>
+  <button type="button" class="inspera-snackbar__action">Undo</button>
+  <button type="button" class="inspera-snackbar__close" aria-label="Dismiss">
+    <span class="material-symbols-outlined" aria-hidden="true">close</span>
+  </button>
+</div>
+```
+
+
+### Tooltip
+
+Provide contextual help on hover or focus. - category: `feedback`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library - build the markup from the HTML and CSS under
+> **Without the package** below, which is this component's exact appearance.
+
+```tsx
+import { Tooltip } from '@inspera/components'
+
+<Tooltip
+  content="Supplementary help text"
+  placement="Top"
+  theme="Dark"
+  type="Default"
+>
+  <IconButton icon="help" />
+</Tooltip>
+```
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `content` | `string` | `'Supplementary help text'` | The hint text. Keep it short; never put essential information here alone. |
+| `placement` | `'Top' \| 'Bottom' \| 'Left' \| 'Right'` | `'Top'` | Position relative to the trigger. |
+| `theme` | `'Light' \| 'Dark'` | `'Dark'` | Surface color. |
+| `type` | `'Default' \| 'Accessibility'` | `'Default'` | Accessibility type uses larger text. |
+| `children` | `ReactNode` | - | The element the tooltip describes. |
+| `forceVisible` | `boolean` | `false` | Keep the tooltip visible regardless of hover - used for documentation. |
+
+**Accessibility** - role `tooltip`, keyboard operable. Use role="tooltip" on the tooltip element; Link trigger and tooltip with aria-describedby; Escape key dismisses the tooltip; Tooltip must not contain interactive content.
+
+**Behaviour you must implement** - the HTML and CSS below are structure and
+appearance only. This component is not finished until it also does:
+
+- Show on hover and on keyboard focus; hide on blur, on mouse leave, and on Escape.
+- Delay before showing but hide immediately, so travelling the pointer across a toolbar does not flash tooltips.
+- Never move focus into the tooltip.
+
+**Do:** Use for supplementary information; Keep tooltip text short and scannable; Position to avoid clipping viewport edges.
+**Don't:** Do not put critical information only in tooltips; Do not use for interactive content - use Popover instead.
+
+**Deprecated aliases** (do not use): `Tooltips`, `Walkthrough`, `a11y tooltips`
+
+#### Without the package - exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. This is the
+component's exact structure and appearance: do not substitute a radius, colour,
+spacing or font weight of your own, and do not restyle it with a UI kit's
+defaults.
+
+It is not the whole component. HTML and CSS cannot provide focus trapping,
+Escape handling, outside-click dismissal or a roving tabindex, so the
+accessibility contract and any behaviour listed above must still be implemented
+in JavaScript before this component is finished.
+
+- The trigger points at the bubble with `aria-describedby`, and the bubble is `role="tooltip"`. A custom trigger needs that attribute too - the tooltip is not announced without it.
+- Show on `:hover` **and** `:focus-within`. A hint only a mouse can reach is unreachable for anyone navigating by keyboard.
+- The bubble takes `pointer-events: none` so it can never sit between the pointer and what it describes.
+- Dark is `--gray-900` with white text and no border; Light is white with a 1px `--border-strong`, and the arrow has to pick up that border on its two trigger-facing edges.
+- Default type is 12px; the accessibility type is 14px with more padding, for hints that carry real instruction.
+- Escape must dismiss it (WCAG 1.4.13), and nothing essential may live only here - a tooltip is supplementary by definition.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --white:          #ffffff;
+  --gray-300:       #D9D9D9;
+  --gray-900:       #272727;
+  --action-active:  rgba(0, 0, 0, 0.56);
+  --text-primary:   rgba(0, 0, 0, 0.87);
+  --border-strong:  var(--gray-300);
+  --radius-sm:      4px;
+  --radius-pill:    9999px;
+  --shadow-100:     0px 4px 4px rgba(39, 39, 39, 0.08), 0px 2px 4px rgba(39, 39, 39, 0.12);
+  --z-tooltip:      800;
+  --font-sans:      'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-tooltip {
+  position: relative;
+  display: inline-flex;
+}
+
+.inspera-tooltip__bubble {
+  position: absolute;
+  max-width: 240px;
+  width: max-content;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--gray-900);
+  color: var(--white);
+  border: none;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 1.4;
+  box-shadow: var(--shadow-100);
+  z-index: var(--z-tooltip, 30);
+  /* Never a pointer target: hovering the hint must not keep it open, and it
+     must never sit between the pointer and the thing it describes. */
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 140ms ease;
+}
+
+/* Shown on hover and on keyboard focus. Focus is not optional - a hint only
+   available to a mouse is unreachable for half the people who need it. */
+.inspera-tooltip:hover .inspera-tooltip__bubble,
+.inspera-tooltip:focus-within .inspera-tooltip__bubble { opacity: 1; }
+
+/* The accessibility type is larger, for hints that carry real instruction. */
+.inspera-tooltip__bubble--accessibility { padding: 10px 12px; font-size: 14px; }
+
+.inspera-tooltip__bubble--light {
+  background: var(--white);
+  color: var(--text-primary);
+  border: 1px solid var(--border-strong);
+}
+
+.inspera-tooltip__bubble--top    { bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); }
+.inspera-tooltip__bubble--bottom { top: calc(100% + 8px); left: 50%; transform: translateX(-50%); }
+.inspera-tooltip__bubble--left   { right: calc(100% + 8px); top: 50%; transform: translateY(-50%); }
+.inspera-tooltip__bubble--right  { left: calc(100% + 8px); top: 50%; transform: translateY(-50%); }
+
+.inspera-tooltip__arrow {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: var(--gray-900);
+  transform: rotate(45deg);
+  z-index: 31;
+}
+
+.inspera-tooltip__bubble--light .inspera-tooltip__arrow { background: var(--white); }
+
+.inspera-tooltip__bubble--top .inspera-tooltip__arrow {
+  bottom: -4px; left: 50%; margin-left: -4px;
+  border-right: 1px solid transparent; border-bottom: 1px solid transparent;
+}
+.inspera-tooltip__bubble--bottom .inspera-tooltip__arrow {
+  top: -4px; left: 50%; margin-left: -4px;
+  border-left: 1px solid transparent; border-top: 1px solid transparent;
+}
+.inspera-tooltip__bubble--left .inspera-tooltip__arrow {
+  right: -4px; top: 50%; margin-top: -4px;
+  border-right: 1px solid transparent; border-top: 1px solid transparent;
+}
+.inspera-tooltip__bubble--right .inspera-tooltip__arrow {
+  left: -4px; top: 50%; margin-top: -4px;
+  border-left: 1px solid transparent; border-bottom: 1px solid transparent;
+}
+
+.inspera-tooltip__bubble--light.inspera-tooltip__bubble--top .inspera-tooltip__arrow {
+  border-right-color: var(--border-strong); border-bottom-color: var(--border-strong);
+}
+.inspera-tooltip__bubble--light.inspera-tooltip__bubble--bottom .inspera-tooltip__arrow {
+  border-left-color: var(--border-strong); border-top-color: var(--border-strong);
+}
+.inspera-tooltip__bubble--light.inspera-tooltip__bubble--left .inspera-tooltip__arrow {
+  border-right-color: var(--border-strong); border-top-color: var(--border-strong);
+}
+.inspera-tooltip__bubble--light.inspera-tooltip__bubble--right .inspera-tooltip__arrow {
+  border-left-color: var(--border-strong); border-bottom-color: var(--border-strong);
+}
+
+.inspera-tooltip__default-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border-strong);
+  background: var(--white);
+  font-family: var(--font-sans);
+  cursor: help;
+}
+.inspera-tooltip__default-trigger .material-symbols-outlined {
+  font-size: 20px;
+  color: var(--action-active);
+}
+```
+
+```html
+<span class="inspera-tooltip">
+  <button type="button" class="inspera-tooltip__default-trigger" aria-describedby="tip-1">
+    <span class="material-symbols-outlined" aria-hidden="true">help</span>
+  </button>
+  <span class="inspera-tooltip__bubble inspera-tooltip__bubble--top" id="tip-1" role="tooltip">
+    Supplementary help text
+    <span class="inspera-tooltip__arrow" aria-hidden="true"></span>
+  </span>
+</span>
+```
+
+
+### Progress
+
+Show completion of an ongoing task. - category: `feedback`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library - build the markup from the HTML and CSS under
+> **Without the package** below, which is this component's exact appearance.
+
+```tsx
+import { Progress } from '@inspera/components'
+
+<Progress
+  variant="Linear"
+  value={60}
+  intent="Primary"
+  size="Medium"
+  label="Uploading attachments"
+  indeterminate={false}
+  showValue={false}
+/>
+```
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `variant` | `'Linear' \| 'Circular'` | `'Linear'` | Bar or ring. |
+| `value` | `number` | `60` | Completion percentage 0-100. Ignored when indeterminate. |
+| `indeterminate` | `boolean` | `false` | Unknown-duration animation. |
+| `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Bar height / ring diameter. |
+| `intent` | `'Primary' \| 'Success' \| 'Warning' \| 'Error'` | `'Primary'` | Fill color. |
+| `showValue` | `boolean` | `false` | Render the percentage. |
+| `label` | `string` | `'Progress'` | Accessible name. Say what is progressing, not just "Progress". |
+
+**Accessibility** - role `progressbar`. Use role="progressbar" with aria-valuenow / min / max; Omit aria-valuenow when indeterminate; Provide an accessible label for the task.
+
+**Do:** Use determinate progress when completion is known; Use indeterminate for unknown-duration waits; Match intent color to context.
+**Don't:** Do not use for very short operations; Do not fake progress values.
+
+**Deprecated aliases** (do not use): `Progress bar`, `Loading bar`, `Meter`
+
+#### Without the package - exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. This is the
+component's exact structure and appearance: do not substitute a radius, colour,
+spacing or font weight of your own, and do not restyle it with a UI kit's
+defaults.
+
+It is not the whole component. HTML and CSS cannot provide focus trapping,
+Escape handling, outside-click dismissal or a roving tabindex, so the
+accessibility contract and any behaviour listed above must still be implemented
+in JavaScript before this component is finished.
+
+- The bar heights are 4 / 8 / 12 and the ring diameters 24 / 40 / 56, with stroke widths 3 / 4 / 5.
+- `role="progressbar"` with `aria-valuemin`, `aria-valuemax` and an `aria-label` is mandatory. A styled div announces nothing.
+- When indeterminate, omit `aria-valuenow` entirely. Sending 0 tells the user it is stuck at zero.
+- The indeterminate bar is a 40% sliver swept by keyframes across a clipped track - not a full-width bar that fades.
+- The ring is rotated -90deg so the arc starts at twelve o'clock, and the arc length is set by `stroke-dashoffset`.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --primary:       #004080;
+  --error:         #D32F2F;
+  --warning:       #EF6C00;
+  --success:       #2E7D32;
+  --gray-200:      #EDEDED;
+  --text-primary:  rgba(0, 0, 0, 0.87);
+  --radius-pill:   9999px;
+  --font-sans:     'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-progress {
+  --progress-fill: var(--primary);
+
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  font-family: var(--font-sans);
+}
+
+.inspera-progress--circular { width: auto; }
+
+.inspera-progress--success { --progress-fill: var(--success); }
+.inspera-progress--warning { --progress-fill: var(--warning); }
+.inspera-progress--error   { --progress-fill: var(--error); }
+
+/* Linear: a rounded track that clips the fill. */
+.inspera-progress__track {
+  position: relative;
+  flex: 1;
+  height: 8px;
+  border-radius: var(--radius-pill);
+  background: var(--gray-200);
+  overflow: hidden;
+}
+.inspera-progress--small .inspera-progress__track { height: 4px; }
+.inspera-progress--large .inspera-progress__track { height: 12px; }
+
+.inspera-progress__fill {
+  display: block;
+  height: 100%;
+  border-radius: var(--radius-pill);
+  background: var(--progress-fill);
+  transition: width 240ms ease;
+}
+
+/* Indeterminate: a 40% sliver that sweeps the track. Width is animated, so the
+   fill is absolutely positioned rather than sized by a value. */
+.inspera-progress__fill--indeterminate {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 40%;
+  transition: none;
+  animation: inspera-indeterminate 1.4s ease infinite;
+}
+
+.inspera-progress__value {
+  font-size: 14px;
+  color: var(--text-primary);
+  min-width: 36px;
+  text-align: right;
+}
+
+/* Circular: the ring spins as a whole when indeterminate. */
+.inspera-progress__ring {
+  display: inline-flex;
+  width: 40px;
+  height: 40px;
+}
+.inspera-progress__ring--indeterminate { animation: inspera-spin 0.9s linear infinite; }
+.inspera-progress__ring > svg { transform: rotate(-90deg); }
+
+@keyframes inspera-indeterminate {
+  0%   { left: -40%; width: 40%; }
+  50%  { width: 55%; }
+  100% { left: 100%; width: 40%; }
+}
+
+@keyframes inspera-spin {
+  to { transform: rotate(360deg); }
+}
+```
+
+```html
+<!-- Linear, 60%. The ARIA is the component: a styled div announces nothing. -->
+<span class="inspera-progress">
+  <span class="inspera-progress__track" role="progressbar"
+        aria-valuemin="0" aria-valuemax="100" aria-valuenow="60" aria-label="Uploading attachments">
+    <span class="inspera-progress__fill" style="width: 60%" aria-hidden="true"></span>
+  </span>
+  <span class="inspera-progress__value">60%</span>
+</span>
+
+<!-- Indeterminate: drop aria-valuenow entirely, do not send 0. -->
+<span class="inspera-progress">
+  <span class="inspera-progress__track" role="progressbar"
+        aria-valuemin="0" aria-valuemax="100" aria-label="Loading">
+    <span class="inspera-progress__fill inspera-progress__fill--indeterminate" aria-hidden="true"></span>
+  </span>
+</span>
+```
+
+
+### Spinner
+
+Indicate an indeterminate loading state. - category: `feedback`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library - build the markup from the HTML and CSS under
+> **Without the package** below, which is this component's exact appearance.
+
+```tsx
+import { Spinner } from '@inspera/components'
+
+<Spinner
+  size="Medium"
+  intent="Primary"
+  label="Loading assessments"
+/>
+```
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Diameter 16 / 24 / 40. |
+| `intent` | `'Primary' \| 'Neutral' \| 'Inverse'` | `'Primary'` | Arc color. |
+| `label` | `string` | `'Loading'` | Accessible label. |
+
+**Accessibility** - role `status`. Use role="status" with aria-live="polite"; Provide an accessible label via aria-label; Include visually-hidden loading text.
+
+**Do:** Use for short, indeterminate waits; Use Inverse on dark surfaces; Pair with context describing what is loading.
+**Don't:** Do not use where determinate Progress is possible; Do not show multiple competing spinners.
+
+**Deprecated aliases** (do not use): `Loader`, `Loading indicator`, `Activity indicator`
+
+#### Without the package - exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. This is the
+component's exact structure and appearance: do not substitute a radius, colour,
+spacing or font weight of your own, and do not restyle it with a UI kit's
+defaults.
+
+It is not the whole component. HTML and CSS cannot provide focus trapping,
+Escape handling, outside-click dismissal or a roving tabindex, so the
+accessibility contract and any behaviour listed above must still be implemented
+in JavaScript before this component is finished.
+
+- It is an SVG of two circles - a full `--gray-200` track and a coloured arc - not a bordered div with one transparent side.
+- The arc is drawn by `stroke-dasharray` = circumference and `stroke-dashoffset` = 70% of it. Change the offset, not the geometry.
+- Diameters are 16 / 24 / 40 with stroke widths 2 / 3 / 4.
+- Rotation is 0.8s linear infinite on the `<svg>`, so the arc spins and the track does not.
+- The visually hidden label is required - `role="status"` with no name announces nothing.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --primary:    #004080;
+  --gray-200:   #EDEDED;
+  --font-sans:  'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-spinner {
+  display: inline-flex;
+  width: 24px;
+  height: 24px;
+}
+
+.inspera-spinner--small { width: 16px; height: 16px; }
+.inspera-spinner--large { width: 40px; height: 40px; }
+
+.inspera-spinner > svg {
+  animation: inspera-spin 0.8s linear infinite;
+}
+
+/* The visually hidden label. A spinner with no accessible name announces
+   nothing at all, so this is not optional. */
+.inspera-spinner__label {
+  font-family: var(--font-sans);
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@keyframes inspera-spin {
+  to { transform: rotate(360deg); }
+}
+```
+
+```html
+<!-- Medium (24px). The track is --gray-200; the arc is the intent colour. -->
+<span class="inspera-spinner" role="status" aria-label="Loading assessments">
+  <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+    <circle cx="12" cy="12" r="10.5" fill="none" stroke="var(--gray-200)" stroke-width="3"></circle>
+    <circle cx="12" cy="12" r="10.5" fill="none" stroke="var(--primary)" stroke-width="3"
+            stroke-linecap="round" stroke-dasharray="65.97344572538566" stroke-dashoffset="46.18141200776996"></circle>
+  </svg>
+  <span class="inspera-spinner__label">Loading assessments</span>
+</span>
+```
+
+
+### Skeleton
+
+Show placeholder shapes while content loads. - category: `feedback`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library - build the markup from the HTML and CSS under
+> **Without the package** below, which is this component's exact appearance.
+
+```tsx
+import { Skeleton } from '@inspera/components'
+
+<Skeleton
+  variant="Text"
+  lines={3}
+/>
+```
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `variant` | `'Text' \| 'Rect' \| 'Circle'` | `'Text'` | Placeholder shape. |
+| `width` | `string \| number` | - | Explicit width. |
+| `height` | `string \| number` | - | Explicit height. |
+| `lines` | `number` | `1` | Number of text lines. Only applies to the Text variant. |
+| `radius` | `string \| number` | - | Corner radius override. Match the shape being stood in for. |
+
+**Accessibility** - role `presentation`. Skeletons are decorative and aria-hidden; Announce the real content once loaded; Mirror the layout of the content being loaded.
+
+**Do:** Match skeleton shapes to real content; Use for perceived performance on initial load; Replace with content as soon as it arrives.
+**Don't:** Do not animate skeletons indefinitely; Do not use for user-triggered actions - use Spinner.
+
+**Deprecated aliases** (do not use): `Placeholder`, `Shimmer`, `Ghost`
+
+#### Without the package - exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. This is the
+component's exact structure and appearance: do not substitute a radius, colour,
+spacing or font weight of your own, and do not restyle it with a UI kit's
+defaults.
+
+It is not the whole component. HTML and CSS cannot provide focus trapping,
+Escape handling, outside-click dismissal or a roving tabindex, so the
+accessibility contract and any behaviour listed above must still be implemented
+in JavaScript before this component is finished.
+
+- The shimmer is a 400%-wide linear gradient panned by `background-position`, 1.4s ease infinite. It is not an opacity pulse.
+- Text lines are 12px tall with `--radius-sm` and an 8px gap; the last of several is 60% wide so the block reads as a paragraph.
+- Rect uses `--radius-md`, Circle uses `--radius-pill`. Match the radius to whatever the placeholder stands in for.
+- Always `aria-hidden` - a skeleton is decoration, and announcing it interrupts the user with nothing.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --gray-100:     #F7F7F7;
+  --gray-200:     #EDEDED;
+  --radius-sm:    4px;
+  --radius-md:    8px;
+  --radius-pill:  9999px;
+}
+
+.inspera-skeleton {
+  /* The shimmer: an oversized gradient panned across the element. A pulsing
+     opacity is a different effect and reads as a flash, not a load. */
+  background-image: linear-gradient(90deg, var(--gray-200) 25%, var(--gray-100) 37%, var(--gray-200) 63%);
+  background-size: 400% 100%;
+  animation: inspera-shimmer 1.4s ease infinite;
+}
+
+.inspera-skeleton--text {
+  display: block;
+  width: 100%;
+  height: 12px;
+  border-radius: var(--radius-sm);
+}
+
+.inspera-skeleton--rect {
+  display: block;
+  width: 100%;
+  height: 120px;
+  border-radius: var(--radius-md);
+}
+
+.inspera-skeleton--circle {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-pill);
+}
+
+/* A stack of lines, with the last one short so it reads as a paragraph. */
+.inspera-skeleton-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  background: none;
+  animation: none;
+}
+.inspera-skeleton-lines > .inspera-skeleton--text:last-child:not(:only-child) { width: 60%; }
+
+@keyframes inspera-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+```
+
+```html
+<!-- Three text lines. The wrapper is not itself a shimmering block. -->
+<span class="inspera-skeleton-lines" role="presentation" aria-hidden="true">
+  <span class="inspera-skeleton inspera-skeleton--text"></span>
+  <span class="inspera-skeleton inspera-skeleton--text"></span>
+  <span class="inspera-skeleton inspera-skeleton--text"></span>
+</span>
+
+<span class="inspera-skeleton inspera-skeleton--circle" role="presentation" aria-hidden="true"></span>
+
+<span class="inspera-skeleton inspera-skeleton--rect" role="presentation" aria-hidden="true"></span>
+```
+
+
+### Popover
+
+Show interactive content anchored to a trigger. - category: `feedback`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library - build the markup from the HTML and CSS under
+> **Without the package** below, which is this component's exact appearance.
+
+```tsx
+import { Popover } from '@inspera/components'
+
+<Popover
+  placement="Bottom"
+  title="Filter results"
+  trigger={<Button label="Filters" />}
+  content={<FilterForm />}
+/>
+```
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `trigger` | `ReactNode` | - | Element that toggles the popover. |
+| `title` | `string` | `'Popover title'` | Optional panel heading. |
+| `content` | `ReactNode` | `'Popover content with interactive elements.'` | Popover body content. |
+| `placement` | `'Top' \| 'Bottom' \| 'Left' \| 'Right'` | `'Bottom'` | Position relative to the trigger. |
+| `open` | `boolean` | - | Controlled open state. Leave unset to let the popover manage itself. |
+| `defaultOpen` | `boolean` | `false` | Open on mount. |
+| `forceVisible` | `boolean` | `false` | Keep the panel visible regardless of state - used for documentation. |
+| `onOpenChange` | `(open: boolean) => void` | - | Fired when the popover opens or closes. |
+
+**Accessibility** - role `dialog`, keyboard operable. Trigger uses aria-haspopup and aria-expanded; Panel uses role="dialog"; Escape and outside-click close the popover; May contain interactive content (unlike Tooltip).
+
+**Behaviour you must implement** - the HTML and CSS below are structure and
+appearance only. This component is not finished until it also does:
+
+- Toggle on trigger activation; close on Escape and on a click outside the panel.
+- Move focus into the panel when it holds interactive content, and restore it to the trigger on close.
+- Reposition on scroll and resize so the panel stays anchored to its trigger.
+
+**Do:** Use for rich, interactive overflow content; Anchor to the triggering element; Allow dismissal via Escape and outside click.
+**Don't:** Do not use for simple hover hints - use Tooltip; Do not stack popovers.
+
+**Deprecated aliases** (do not use): `Flyout`, `Overlay panel`
+
+#### Without the package - exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. This is the
+component's exact structure and appearance: do not substitute a radius, colour,
+spacing or font weight of your own, and do not restyle it with a UI kit's
+defaults.
+
+It is not the whole component. HTML and CSS cannot provide focus trapping,
+Escape handling, outside-click dismissal or a roving tabindex, so the
+accessibility contract and any behaviour listed above must still be implemented
+in JavaScript before this component is finished.
+
+- A popover holds interactive content, so it is `role="dialog"` (not `tooltip`), it is reachable by keyboard, and it does not disappear on mouseout.
+- The panel is `--radius-md` on `--surface` with a 1px `--border` and `--shadow-300`, 16px padding, capped at 280px with `width: max-content`.
+- Placement sets the offset and the centring transform together; the 10px gap leaves room for the arrow without it touching the trigger.
+- The arrow is a 10px square rotated 45deg that borrows exactly two of the panel's borders - the two facing the trigger.
+- Close on Escape and on an outside click, and return focus to the trigger.
+- For plain text with no controls, use a Tooltip. For anything that must be acted on, this.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --white:             #ffffff;
+  --gray-200:          #EDEDED;
+  --gray-300:          #D9D9D9;
+  --gray-600:          #7A7A7A;
+  --text-primary:      rgba(0, 0, 0, 0.87);
+  --surface:           var(--white);
+  --border:            var(--gray-200);
+  --border-strong:     var(--gray-300);
+  --muted-foreground:  var(--gray-600);
+  --radius-sm:         4px;
+  --radius-md:         8px;
+  --shadow-300:        0px 8px 16px rgba(39, 39, 39, 0.08), 0px 6px 8px rgba(39, 39, 39, 0.12);
+  --z-popover:         400;
+  --font-sans:         'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-popover {
+  position: relative;
+  display: inline-flex;
+}
+
+.inspera-popover__trigger { display: inline-flex; }
+
+.inspera-popover__panel {
+  position: absolute;
+  z-index: var(--z-popover, 40);
+  max-width: 280px;
+  width: max-content;
+  padding: 16px;
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-300);
+  text-align: left;
+  font-family: var(--font-sans);
+}
+
+/* Placement sets the offset and the centring transform together - a 10px gap
+   leaves room for the arrow without it touching the trigger. */
+.inspera-popover__panel--bottom { top: calc(100% + 10px); left: 50%; transform: translateX(-50%); }
+.inspera-popover__panel--top    { bottom: calc(100% + 10px); left: 50%; transform: translateX(-50%); }
+.inspera-popover__panel--left   { right: calc(100% + 10px); top: 50%; transform: translateY(-50%); }
+.inspera-popover__panel--right  { left: calc(100% + 10px); top: 50%; transform: translateY(-50%); }
+
+/* The arrow is a rotated square that borrows two of the panel's borders. */
+.inspera-popover__arrow {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: var(--surface);
+  transform: rotate(45deg);
+}
+
+.inspera-popover__panel--bottom .inspera-popover__arrow {
+  top: -5px; left: 50%; margin-left: -5px;
+  border-left: 1px solid var(--border);
+  border-top: 1px solid var(--border);
+}
+.inspera-popover__panel--top .inspera-popover__arrow {
+  bottom: -5px; left: 50%; margin-left: -5px;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.inspera-popover__panel--left .inspera-popover__arrow {
+  right: -5px; top: 50%; margin-top: -5px;
+  border-right: 1px solid var(--border);
+  border-top: 1px solid var(--border);
+}
+.inspera-popover__panel--right .inspera-popover__arrow {
+  left: -5px; top: 50%; margin-top: -5px;
+  border-left: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.inspera-popover__title {
+  margin: 0 0 8px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.inspera-popover__body {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--muted-foreground);
+}
+
+.inspera-popover__default-trigger {
+  height: 40px;
+  padding: 0 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-strong);
+  background: var(--white);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+}
+```
+
+```html
+<span class="inspera-popover">
+  <span class="inspera-popover__trigger" aria-expanded="true"
+        aria-haspopup="dialog" aria-controls="filters-popover">
+    <button type="button" class="inspera-popover__default-trigger">Filters</button>
+  </span>
+  <div class="inspera-popover__panel inspera-popover__panel--bottom" id="filters-popover"
+       role="dialog" aria-labelledby="filters-title">
+    <span class="inspera-popover__arrow" aria-hidden="true"></span>
+    <h3 class="inspera-popover__title" id="filters-title">Filter results</h3>
+    <div class="inspera-popover__body">Popovers can hold interactive content.</div>
+  </div>
+</span>
+```
+
+
+### Drawer
+
+Slide a panel in from the edge of the screen. - category: `feedback`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library - build the markup from the HTML and CSS under
+> **Without the package** below, which is this component's exact appearance.
+
+```tsx
+import { Drawer } from '@inspera/components'
+
+<Drawer
+  open={open}
+  side="Right"
+  size="Medium"
+  title="Assessment details"
+  hasCloseButton={true}
+  onClose={() => setOpen(false)}
+>
+  {children}
+</Drawer>
+```
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `open` | `boolean` | `false` | Visibility. |
+| `side` | `'Right' \| 'Left' \| 'Bottom'` | `'Right'` | Edge it slides from. |
+| `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Panel width / height. |
+| `title` | `string` | `'Panel'` | Header title. |
+| `hasCloseButton` | `boolean` | `true` | Show the close affordance. |
+| `children` | `ReactNode` | - | Panel contents. |
+| `embedded` | `boolean` | `false` | Render just the panel inline (no overlay/scrim) - used for documentation previews. |
+| `onClose` | `() => void` | - | Fired on the close button, the scrim, and Escape. |
+
+**Accessibility** - role `dialog`, keyboard operable. Use role="dialog" with aria-modal="true"; Set aria-labelledby to the drawer title; Trap focus while open and restore it on close; Escape closes the drawer.
+
+**Behaviour you must implement** - the HTML and CSS below are structure and
+appearance only. This component is not finished until it also does:
+
+- Trap Tab and Shift+Tab inside the drawer for as long as it is open.
+- Move focus into the drawer when it opens and back to the trigger when it closes.
+- Close on Escape and on scrim click.
+- Lock background scroll while open.
+
+**Do:** Use for secondary tasks and detail panels; Provide a clear close control; Return focus to the trigger on close.
+**Don't:** Do not use for critical confirmations - use Dialog; Do not open multiple drawers at once.
+
+**Deprecated aliases** (do not use): `Sheet`, `Side panel`, `Off-canvas`
+
+#### Without the package - exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. This is the
+component's exact structure and appearance: do not substitute a radius, colour,
+spacing or font weight of your own, and do not restyle it with a UI kit's
+defaults.
+
+It is not the whole component. HTML and CSS cannot provide focus trapping,
+Escape handling, outside-click dismissal or a roving tabindex, so the
+accessibility contract and any behaviour listed above must still be implemented
+in JavaScript before this component is finished.
+
+- Side panels are 320 / 400 / 560 wide and pinned top-to-bottom; a bottom drawer takes that number as its height, spans the full width, and caps at 90% of the viewport.
+- Same scrim and the same modal obligations as Dialog: focus in, Tab trapped, focus restored, Escape and scrim click close, body scroll locked.
+- The body scrolls (`flex: 1; overflow-y: auto`), not the panel - the header has to stay put.
+- The header is 16px/20px padding with an 18px/500 title, smaller than a Dialog's because a drawer is a secondary surface.
+- Slide it in from its own edge. A drawer that fades in reads as a dialog in the wrong place.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --white:          #ffffff;
+  --gray-200:       #EDEDED;
+  --gray-700:       #595959;
+  --action-active:  rgba(0, 0, 0, 0.56);
+  --text-primary:   rgba(0, 0, 0, 0.87);
+  --surface:        var(--white);
+  --border:         var(--gray-200);
+  --shadow-500:     0px 10px 32px rgba(39, 39, 39, 0.1), 0px 6px 14px rgba(39, 39, 39, 0.12);
+  --z-modal:        600;
+  --font-sans:      'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(39, 39, 39, 0.48);
+  z-index: var(--z-modal, 1000);
+}
+
+.inspera-drawer {
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-500);
+  font-family: var(--font-sans);
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 400px;
+  max-width: 100%;
+}
+
+.inspera-drawer--left  { left: 0; right: auto; }
+.inspera-drawer--small { width: 320px; }
+.inspera-drawer--large { width: 560px; }
+
+/* Bottom pins to the full width and takes its size as height instead. */
+.inspera-drawer--bottom {
+  top: auto;
+  left: 0;
+  right: 0;
+  width: auto;
+  height: 400px;
+  max-height: 90%;
+}
+.inspera-drawer--bottom.inspera-drawer--small { width: auto; height: 320px; }
+.inspera-drawer--bottom.inspera-drawer--large { width: auto; height: 560px; }
+
+.inspera-drawer__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.inspera-drawer__title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.inspera-drawer__close {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: var(--action-active);
+  display: inline-flex;
+}
+.inspera-drawer__close .material-symbols-outlined { font-size: 22px; }
+
+/* The body scrolls, not the panel - the header stays put. */
+.inspera-drawer__body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--gray-700);
+}
+```
+
+```html
+<div class="inspera-drawer-overlay">
+  <div class="inspera-drawer" role="dialog" aria-modal="true"
+       aria-labelledby="drawer-title" tabindex="-1">
+    <div class="inspera-drawer__header">
+      <h2 class="inspera-drawer__title" id="drawer-title">Assessment details</h2>
+      <button type="button" class="inspera-drawer__close" aria-label="Close">
+        <span class="material-symbols-outlined" aria-hidden="true">close</span>
+      </button>
+    </div>
+    <div class="inspera-drawer__body">Panel content.</div>
+  </div>
+</div>
+```
+
+
+## Components - navigation
+
+### Tabs
+
+Organize content into switchable panels. - category: `navigation`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library - build the markup from the HTML and CSS under
+> **Without the package** below, which is this component's exact appearance.
+
+```tsx
+import { Tabs } from '@inspera/components'
+
+<Tabs
+  items={[{ label: 'Overview' }, { label: 'Questions' }]}
+  style="Underline"
+  size="Medium"
+  fullWidth={false}
+/>
+```
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `items` | `TabItem[]` | `defaultItems` | The tabs, in order. |
+| `style` | `'Underline' \| 'Contained'` | `'Underline'` | Visual treatment. |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Tab height 40 / 48. |
+| `fullWidth` | `boolean` | `false` | Stretch tabs to fill the row. |
+| `value` | `number` | - | Index of the active tab. Controlled - pair with onChange. |
+| `onChange` | `(index: number) => void` | - | Fired with the index of the newly selected tab. |
+
+```ts
+export interface TabItem {
+  label: string
+  icon?: string
+}
+```
+
+**Accessibility** - role `tablist`, keyboard operable. Use role="tablist" on the tab container; Each tab uses role="tab" with aria-selected; Tab panels use role="tabpanel" linked by aria-labelledby; Arrow keys navigate between tabs.
+
+**Behaviour you must implement** - the HTML and CSS below are structure and
+appearance only. This component is not finished until it also does:
+
+- Roving tabindex - exactly one tab is in the tab order, every other tab is tabindex="-1".
+- Arrow keys move between tabs wrapping at the ends; Home/End jump to the first and last.
+- Render only the selected panel and keep aria-selected in step with it.
+
+**Do:** Use to organize related content sections; Label tabs clearly and concisely; Use a maximum of 6 tabs per set.
+**Don't:** Do not use tabs for sequential steps - use a stepper instead; Do not nest tab sets inside other tab sets.
+
+**Deprecated aliases** (do not use): `Tab bar`, `Tab navigation`
+
+#### Without the package - exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. This is the
+component's exact structure and appearance: do not substitute a radius, colour,
+spacing or font weight of your own, and do not restyle it with a UI kit's
+defaults.
+
+It is not the whole component. HTML and CSS cannot provide focus trapping,
+Escape handling, outside-click dismissal or a roving tabindex, so the
+accessibility contract and any behaviour listed above must still be implemented
+in JavaScript before this component is finished.
+
+- Underline tabs are 48px tall (40px small) on a 1px `--border-strong` rail, with `margin-bottom: -1px` so the selected 2px `--primary` underline covers the rail.
+- The resting bottom border is a transparent 2px, not none - otherwise selecting a tab shifts the whole row by two pixels.
+- Contained tabs drop the rail entirely and become a pill group on `--gray-100`, with the selected tab a white `--shadow-100` card.
+- `role="tablist"` / `role="tab"` / `role="tabpanel"`, each tab pointing at its panel with `aria-controls` and each panel back with `aria-labelledby`.
+- Roving tabindex: only the selected tab is a tab stop; Left/Right move between them.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --primary:        #004080;
+  --white:          #ffffff;
+  --gray-100:       #F7F7F7;
+  --gray-300:       #D9D9D9;
+  --gray-700:       #595959;
+  --border-strong:  var(--gray-300);
+  --radius-sm:      4px;
+  --radius-md:      8px;
+  --shadow-100:     0px 4px 4px rgba(39, 39, 39, 0.08), 0px 2px 4px rgba(39, 39, 39, 0.12);
+  --font-sans:      'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-tabs {
+  display: flex;
+  gap: 0;
+  padding: 0;
+  border-bottom: 1px solid var(--border-strong);
+  background: transparent;
+  border-radius: 0;
+  width: auto;
+}
+
+.inspera-tabs--full { width: 100%; }
+
+/* Contained: a pill group on a tinted track, with no rail underneath. */
+.inspera-tabs--contained {
+  gap: 4px;
+  padding: 4px;
+  border-bottom: none;
+  background: var(--gray-100);
+  border-radius: var(--radius-md);
+}
+
+.inspera-tabs__tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 48px;
+  padding: 0 16px;
+  flex: none;
+  border-top: none;
+  border-right: none;
+  border-left: none;
+  /* A transparent 2px rail at rest, so selecting a tab does not shift the row. */
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--gray-700);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-bottom: -1px;
+  transition: color 120ms ease, border-color 120ms ease;
+}
+
+.inspera-tabs--small .inspera-tabs__tab { height: 40px; }
+.inspera-tabs--full .inspera-tabs__tab { flex: 1; }
+
+.inspera-tabs__tab[aria-selected='true'] {
+  border-bottom-color: var(--primary);
+  color: var(--primary);
+}
+
+/* Contained tabs sit inside the track: no rail, a raised white card instead. */
+.inspera-tabs--contained .inspera-tabs__tab {
+  height: 40px;
+  border-bottom: none;
+  border-radius: var(--radius-sm);
+  margin-bottom: 0;
+}
+.inspera-tabs--contained.inspera-tabs--small .inspera-tabs__tab { height: 32px; }
+
+.inspera-tabs--contained .inspera-tabs__tab[aria-selected='true'] {
+  background: var(--white);
+  box-shadow: var(--shadow-100);
+  color: var(--primary);
+}
+
+.inspera-tabs__tab .material-symbols-outlined { font-size: 20px; }
+```
+
+```html
+<div class="inspera-tabs" role="tablist" aria-label="Section tabs">
+  <button type="button" class="inspera-tabs__tab" role="tab" aria-selected="true"
+          id="tab-overview" aria-controls="panel-overview" tabindex="0">Overview</button>
+  <button type="button" class="inspera-tabs__tab" role="tab" aria-selected="false"
+          id="tab-questions" aria-controls="panel-questions" tabindex="-1">Questions</button>
+</div>
+
+<div id="panel-overview" role="tabpanel" aria-labelledby="tab-overview" tabindex="0">...</div>
+<div id="panel-questions" role="tabpanel" aria-labelledby="tab-questions" tabindex="0" hidden>...</div>
+```
+
+
+### Breadcrumb
+
+Show the user's current location in a hierarchy. - category: `navigation`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library - build the markup from the HTML and CSS under
+> **Without the package** below, which is this component's exact appearance.
+
+```tsx
+import { Breadcrumb } from '@inspera/components'
+
+<Breadcrumb
+  items={['Home', 'Assessments', 'Algebra Quiz']}
+  separator="Chevron"
+  size="Medium"
+/>
+```
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `items` | `string[]` | `defaultItems` | Trail from root to current page. The last entry is the current page and is not a link. |
+| `separator` | `'Slash' \| 'Chevron'` | `'Chevron'` | Divider glyph between items. |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Text size 14 / 16. |
+| `onNavigate` | `(index: number) => void` | - | Fired with the index of the crumb that was clicked. |
+
+**Accessibility** - role `navigation`, keyboard operable. Wrap in nav with aria-label="Breadcrumb"; Use an ordered list for semantic structure; Mark current page with aria-current="page".
+
+**Do:** Use for hierarchical navigation structures; Always include the current page as the last item; Keep breadcrumb labels concise.
+**Don't:** Do not use for flat navigation; Do not make the current page breadcrumb a link.
+
+**Deprecated aliases** (do not use): `Breadcrumbs`, `Path navigation`
+
+#### Without the package - exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. This is the
+component's exact structure and appearance: do not substitute a radius, colour,
+spacing or font weight of your own, and do not restyle it with a UI kit's
+defaults.
+
+It is not the whole component. HTML and CSS cannot provide focus trapping,
+Escape handling, outside-click dismissal or a roving tabindex, so the
+accessibility contract and any behaviour listed above must still be implemented
+in JavaScript before this component is finished.
+
+- It is a `<nav aria-label="Breadcrumb">` wrapping an `<ol>` - order is the meaning, so not a `<div>` of spans.
+- The last crumb is the current page: `aria-current="page"`, `--text-primary` at 500 weight, and not a control.
+- Separators live in their own `<li>` marked `aria-hidden="true"`. Left announced, a screen reader reads "chevron right" between every crumb.
+- Crumbs are 16px (14px small) in `--primary`, underlined on hover only. The chevron runs 2px larger than the text.
+- With real URLs use `<a href>` rather than `<button>`, keeping the same class - a breadcrumb should be openable in a new tab.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --primary:       #004080;
+  --gray-400:      #BCBCBC;
+  --text-primary:  rgba(0, 0, 0, 0.87);
+  --font-sans:     'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-breadcrumb {
+  font-family: var(--font-sans);
+}
+
+.inspera-breadcrumb__list {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex-wrap: wrap;
+}
+
+/* A crumb. Rendered as <button> in the React component because navigation runs
+   through a router callback; with real URLs, use <a href> and the same class. */
+.inspera-breadcrumb__crumb {
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--primary);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  text-decoration: none;
+  cursor: pointer;
+}
+.inspera-breadcrumb__crumb:hover { text-decoration: underline; }
+
+.inspera-breadcrumb--small .inspera-breadcrumb__crumb { font-size: 14px; }
+
+/* The last crumb is the current page: darker, heavier, and not interactive. */
+.inspera-breadcrumb__current {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+.inspera-breadcrumb--small .inspera-breadcrumb__current { font-size: 14px; }
+
+/* The separator sizes its own glyph rather than setting a size on the <li>,
+   so the chevron can run 2px larger than the text while the slash matches it. */
+.inspera-breadcrumb__separator {
+  color: var(--gray-400);
+  display: inline-flex;
+  align-items: center;
+}
+
+.inspera-breadcrumb__separator .material-symbols-outlined { font-size: 18px; }
+.inspera-breadcrumb--small .inspera-breadcrumb__separator .material-symbols-outlined { font-size: 16px; }
+
+.inspera-breadcrumb__slash { font-size: 16px; }
+.inspera-breadcrumb--small .inspera-breadcrumb__slash { font-size: 14px; }
+```
+
+```html
+<nav class="inspera-breadcrumb" aria-label="Breadcrumb">
+  <ol class="inspera-breadcrumb__list">
+    <li><a class="inspera-breadcrumb__crumb" href="/">Home</a></li>
+    <li class="inspera-breadcrumb__separator" aria-hidden="true">
+      <span class="material-symbols-outlined">chevron_right</span>
+    </li>
+    <li><a class="inspera-breadcrumb__crumb" href="/assessments">Assessments</a></li>
+    <li class="inspera-breadcrumb__separator" aria-hidden="true">
+      <span class="material-symbols-outlined">chevron_right</span>
+    </li>
+    <li><span class="inspera-breadcrumb__current" aria-current="page">Algebra Quiz</span></li>
+  </ol>
+</nav>
+```
+
+
+### Pagination
+
+Navigate between pages of content. - category: `navigation`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library - build the markup from the HTML and CSS under
+> **Without the package** below, which is this component's exact appearance.
+
+```tsx
+import { Pagination } from '@inspera/components'
+
+<Pagination
+  page={page}
+  pageCount={12}
+  size="Medium"
+  showEdges={true}
+  onChange={setPage}
+/>
+```
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `page` | `number` | `1` | Current page (1-based). |
+| `pageCount` | `number` | `10` | Total number of pages. |
+| `siblingCount` | `number` | `1` | Pages shown either side of current. |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Control height. |
+| `showEdges` | `boolean` | `true` | Show first / last controls. |
+| `onChange` | `(page: number) => void` | - | Fired with the requested page number, 1-based. |
+
+**Accessibility** - role `navigation`, keyboard operable. Wrap in nav with aria-label="Pagination"; Mark the current page with aria-current="page"; Disable and aria-disable prev/next at the bounds.
+
+**Behaviour you must implement** - the HTML and CSS below are structure and
+appearance only. This component is not finished until it also does:
+
+- Prevent activation of previous/next at the bounds, not only style them as disabled.
+- Place focus deliberately after a page change rather than dropping the keyboard user at the top of the document.
+
+**Do:** Use for long, paged result sets; Show current, first, and last pages; Collapse large gaps with an ellipsis.
+**Don't:** Do not use for a handful of items; Do not hide the current page indicator.
+
+**Deprecated aliases** (do not use): `Pager`, `Page navigation`
+
+#### Without the package - exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. This is the
+component's exact structure and appearance: do not substitute a radius, colour,
+spacing or font weight of your own, and do not restyle it with a UI kit's
+defaults.
+
+It is not the whole component. HTML and CSS cannot provide focus trapping,
+Escape handling, outside-click dismissal or a roving tabindex, so the
+accessibility contract and any behaviour listed above must still be implemented
+in JavaScript before this component is finished.
+
+- A `<nav aria-label="Pagination">` around a `<ul>`; the current page is a button with `aria-current="page"`, filled `--primary`.
+- Every page button needs a real label ("Page 4"), and the arrows need "Previous page" / "Next page". A bare chevron announces as nothing.
+- The ellipsis is a `<span>` marked `aria-hidden`, not a disabled button - it is a gap marker, not a control.
+- Cells are 40px (32px small) with `--radius-md` and a 4px gap, and the list wraps rather than overflowing in a narrow column.
+- Disable the arrows at the ends rather than hiding them, so the control does not change width as you page.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --primary:           #004080;
+  --white:             #ffffff;
+  --gray-600:          #7A7A7A;
+  --action-hover:      rgba(0, 0, 0, 0.04);
+  --action-disabled:   rgba(0, 0, 0, 0.38);
+  --text-primary:      rgba(0, 0, 0, 0.87);
+  --muted-foreground:  var(--gray-600);
+  --radius-md:         8px;
+  --font-sans:         'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-pagination__list {
+  display: flex;
+  align-items: center;
+  /* Wrap rather than overflow: a long pager has to degrade in a narrow column,
+     not spill out of it. */
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.inspera-pagination__item {
+  min-width: 40px;
+  height: 40px;
+  padding: 0 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  border: none;
+  background: transparent;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 120ms ease, color 120ms ease;
+}
+
+.inspera-pagination--small .inspera-pagination__item {
+  min-width: 32px;
+  height: 32px;
+  font-size: 14px;
+}
+
+.inspera-pagination__item:hover:not(:disabled):not([aria-current='page']) {
+  background: var(--action-hover);
+}
+
+.inspera-pagination__item[aria-current='page'] {
+  background: var(--primary);
+  color: var(--white);
+}
+
+.inspera-pagination__item:disabled {
+  color: var(--action-disabled);
+  cursor: not-allowed;
+}
+
+.inspera-pagination__item .material-symbols-outlined { font-size: 20px; }
+.inspera-pagination--small .inspera-pagination__item .material-symbols-outlined { font-size: 18px; }
+
+/* The gap marker is not a control: a span, hidden from assistive tech. */
+.inspera-pagination__ellipsis {
+  cursor: default;
+  color: var(--muted-foreground);
+}
+```
+
+```html
+<nav class="inspera-pagination" aria-label="Pagination">
+  <ul class="inspera-pagination__list">
+    <li><button type="button" class="inspera-pagination__item" aria-label="Previous page">
+      <span class="material-symbols-outlined" aria-hidden="true">chevron_left</span>
+    </button></li>
+    <li><button type="button" class="inspera-pagination__item" aria-label="Page 1">1</button></li>
+    <li><span class="inspera-pagination__item inspera-pagination__ellipsis" aria-hidden="true">...</span></li>
+    <li><button type="button" class="inspera-pagination__item" aria-label="Page 4" aria-current="page">4</button></li>
+    <li><button type="button" class="inspera-pagination__item" aria-label="Next page">
+      <span class="material-symbols-outlined" aria-hidden="true">chevron_right</span>
+    </button></li>
+  </ul>
+</nav>
+```
+
+
+### Menu
+
+Present a list of actions in a dropdown. - category: `navigation`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library - build the markup from the HTML and CSS under
+> **Without the package** below, which is this component's exact appearance.
+
+```tsx
+import { Menu } from '@inspera/components'
+
+<Menu
+  label="Actions"
+  placement="Bottom Start"
+  items={[{ label: 'Edit', icon: 'edit' }, { label: 'Delete', icon: 'delete', danger: true }]}
+  onSelect={handleSelect}
+/>
+```
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `label` | `string` | `'Actions'` | Trigger label. |
+| `items` | `MenuItem[]` | `sampleItems` | Menu items. |
+| `placement` | `'Bottom Start' \| 'Bottom End'` | `'Bottom Start'` | Alignment to trigger. |
+| `open` | `boolean` | - | Controlled open state. Leave unset to let the menu manage itself. |
+| `defaultOpen` | `boolean` | `false` | Open on mount. |
+| `forceVisible` | `boolean` | `false` | Always render the open menu, for documentation. |
+| `onSelect` | `(label: string) => void` | - | Fired with the label of the chosen item. |
+
+```ts
+export interface MenuItem {
+  label: string
+  icon?: string
+  danger?: boolean
+  disabled?: boolean
+  divider?: boolean
+}
+```
+
+**Accessibility** - role `menu`, keyboard operable. Trigger uses aria-haspopup="menu" and aria-expanded; Items use role="menuitem"; Arrow keys move, Enter selects, Escape closes; Outside click closes the menu.
+
+**Behaviour you must implement** - the HTML and CSS below are structure and
+appearance only. This component is not finished until it also does:
+
+- Open on click, Enter, Space or Down arrow, placing focus on the first item.
+- Move focus with Up/Down wrapping at the ends, and Home/End to the first and last item.
+- Close on Escape, on outside click, and after an item is activated - restoring focus to the trigger each time.
+
+**Do:** Use for grouped actions and overflow; Separate destructive actions with a divider; Keep item labels action-oriented.
+**Don't:** Do not use for selecting a value - use Select; Do not nest menus more than one level.
+
+**Deprecated aliases** (do not use): `Dropdown menu`, `Action menu`, `Context menu`, `Overflow menu`
+
+#### Without the package - exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. This is the
+component's exact structure and appearance: do not substitute a radius, colour,
+spacing or font weight of your own, and do not restyle it with a UI kit's
+defaults.
+
+It is not the whole component. HTML and CSS cannot provide focus trapping,
+Escape handling, outside-click dismissal or a roving tabindex, so the
+accessibility contract and any behaviour listed above must still be implemented
+in JavaScript before this component is finished.
+
+- The trigger takes `aria-haspopup="menu"`, `aria-expanded` and `aria-controls`; the panel is `role="menu"` with `role="menuitem"` buttons at `tabindex="-1"`.
+- Focus stays on the trigger and the arrows move a highlight, so hover and the keyboard cursor must drive the same `--active` state.
+- Separators are `role="separator"` and `aria-hidden`, 1px of `--border` with a 4px margin.
+- Destructive items are `--error` text, never a red fill - a filled row reads as selected.
+- Panel is `--radius-md` on `--surface` with `--shadow-200` and a 180px floor, anchored 4px under the trigger. Bottom End flips it to `right: 0` for menus near the viewport edge.
+- Escape closes and returns focus to the trigger; an outside click closes without moving focus.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --error:               #D32F2F;
+  --white:               #ffffff;
+  --gray-200:            #EDEDED;
+  --gray-300:            #D9D9D9;
+  --primary-focus-ring:  rgba(0, 64, 128, 0.3);
+  --action-hover:        rgba(0, 0, 0, 0.04);
+  --action-disabled:     rgba(0, 0, 0, 0.38);
+  --text-primary:        rgba(0, 0, 0, 0.87);
+  --surface:             var(--white);
+  --border:              var(--gray-200);
+  --border-strong:       var(--gray-300);
+  --radius-sm:           4px;
+  --radius-md:           8px;
+  --shadow-200:          0px 8px 8px rgba(39, 39, 39, 0.08), 0px 4px 6px rgba(39, 39, 39, 0.12);
+  --z-dropdown:          300;
+  --font-sans:           'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-menu {
+  position: relative;
+  display: inline-block;
+  font-family: var(--font-sans);
+}
+
+.inspera-menu__trigger {
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 12px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-strong);
+  background: var(--white);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: none;
+  transition: box-shadow 120ms ease;
+}
+
+.inspera-menu__trigger[aria-expanded='true'] {
+  box-shadow: 0 0 0 3px var(--primary-focus-ring);
+}
+
+.inspera-menu__trigger .material-symbols-outlined {
+  font-size: 20px;
+  transition: transform 140ms ease;
+}
+.inspera-menu__trigger[aria-expanded='true'] .material-symbols-outlined { transform: rotate(180deg); }
+
+.inspera-menu__list {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: auto;
+  min-width: 180px;
+  padding: 4px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-200);
+  z-index: var(--z-dropdown, 20);
+}
+
+/* Bottom End aligns the panel's right edge to the trigger's, for a menu near
+   the right edge of the viewport. */
+.inspera-menu__list--end { left: auto; right: 0; }
+
+.inspera-menu__item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  text-align: left;
+  cursor: pointer;
+  opacity: 1;
+  transition: background 120ms ease;
+}
+
+/* The highlight follows the keyboard cursor, so hover and arrow keys have to
+   drive the same state. */
+.inspera-menu__item--active,
+.inspera-menu__item:hover:not(:disabled) { background: var(--action-hover); }
+
+.inspera-menu__item--danger { color: var(--error); }
+
+.inspera-menu__item:disabled {
+  color: var(--action-disabled);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.inspera-menu__item .material-symbols-outlined { font-size: 20px; }
+
+.inspera-menu__separator {
+  height: 1px;
+  background: var(--border);
+  margin: 4px 0;
+}
+```
+
+```html
+<div class="inspera-menu">
+  <button type="button" class="inspera-menu__trigger"
+          aria-haspopup="menu" aria-expanded="true" aria-controls="actions-menu">
+    Actions
+    <span class="material-symbols-outlined" aria-hidden="true">expand_more</span>
+  </button>
+  <div class="inspera-menu__list" id="actions-menu" role="menu" aria-label="Actions">
+    <button type="button" class="inspera-menu__item inspera-menu__item--active" role="menuitem" tabindex="-1">
+      <span class="material-symbols-outlined" aria-hidden="true">edit</span>Edit
+    </button>
+    <div class="inspera-menu__separator" role="separator" aria-hidden="true"></div>
+    <button type="button" class="inspera-menu__item inspera-menu__item--danger" role="menuitem" tabindex="-1">
+      <span class="material-symbols-outlined" aria-hidden="true">delete</span>Delete
+    </button>
+  </div>
+</div>
+```
+
+
+### Stepper
+
+Show progress through a sequence of steps. - category: `navigation`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library - build the markup from the HTML and CSS under
+> **Without the package** below, which is this component's exact appearance.
+
+```tsx
+import { Stepper } from '@inspera/components'
+
+<Stepper
+  steps={[{ label: 'Details' }, { label: 'Questions' }, { label: 'Review' }]}
+  activeStep={1}
+  orientation="Horizontal"
+  size="Medium"
+/>
+```
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `steps` | `Step[]` | `defaultSteps` | Ordered steps. |
+| `activeStep` | `number` | `1` | Zero-based index of the current step. |
+| `orientation` | `'Horizontal' \| 'Vertical'` | `'Horizontal'` | Layout direction. |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Indicator size. |
+
+```ts
+export interface Step {
+  label: string
+  description?: string
+}
+```
+
+**Accessibility** - role `list`. Use an ordered list for step semantics; Mark the current step with aria-current="step"; Convey completion with an icon, not color alone.
+
+**Do:** Use for multi-step flows and wizards; Show completed, current, and upcoming states; Keep step labels short.
+**Don't:** Do not use for non-sequential navigation - use Tabs; Do not exceed a handful of steps.
+
+**Deprecated aliases** (do not use): `Wizard`, `Progress steps`, `Step indicator`
+
+#### Without the package - exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. This is the
+component's exact structure and appearance: do not substitute a radius, colour,
+spacing or font weight of your own, and do not restyle it with a UI kit's
+defaults.
+
+It is not the whole component. HTML and CSS cannot provide focus trapping,
+Escape handling, outside-click dismissal or a roving tabindex, so the
+accessibility contract and any behaviour listed above must still be implemented
+in JavaScript before this component is finished.
+
+- It is an `<ol>`: the order is the meaning. The current step carries `aria-current="step"`.
+- Steps take `flex: 1 1 auto`, never `flex: 1`. A zero basis gives every step the same total width, so a long label ends up with a stub connector while a short one gets a long run.
+- Keep steps top-aligned. Centring makes the connector sit against the full step height and render down at label level instead of through the circles.
+- The connector is offset by half the circle (`margin-top: 15px`, or 11px small) so it passes through the centres.
+- Completed and current share the `--primary` fill; only the current one gets the 4px `--primary-focus-ring` halo. Completed shows a tick, upcoming shows its number.
+- Indicators are 32px (24px small) and the connector is 2px, filled `--primary` behind completed steps and `--border` ahead of them.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --primary:             #004080;
+  --white:               #ffffff;
+  --gray-200:            #EDEDED;
+  --gray-300:            #D9D9D9;
+  --gray-600:            #7A7A7A;
+  --primary-focus-ring:  rgba(0, 64, 128, 0.3);
+  --text-primary:        rgba(0, 0, 0, 0.87);
+  --border:              var(--gray-200);
+  --border-strong:       var(--gray-300);
+  --muted-foreground:    var(--gray-600);
+  --radius-pill:         9999px;
+  --font-sans:           'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-stepper {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 0;
+  width: 100%;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-sans);
+}
+
+.inspera-stepper--vertical {
+  flex-direction: column;
+  align-items: stretch;
+  width: auto;
+}
+
+/* The step lays out body-then-connector along the stepper's own axis, so a
+   horizontal stepper puts them in a row and a vertical one stacks them. Note
+   this is the opposite of the body inside it, which stacks the circle over the
+   label horizontally and sits them side by side vertically. */
+.inspera-stepper__step {
+  display: flex;
+  flex-direction: row;
+  /* Always top-aligned. Centring makes the horizontal connector sit against the
+     full step height and render down at label level instead of through the
+     circles. */
+  align-items: flex-start;
+  /* "1 1 auto", not "1": a zero basis gives every step the same total width, so
+     a long label leaves a stub of a connector while a short one gets a long
+     run. Growing from the content width shares the free space evenly. */
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.inspera-stepper__step:last-child { flex: none; }
+.inspera-stepper--vertical .inspera-stepper__step { flex-direction: column; flex: none; }
+
+.inspera-stepper__body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.inspera-stepper--vertical .inspera-stepper__body {
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.inspera-stepper__indicator {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  border-radius: var(--radius-pill);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 600;
+  background: transparent;
+  color: var(--gray-600);
+  border: 2px solid var(--border-strong);
+  box-shadow: none;
+  transition: background 140ms ease, box-shadow 140ms ease;
+}
+
+.inspera-stepper--small .inspera-stepper__indicator { width: 24px; height: 24px; }
+
+/* Done and current share the fill; only the current one gets the halo. */
+.inspera-stepper__indicator--done,
+.inspera-stepper__indicator--active {
+  background: var(--primary);
+  color: var(--white);
+  border: none;
+}
+
+.inspera-stepper__indicator--active { box-shadow: 0 0 0 4px var(--primary-focus-ring); }
+
+.inspera-stepper__indicator .material-symbols-outlined { font-size: 18px; }
+
+.inspera-stepper__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: center;
+}
+.inspera-stepper--vertical .inspera-stepper__text { text-align: left; }
+
+.inspera-stepper__label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--gray-600);
+}
+.inspera-stepper--small .inspera-stepper__label { font-size: 13px; }
+
+.inspera-stepper__step--done .inspera-stepper__label,
+.inspera-stepper__step--active .inspera-stepper__label {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.inspera-stepper__description {
+  font-size: 12px;
+  color: var(--muted-foreground);
+}
+
+/* The connector is nudged by half the circle so it runs through the centres
+   rather than under the labels. */
+.inspera-stepper__connector {
+  height: 2px;
+  flex: 1;
+  margin: 0 8px;
+  margin-top: 15px;
+  background: var(--border);
+}
+
+.inspera-stepper--small .inspera-stepper__connector { margin-top: 11px; }
+
+.inspera-stepper__connector--done { background: var(--primary); }
+
+.inspera-stepper--vertical .inspera-stepper__connector {
+  width: 2px;
+  height: auto;
+  flex: 1;
+  min-height: 20px;
+  margin: 4px 0;
+  margin-left: 15px;
+}
+.inspera-stepper--vertical.inspera-stepper--small .inspera-stepper__connector { margin-left: 11px; }
+```
+
+```html
+<ol class="inspera-stepper" role="list">
+  <li class="inspera-stepper__step inspera-stepper__step--done">
+    <div class="inspera-stepper__body">
+      <span class="inspera-stepper__indicator inspera-stepper__indicator--done" aria-hidden="true">
+        <span class="material-symbols-outlined">check</span>
+      </span>
+      <span class="inspera-stepper__text">
+        <span class="inspera-stepper__label">Details</span>
+        <span class="inspera-stepper__description">Assessment info</span>
+      </span>
+    </div>
+    <span class="inspera-stepper__connector inspera-stepper__connector--done" aria-hidden="true"></span>
+  </li>
+  <li class="inspera-stepper__step inspera-stepper__step--active" aria-current="step">
+    <div class="inspera-stepper__body">
+      <span class="inspera-stepper__indicator inspera-stepper__indicator--active" aria-hidden="true">2</span>
+      <span class="inspera-stepper__text">
+        <span class="inspera-stepper__label">Questions</span>
+      </span>
+    </div>
+  </li>
+</ol>
+```
+
+
+### Link
+
+Navigate to another location or resource. - category: `navigation`.
+
+> `@inspera/components` is **not published yet**. If you cannot resolve that import, do
+> not swap in another UI library - build the markup from the HTML and CSS under
+> **Without the package** below, which is this component's exact appearance.
+
+```tsx
+import { Link } from '@inspera/components'
+
+<Link
+  href="/docs"
+  label="Learn more"
+  intent="Default"
+  size="Medium"
+  underline="Hover"
+  external={false}
+/>
+```
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `children` | `ReactNode` | - | Link text. Takes precedence over label. |
+| `label` | `string` | `'Learn more'` | Link text, when not passing children. |
+| `href` | `string` | `'#'` | Destination URL. Always provide a real one. |
+| `intent` | `'Default' \| 'Muted'` | `'Default'` | Color emphasis. |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Text size. |
+| `underline` | `'Always' \| 'Hover' \| 'None'` | `'Hover'` | Underline behavior. |
+| `external` | `boolean` | `false` | Open in a new tab with an icon. |
+| `disabled` | `boolean` | `false` | Non-interactive state. |
+| `leadingIcon` | `string` | - | Material Symbols name shown before the text. |
+| `trailingIcon` | `string` | - | Material Symbols name shown after the text. |
+| `onClick` | `(e: React.MouseEvent) => void` | - | Fired on activation. Use for routing, not to replace href. |
+
+**Accessibility** - role `link`, keyboard operable. Use a real anchor with a valid href; External links set target="_blank" and rel="noreferrer"; Disabled links set aria-disabled and prevent navigation; Focus ring is visible on keyboard focus.
+
+**Do:** Use for navigation, not actions; Signal external links with an icon; Keep link text descriptive.
+**Don't:** Do not use links to trigger actions - use Button; Do not use "click here" as link text.
+
+**Deprecated aliases** (do not use): `Hyperlink`, `Text link`, `Anchor`
+
+#### Without the package - exact HTML and CSS
+
+Use this whenever `@inspera/components` is not installed. This is the
+component's exact structure and appearance: do not substitute a radius, colour,
+spacing or font weight of your own, and do not restyle it with a UI kit's
+defaults.
+
+It is not the whole component. HTML and CSS cannot provide focus trapping,
+Escape handling, outside-click dismissal or a roving tabindex, so the
+accessibility contract and any behaviour listed above must still be implemented
+in JavaScript before this component is finished.
+
+- The default is underline **on hover only** - not always, and not never.
+- Colour is `--primary` at 16px/500 (14px when small), with `text-underline-offset: 2px` so the rule clears the descenders.
+- An external link gets `target="_blank"`, `rel="noreferrer"`, and the `open_in_new` icon. All three, not one.
+- A disabled link carries no `href` and sets `aria-disabled="true"`. Do not leave the href and swallow the click.
+- The focus ring is `--primary-focus-ring` at 2px with a 2px offset - different from the solid `--primary` ring buttons use.
+
+```css
+/* Tokens this component needs. Paste once, at `:root`. */
+:root {
+  --primary:             #004080;
+  --gray-600:            #7A7A7A;
+  --primary-focus-ring:  rgba(0, 64, 128, 0.3);
+  --action-disabled:     rgba(0, 0, 0, 0.38);
+  --radius-xs:           2px;
+  --duration-fast:       100ms;
+  --easing-standard:     cubic-bezier(0.2, 0, 0, 1);
+  --font-sans:           'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.inspera-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--primary);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 500;
+  text-decoration: none;
+  text-underline-offset: 2px;
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  transition: color var(--duration-fast) var(--easing-standard);
+}
+
+.inspera-link--small { font-size: 14px; }
+
+.inspera-link--muted { color: var(--gray-600); }
+
+/* Underline behaviour. Hover is the default; the other two are explicit. */
+.inspera-link:hover { text-decoration: underline; }
+.inspera-link--underline-always { text-decoration: underline; }
+.inspera-link--underline-none:hover { text-decoration: none; }
+
+.inspera-link:focus-visible {
+  outline: 2px solid var(--primary-focus-ring);
+  outline-offset: 2px;
+}
+
+/* Disabled: no href, announced with aria-disabled. A link with no href is not
+   focusable, which is the behaviour you want. */
+.inspera-link--disabled {
+  color: var(--action-disabled);
+  cursor: not-allowed;
+  text-decoration: none;
+}
+.inspera-link--disabled:hover { text-decoration: none; }
+
+.inspera-link .material-symbols-outlined { font-size: 18px; }
+.inspera-link--small .material-symbols-outlined { font-size: 16px; }
+```
+
+```html
+<a class="inspera-link" href="/docs">Learn more</a>
+
+<!-- External links open in a new tab and say so with an icon. -->
+<a class="inspera-link" href="https://inspera.com" target="_blank" rel="noreferrer">
+  Documentation
+  <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span>
+</a>
+
+<a class="inspera-link inspera-link--muted inspera-link--small" href="/skip">Skip for now</a>
+
+<!-- Disabled: no href at all. -->
+<a class="inspera-link inspera-link--disabled" aria-disabled="true">Unavailable</a>
+```
+
