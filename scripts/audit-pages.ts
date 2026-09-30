@@ -1,5 +1,5 @@
 /**
- * Example pages, checked without a browser.
+ * Prototyping Kits, checked without a browser.
  *
  *   1. A page's `uses` list names exactly the library components it imports.
  *      The gallery card shows it as the page's recipe; it used to list
@@ -51,9 +51,9 @@ for (const page of examplePages) {
 }
 
 if (problems.length > 0) {
-  console.error(`\n✗ ${problems.length} example-page problem(s):\n`)
+  console.error(`\n✗ ${problems.length} prototyping-kit problem(s):\n`)
   for (const p of problems) console.error('  ' + p)
   console.error('\nFix src/docs/pages/registry.tsx or src/docs/pages/bundle.ts.\n')
   process.exit(1)
 }
-console.log(`✓ ${checked} example pages: uses lists match the imports, and every bundle resolves its own imports`)
+console.log(`✓ ${checked} prototyping kits: uses lists match the imports, and every bundle resolves its own imports`)

@@ -9,7 +9,7 @@ import IntegratePage from './docs/IntegratePage'
 import SpecPage from './docs/SpecPage'
 import { followLink } from './docs/links'
 
-// The example pages are full screens of their own; load them when visited.
+// The prototyping kits are full screens of their own; load them when visited.
 const PagesPage = lazy(() => import('./docs/PagesPage'))
 
 // Lightweight hash routing keeps the docs shareable (deep links to a component)

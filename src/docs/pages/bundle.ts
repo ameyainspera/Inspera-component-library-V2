@@ -1,7 +1,7 @@
 import type { ExamplePage } from './registry'
 
 /**
- * Builds a single self-contained text file for an example page so anyone can
+ * Builds a single self-contained text file for a prototyping kit so anyone can
  * hand it to an AI assistant and rebuild the screen from scratch: the design
  * tokens, the runtime CSS, the font wiring, every library file the page needs,
  * its non-library imports, and the page source itself.

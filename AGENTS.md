@@ -7,7 +7,7 @@ The reference site and distribution hub for the Inspera Design System: React + V
 - `src/components/inspera/` - the library components (one file each, plus shared `types.ts`, `overlay.tsx`, `useControllableState.ts`, `useModalBehavior.ts`, `calendar.tsx`; barrel in `index.ts`).
 - `src/data/tokens.ts` - token values. `src/data/components.ts` - component semantics for the docs and the AI spec.
 - `src/docs/registry.tsx` - each component page's playground controls, snippets and "Variants & states" gallery. `src/data/recipes.tsx` - the HTML+CSS recipe for each component.
-- `src/docs/` - the docs shell (`App.tsx` routes by hash); `src/docs/pages/` - the example pages.
+- `src/docs/` - the docs shell (`App.tsx` routes by hash); `src/docs/pages/` - the prototyping kits.
 - `src/imports/runtime.css` - hand-written CSS the components need (states, keyframes). `src/imports/tokens.css` is generated.
 - `scripts/build-portable.ts` - generates everything under `public/`, `kit/`, `packages/components/styles.css`, and the `*.generated.ts` files.
 

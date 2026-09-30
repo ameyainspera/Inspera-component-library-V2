@@ -10,7 +10,7 @@ import { AssessorNav } from '../../imports/pasted_text/global-nav'
  * blue title links, a per-row Status dropdown and hover-revealed row actions.
  */
 
-// The product's CTA orange, shared with the other example pages.
+// The product's CTA orange, shared with the other prototyping kits.
 const CTA = '#d9432c'
 
 interface QSRow {
@@ -111,13 +111,16 @@ function Toolbar() {
   )
 }
 
+/** Room at the row's end for More + Preview + Edit. */
+const ACTIONS_WIDTH = 180
+
 const COLS: { key: string; label: string; sortable?: boolean; width?: number }[] = [
-  { key: 'title', label: 'Title' },
+  { key: 'title', label: 'Title', width: 200 },
   { key: 'createdBy', label: 'Created by', width: 150 },
-  { key: 'lastEdited', label: 'Last edited', sortable: true, width: 200 },
+  { key: 'lastEdited', label: 'Last edited', sortable: true, width: 180 },
   { key: 'editedBy', label: 'Edited by', width: 150 },
-  { key: 'created', label: 'Created', width: 190 },
-  { key: 'status', label: 'Status', width: 210 },
+  { key: 'created', label: 'Created', width: 170 },
+  { key: 'status', label: 'Status', width: 180 },
 ]
 
 /** The question-sets data grid. */
@@ -159,7 +162,7 @@ function QuestionSetsTable() {
         <tr>
           <th style={{ ...th, width: 44, paddingRight: 0 }}>{box(allOn, toggleAll, 'Select all question sets')}</th>
           {COLS.map((c) => (
-            <th key={c.key} style={{ ...th, width: c.width }}>
+            <th key={c.key} style={{ ...th, width: c.width, minWidth: c.width }}>
               <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
                 {c.label}
                 {c.sortable && (
@@ -170,6 +173,8 @@ function QuestionSetsTable() {
               </span>
             </th>
           ))}
+          {/* Empty column that holds the hover actions, so they never push the grid wider. */}
+          <th aria-label="Row actions" style={{ ...th, width: ACTIONS_WIDTH, minWidth: ACTIONS_WIDTH }} />
         </tr>
       </thead>
       <tbody>
@@ -191,7 +196,7 @@ function QuestionSetsTable() {
             <td style={td}>{row.lastEdited}</td>
             <td style={td}>{row.editedBy}</td>
             <td style={td}>{row.created}</td>
-            <td style={{ ...td, position: 'relative' }}>
+            <td style={td}>
               <select
                 defaultValue="Draft"
                 aria-label={`Status of ${row.title}`}
@@ -206,14 +211,11 @@ function QuestionSetsTable() {
                 <option>Ready</option>
                 <option>Archived</option>
               </select>
-              {/* Row actions, revealed on hover, floating over the row's end. */}
+            </td>
+            <td style={{ ...td, paddingLeft: 8 }}>
+              {/* Row actions, revealed on hover in the empty column at the row's end. */}
               {hovered === i && (
-                <div
-                  style={{
-                    position: 'absolute', top: '50%', right: -8, transform: 'translate(100%, -50%)',
-                    display: 'inline-flex', alignItems: 'center', gap: 6, zIndex: 1,
-                  }}
-                >
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
                   <button
                     type="button"
                     style={{
@@ -267,7 +269,7 @@ export default function QuestionSets() {
   )
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100%', background: 'var(--surface)' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', background: 'var(--surface)' }}>
       <AssessorNav activeId="author" onHome={() => {}} onNavigate={() => {}} />
 
       <div style={{ flex: 1, display: 'flex', minHeight: 0 }}>
@@ -314,8 +316,8 @@ export default function QuestionSets() {
           </div>
         </aside>
 
-        {/* Main content */}
-        <main style={{ flex: 1, minWidth: 0, padding: '24px 28px 32px', fontFamily: 'var(--font-sans)', display: 'flex', flexDirection: 'column', gap: 16 }}>
+        {/* Main content: the only part that scrolls, so the Views rail stays put. */}
+        <main style={{ flex: 1, minWidth: 0, minHeight: 0, overflowY: 'auto', padding: '24px 28px 32px', fontFamily: 'var(--font-sans)', display: 'flex', flexDirection: 'column', gap: 16 }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
             <h1 style={{ margin: 0, fontSize: 30, fontWeight: 600, color: 'var(--text-primary)' }}>Question Sets</h1>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
@@ -359,7 +361,7 @@ export default function QuestionSets() {
 
           <Toolbar />
 
-          <div style={{ overflowX: 'auto' }}>
+          <div style={{ overflowX: 'auto', flexShrink: 0 }}>
             <QuestionSetsTable />
           </div>
 

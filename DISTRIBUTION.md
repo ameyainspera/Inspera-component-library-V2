@@ -38,7 +38,7 @@ No browser needed:
 pnpm typecheck
 pnpm verify:generated
 pnpm audit:snippets   # every playground control reaches the JSX and the gallery
-pnpm audit:pages      # example pages: component lists and download bundles
+pnpm audit:pages      # prototyping kits: component lists and download bundles
 pnpm audit:search
 pnpm audit:ascii      # shipped text files are plain ASCII
 ```

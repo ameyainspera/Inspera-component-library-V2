@@ -40,7 +40,7 @@ body,
   outline-offset: var(--focus-ring-offset);
 }
 
-/* Example-page cards: the title link stretches over the card, so the whole
+/* Prototyping-kit cards: the title link stretches over the card, so the whole
    card is clickable while its Download button stays a separate control. */
 /* The main scroll area takes focus for keyboard scrolling; ring it inside. */
 #docs-scroll:focus-visible {
@@ -65,6 +65,59 @@ body,
 .docs-page-card:has(.docs-page-card-link:focus-visible) {
   outline: var(--focus-ring-width) solid var(--focus-ring-color);
   outline-offset: var(--focus-ring-offset);
+}
+
+/* Prototyping Kits guide (PagesGuide.tsx). Inline styles cannot express hover,
+   keyframes or media queries, so those parts live here. */
+@keyframes docs-guide-fade {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes docs-guide-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+.docs-guide-scrim {
+  animation: docs-guide-fade var(--duration-slow) var(--easing-enter);
+}
+.docs-guide-panel {
+  animation: docs-guide-rise var(--duration-slow) var(--easing-enter);
+}
+.docs-guide-slide {
+  animation: docs-guide-rise var(--duration-normal) var(--easing-enter);
+}
+.docs-guide-scroll:focus-visible {
+  outline-offset: calc(-1 * var(--focus-ring-width));
+}
+.docs-guide-rail-item:hover {
+  background: var(--gray-200);
+}
+.docs-guide-card {
+  transition: border-color var(--duration-fast) ease, box-shadow var(--duration-fast) ease;
+}
+.docs-guide-card:hover {
+  border-color: var(--primary) !important;
+  box-shadow: var(--shadow-200);
+}
+.docs-guide-chip:hover {
+  background: var(--blue-100) !important;
+}
+/* Below this the slide rail gives way, so the flow diagrams keep their full
+   width without scrolling. The footer still shows the progress. */
+@media (max-width: 1100px) {
+  .docs-guide-rail {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .docs-guide-scrim,
+  .docs-guide-panel,
+  .docs-guide-slide {
+    animation: none;
+  }
 }
 
 body {

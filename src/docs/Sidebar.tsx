@@ -22,7 +22,7 @@ const INTEGRATE = {
 /** Full example screens assembled from components - a starting point to copy. */
 const PAGES = {
   hash: '#/pages',
-  label: 'Example pages',
+  label: 'Prototyping Kits',
   icon: 'space_dashboard',
   detail: 'Full Inspera screens built from library components',
 }
@@ -317,7 +317,7 @@ export default function Sidebar({ route, onNavigate }: SidebarProps) {
             </span>
           </a>
 
-          {/* Example pages: full screens assembled from the components below. */}
+          {/* Prototyping Kits: full screens assembled from the components below. */}
           <a
             href={PAGES.hash}
             onClick={follow(PAGES.hash)}
