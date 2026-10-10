@@ -1,7 +1,7 @@
 /**
  * Visual regression against the docs site.
  *
- * For each component page, screenshot the State gallery panel - a deterministic
+ * For each component page, screenshot the "Variants & states" panel - a deterministic
  * shot, because every interactive state is frozen through the `data-force-state`
  * mechanism in src/imports/runtime.css rather than a live hover or focus. Then
  * compare pixel-for-pixel against a committed baseline.
@@ -51,9 +51,11 @@ if (!update) {
   mkdirSync(diffDir, { recursive: true })
 }
 
+const VIEWPORT = { width: 1440, height: 1000 }
+
 const browser = await chromium.launch({ channel: 'chrome' })
 const page = await browser.newPage({
-  viewport: { width: 1440, height: 1000 },
+  viewport: VIEWPORT,
   // Pin the scale factor so a baseline captured on one machine matches the
   // next; a HiDPI host would otherwise double every dimension.
   deviceScaleFactor: 1,
@@ -63,19 +65,33 @@ type Outcome = { slug: string; status: 'pass' | 'fail' | 'new' | 'missing'; deta
 const results: Outcome[] = []
 
 for (const slug of slugs) {
+  await page.setViewportSize(VIEWPORT)
   await page.goto(`${BASE}/#/component/${slug}`, { waitUntil: 'networkidle' })
   await page.waitForTimeout(150)
 
-  // The State gallery panel is the deterministic surface. Locate its <section>
-  // the same way audit-gallery does, then shoot just that element.
-  const handle = await page.evaluateHandle(() => {
-    const heading = [...document.querySelectorAll('h2')].find((h) => h.textContent?.trim() === 'States')
-    return heading?.closest('section') ?? null
-  })
-  const element = handle.asElement()
-  if (!element) {
-    results.push({ slug, status: 'missing', detail: 'no States gallery' })
+  // The "Variants & states" panel is the deterministic surface. It starts
+  // collapsed, so open it the same way audit-gallery does, then shoot just its
+  // <section>.
+  const toggle = page.getByRole('button', { name: 'Variants & states', exact: true })
+  if ((await toggle.count()) === 0) {
+    results.push({ slug, status: 'missing', detail: 'no Variants & states gallery' })
     continue
+  }
+  await toggle.click()
+  await page.waitForTimeout(120)
+  const element = (await toggle.evaluateHandle((b) => b.closest('section'))).asElement()
+  if (!element) {
+    results.push({ slug, status: 'missing', detail: 'no Variants & states gallery' })
+    continue
+  }
+
+  // The docs shell is a 100vh column that scrolls inside, so whatever sits
+  // below the viewport paints blank in a screenshot. Grow the viewport until
+  // the whole panel fits.
+  const box = await element.boundingBox()
+  if (box && box.height > VIEWPORT.height - 200) {
+    await page.setViewportSize({ width: VIEWPORT.width, height: Math.ceil(box.height) + 200 })
+    await page.waitForTimeout(120)
   }
 
   const shot = await element.screenshot({ type: 'png' })
