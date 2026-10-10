@@ -1,4 +1,4 @@
-import { type CSSProperties, type ReactNode, useLayoutEffect, useRef, useState } from 'react'
+import { type CSSProperties, type ReactNode, useRef, useState } from 'react'
 import { components } from '../data/components'
 import { componentApi } from '../data/component-api.generated'
 import { componentDocs } from '../data/component-docs.generated'
@@ -132,13 +132,6 @@ const VIEWS = [
   { value: 'component', label: 'Component' },
   { value: 'context', label: 'In context' },
 ]
-
-/** In context, the widest the playground grows past the page column. */
-const PLAYGROUND_MAX = 1280
-/** Below this width the scene and the props stack; side by side the scene would get too narrow. */
-const SIDE_BY_SIDE_MIN = 1040
-/** The props rail beside a scene. */
-const RAIL = 288
 
 /**
  * Why the chosen variant fits the scene, from `usage.variants`. With no line
@@ -339,18 +332,6 @@ export default function ComponentPage({ slug }: { slug: string }) {
   // scene. Any control change brings it back, as does Show again.
   const [dismissedFor, setDismissedFor] = useState<string | null>(null)
   const playgroundRef = useRef<HTMLDivElement>(null)
-  // The width the docs column has to give, for the side-by-side layout.
-  const [room, setRoom] = useState(0)
-  useLayoutEffect(() => {
-    const main = document.getElementById('docs-scroll')
-    if (!main) return
-    // The column's horizontal padding is 40px a side.
-    const measure = () => setRoom(main.clientWidth - 80)
-    measure()
-    const ro = new ResizeObserver(measure)
-    ro.observe(main)
-    return () => ro.disconnect()
-  }, [])
 
   if (!spec || !entry) {
     return <div style={{ padding: 32 }}>Component not found.</div>
@@ -377,11 +358,6 @@ export default function ComponentPage({ slug }: { slug: string }) {
   const dismissed = dismissedFor === combination
 
   const scene = inContext ? sceneFor(slug, shown) : undefined
-  // In context, the playground takes the docs column's full width, so the scene
-  // and the props sit side by side - every change in view without scrolling.
-  // Below that width it stacks, as the component view does.
-  const playgroundWidth = Math.min(room, PLAYGROUND_MAX)
-  const sideBySide = Boolean(scene) && playgroundWidth >= SIDE_BY_SIDE_MIN
 
   const controls = Object.entries(entry.controls)
   // The sheet groups switches the way the gallery below does: what the
@@ -516,12 +492,9 @@ export default function ComponentPage({ slug }: { slug: string }) {
         <p style={{ margin: 0, fontSize: 16, color: 'var(--muted-foreground)', maxWidth: 640 }}>{spec.purpose}</p>
       </header>
 
-      {/* Playground: live preview + controls. Side by side in context, it
-          widens past the page column, centred on it. */}
-      <div
-        ref={playgroundRef}
-        style={{ scrollMarginTop: 16, ...(sideBySide ? { width: playgroundWidth, alignSelf: 'center' } : null) }}
-      >
+      {/* Playground: live preview + controls. Both views keep the page
+          column's width, so switching between them never shifts the page. */}
+      <div ref={playgroundRef} style={{ scrollMarginTop: 16 }}>
         <Panel>
           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
             {/* The header holds only what the whole panel is about: its name and
@@ -547,24 +520,11 @@ export default function ComponentPage({ slug }: { slug: string }) {
             )}
           </div>
           {scene ? (
-            sideBySide ? (
-              <div style={{ display: 'grid', gridTemplateColumns: `minmax(0, 1fr) ${RAIL}px`, gap: 24, alignItems: 'start' }}>
-                <div style={{ minWidth: 0 }}>
-                  {frame}
-                  {notes}
-                </div>
-                {/* The props stay in view beside a scene taller than the window. */}
-                <aside aria-label="Props" style={{ position: 'sticky', top: 16, maxHeight: 'calc(100vh - 92px)', overflowY: 'auto', paddingRight: 4 }}>
-                  {sheet}
-                </aside>
-              </div>
-            ) : (
-              <>
-                {frame}
-                {notes}
-                <div style={{ marginTop: 24 }}>{sheet}</div>
-              </>
-            )
+            <>
+              {frame}
+              {notes}
+              <div style={{ marginTop: 24 }}>{sheet}</div>
+            </>
           ) : (
             <>
               <PreviewCanvas contentWidth={layout.width} minHeight={layout.minHeight} align={layout.align} floating={Boolean(layout.minHeight)}>
