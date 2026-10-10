@@ -77,7 +77,7 @@ export default function DateRangePicker({
     onChange as ((r: DateRange | undefined) => void) | undefined,
   )
   const [openState, setOpenState] = useControllableState(openProp, defaultOpen, onOpenChange)
-  const frozenOpen = forceState === 'Open'
+  const frozenOpen = forceState === 'Open' && !disabled
   const open = !disabled && (frozenOpen || openState)
 
   // The first click of a new range lives here, not in `value`: a range only
@@ -147,7 +147,7 @@ export default function DateRangePicker({
     alignItems: 'center',
     gap: 8,
     padding: '0 12px',
-    borderRadius: 'var(--radius-md)',
+    borderRadius: 'var(--radius-sm)',
     borderWidth: 'var(--border-width-default)',
     borderStyle: 'solid',
     background: disabled ? 'var(--surface-disabled)' : 'var(--white)',
@@ -179,6 +179,11 @@ export default function DateRangePicker({
         boxShadow: 'var(--shadow-200)',
         border: 'var(--border-width-default) solid var(--border)',
         fontFamily: 'var(--font-sans)',
+        // As wide as both months side by side. Without this the panel took the
+        // width of the field it hangs from and stacked the months into a very
+        // tall column; now they stack only when the window is too narrow.
+        width: 'max-content',
+        maxWidth: 'calc(100vw - 16px)',
         ...(frozenOpen ? { position: 'absolute', top: 'calc(100% + 4px)', left: 0 } : pos.style),
       }}
     >
@@ -193,7 +198,7 @@ export default function DateRangePicker({
           <span className="material-symbols-outlined" style={{ fontSize: 20 }} aria-hidden>chevron_right</span>
         </button>
       </div>
-      {/* Two months side by side; they stack when the viewport is too narrow. */}
+      {/* Two months side by side; they stack when the window is too narrow for both. */}
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16 }}>
         {months.map((m) => (
           <div key={m.getMonth()} style={{ width: 240 }}>
@@ -216,7 +221,7 @@ export default function DateRangePicker({
   return (
     <div
       className={cx('inspera', className)}
-      style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: 6, width: '100%', fontFamily: 'var(--font-sans)', ...style }}
+      style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: 'var(--space-1)', width: '100%', fontFamily: 'var(--font-sans)', ...style }}
     >
       {field.ownLabel && (
         <label id={field.labelId} htmlFor={field.id} style={labelStyle}>{label}</label>
@@ -230,7 +235,7 @@ export default function DateRangePicker({
           id={field.id}
           type="button"
           className="inspera-interactive inspera-field"
-          data-force-state={open ? 'Open' : forceState}
+          data-force-state={open ? 'Open' : disabled ? undefined : forceState}
           data-invalid={field.invalid || undefined}
           data-disabled={disabled || undefined}
           disabled={disabled}

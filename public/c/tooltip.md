@@ -52,7 +52,7 @@ Provide contextual help on hover or focus. - category: `feedback`.
 import { Tooltip } from '@inspera/components'
 
 <Tooltip
-  content="Supplementary help text shown on hover or focus."
+  content="Get help with this page"
 >
   <Button label="Help" intent="Outline" leadingIcon="help" iconOnly />
 </Tooltip>
@@ -63,15 +63,23 @@ import { Tooltip } from '@inspera/components'
 | `content` **(required)** | `string` | - | The hint text. Keep it short; never put essential information here alone. |
 | `children` **(required)** | `ReactElement` | - | The element the tooltip describes: one focusable element, e.g. an icon-only Button. It receives `aria-describedby` pointing at the tooltip. |
 | `placement` | `'Top' \| 'Bottom' \| 'Left' \| 'Right'` | `'Top'` | Preferred side. It flips when there is no room. |
-| `theme` | `'Light' \| 'Dark'` | `'Dark'` | Surface color. |
+| `theme` | `'Light' \| 'Dark'` | `'Dark'` | Surface colour. |
 | `variant` | `'Default' \| 'Accessibility'` | `'Default'` | Accessibility uses larger text and more padding. |
 
 Also accepts any native `<span>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<span>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `tooltip`, keyboard operable. Use role="tooltip" on the tooltip element; Link trigger and tooltip with aria-describedby; Escape key dismisses the tooltip; Tooltip must not contain interactive content.
 
-**Do:** Use for supplementary information; Keep tooltip text short and scannable; Position to avoid clipping viewport edges.
+**Do:** Use for supplementary information; Keep tooltip text short and scannable; Place it so it is not cut off at the edge of the screen.
 **Don't:** Do not put critical information only in tooltips; Do not use for interactive content - use Popover instead.
+
+**Choosing a variant:**
+- `placement="Top"`: Most tooltips, above the control, such as icon buttons in a toolbar. The default.
+- `placement="Bottom"`: Controls near the top of the screen, such as icon buttons in the page header.
+- `placement="Right"`: Controls on the left of the screen, such as a flag at the end of a row in a narrow list.
+- `placement="Left"`: Controls at the right edge, such as the last icon on a table row.
+- `theme="Light"`: Dark surfaces, such as the navy tool rail of the question set editor, where a dark bubble would disappear.
+- `variant="Accessibility"`: A longer explanation, such as what a statistical term means, in larger text that is easier to read.
 
 **Deprecated aliases** (do not use): `Tooltips`, `Walkthrough`, `a11y tooltips`
 
@@ -118,28 +126,33 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 ```css
 /* Tokens this component needs. Paste once, at `:root`. */
 :root {
-  --primary:               #004080;
-  --error:                 #D32F2F;
-  --warning:               #EF6C00;
-  --success:               #2E7D32;
-  --white:                 #ffffff;
-  --gray-100:              #F7F7F7;
-  --gray-300:              #D9D9D9;
-  --gray-700:              #595959;
-  --gray-900:              #272727;
-  --text-primary:          rgba(0, 0, 0, 0.87);
-  --border-strong:         var(--gray-300);
-  --radius-sm:             4px;
-  --shadow-100:            0px 4px 4px rgba(39, 39, 39, 0.08), 0px 2px 4px rgba(39, 39, 39, 0.12);
-  --effect-button-shadow:  inset 0px -1px 0px rgba(0, 0, 0, 0.2), 0px 1px 0px rgba(0, 0, 0, 0.08);
-  --border-width-default:  1px;
-  --focus-ring-width:      2px;
-  --focus-ring-offset:     2px;
-  --focus-ring-color:      var(--primary);
-  --duration-fast:         100ms;
-  --easing-standard:       cubic-bezier(0.2, 0, 0, 1);
-  --z-tooltip:             800;
-  --font-sans:             'Inter', system-ui, -apple-system, sans-serif;
+  --primary:                #004080;
+  --error:                  #D32F2F;
+  --success:                #2E7D32;
+  --white:                  #ffffff;
+  --gray-100:               #F7F7F7;
+  --gray-300:               #D9D9D9;
+  --gray-700:               #595959;
+  --gray-900:               #272727;
+  --orange-600:             #F2A202;
+  --text-primary:           rgba(0, 0, 0, 0.87);
+  --border-strong:          var(--gray-300);
+  --control-height-sm:      32px;
+  --control-height-md:      40px;
+  --control-height-lg:      44px;
+  --radius-sm:              4px;
+  --shadow-100:             0px 4px 4px rgba(39, 39, 39, 0.08), 0px 2px 4px rgba(39, 39, 39, 0.12);
+  --effect-button-shadow:   inset 0px -1px 0px rgba(0, 0, 0, 0.2), 0px 1px 0px rgba(0, 0, 0, 0.08);
+  --border-width-default:   1px;
+  --focus-ring-width:       2px;
+  --focus-ring-offset:      2px;
+  --focus-ring-color:       var(--primary);
+  --duration-fast:          100ms;
+  --easing-standard:        cubic-bezier(0.2, 0, 0, 1);
+  --z-tooltip:              800;
+  --font-sans:              'Inter', system-ui, -apple-system, sans-serif;
+  --medium-14-size:         14px;
+  --medium-14-line-height:  1.4;
 }
 
 .inspera-btn {
@@ -157,7 +170,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   align-items: center;
   justify-content: center;
   gap: 8px;
-  height: 40px;
+  height: var(--control-height-md);
   min-width: 80px;
   padding: 0 16px;
   border-radius: var(--radius-sm);
@@ -178,19 +191,27 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
     transform var(--duration-fast) var(--easing-standard);
 }
 
-/* Sizes change height, padding and gap only - never the 16px type. */
-.inspera-btn--small { height: 32px; padding: 0 12px; gap: 6px; }
-.inspera-btn--large { height: 48px; padding: 0 24px; gap: 10px; }
+/* Sizes change height and padding. Small also steps down to 14px type and a
+   16px icon (see the end of this block). */
+.inspera-btn--small {
+  height: var(--control-height-sm);
+  padding: 0 12px;
+  gap: 4px;
+  font-size: var(--medium-14-size);
+  line-height: var(--medium-14-line-height);
+}
+.inspera-btn--large { height: var(--control-height-lg); padding: 0 20px; }
 
 /* Icon only: a square the height of the button. It still needs aria-label. */
-.inspera-btn--icon-only { width: 40px; min-width: 0; padding: 0; }
-.inspera-btn--small.inspera-btn--icon-only { width: 32px; }
-.inspera-btn--large.inspera-btn--icon-only { width: 48px; }
+.inspera-btn--icon-only { width: var(--control-height-md); min-width: 0; padding: 0; }
+.inspera-btn--small.inspera-btn--icon-only { width: var(--control-height-sm); }
+.inspera-btn--large.inspera-btn--icon-only { width: var(--control-height-lg); }
 
 /* Solid intents differ only in fill; hover and pressed derive from it. */
 .inspera-btn--primary     { --btn-bg: var(--primary); }
 .inspera-btn--success     { --btn-bg: var(--success); }
-.inspera-btn--warning     { --btn-bg: var(--warning); }
+/* Warning takes dark text on orange-600: white on --warning is 3.08:1. */
+.inspera-btn--warning     { --btn-bg: var(--orange-600); --btn-fg: var(--gray-900); }
 .inspera-btn--destructive { --btn-bg: var(--error); }
 .inspera-btn--secondary {
   --btn-bg: var(--gray-100);
@@ -215,6 +236,8 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   background: var(--btn-bg-hover);
   box-shadow: var(--btn-shadow-hover);
 }
+/* A button that opens a menu keeps its hover fill while the menu is open. */
+.inspera-btn[aria-expanded='true'] { background: var(--btn-bg-hover); }
 .inspera-btn:active:not(:disabled) {
   background: var(--btn-bg-active);
   box-shadow: var(--btn-shadow-active);
@@ -227,6 +250,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 .inspera-btn:disabled { opacity: 0.38; cursor: not-allowed; }
 
 .inspera-btn .material-symbols-outlined { font-size: 20px; }
+.inspera-btn--small .material-symbols-outlined { font-size: 16px; }
 
 .inspera-tooltip {
   position: relative;
@@ -325,7 +349,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
     <span class="material-symbols-outlined" aria-hidden="true">help</span>
   </button>
   <span class="inspera-tooltip__bubble inspera-tooltip__bubble--top" id="tip-1" role="tooltip">
-    Supplementary help text
+    Get help with this page
     <span class="inspera-tooltip__arrow" aria-hidden="true"></span>
   </span>
 </span>

@@ -1,6 +1,7 @@
-import { type CSSProperties, useEffect, useState } from 'react'
+import { type CSSProperties, useEffect, useRef, useState } from 'react'
+import Button from './Button'
 import { FieldMessage, labelStyle, useFieldA11y } from './FormField'
-import { cx, type ForceState, type NativeAttrs } from './types'
+import { assignRef, cx, type ForceState, type NativeAttrs } from './types'
 import { useControllableState } from './useControllableState'
 
 export type NumberInputSize = 'Small' | 'Medium'
@@ -16,17 +17,17 @@ export interface NumberInputProps {
   defaultValue?: number
   /** Fired with each committed value - valid, and within min/max. */
   onChange?: (value: number) => void
-  /** Minimum allowed value. */
+  /** Minimum allowed value. The decrease button turns off at it. */
   min?: number
-  /** Maximum allowed value. */
+  /** Maximum allowed value. The increase button turns off at it. */
   max?: number
   /** Increment applied by the steppers and arrow keys. */
   step?: number
-  /** Control height. */
+  /** Height 32 / 40 (`--control-height-sm/md`), for the value box and both steppers. */
   size?: NumberInputSize
   /** Render the visible label. When false, the label becomes `aria-label`. */
   showLabel?: boolean
-  /** Unit suffix shown inside the field, e.g. "min" or "%". */
+  /** Unit shown after the number inside the value box, e.g. "min" or "%". */
   suffix?: string
   /** Guidance shown below the field. Replaced by errorText when `error` is set. */
   helpText?: string
@@ -34,9 +35,9 @@ export interface NumberInputProps {
   errorText?: string
   /** Marks the field invalid: red border, `aria-invalid`, errorText shown. */
   error?: boolean
-  /** Blocks editing and dims the field. */
+  /** Blocks editing and dims the field and both steppers. */
   disabled?: boolean
-  /** Shows the value without allowing edits. */
+  /** Shows the value without allowing edits. The steppers turn off. */
   readOnly?: boolean
   /** @internal Freezes a hover or focus look for the docs gallery. */
   forceState?: ForceState
@@ -75,6 +76,7 @@ export default function NumberInput({
   id,
   required,
   onBlur,
+  ref,
   ...rest
 }: NumberInputProps & NativeAttrs<'input', NumberInputProps>) {
   const [current, setCurrent] = useControllableState<number | undefined>(
@@ -83,6 +85,7 @@ export default function NumberInput({
     onChange as ((n: number | undefined) => void) | undefined,
   )
   const field = useFieldA11y({ id, label, showLabel, helpText, errorText, error, required })
+  const input = useRef<HTMLInputElement | null>(null)
 
   // What is typed, kept apart from the committed number. Clamping every
   // keystroke made some values impossible to enter: with min=10, typing "15"
@@ -111,95 +114,128 @@ export default function NumberInput({
   const atMax = typeof max === 'number' && current !== undefined && current >= max
   // Decimal and negative values need a keyboard with a point and a minus key.
   const decimalKeys = precision(step) > 0 || (typeof min === 'number' ? min < 0 : true)
+  const locked = disabled || readOnly
+
+  // The input is only as wide as what it holds, so the number and its unit sit
+  // centred together ("5 min") rather than at opposite ends of the box.
+  // Tabular figures make every digit exactly 1ch; 2px leaves room for the caret.
+  const chars = Math.max(draft === '' ? (placeholder?.length ?? 0) : draft.length, 1)
 
   const box: CSSProperties = {
-    height: size === 'Small' ? 32 : 40,
+    height: size === 'Small' ? 'var(--control-height-sm)' : 'var(--control-height-md)',
+    minWidth: 80,
+    // A min-width replaces a flex item's automatic minimum, so without this a
+    // narrow column squeezed the box below its own number and unit.
+    flexShrink: 0,
     display: 'flex',
     alignItems: 'center',
+    justifyContent: 'center',
     gap: 4,
-    padding: '0 4px 0 12px',
-    borderRadius: 'var(--radius-md)',
+    padding: '0 8px',
+    borderRadius: 'var(--radius-sm)',
     borderWidth: 'var(--border-width-default)',
     borderStyle: 'solid',
     background: disabled ? 'var(--surface-disabled)' : readOnly ? 'var(--gray-100)' : 'var(--white)',
     opacity: disabled ? 0.6 : 1,
+    cursor: disabled ? 'not-allowed' : 'text',
   }
 
-  const stepBtn = (off: boolean): CSSProperties => ({
-    width: 28,
-    height: 28,
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    border: 'none',
-    background: 'transparent',
-    borderRadius: 'var(--radius-sm)',
-    color: off || disabled || readOnly ? 'var(--action-disabled)' : 'var(--action-active)',
-    cursor: off || disabled || readOnly ? 'not-allowed' : 'pointer',
-  })
+  const text: CSSProperties = { fontFamily: 'var(--font-sans)', fontSize: 16, color: 'var(--text-primary)' }
 
   return (
     <div
       className={cx('inspera', className)}
-      style={{ display: 'flex', flexDirection: 'column', gap: 6, width: '100%', fontFamily: 'var(--font-sans)', ...style }}
+      style={{ display: 'inline-flex', flexDirection: 'column', gap: 'var(--space-1)', maxWidth: '100%', verticalAlign: 'top', fontFamily: 'var(--font-sans)', ...style }}
     >
       {field.ownLabel && (
         <label id={field.labelId} htmlFor={field.id} style={labelStyle}>{label}</label>
       )}
-      <div
-        className="inspera-interactive inspera-field"
-        data-force-state={forceState}
-        data-invalid={field.invalid || undefined}
-        data-disabled={disabled || undefined}
-        data-readonly={readOnly || undefined}
-        style={box}
-      >
-        <input
-          id={field.id}
-          type="number"
-          inputMode={decimalKeys ? 'decimal' : 'numeric'}
-          value={draft}
-          placeholder={placeholder}
-          min={min}
-          max={max}
-          step={step}
-          disabled={disabled}
-          readOnly={readOnly}
-          required={field.required || undefined}
-          aria-label={field.ariaLabel}
-          aria-invalid={field.invalid || undefined}
-          aria-describedby={field.describedBy}
-          onChange={(e) => {
-            const text = e.target.value
-            setDraft(text)
-            const n = Number(text)
-            // Report a value as soon as it is a complete, in-range number;
-            // anything else waits for blur.
-            if (text !== '' && Number.isFinite(n) && inRange(n)) setCurrent(round(n))
-          }}
-          onBlur={(e) => {
-            const n = Number(draft)
-            if (draft === '' || !Number.isFinite(n)) setDraft(current === undefined ? '' : String(current))
-            else commit(n)
-            onBlur?.(e)
-          }}
-          style={{
-            flex: 1, border: 'none', outline: 'none', background: 'transparent',
-            fontFamily: 'var(--font-sans)', fontSize: 16, color: 'var(--text-primary)', minWidth: 0,
-            // The UA spinner would double up with our steppers.
-            appearance: 'textfield', WebkitAppearance: 'textfield',
-          }}
-          {...rest}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+        <Button
+          label={`Decrease ${label}`}
+          intent="Primary"
+          size={size}
+          leadingIcon="remove"
+          iconOnly
+          disabled={locked || atMin}
+          onClick={() => bump(-1)}
+          style={{ flexShrink: 0 }}
         />
-        {suffix && <span style={{ fontSize: 14, color: 'var(--muted-foreground)' }}>{suffix}</span>}
-        <span style={{ display: 'inline-flex' }}>
-          <button type="button" className="inspera-interactive" aria-label={`Decrease ${label}`} disabled={disabled || readOnly || atMin} style={stepBtn(Boolean(atMin))} onClick={() => bump(-1)}>
-            <span className="material-symbols-outlined" style={{ fontSize: 20 }} aria-hidden>remove</span>
-          </button>
-          <button type="button" className="inspera-interactive" aria-label={`Increase ${label}`} disabled={disabled || readOnly || atMax} style={stepBtn(Boolean(atMax))} onClick={() => bump(1)}>
-            <span className="material-symbols-outlined" style={{ fontSize: 20 }} aria-hidden>add</span>
-          </button>
-        </span>
+        <div
+          className="inspera-interactive inspera-field"
+          data-force-state={disabled || (readOnly && forceState === 'Hover') ? undefined : forceState}
+          data-invalid={field.invalid || undefined}
+          data-disabled={disabled || undefined}
+          data-readonly={readOnly || undefined}
+          style={box}
+          // A press on the unit or the padding still lands in the input.
+          onMouseDown={(e) => {
+            if (e.target === input.current || disabled) return
+            e.preventDefault()
+            input.current?.focus()
+          }}
+        >
+          <input
+            ref={(node) => {
+              input.current = node
+              assignRef(ref, node)
+            }}
+            id={field.id}
+            type="number"
+            inputMode={decimalKeys ? 'decimal' : 'numeric'}
+            value={draft}
+            placeholder={placeholder}
+            min={min}
+            max={max}
+            step={step}
+            disabled={disabled}
+            readOnly={readOnly}
+            required={field.required || undefined}
+            aria-label={field.ariaLabel}
+            aria-invalid={field.invalid || undefined}
+            aria-describedby={field.describedBy}
+            onChange={(e) => {
+              const typed = e.target.value
+              setDraft(typed)
+              const n = Number(typed)
+              // Report a value as soon as it is a complete, in-range number;
+              // anything else waits for blur.
+              if (typed !== '' && Number.isFinite(n) && inRange(n)) setCurrent(round(n))
+            }}
+            onBlur={(e) => {
+              const n = Number(draft)
+              if (draft === '' || !Number.isFinite(n)) setDraft(current === undefined ? '' : String(current))
+              else commit(n)
+              onBlur?.(e)
+            }}
+            style={{
+              ...text,
+              width: `calc(${chars}ch + 2px)`,
+              padding: 0,
+              border: 'none',
+              outline: 'none',
+              background: 'transparent',
+              textAlign: 'center',
+              fontVariantNumeric: 'tabular-nums',
+              cursor: 'inherit',
+              // The UA spinner would double up with our steppers.
+              appearance: 'textfield',
+              WebkitAppearance: 'textfield',
+            }}
+            {...rest}
+          />
+          {suffix && <span style={text}>{suffix}</span>}
+        </div>
+        <Button
+          label={`Increase ${label}`}
+          intent="Primary"
+          size={size}
+          leadingIcon="add"
+          iconOnly
+          disabled={locked || atMax}
+          onClick={() => bump(1)}
+          style={{ flexShrink: 0 }}
+        />
       </div>
       <FieldMessage field={field} />
     </div>

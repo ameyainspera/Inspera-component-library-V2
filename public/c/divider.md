@@ -57,15 +57,21 @@ import { Divider } from '@inspera/components'
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `orientation` | `'Horizontal' \| 'Vertical'` | `'Horizontal'` | Divider direction. A vertical divider needs a flex row around it. |
-| `label` | `string` | - | Optional centered label (horizontal only). |
-| `spacing` | `'Compact' \| 'Default' \| 'Spacious'` | `'Default'` | Surrounding margin. |
+| `label` | `string` | - | Optional centred label (horizontal only). |
+| `spacing` | `'Compact' \| 'Default' \| 'Spacious'` | `'Default'` | Surrounding margin, 8 / 16 / 24px on each side. |
 
 Also accepts any native `<div>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<div>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `separator`. Use role="separator" with aria-orientation; Purely decorative dividers may be aria-hidden.
 
-**Do:** Use to group and separate related content; Use a labeled divider to introduce a section; Keep dividers hairline-thin.
+**Do:** Use to group and separate related content; Use a labelled divider to introduce a section; Keep dividers hairline-thin.
 **Don't:** Do not overuse dividers where whitespace suffices; Do not use heavy rules.
+
+**Choosing a variant:**
+- `orientation="Horizontal"`: Between groups stacked in a panel. Labelled or, it separates two ways to do the same thing, such as adding candidates.
+- `orientation="Vertical"`: Between groups of controls in a row, such as the tool groups of an editor toolbar.
+- `spacing="Compact"`: Dense panels, such as between the groups of a question's settings.
+- `spacing="Spacious"`: Between the major sections of a long form.
 
 **Deprecated aliases** (do not use): `Separator`, `Rule`, `HR`
 
@@ -111,9 +117,9 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 /* Tokens this component needs. Paste once, at `:root`. */
 :root {
   --gray-200:          #EDEDED;
-  --gray-600:          #7A7A7A;
+  --gray-700:          #595959;
   --border:            var(--gray-200);
-  --muted-foreground:  var(--gray-600);
+  --muted-foreground:  var(--gray-700);
   --font-sans:         'Inter', system-ui, -apple-system, sans-serif;
 }
 

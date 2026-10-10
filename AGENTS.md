@@ -7,9 +7,10 @@ The reference site and distribution hub for the Inspera Design System: React + V
 - `src/components/inspera/` - the library components (one file each, plus shared `types.ts`, `overlay.tsx`, `useControllableState.ts`, `useModalBehavior.ts`, `calendar.tsx`; barrel in `index.ts`).
 - `src/data/tokens.ts` - token values. `src/data/components.ts` - component semantics for the docs and the AI spec.
 - `src/docs/registry.tsx` - each component page's playground controls, snippets and "Variants & states" gallery. `src/data/recipes.tsx` - the HTML+CSS recipe for each component.
-- `src/docs/` - the docs shell (`App.tsx` routes by hash); `src/docs/pages/` - the prototyping kits.
+- `src/docs/` - the docs shell (`App.tsx` routes by hash); `src/docs/pages/` - the screen templates.
 - `src/imports/runtime.css` - hand-written CSS the components need (states, keyframes). `src/imports/tokens.css` is generated.
 - `scripts/build-portable.ts` - generates everything under `public/`, `kit/`, `packages/components/styles.css`, and the `*.generated.ts` files.
+- `design-md/` - the design guide (DESIGN.md and its `references/`), provided by the design system team. Never edit it; replace it wholesale when a new version arrives. `pnpm generate` publishes it byte for byte to `public/design/`, and it ships in the AI spec zip beside the full guide. `src/data/design-md.ts` holds what the library says about it: the file list, the markers, and the known differences, which ship as errata.
 
 ## Rules for library components
 
@@ -17,7 +18,8 @@ The reference site and distribution hub for the Inspera Design System: React + V
 - Content is a required prop; never a placeholder default. State props come in pairs (`value` + `defaultValue` + `onChange`) through `useControllableState`.
 - Accept `className`, `style` and native attributes via `NativeAttrs`, and spread them on the root element.
 - Docs-only props (`forceState`, `forceVisible`, `embedded`) are marked `/** @internal */` and never reach snippets or the spec.
-- After changing a component, its tokens or its registry entry: run `pnpm generate`, then `pnpm typecheck`, `pnpm audit:snippets` and `pnpm audit:recipes`.
+- After changing a component, its tokens or its registry entry: run `pnpm generate`, then `pnpm typecheck`, `pnpm audit:snippets`, `pnpm audit:recipes` and `pnpm audit:design-md`.
+- When `pnpm audit:design-md` reports a difference with DESIGN.md, either change the library back, or acknowledge it: add it to `knownDifferences` in `src/data/design-md.ts`, tie it to its finding in `scripts/design-md-claims.ts`, and send the design system team `pnpm audit:design-md --request`.
 
 ---
 

@@ -7,7 +7,7 @@ export type TagSize = 'Small' | 'Medium'
 export interface TagProps {
   /** Tag text. */
   label: string
-  /** Semantic color. */
+  /** Semantic colour. */
   intent?: TagIntent
   /** Tag height. */
   size?: TagSize
@@ -23,10 +23,10 @@ export interface TagProps {
 
 const intentMap: Record<TagIntent, { bg: string; fg: string }> = {
   Neutral: { bg: 'var(--surface-neutral)', fg: 'var(--gray-900)' },
-  Info: { bg: 'var(--info-surface)', fg: 'var(--info)' },
-  Success: { bg: 'var(--success-surface)', fg: 'var(--success)' },
-  Warning: { bg: 'var(--warning-surface)', fg: 'var(--warning)' },
-  Error: { bg: 'var(--error-surface)', fg: 'var(--error)' },
+  Info: { bg: 'var(--info-surface)', fg: 'var(--info-text)' },
+  Success: { bg: 'var(--success-surface)', fg: 'var(--success-text)' },
+  Warning: { bg: 'var(--warning-surface)', fg: 'var(--warning-text)' },
+  Error: { bg: 'var(--error-surface)', fg: 'var(--error-text)' },
 }
 
 /** Strips the UA button look so a button inside the pill reads as the pill's text. */

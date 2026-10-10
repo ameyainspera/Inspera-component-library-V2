@@ -93,8 +93,14 @@ export interface AccordionItem {
 
 **Accessibility** - role `region`, keyboard operable. Header is a button with aria-expanded and aria-controls; Panel uses role="region" linked via aria-labelledby; Enter / Space toggle the section.
 
-**Do:** Use to progressively disclose content; Keep section titles scannable; Use Single mode when only one section is relevant at a time.
+**Do:** Use to reveal detail only when people ask for it; Keep section titles scannable; Use Single mode when only one section is relevant at a time.
 **Don't:** Do not nest accordions deeply; Do not hide critical content behind collapsed sections.
+
+**Choosing a variant:**
+- `selection="Single"`: Reference people look up one part at a time, such as what to do when a candidate loses connection.
+- `selection="Multiple"`: People work across several sections at once, such as the groups of a test's settings.
+- `iconPosition="Right"`: Most accordions. The title leads and the chevron sits at the end of the row.
+- `iconPosition="Left"`: Lists that read like a tree, such as the sections of a question set, so the chevrons line up the levels.
 
 **Deprecated aliases** (do not use): `Disclosure`, `Collapse`, `Expander`
 
@@ -143,11 +149,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 :root {
   --white:             #ffffff;
   --gray-200:          #EDEDED;
-  --gray-600:          #7A7A7A;
   --gray-700:          #595959;
   --text-primary:      rgba(0, 0, 0, 0.87);
   --border:            var(--gray-200);
-  --muted-foreground:  var(--gray-600);
+  --muted-foreground:  var(--gray-700);
   --radius-md:         8px;
   --font-sans:         'Inter', system-ui, -apple-system, sans-serif;
 }

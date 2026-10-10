@@ -12,11 +12,11 @@ export interface LinkProps {
   children?: ReactNode
   /** Link text, when not passing children. */
   label?: string
-  /** Color emphasis. */
+  /** Colour emphasis. */
   intent?: LinkIntent
   /** Text size. */
   size?: LinkSize
-  /** Underline behavior. */
+  /** Underline behaviour. */
   underline?: LinkUnderline
   /** Open in a new tab, with an icon and a spoken "opens in a new tab". */
   external?: boolean
@@ -49,7 +49,7 @@ export default function Link({
   const color = disabled
     ? 'var(--action-disabled)'
     : intent === 'Muted'
-      ? 'var(--gray-600)'
+      ? 'var(--text-secondary)'
       : 'var(--primary)'
 
   const anchor: CSSProperties = {
@@ -61,7 +61,9 @@ export default function Link({
     fontFamily: 'var(--font-sans)',
     fontSize: size === 'Small' ? 14 : 16,
     fontWeight: 500,
-    textDecoration: underline === 'Always' ? 'underline' : 'none',
+    // Hover underline is the class's job (.inspera-underline-hover); an inline
+    // value here would outrank its :hover rule.
+    textDecoration: underline === 'Always' ? 'underline' : underline === 'Hover' && !disabled ? undefined : 'none',
     textUnderlineOffset: 2,
     cursor: disabled ? 'not-allowed' : 'pointer',
     borderRadius: 'var(--radius-xs)',

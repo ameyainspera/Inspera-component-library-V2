@@ -306,7 +306,7 @@ export function TopNav({ onHome, activeId = null, onNavigate }: { onHome?: () =>
                       <div className={n.unread ? "" : "pl-[15px]"}>
                         <p className="font-medium text-[13px] text-[#272727] leading-[1.4]">{n.title}</p>
                         <p className="font-normal text-[12px] text-[#595959] leading-[1.4] mt-[1px]">{n.body}</p>
-                        <p className="font-normal text-[12px] text-[#949494] mt-[3px]">{n.when}</p>
+                        <p className="font-normal text-[12px] text-[#595959] mt-[3px]">{n.when}</p>
                       </div>
                     </div>
                   </div>
@@ -386,14 +386,14 @@ export function HomeScreen({
           {stats.map((s, i) => (
             <div key={i} className="bg-white/[0.06] border border-white/10 rounded-[10px] px-[24px] py-[20px] flex flex-col gap-[18px]">
               <div className="flex flex-col gap-[8px]">
-                <span className="font-medium text-[13px] text-white/60">{s.group}</span>
+                <span className="font-medium text-[13px] text-white/70">{s.group}</span>
                 <div className="flex items-end justify-between gap-[12px]">
                   <span className="font-normal text-[19px] text-white leading-[1.3]">{s.label}</span>
                   <span className="font-semibold text-[40px] text-white leading-none flex-shrink-0">{s.value}</span>
                 </div>
               </div>
               <div className="border-t border-white/10 pt-[10px] flex items-center justify-between">
-                <span className="font-normal text-[13px] text-white/50">Last change:</span>
+                <span className="font-normal text-[13px] text-white/70">Last change:</span>
                 <span className="font-normal text-[13px] text-white/70">{s.lastChange}</span>
               </div>
             </div>
@@ -421,7 +421,7 @@ export function HomeScreen({
                   <path d="M3 17c0-3.87 3.13-7 7-7s7 3.13 7 7" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
                 </svg>
                 <div className="min-w-0">
-                  <p className="font-normal text-[13px] text-[#949494] mb-[3px]">{ev.time}</p>
+                  <p className="font-normal text-[13px] text-[#595959] mb-[3px]">{ev.time}</p>
                   <p className="font-normal text-[15px] text-[#272727] leading-[1.5]">
                     {ev.parts.map((p, pi) => (
                       <span key={pi} className={p.variant === "link" ? "text-[#004080] hover:underline cursor-pointer" : p.variant === "italic" ? "italic" : ""}>{p.text}</span>

@@ -64,16 +64,23 @@ import { Checkbox } from '@inspera/components'
 | `onChange` | `(checked: boolean) => void` | - | Fired with the new checked state. |
 | `indeterminate` | `boolean` | `false` | Partially-selected state, for a parent whose children are mixed. Wins over `checked` visually and announces as mixed. |
 | `withLabel` | `boolean` | `true` | Render the label text. When false, the label becomes `aria-label`. |
-| `size` | `'Small' \| 'Medium'` | `'Medium'` | Indicator size. |
 | `disabled` | `boolean` | `false` | Blocks interaction and dims the control. |
-| `error` | `boolean` | `false` | Marks the control invalid: red border and `aria-invalid`. |
+| `error` | `boolean` | `false` | Marks the control invalid: a red border, checked or not, and `aria-invalid` on the input. |
+| `description` | `ReactNode` | - | A line under the label: what the option does, or why it is unavailable. Shown with a visible label, and linked to the box with `aria-describedby`. |
+| `errorText` | `string` | - | Replaces the description while `error` is set. Say what to do: "Confirm the marks to submit them." |
 
 Also accepts any native `<input>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<input>`. `className` and `style` go on the outermost element.
 
-**Accessibility** - role `checkbox`, keyboard operable. Use aria-checked to reflect state; Group related checkboxes with fieldset and legend.
+**Accessibility** - role `checkbox`, keyboard operable. Use aria-checked to reflect state; Group related checkboxes with fieldset and legend; The description or errorText under the label is linked with aria-describedby.
 
-**Do:** Use for multi-select scenarios; Always provide a label for each checkbox; Group related options together.
-**Don't:** Do not use for mutually exclusive options - use Radio Button instead; Do not use without a label.
+**Do:** Use when people can choose more than one option; Always provide a label for each checkbox; Group related options together; Say why a disabled option is unavailable in its description, right under it; Say what to do in errorText, under the box: "Confirm the marks to submit them".
+**Don't:** Do not use for mutually exclusive options - use Radio Group instead; Do not use without a label.
+
+**Choosing a variant:**
+- `indeterminate`: A select-all box when only some of the rows are selected.
+- `withLabel="false"`: The row already names it, such as a question in a selection list. Keep the label for screen readers.
+- `error`: A required tick is missing, such as confirming that marks are final. Say what to do right under it.
+- `disabled`: The option does not apply right now. Say under it what makes it available.
 
 **Deprecated aliases** (do not use): `Checkbox/Unchecked`, `Checkbox/Checked`, `Checkbox with label`, `Checkbox (fill width)`, `Checkbox (Cards)`
 
@@ -112,23 +119,29 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 - Keep the native `<input type="checkbox">` in the DOM, visually hidden with `position: absolute; opacity: 0; width: 0; height: 0`. `display: none` removes it from the tab order and from form submission.
 - Draw the focus ring on the box via `:focus-visible + .box`. A ring on a 0x0 input is invisible - this is the detail custom checkboxes miss most often.
-- The box is 20px (16px small) with a 2px border and `--radius-xs`. Unchecked is `--border-control-strong`; checked fills with `--primary`.
+- The box is 18px, one size, with a 2px border and `--radius-xs`. Unchecked is `--border-control`; checked fills with `--primary`.
+- In error the border is `--error`, checked or not; a checked or mixed box keeps its `--primary` fill. An unchecked box takes an `--error-surface` hover tint, and the focus ring stays `--primary`.
 - Indeterminate is a DOM property (`el.indeterminate = true`), not an HTML attribute; a native checkbox then announces as mixed by itself, so do not add `aria-checked`. Its glyph is `remove`, not a tick. Static markup that cannot run script uses the `inspera-checkbox--mixed` class instead.
 - The whole row is the `<label>`, so the text is part of the hit target.
+- A description or error goes under the label in `.inspera-checkbox__message`, linked with `aria-describedby`. It starts where the label text starts (26px in) and stays at full contrast when the box is disabled.
 
 ```css
 /* Tokens this component needs. Paste once, at `:root`. */
 :root {
-  --primary:                #004080;
-  --error:                  #D32F2F;
-  --white:                  #ffffff;
-  --text-primary:           rgba(0, 0, 0, 0.87);
-  --border-control-strong:  #8C8C8C;
-  --radius-xs:              2px;
-  --focus-ring-width:       2px;
-  --focus-ring-offset:      2px;
-  --focus-ring-color:       var(--primary);
-  --font-sans:              'Inter', system-ui, -apple-system, sans-serif;
+  --primary:            #004080;
+  --error:              #D32F2F;
+  --white:              #ffffff;
+  --gray-600:           #7A7A7A;
+  --gray-700:           #595959;
+  --text-primary:       rgba(0, 0, 0, 0.87);
+  --error-surface:      #FFEBEE;
+  --border-control:     var(--gray-600);
+  --muted-foreground:   var(--gray-700);
+  --radius-xs:          2px;
+  --focus-ring-width:   2px;
+  --focus-ring-offset:  2px;
+  --focus-ring-color:   var(--primary);
+  --font-sans:          'Inter', system-ui, -apple-system, sans-serif;
 }
 
 .inspera-checkbox {
@@ -152,10 +165,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 }
 
 .inspera-checkbox__box {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   border-radius: var(--radius-xs);
-  border: 2px solid var(--border-control-strong);
+  border: 2px solid var(--border-control);
   background: var(--white);
   display: inline-flex;
   align-items: center;
@@ -165,14 +178,11 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   transition: all 120ms ease;
 }
 
-.inspera-checkbox--small .inspera-checkbox__box { width: 16px; height: 16px; }
-
 /* The tick is a Material Symbol at the box size minus 4. */
 .inspera-checkbox__box .material-symbols-outlined {
-  font-size: 16px;
+  font-size: 14px;
   font-variation-settings: 'wght' 600;
 }
-.inspera-checkbox--small .inspera-checkbox__box .material-symbols-outlined { font-size: 12px; }
 
 .inspera-checkbox__input:checked + .inspera-checkbox__box,
 .inspera-checkbox__input:indeterminate + .inspera-checkbox__box,
@@ -201,17 +211,48 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 .inspera-checkbox:active .inspera-checkbox__box { transform: scale(0.92); }
 
+/* In error the border is red whether or not the box is checked, so a group
+   in error reads as one. A checked box keeps its blue fill, and only an
+   unchecked one takes the red hover tint. */
 .inspera-checkbox--error .inspera-checkbox__box { border-color: var(--error); }
-.inspera-checkbox--error:hover .inspera-checkbox__box { border-color: var(--error); }
+.inspera-checkbox--error:hover .inspera-checkbox__box { border-color: var(--error); background: var(--error-surface); }
+.inspera-checkbox--error .inspera-checkbox__input:checked + .inspera-checkbox__box,
+.inspera-checkbox--error .inspera-checkbox__input:indeterminate + .inspera-checkbox__box,
+.inspera-checkbox--error.inspera-checkbox--mixed .inspera-checkbox__box,
+.inspera-checkbox--error:hover .inspera-checkbox__input:checked + .inspera-checkbox__box,
+.inspera-checkbox--error:hover .inspera-checkbox__input:indeterminate + .inspera-checkbox__box,
+.inspera-checkbox--error.inspera-checkbox--mixed:hover .inspera-checkbox__box {
+  border-color: var(--error);
+  background: var(--primary);
+}
 
 .inspera-checkbox--disabled {
   cursor: not-allowed;
   opacity: 0.38;
 }
 .inspera-checkbox--disabled:hover .inspera-checkbox__box {
-  border-color: var(--border-control-strong);
+  border-color: var(--border-control);
   background: var(--white);
 }
+
+/* A line under the label: a description, or the error in its place. The
+   field stacks the row and the line. The line starts under the label text
+   (the 18px box plus its 8px gap) and sits 4px under it, pulled up into the
+   row's 8px padding. It is not dimmed with a disabled box: it often says why
+   the option is unavailable. */
+.inspera-checkbox-field {
+  display: inline-flex;
+  flex-direction: column;
+  font-family: var(--font-sans);
+}
+.inspera-checkbox__message {
+  margin-top: -4px;
+  padding-left: 26px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--muted-foreground);
+}
+.inspera-checkbox__message--error { color: var(--error); }
 ```
 
 ```html

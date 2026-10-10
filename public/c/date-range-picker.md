@@ -88,6 +88,10 @@ export interface DateRange {
 **Do:** Show two months for cross-month ranges; Highlight the full span between endpoints; Confirm the range only once both ends are chosen.
 **Don't:** Do not use for a single date - use Date Picker; Do not allow an end date before the start date.
 
+**Choosing a variant:**
+- `error`: The range is incomplete or impossible, such as a window that ends before it starts. Say what to fix.
+- `disabled`: The range is set somewhere else, such as by the exam office. Say who sets it.
+
 **Deprecated aliases** (do not use): `Range calendar`, `Date range`, `Period picker`
 
 #### One-time setup
@@ -127,7 +131,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 - The popover shows two months side by side (each a `repeat(7, 1fr)` grid) so a range that crosses a month boundary is visible without paging.
 - The two endpoints are filled `--primary` with white text; every day between them is filled `--blue-100`. First click sets the start, second click sets the end and closes.
 - The trigger shows "start - end" once both are chosen (`__value--set`), placeholder text otherwise. Store and emit ISO `YYYY-MM-DD`.
-- Trigger chrome matches the other fields: 40px, `--radius-md`, `--border-control` to `--primary` with `--effect-state-focus`.
+- Trigger chrome matches the other fields: 40px, `--radius-sm`, `--border-control` to `--primary` with `--effect-state-focus`.
 
 ```css
 /* Tokens this component needs. Paste once, at `:root`. */
@@ -135,15 +139,18 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   --primary:                #004080;
   --error:                  #D32F2F;
   --white:                  #ffffff;
+  --gray-600:               #7A7A7A;
+  --gray-700:               #595959;
+  --gray-800:               #404040;
   --blue-300:               #B3D9FF;
   --red-300:                #F9B8B8;
   --action-active:          rgba(0, 0, 0, 0.56);
   --text-primary:           rgba(0, 0, 0, 0.87);
-  --border-control:         #C4C4C4;
-  --border-control-strong:  #8C8C8C;
-  --text-placeholder:       #8C8C8C;
+  --border-control:         var(--gray-600);
+  --border-control-strong:  var(--gray-800);
+  --text-placeholder:       var(--gray-700);
   --surface-disabled:       #F5F5F5;
-  --radius-md:              8px;
+  --radius-sm:              4px;
   --effect-state-focus:     0px 0px 0px 3px var(--blue-300);
   --effect-state-error:     0px 0px 0px 3px var(--red-300);
   --border-width-default:   1px;
@@ -153,7 +160,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 .inspera-daterange {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
   width: 100%;
   position: relative;
   font-family: var(--font-sans);
@@ -172,7 +179,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   align-items: center;
   gap: 8px;
   padding: 0 12px;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   border: var(--border-width-default) solid var(--border-control);
   background: var(--white);
   cursor: pointer;

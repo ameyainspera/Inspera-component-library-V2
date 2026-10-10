@@ -40,6 +40,19 @@ export const precedence: string[] = [
   'Examples',
 ]
 
+/**
+ * How this spec works beside DESIGN.md, the design system team's guide that
+ * ships with it. It repeats the split DESIGN.md states for itself - `pnpm
+ * audit:design-md` fails if that sentence in DESIGN.md changes - so the two
+ * documents describe the same division of labour.
+ */
+export const designGuideNote: string[] = [
+  'If you also have DESIGN.md (the Inspera design guide), read it first. It decides who the screen is for, whether new UI matches the existing product or uses this library (the plane rule), the information hierarchy, the layout and the UI text.',
+  'This document decides the tokens and how each component is built: its props, HTML and CSS.',
+  "Where the two disagree, this document wins for a component's internals and DESIGN.md wins for screen composition. Corner radius is the exception: there, DESIGN.md wins.",
+  'With DESIGN.md present, its order for conflicting instructions replaces the one in this document. The start-here note in the AI spec download lists the known differences between the two, and which one to follow for each.',
+]
+
 export const whenUnsure: string[] = [
   'Reuse the nearest canonical component or composition.',
   'Reuse an existing token.',
@@ -252,28 +265,33 @@ export const workedScreen = {
   Breadcrumb, Button, Select, DatePicker, Tag, Table, Badge, Pagination,
 } from '@inspera/components'
 
-export function AssessmentList() {
+export function AssessmentList({ clearStatus, clearDate, loadPage }: {
+  clearStatus: () => void
+  clearDate: () => void
+  loadPage: (page: number) => void
+}) {
   return (
     <div style={{ padding: 'var(--space-6)', display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
       <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Assessments' }]} />
 
       <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 'var(--space-4)' }}>
         <h1 className="inspera-h1" style={{ margin: 0 }}>Assessments</h1>
-        <Button label="New assessment" intent="Primary" content="Icon + Text" icon="add" />
+        <Button label="New assessment" intent="Primary" leadingIcon="add" />
       </header>
 
       <div style={{ display: 'flex', alignItems: 'flex-end', gap: 'var(--space-2)', flexWrap: 'wrap' }}>
-        <Select label="Status" options={['All', 'Live', 'Draft', 'Scheduled']} value="All" />
-        <DatePicker label="Created after" value="2026-01-01" />
+        <Select label="Status" options={['All', 'Live', 'Draft', 'Scheduled']} defaultValue="All" widthMode="Hug" />
+        <DatePicker label="Created after" defaultValue="2026-01-01" />
         <Button label="Reset" intent="Text" />
       </div>
 
       <div style={{ display: 'flex', gap: 'var(--space-2)', flexWrap: 'wrap' }}>
-        <Tag label="Status: Live" removable />
-        <Tag label="Created after 1 Jan" removable />
+        <Tag label="Status: Live" removable onRemove={clearStatus} />
+        <Tag label="Created after 1 Jan" removable onRemove={clearDate} />
       </div>
 
       <Table
+        caption="Assessments"
         columns={[
           { key: 'name', header: 'Assessment' },
           { key: 'items', header: 'Items', align: 'right' },
@@ -286,16 +304,19 @@ export function AssessmentList() {
         ]}
       />
 
-      <Pagination page={1} totalPages={8} />
+      <Pagination pageCount={8} onChange={loadPage} />
     </div>
   )
 }`,
   html: `<!-- Requires the one-time setup block and the tokens from Setup. -->
 <div class="page">
   <nav class="inspera-breadcrumb" aria-label="Breadcrumb">
-    <ol>
-      <li><a class="inspera-breadcrumb__link" href="/">Home</a></li>
-      <li aria-current="page">Assessments</li>
+    <ol class="inspera-breadcrumb__list">
+      <li><a class="inspera-breadcrumb__crumb" href="/">Home</a></li>
+      <li class="inspera-breadcrumb__separator" aria-hidden="true">
+        <span class="material-symbols-outlined">chevron_right</span>
+      </li>
+      <li><span class="inspera-breadcrumb__current" aria-current="page">Assessments</span></li>
     </ol>
   </nav>
 
@@ -313,7 +334,7 @@ export function AssessmentList() {
   </div>
 
   <div class="page__tags">
-    <span class="inspera-tag">Status: Live
+    <span class="inspera-tag inspera-tag--neutral">Status: Live
       <button type="button" class="inspera-tag__remove" aria-label="Remove status filter">
         <span class="material-symbols-outlined" aria-hidden="true">close</span>
       </button>
@@ -321,18 +342,19 @@ export function AssessmentList() {
   </div>
 
   <table class="inspera-table">
+    <caption>Assessments</caption>
     <thead>
       <tr>
         <th scope="col">Assessment</th>
-        <th scope="col" class="inspera-table__num">Items</th>
+        <th scope="col" class="inspera-table__cell--right">Items</th>
         <th scope="col">Status</th>
       </tr>
     </thead>
     <tbody>
       <tr>
         <td>Algebra Quiz</td>
-        <td class="inspera-table__num">24</td>
-        <td><span class="inspera-badge inspera-badge--success">Live</span></td>
+        <td class="inspera-table__cell--right">24</td>
+        <td><span class="inspera-badge inspera-badge--success" role="status">Live</span></td>
       </tr>
     </tbody>
   </table>

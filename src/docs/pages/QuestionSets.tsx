@@ -10,8 +10,9 @@ import { AssessorNav } from '../../imports/pasted_text/global-nav'
  * blue title links, a per-row Status dropdown and hover-revealed row actions.
  */
 
-// The product's CTA orange, shared with the other prototyping kits.
-const CTA = '#d9432c'
+// The product's CTA orange, shared with the other screen templates. 4% darker
+// than the product's #d9432c, which is 4.38:1 under white text.
+const CTA = '#d0402a'
 
 interface QSRow {
   title: string

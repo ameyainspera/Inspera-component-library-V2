@@ -65,13 +65,20 @@ import { Toggle } from '@inspera/components'
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Track / thumb size. |
 | `withLabel` | `boolean` | `true` | Render the label text. When false, the label becomes `aria-label`. |
 | `disabled` | `boolean` | `false` | Blocks interaction and dims the control. |
+| `description` | `ReactNode` | - | A line under the label: what the setting does, or why it is locked. Shown with a visible label, and linked to the switch with `aria-describedby`. |
 
 Also accepts any native `<input>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<input>`. `className` and `style` go on the outermost element.
 
-**Accessibility** - role `switch`, keyboard operable. Use role="switch" for the toggle; Use aria-checked to reflect on/off state; Space key toggles the switch.
+**Accessibility** - role `switch`, keyboard operable. Use role="switch" for the toggle; Use aria-checked to reflect on/off state; Space key toggles the switch; The description under the label is linked with aria-describedby.
 
-**Do:** Use for immediate on/off settings; Provide a clear label describing the setting; Show the current state visually.
-**Don't:** Do not use for form submissions - use Checkbox instead; Do not use without a visible label.
+**Do:** Use for settings that take effect immediately; Provide a clear label describing the setting; Show the current state visually; Say what the setting does, or why it is locked, in its description.
+**Don't:** Do not use for choices that only apply when a form is submitted - use Checkbox instead; Do not hide the label unless the row already names the setting.
+
+**Choosing a variant:**
+- `size="Medium"`: Settings pages, one setting per row. The default size.
+- `size="Small"`: Dense lists, such as settings in a side panel.
+- `withLabel="false"`: The row already names the setting, with the switch at the end of the row, as in a settings list. Keep the label for screen readers.
+- `disabled`: The setting is locked, for example by an admin policy. Say why next to it.
 
 **Deprecated aliases** (do not use): `Switch`, `Toggle switch`
 
@@ -113,14 +120,18 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 - The track fill is `--border-control` off and `--primary` on. It does not tint on hover - only the thumb shadow deepens.
 - The focus ring goes on the track, since the real input is 0x0.
 - A toggle applies immediately. If the change needs a Save button, use a Checkbox instead.
+- A description goes under the label in `.inspera-toggle__message`, linked with `aria-describedby`: 52px in (44px when small), 4px under the row.
 
 ```css
 /* Tokens this component needs. Paste once, at `:root`. */
 :root {
   --primary:            #004080;
   --white:              #ffffff;
+  --gray-600:           #7A7A7A;
+  --gray-700:           #595959;
   --text-primary:       rgba(0, 0, 0, 0.87);
-  --border-control:     #C4C4C4;
+  --border-control:     var(--gray-600);
+  --muted-foreground:   var(--gray-700);
   --radius-pill:        9999px;
   --focus-ring-width:   2px;
   --focus-ring-offset:  2px;
@@ -189,6 +200,23 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 }
 
 .inspera-toggle--disabled { cursor: not-allowed; opacity: 0.38; }
+
+/* A description under the label, linked with aria-describedby. It starts
+   where the label text starts (the track plus its 8px gap) and sits 4px under
+   the row. Not dimmed when disabled: it often says why the setting is locked. */
+.inspera-toggle-field {
+  display: inline-flex;
+  flex-direction: column;
+  font-family: var(--font-sans);
+}
+.inspera-toggle__message {
+  margin-top: 4px;
+  padding-left: 52px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--muted-foreground);
+}
+.inspera-toggle--small + .inspera-toggle__message { padding-left: 44px; }
 ```
 
 ```html

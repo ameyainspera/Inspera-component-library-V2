@@ -3,39 +3,102 @@
 
 export const artifactSizes: Record<string, { bytes: number; tokens: number }> = {
   "llms-full.txt": {
-    "bytes": 381728,
-    "tokens": 95432
+    "bytes": 450782,
+    "tokens": 112696
+  },
+  "design/DESIGN.md": {
+    "bytes": 51999,
+    "tokens": 13000
   },
   "llms.txt": {
-    "bytes": 23362,
-    "tokens": 5841
+    "bytes": 25567,
+    "tokens": 6392
   },
   "foundations.md": {
-    "bytes": 17526,
-    "tokens": 4382
+    "bytes": 18394,
+    "tokens": 4599
   },
   "guidance.md": {
-    "bytes": 13472,
-    "tokens": 3368
+    "bytes": 17051,
+    "tokens": 4263
   },
   "api.json": {
-    "bytes": 142164,
-    "tokens": 35541
+    "bytes": 189712,
+    "tokens": 47428
   },
   "tokens.css": {
-    "bytes": 27595,
-    "tokens": 6899
+    "bytes": 32246,
+    "tokens": 8062
   },
   "inspera.theme.css": {
     "bytes": 4913,
     "tokens": 1228
   },
   "tokens.w3c.json": {
-    "bytes": 13911,
-    "tokens": 3478
+    "bytes": 14146,
+    "tokens": 3537
   },
   "aliases.json": {
     "bytes": 4099,
     "tokens": 1025
+  },
+  "spec/inspera-00-start-here.md": {
+    "bytes": 9341,
+    "tokens": 2335
+  },
+  "spec/inspera-01-core.md": {
+    "bytes": 50276,
+    "tokens": 12569
+  },
+  "spec/inspera-02-input-controls-basic.md": {
+    "bytes": 84799,
+    "tokens": 21200
+  },
+  "spec/inspera-03-input-controls-advanced.md": {
+    "bytes": 74033,
+    "tokens": 18508
+  },
+  "spec/inspera-04-data-display-tables.md": {
+    "bytes": 50761,
+    "tokens": 12690
+  },
+  "spec/inspera-05-data-display-content.md": {
+    "bytes": 61421,
+    "tokens": 15355
+  },
+  "spec/inspera-06-feedback.md": {
+    "bytes": 85410,
+    "tokens": 21353
+  },
+  "spec/inspera-07-navigation.md": {
+    "bytes": 47916,
+    "tokens": 11979
+  },
+  "inspera-00-start-here.md": {
+    "bytes": 9554,
+    "tokens": 2389
+  },
+  "design/references/roles.md": {
+    "bytes": 7006,
+    "tokens": 1752
+  },
+  "design/references/information-hierarchy.md": {
+    "bytes": 6065,
+    "tokens": 1516
+  },
+  "design/references/components.md": {
+    "bytes": 13653,
+    "tokens": 3413
+  },
+  "design/references/ux-writing.md": {
+    "bytes": 8050,
+    "tokens": 2013
+  },
+  "design/references/tokens-palette.md": {
+    "bytes": 2064,
+    "tokens": 516
   }
 }
+
+/** The version stamped into every file above. */
+export const artifactVersion = "1.0.0"

@@ -84,6 +84,12 @@ export interface SegmentedControlItem {
 **Do:** Use for 2-4 mutually exclusive views; Keep labels short and parallel; Show the active segment clearly.
 **Don't:** Do not use for more than 4 options - use Tabs or Select; Do not use for multi-select.
 
+**Choosing a variant:**
+- `size="Medium"`: A switch above the content it changes, such as how results are broken down. The default size.
+- `size="Small"`: Card headers and dense toolbars, such as the period of a dashboard card.
+- `fullWidth`: A narrow panel, where the segments share its width, such as the device in a preview panel.
+- `disabled`: The views are not available yet. Say why next to it.
+
 **Deprecated aliases** (do not use): `Segment control`, `Toggle group`, `Button group`
 
 #### One-time setup
@@ -119,57 +125,80 @@ Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
 font weight of your own, and do not restyle it with a UI kit's defaults.
 
-- The track is `--gray-100` with 4px padding and `--radius-md`; segments are `--radius-sm` inside it.
-- The selected segment becomes a white `--surface` card with `--shadow-100` and `--primary` text at 600 weight. Colour alone is not enough at 14px.
-- Segment height is 40px (32px small) and the type stays 14px at both.
+- Segments are joined and outlined: white `--surface`, `--gray-800` text and a `--border-control` border, overlapping by one border so each join is a single line. Only the outer corners take `--radius-sm`.
+- The selected segment is `--blue-100` with `--primary` (blue-800) text and a `--blue-700` border, at 600 weight. It sits above its neighbours so the blue border shows on all four sides, and the weight marks it as well as the colour.
+- Heights and type match Button: 40px with 16px text, or 32px with 14px text when small - the same heights as Text Input, so they line up in a toolbar.
+- A hidden bold copy of the label (`::after` from `data-label`) holds the bold width, so selecting a segment does not shift the others.
 - Use `role="radiogroup"` with `role="radio"` children and a roving tabindex: the selected item is the only tab stop, and arrows move between them.
 - For more than about four options, or for anything not mutually exclusive, use Tabs or a Select instead.
 
 ```css
 /* Tokens this component needs. Paste once, at `:root`. */
 :root {
-  --primary:            #004080;
-  --white:              #ffffff;
-  --gray-100:           #F7F7F7;
-  --gray-600:           #7A7A7A;
-  --surface:            var(--white);
-  --muted-foreground:   var(--gray-600);
-  --radius-sm:          4px;
-  --radius-md:          8px;
-  --shadow-100:         0px 4px 4px rgba(39, 39, 39, 0.08), 0px 2px 4px rgba(39, 39, 39, 0.12);
-  --focus-ring-width:   2px;
-  --focus-ring-offset:  2px;
-  --focus-ring-color:   var(--primary);
-  --font-sans:          'Inter', system-ui, -apple-system, sans-serif;
+  --primary:                         #004080;
+  --white:                           #ffffff;
+  --gray-600:                        #7A7A7A;
+  --gray-800:                        #404040;
+  --blue-100:                        #F0F7FF;
+  --blue-700:                        #0059B3;
+  --border-control:                  var(--gray-600);
+  --surface:                         var(--white);
+  --control-height-sm:               32px;
+  --control-height-md:               40px;
+  --radius-sm:                       4px;
+  --border-width-default:            1px;
+  --focus-ring-width:                2px;
+  --focus-ring-offset:               2px;
+  --focus-ring-color:                var(--primary);
+  --duration-fast:                   100ms;
+  --easing-standard:                 cubic-bezier(0.2, 0, 0, 1);
+  --font-sans:                       'Inter', system-ui, -apple-system, sans-serif;
+  --default-16-regular-size:         16px;
+  --default-16-regular-line-height:  1.25;
+  --medium-14-size:                  14px;
+  --medium-14-line-height:           1.4;
 }
 
-.inspera-segmented {
-  display: inline-flex;
-  gap: 2px;
-  padding: 4px;
-  background: var(--gray-100);
-  border-radius: var(--radius-md);
-}
-
+.inspera-segmented { display: inline-flex; }
 .inspera-segmented--full { width: 100%; }
 
 .inspera-segmented__item {
-  height: 40px;
-  padding: 0 16px;
-  border: none;
-  border-radius: var(--radius-sm);
-  background: transparent;
-  box-shadow: none;
-  color: var(--muted-foreground);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--control-height-md);
+  padding: 0 12px;
+  border: var(--border-width-default) solid var(--border-control);
+  border-radius: 0;
+  background: var(--surface);
+  color: var(--gray-800);
   font-family: var(--font-sans);
-  font-size: 14px;
-  font-weight: 500;
+  font-size: var(--default-16-regular-size);
+  line-height: var(--default-16-regular-line-height);
+  font-weight: 400;
+  white-space: nowrap;
   cursor: pointer;
-  transition: all 120ms ease;
+  transition: background var(--duration-fast) var(--easing-standard);
 }
 
-.inspera-segmented--small .inspera-segmented__item { height: 32px; }
+/* Neighbours overlap by one border, so each join is a single line. Only the
+   outer corners are rounded. */
+.inspera-segmented__item + .inspera-segmented__item { margin-left: calc(var(--border-width-default) * -1); }
+.inspera-segmented__item:first-child { border-radius: var(--radius-sm) 0 0 var(--radius-sm); }
+.inspera-segmented__item:last-child { border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
+.inspera-segmented__item:only-child { border-radius: var(--radius-sm); }
+
+.inspera-segmented--small .inspera-segmented__item {
+  height: var(--control-height-sm);
+  font-size: var(--medium-14-size);
+  line-height: var(--medium-14-line-height);
+}
 .inspera-segmented--full .inspera-segmented__item { flex: 1; }
+
+.inspera-segmented__item[aria-checked='false']:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--surface) 96%, black);
+}
 
 .inspera-segmented__item:focus-visible {
   outline: var(--focus-ring-width) solid var(--focus-ring-color);
@@ -179,22 +208,42 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 .inspera-segmented--disabled { opacity: 0.38; }
 .inspera-segmented--disabled .inspera-segmented__item { cursor: not-allowed; }
 
-/* Selected: a raised white card on the tinted track. Colour alone is not
-   enough separation at 14px. */
+/* Selected: raised above its neighbours so the blue border shows on all four
+   sides, and bold as well as blue - blue against gray text alone would leave
+   the choice to colour. */
 .inspera-segmented__item[aria-checked='true'] {
-  background: var(--surface);
-  box-shadow: var(--shadow-100);
+  z-index: 1;
+  background: var(--blue-100);
   color: var(--primary);
+  border-color: var(--blue-700);
   font-weight: 600;
+}
+
+/* A hidden bold copy of the label holds the bold width, so selecting a
+   segment does not shift the ones after it. */
+.inspera-segmented__label {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+}
+.inspera-segmented__label::after {
+  content: attr(data-label);
+  content: attr(data-label) / '';
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+  font-weight: 600;
+  pointer-events: none;
+  user-select: none;
 }
 ```
 
 ```html
 <!-- Roving tabindex: the group is one tab stop and the arrows move inside it. -->
 <div class="inspera-segmented" role="radiogroup" aria-label="Date range">
-  <button type="button" class="inspera-segmented__item" role="radio" aria-checked="true" tabindex="0">Day</button>
-  <button type="button" class="inspera-segmented__item" role="radio" aria-checked="false" tabindex="-1">Week</button>
-  <button type="button" class="inspera-segmented__item" role="radio" aria-checked="false" tabindex="-1">Month</button>
+  <button type="button" class="inspera-segmented__item" role="radio" aria-checked="true" tabindex="0"><span class="inspera-segmented__label" data-label="Day">Day</span></button>
+  <button type="button" class="inspera-segmented__item" role="radio" aria-checked="false" tabindex="-1"><span class="inspera-segmented__label" data-label="Week">Week</span></button>
+  <button type="button" class="inspera-segmented__item" role="radio" aria-checked="false" tabindex="-1"><span class="inspera-segmented__label" data-label="Month">Month</span></button>
 </div>
 ```
 

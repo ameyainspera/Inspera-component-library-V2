@@ -44,6 +44,13 @@ variant with no error at all. Variant *values* are Capitalised
 - Do not infer a brand colour or visual style from framework defaults.
 - Mark a genuinely missing primitive `DESIGN_SYSTEM_GAP` rather than presenting it as canonical.
 
+## Working with DESIGN.md
+
+- If you also have DESIGN.md (the Inspera design guide), read it first. It decides who the screen is for, whether new UI matches the existing product or uses this library (the plane rule), the information hierarchy, the layout and the UI text.
+- This document decides the tokens and how each component is built: its props, HTML and CSS.
+- Where the two disagree, this document wins for a component's internals and DESIGN.md wins for screen composition. Corner radius is the exception: there, DESIGN.md wins.
+- With DESIGN.md present, its order for conflicting instructions replaces the one in this document. The start-here note in the AI spec download lists the known differences between the two, and which one to follow for each.
+
 ## Composition patterns
 
 These are **compositions, not new components**. They do not authorise a new
@@ -175,28 +182,33 @@ import {
   Breadcrumb, Button, Select, DatePicker, Tag, Table, Badge, Pagination,
 } from '@inspera/components'
 
-export function AssessmentList() {
+export function AssessmentList({ clearStatus, clearDate, loadPage }: {
+  clearStatus: () => void
+  clearDate: () => void
+  loadPage: (page: number) => void
+}) {
   return (
     <div style={{ padding: 'var(--space-6)', display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
       <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Assessments' }]} />
 
       <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 'var(--space-4)' }}>
         <h1 className="inspera-h1" style={{ margin: 0 }}>Assessments</h1>
-        <Button label="New assessment" intent="Primary" content="Icon + Text" icon="add" />
+        <Button label="New assessment" intent="Primary" leadingIcon="add" />
       </header>
 
       <div style={{ display: 'flex', alignItems: 'flex-end', gap: 'var(--space-2)', flexWrap: 'wrap' }}>
-        <Select label="Status" options={['All', 'Live', 'Draft', 'Scheduled']} value="All" />
-        <DatePicker label="Created after" value="2026-01-01" />
+        <Select label="Status" options={['All', 'Live', 'Draft', 'Scheduled']} defaultValue="All" widthMode="Hug" />
+        <DatePicker label="Created after" defaultValue="2026-01-01" />
         <Button label="Reset" intent="Text" />
       </div>
 
       <div style={{ display: 'flex', gap: 'var(--space-2)', flexWrap: 'wrap' }}>
-        <Tag label="Status: Live" removable />
-        <Tag label="Created after 1 Jan" removable />
+        <Tag label="Status: Live" removable onRemove={clearStatus} />
+        <Tag label="Created after 1 Jan" removable onRemove={clearDate} />
       </div>
 
       <Table
+        caption="Assessments"
         columns={[
           { key: 'name', header: 'Assessment' },
           { key: 'items', header: 'Items', align: 'right' },
@@ -209,7 +221,7 @@ export function AssessmentList() {
         ]}
       />
 
-      <Pagination page={1} totalPages={8} />
+      <Pagination pageCount={8} onChange={loadPage} />
     </div>
   )
 }
@@ -221,9 +233,12 @@ Same screen without the package:
 <!-- Requires the one-time setup block and the tokens from Setup. -->
 <div class="page">
   <nav class="inspera-breadcrumb" aria-label="Breadcrumb">
-    <ol>
-      <li><a class="inspera-breadcrumb__link" href="/">Home</a></li>
-      <li aria-current="page">Assessments</li>
+    <ol class="inspera-breadcrumb__list">
+      <li><a class="inspera-breadcrumb__crumb" href="/">Home</a></li>
+      <li class="inspera-breadcrumb__separator" aria-hidden="true">
+        <span class="material-symbols-outlined">chevron_right</span>
+      </li>
+      <li><span class="inspera-breadcrumb__current" aria-current="page">Assessments</span></li>
     </ol>
   </nav>
 
@@ -241,7 +256,7 @@ Same screen without the package:
   </div>
 
   <div class="page__tags">
-    <span class="inspera-tag">Status: Live
+    <span class="inspera-tag inspera-tag--neutral">Status: Live
       <button type="button" class="inspera-tag__remove" aria-label="Remove status filter">
         <span class="material-symbols-outlined" aria-hidden="true">close</span>
       </button>
@@ -249,18 +264,19 @@ Same screen without the package:
   </div>
 
   <table class="inspera-table">
+    <caption>Assessments</caption>
     <thead>
       <tr>
         <th scope="col">Assessment</th>
-        <th scope="col" class="inspera-table__num">Items</th>
+        <th scope="col" class="inspera-table__cell--right">Items</th>
         <th scope="col">Status</th>
       </tr>
     </thead>
     <tbody>
       <tr>
         <td>Algebra Quiz</td>
-        <td class="inspera-table__num">24</td>
-        <td><span class="inspera-badge inspera-badge--success">Live</span></td>
+        <td class="inspera-table__cell--right">24</td>
+        <td><span class="inspera-badge inspera-badge--success" role="status">Live</span></td>
       </tr>
     </tbody>
   </table>
@@ -273,6 +289,30 @@ Same screen without the package:
   .page__tags    { display: flex; gap: var(--space-2); flex-wrap: wrap; }
 </style>
 ```
+
+## Screen templates
+
+Working copies of real Inspera screens, built at least in part from library
+components. When you build a whole screen or a large region, pick the template
+whose purpose matches the task and follow its layout, regions and component
+choices.
+
+- The global app shell in a template - the top bar and navigation - is the
+  existing product's. It stays as it is.
+- The parts of a template not yet rebuilt from library components keep the
+  existing product's styling. Treat them as the as-is reference, not as library
+  styling.
+- Each template's full source - its tokens, components and page - is one
+  download on the library's Screen templates page.
+
+| Template | Where in the product | What it shows | Library components |
+| --- | --- | --- | --- |
+| [Monitor](./#/pages/monitor-candidates) | Landing | Monitor > Candidates roster: the Views rail with saved counts, search toolbar, and the wide live candidate grid. | `TextInput`, `Pagination` |
+| [Question sets](./#/pages/question-sets) | Author > Question Sets | Author > Question Sets roster: the Views rail, search and filter toolbar, the grid with per-row status, and pager. | `TextInput`, `Pagination` |
+| [New author - Edit](./#/pages/new-author-edit) | Author > Question Sets > Create new > New author | Question-set editor: the tool rail, the sections and questions panel, the rich-text question editor, and the settings for the open question. | `Tabs` |
+| [Deliver](./#/pages/deliver-tests) | Deliver > Tests | Deliver > Tests roster: the Views rail, search and filter toolbar, the tests grid and pager. | `TextInput`, `Pagination` |
+| [Test setup](./#/pages/test-setup) | Deliver > Tests > Create new > IA | Deliver > Setup screen: test details, candidate and committee counts, and the Options accordion. | `TextInput`, `Textarea`, `Select`, `Checkbox`, `RadioButton`, `Badge` |
+| [Data-rich list](./#/pages/data-rich-list) | - | A starting point for any list of records, not a product screen: search, a status filter, an advanced search dialog, a sortable data grid with three sets of figures, and a card view. | `Badge`, `Breadcrumb`, `Button`, `Card`, `Checkbox`, `DataGrid`, `DatePicker`, `Dialog`, `EmptyState`, `NumberInput`, `Progress`, `SegmentedControl`, `Select`, `Tag`, `TextInput` |
 
 ## Before you call it done
 

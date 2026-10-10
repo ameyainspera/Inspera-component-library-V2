@@ -69,7 +69,7 @@ export default function Rating({
 
   const starStyle = (filled: boolean): CSSProperties => ({
     fontSize,
-    color: filled ? 'var(--warning)' : 'var(--gray-400)',
+    color: filled ? 'var(--warning)' : 'var(--border-control)',
     fontVariationSettings: filled ? "'FILL' 1" : "'FILL' 0",
     cursor: interactive ? 'pointer' : 'default',
     lineHeight: 1,

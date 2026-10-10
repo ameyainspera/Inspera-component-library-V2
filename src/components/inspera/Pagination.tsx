@@ -87,7 +87,7 @@ export default function Pagination({
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 'var(--radius-md)',
+    borderRadius: 'var(--radius-sm)',
     border: 'none',
     color: 'var(--text-primary)',
     fontFamily: 'var(--font-sans)',

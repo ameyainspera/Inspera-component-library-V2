@@ -42,7 +42,7 @@ variant with no error at all. Variant *values* are Capitalised
 
 ### Form Field
 
-Standardize label, control, and help/error layout around any input. - category: `input-controls`.
+Lay out a label, control and help or error text consistently around any input. - category: `input-controls`.
 
 > `@inspera/components` is **not published yet**. If you cannot resolve that import, do
 > not swap in another UI library - build the markup from the HTML and CSS under
@@ -73,7 +73,10 @@ Also accepts any native `<div>` attribute (`id`, `name`, `aria-*`, `data-*`, eve
 **Accessibility** - role `group`, keyboard operable. Associate the label with the control via htmlFor/id; Link error and help text with aria-describedby on the control; Required fields should set aria-required on the control.
 
 **Do:** Wrap any single control for consistent spacing; Use htmlFor to link the label to the control; Show only one of help or error at a time.
-**Don't:** Do not wrap multiple unrelated controls; Do not omit the label for accessibility.
+**Don't:** Do not wrap several unrelated controls; Do not leave out the label - screen readers need it.
+
+**Choosing a variant:**
+- `required`: The form can't be saved without it, in a form where most fields are optional. Mark only those, and say once what the asterisk means.
 
 **Deprecated aliases** (do not use): `Field wrapper`, `Input group`
 
@@ -113,7 +116,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 - The wrapper owns three links the control cannot make for itself: `for` -> the control id, `aria-describedby` -> the message id, and `aria-invalid` when the message is an error.
 - Only one message shows at a time. When there is an error it replaces the help text; it does not stack under it.
 - The red asterisk is `aria-hidden` decoration. Requiredness is announced from the control's own `required` attribute - the asterisk alone tells a screen reader nothing.
-- Gap between label, control and message is 6px; message text is 12px.
+- Gap between label, control and message is 4px (space-1); message text is 12px.
 - The nested control keeps its own label markup off (there is already one here) but still needs an accessible name via the outer `for`.
 
 ```css
@@ -124,15 +127,18 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   --white:                  #ffffff;
   --gray-100:               #F7F7F7;
   --gray-600:               #7A7A7A;
+  --gray-700:               #595959;
+  --gray-800:               #404040;
   --blue-300:               #B3D9FF;
   --red-300:                #F9B8B8;
   --action-active:          rgba(0, 0, 0, 0.56);
   --text-primary:           rgba(0, 0, 0, 0.87);
-  --border-control:         #C4C4C4;
-  --border-control-strong:  #8C8C8C;
+  --border-control:         var(--gray-600);
+  --border-control-strong:  var(--gray-800);
+  --text-placeholder:       var(--gray-700);
   --surface-disabled:       #F5F5F5;
-  --muted-foreground:       var(--gray-600);
-  --radius-md:              8px;
+  --muted-foreground:       var(--gray-700);
+  --radius-sm:              4px;
   --effect-state-focus:     0px 0px 0px 3px var(--blue-300);
   --effect-state-error:     0px 0px 0px 3px var(--red-300);
   --border-width-default:   1px;
@@ -144,7 +150,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 .inspera-input {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
   width: 100%;
   font-family: var(--font-sans);
 }
@@ -163,7 +169,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   align-items: center;
   gap: 8px;
   padding: 0 12px;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   border: var(--border-width-default) solid var(--border-control);
   background: var(--white);
   transition:
@@ -193,6 +199,8 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   font-size: 16px;
   color: var(--text-primary);
 }
+/* Set, not left to the browser: its default can fall under 4.5:1. */
+.inspera-input__control::placeholder { color: var(--text-placeholder); opacity: 1; }
 
 .inspera-input__field .material-symbols-outlined {
   font-size: 20px;
@@ -230,7 +238,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 .inspera-field-group {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
   width: 100%;
   font-family: var(--font-sans);
 }

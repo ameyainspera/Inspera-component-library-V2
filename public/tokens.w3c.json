@@ -386,6 +386,20 @@
       "$value": "64px"
     }
   },
+  "controlHeight": {
+    "sm": {
+      "$type": "dimension",
+      "$value": "32px"
+    },
+    "md": {
+      "$type": "dimension",
+      "$value": "40px"
+    },
+    "lg": {
+      "$type": "dimension",
+      "$value": "44px"
+    }
+  },
   "radius": {
     "none": {
       "$type": "dimension",

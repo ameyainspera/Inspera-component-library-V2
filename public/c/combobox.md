@@ -97,6 +97,12 @@ export interface ComboboxOption {
 **Do:** Filter options as the user types; Allow custom values only when free text is valid; Show an empty state when nothing matches.
 **Don't:** Do not use for a handful of fixed options - use Select; Do not commit a value the user has not confirmed.
 
+**Choosing a variant:**
+- `allowCustomValue="false"`: Picking one item out of hundreds by typing its name, such as a grader from all staff.
+- `allowCustomValue`: Free text is a valid answer too, such as a new topic for a question.
+- `error`: Nothing valid is chosen. Say what to choose.
+- `disabled`: The field does not apply right now. Say why.
+
 **Deprecated aliases** (do not use): `Autocomplete`, `Typeahead`, `Search select`
 
 #### One-time setup
@@ -134,7 +140,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 - The resting element is the closed field only - a search icon, an unstyled input, and a chevron. The listbox mounts on focus and unmounts on blur or Escape.
 - The input is `role="combobox"` with `aria-expanded` and `aria-controls`; each option is `role="option"` with `aria-selected`, and `aria-activedescendant` tracks the highlighted one.
-- Field chrome is identical to the text input: 40px, `--radius-md`, `--border-control` to `--primary` on focus with `--effect-state-focus`.
+- Field chrome is identical to the text input: 40px, `--radius-sm`, `--border-control` to `--primary` on focus with `--effect-state-focus`.
 - The active option is filled `--blue-100`. Up / Down move it, Enter commits, Escape closes.
 - Only allow a typed value that matches no option when free text is genuinely valid; otherwise force a choice from the list.
 
@@ -145,13 +151,17 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   --error:                  #D32F2F;
   --white:                  #ffffff;
   --gray-200:               #EDEDED;
+  --gray-600:               #7A7A7A;
+  --gray-700:               #595959;
+  --gray-800:               #404040;
   --blue-100:               #F0F7FF;
   --blue-300:               #B3D9FF;
   --red-300:                #F9B8B8;
   --action-active:          rgba(0, 0, 0, 0.56);
   --text-primary:           rgba(0, 0, 0, 0.87);
-  --border-control:         #C4C4C4;
-  --border-control-strong:  #8C8C8C;
+  --border-control:         var(--gray-600);
+  --border-control-strong:  var(--gray-800);
+  --text-placeholder:       var(--gray-700);
   --surface-disabled:       #F5F5F5;
   --surface:                var(--white);
   --border:                 var(--gray-200);
@@ -168,7 +178,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 .inspera-combobox {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
   width: 100%;
   position: relative;
   font-family: var(--font-sans);
@@ -188,7 +198,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   align-items: center;
   gap: 8px;
   padding: 0 12px;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   border: var(--border-width-default) solid var(--border-control);
   background: var(--white);
 }
@@ -209,6 +219,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   font-size: 16px;
   color: var(--text-primary);
 }
+.inspera-combobox__control::placeholder { color: var(--text-placeholder); opacity: 1; }
 
 .inspera-combobox__icon {
   font-size: 20px;

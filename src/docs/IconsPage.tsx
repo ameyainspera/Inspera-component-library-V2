@@ -103,7 +103,7 @@ export default function IconsPage() {
             Material Symbols
           </h1>
           <p style={{ margin: 0, fontSize: 15, color: 'var(--muted-foreground)', maxWidth: 640 }}>
-            {totalIconCount.toLocaleString()} icons across {ICON_CATEGORIES.length - 1} categories - Material Symbols Outlined, with variable weight, fill and optical size. Select any icon for its details, SVG and copyable markup.
+            {totalIconCount.toLocaleString()} Material Symbols Outlined icons in {ICON_CATEGORIES.length - 1} categories. Select an icon to adjust it and copy its SVG or markup.
           </p>
         </div>
       </div>
@@ -166,7 +166,7 @@ export default function IconsPage() {
 
           {/* Weight selector */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
-            <span style={{ fontSize: 12, color: 'var(--muted-foreground)', fontWeight: 500 }}>wght</span>
+            <span style={{ fontSize: 12, color: 'var(--muted-foreground)', fontWeight: 500 }}>Weight</span>
             <div style={{ display: 'flex', border: '1px solid var(--border-strong)', borderRadius: 'var(--radius-sm)', overflow: 'hidden' }}>
               {WEIGHTS.map((w) => (
                 <button
@@ -180,7 +180,7 @@ export default function IconsPage() {
                     fontSize: 11, fontWeight: 500, fontFamily: 'var(--font-sans)',
                     borderRight: w !== 700 ? '1px solid var(--border)' : 'none',
                     background: weight === w ? 'var(--primary)' : 'var(--surface)',
-                    color: weight === w ? 'var(--white)' : 'var(--gray-600)',
+                    color: weight === w ? 'var(--white)' : 'var(--text-secondary)',
                     transition: 'background 0.1s, color 0.1s',
                   }}
                 >
@@ -192,7 +192,7 @@ export default function IconsPage() {
 
           {/* Optical size */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
-            <span style={{ fontSize: 12, color: 'var(--muted-foreground)', fontWeight: 500 }}>opsz</span>
+            <span style={{ fontSize: 12, color: 'var(--muted-foreground)', fontWeight: 500 }}>Optical size</span>
             <div style={{ display: 'flex', border: '1px solid var(--border-strong)', borderRadius: 'var(--radius-sm)', overflow: 'hidden' }}>
               {([20, 24, 40, 48] as const).map((o, i, arr) => (
                 <button
@@ -206,7 +206,7 @@ export default function IconsPage() {
                     fontSize: 11, fontWeight: 500, fontFamily: 'var(--font-sans)',
                     borderRight: i < arr.length - 1 ? '1px solid var(--border)' : 'none',
                     background: opsz === o ? 'var(--primary)' : 'var(--surface)',
-                    color: opsz === o ? 'var(--white)' : 'var(--gray-600)',
+                    color: opsz === o ? 'var(--white)' : 'var(--text-secondary)',
                     transition: 'background 0.1s, color 0.1s',
                   }}
                 >
@@ -244,7 +244,7 @@ export default function IconsPage() {
                 {cat}
                 <span style={{
                   background: active ? 'color-mix(in srgb, var(--white) 25%, transparent)' : 'var(--gray-200)',
-                  color: active ? 'var(--white)' : 'var(--gray-600)',
+                  color: active ? 'var(--white)' : 'var(--text-secondary)',
                   borderRadius: 'var(--radius-pill)', padding: '0 5px', fontSize: 10, fontWeight: 600,
                   lineHeight: '16px', display: 'inline-block', minWidth: 20, textAlign: 'center',
                 }}>
@@ -283,7 +283,7 @@ export default function IconsPage() {
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '64px 0', color: 'var(--muted-foreground)' }}>
           <span className={iconClass} style={{ fontSize: 48, marginBottom: 12, opacity: 0.4 }} aria-hidden>search_off</span>
           <div style={{ fontSize: 16, fontWeight: 500 }}>No icons found</div>
-          <div style={{ fontSize: 14, marginTop: 4 }}>Try a different search term or category</div>
+          <div style={{ fontSize: 14, marginTop: 4 }}>Try another search term or category.</div>
         </div>
       ) : (
         <div
@@ -337,14 +337,14 @@ export default function IconsPage() {
             <pre style={{
               margin: 0, padding: '10px 12px', background: 'var(--gray-100)', borderRadius: 'var(--radius-sm)',
               fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--gray-800)', whiteSpace: 'pre-wrap', overflowWrap: 'anywhere',
-            }}>{`/* Once, at the top of your stylesheet */\n@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-25..200&display=block');`}</pre>
+            }}>{`/* Once, at the top of your stylesheet */\n@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-25..200&display=swap');`}</pre>
           </div>
         </div>
 
         {/* Live preview strip */}
         <div>
           <div style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--muted-foreground)', marginBottom: 10 }}>
-            Live preview - current settings
+            Preview
           </div>
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
             {['home', 'settings', 'favorite', 'star', 'person', 'notifications', 'search', 'add'].map((n) => (

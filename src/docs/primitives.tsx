@@ -1,4 +1,5 @@
-import { type CSSProperties, type ReactNode, useEffect, useRef, useState } from 'react'
+import { type CSSProperties, type ReactNode, useEffect, useId, useRef, useState } from 'react'
+import { Tooltip } from '../components/inspera'
 
 // ---------------------------------------------------------------------------
 // Section heading used across doc panels.
@@ -25,6 +26,65 @@ export function Panel({ children, style }: { children: ReactNode; style?: CSSPro
     >
       {children}
     </section>
+  )
+}
+
+/** An info icon beside a row name; its explanation shows on hover or focus. */
+export function InfoTip({ label, text }: { label: string; text: string }) {
+  return (
+    <Tooltip content={text}>
+      <button
+        type="button"
+        aria-label={`About ${label}`}
+        style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 24, height: 24, padding: 0, border: 'none', borderRadius: 'var(--radius-pill)', background: 'transparent', color: 'var(--gray-600)', cursor: 'help' }}
+      >
+        <span className="material-symbols-outlined" style={{ fontSize: 16 }} aria-hidden>info</span>
+      </button>
+    </Tooltip>
+  )
+}
+
+/**
+ * A long reference panel that starts closed, so the page leads with what most
+ * readers came for. The title is the button: its accessible name stays the
+ * section title, and aria-expanded says whether it is open. The rest of the
+ * header row toggles too, for the pointer only, so an info icon can sit beside
+ * the title without nesting one button in another. The content is not
+ * rendered until it is opened.
+ */
+export function CollapsibleSection({ title, summary, info, children }: { title: string; summary?: ReactNode; info?: string; children: ReactNode }) {
+  const [open, setOpen] = useState(false)
+  const id = useId()
+  const toggle = () => setOpen((o) => !o)
+  return (
+    <Panel>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+        <h2 style={{ margin: 0 }}>
+          <button
+            type="button"
+            aria-expanded={open}
+            aria-controls={id}
+            onClick={toggle}
+            style={{ padding: 0, border: 'none', background: 'transparent', textAlign: 'left', cursor: 'pointer', fontFamily: 'inherit', fontSize: 18, fontWeight: 600, color: 'var(--gray-900)' }}
+          >
+            {title}
+          </button>
+        </h2>
+        {info && <InfoTip label={title} text={info} />}
+        <div
+          aria-hidden
+          onClick={toggle}
+          style={{ flex: 1, alignSelf: 'stretch', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 2, minWidth: 0, cursor: 'pointer', fontSize: 13, fontWeight: 500, color: 'var(--primary)' }}
+        >
+          {open ? 'Hide' : 'Show'}
+          <span className="material-symbols-outlined" style={{ fontSize: 20, transform: open ? 'rotate(180deg)' : undefined }}>expand_more</span>
+        </div>
+      </div>
+      {summary && <p style={{ margin: '4px 0 0', fontSize: 14, color: 'var(--muted-foreground)', maxWidth: 720 }}>{summary}</p>}
+      <div id={id} hidden={!open} style={{ marginTop: 16 }}>
+        {open && children}
+      </div>
+    </Panel>
   )
 }
 
@@ -83,7 +143,7 @@ export function CopyButton({ text, label = 'Copy' }: { text: string; label?: str
 const CODE_MAX_HEIGHT = 440
 
 export function CodeBlock({
-  code, language, copyLabel, maxHeight = CODE_MAX_HEIGHT, headerLeft,
+  code, language, copyLabel, maxHeight = CODE_MAX_HEIGHT, headerLeft, footer,
 }: {
   code: string
   language?: string
@@ -97,6 +157,8 @@ export function CodeBlock({
    * playground's controls directly above already look like.
    */
   headerLeft?: ReactNode
+  /** A short note in a bar under the code, aligned right. */
+  footer?: ReactNode
 }) {
   const pre = useRef<HTMLPreElement>(null)
   const [overflowing, setOverflowing] = useState(false)
@@ -150,19 +212,21 @@ export function CodeBlock({
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
             {headerLeft}
             {overflowing && (
-              <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: 1, textTransform: 'uppercase', color: 'var(--gray-700)' }}>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: 1, textTransform: 'uppercase', color: 'var(--gray-400)' }}>
                 {lines} lines
               </span>
             )}
           </div>
         ) : (
-          <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: 1, textTransform: 'uppercase', color: 'var(--gray-700)' }}>
+          <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: 1, textTransform: 'uppercase', color: 'var(--gray-400)' }}>
             {language ?? 'code'}
             {overflowing && ` | ${lines} lines`}
           </span>
         )}
         <CopyButton text={code} label={copyLabel ?? 'Copy'} />
       </div>
+      {/* The fade is positioned against this wrapper, so it never covers the footer. */}
+      <div style={{ position: 'relative' }}>
       <pre
         ref={pre}
         tabIndex={scrolls ? 0 : undefined}
@@ -195,6 +259,21 @@ export function CodeBlock({
             background: 'linear-gradient(to bottom, rgba(39,39,39,0), var(--gray-900))',
           }}
         />
+      )}
+      </div>
+      {footer && (
+        <div
+          style={{
+            padding: '8px 12px',
+            borderTop: '1px solid rgba(255,255,255,0.08)',
+            textAlign: 'right',
+            fontSize: 12,
+            lineHeight: 1.5,
+            color: 'var(--gray-400)',
+          }}
+        >
+          {footer}
+        </div>
       )}
     </div>
   )
@@ -263,7 +342,7 @@ export function CodeTabs({
 // Segmented control used to drive the interactive playground.
 // ---------------------------------------------------------------------------
 export function SegmentedControl({
-  label, options, value, onChange, defaultValue,
+  label, options, value, onChange, defaultValue, showLabel = true, disabled = false,
 }: {
   label: string
   options: string[]
@@ -271,12 +350,18 @@ export function SegmentedControl({
   onChange: (v: string) => void
   /** Marked with a dot, so the default is visible without reordering options. */
   defaultValue?: string
+  /** Off when a surrounding row already shows the name; it stays the group's accessible name. */
+  showLabel?: boolean
+  /** Held at its value while another control rules the others out. */
+  disabled?: boolean
 }) {
   return (
     <div role="group" aria-label={label} style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-      <span style={{ fontSize: 12, fontWeight: 600, letterSpacing: 0.4, textTransform: 'uppercase', color: 'var(--muted-foreground)' }}>
-        {label}
-      </span>
+      {showLabel && (
+        <span style={{ fontSize: 12, fontWeight: 600, letterSpacing: 0.4, textTransform: 'uppercase', color: 'var(--muted-foreground)' }}>
+          {label}
+        </span>
+      )}
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
         {options.map((opt) => {
           const active = opt === value
@@ -286,6 +371,7 @@ export function SegmentedControl({
               type="button"
               className="inspera-interactive"
               aria-pressed={active}
+              disabled={disabled}
               onClick={() => onChange(opt)}
               title={opt === defaultValue ? 'Default' : undefined}
               style={{
@@ -301,7 +387,8 @@ export function SegmentedControl({
                 fontFamily: 'var(--font-sans)',
                 fontSize: 13,
                 fontWeight: active ? 600 : 400,
-                cursor: 'pointer',
+                cursor: disabled ? 'not-allowed' : 'pointer',
+                opacity: disabled ? 0.45 : 1,
               }}
             >
               {opt}

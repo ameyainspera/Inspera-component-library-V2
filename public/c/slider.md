@@ -66,7 +66,7 @@ import { Slider } from '@inspera/components'
 | `value` | `number` | - | Current value. Controlled - pair with onChange. |
 | `defaultValue` | `number` | - | Starting value when uncontrolled. Defaults to the midpoint. |
 | `onChange` | `(value: number) => void` | - | Fired as the value changes, by drag or arrow key. |
-| `formatValue` | `(value: number) => string` | - | Formats the shown value and what assistive tech announces, e.g. `(v) => `${v}%``. |
+| `formatValue` | `(value: number) => string` | - | Formats the shown value and what assistive tech announces, e.g. `(v) => v + '%'`. |
 | `showValue` | `boolean` | `true` | Show the current value. |
 | `showLabel` | `boolean` | `true` | Render the visible label. When false, the label becomes `aria-label`. |
 | `disabled` | `boolean` | `false` | Blocks interaction and dims the control. |
@@ -76,7 +76,13 @@ Also accepts any native `<input>` attribute (`id`, `name`, `aria-*`, `data-*`, e
 **Accessibility** - role `slider`, keyboard operable. Use role="slider" with aria-valuemin / aria-valuemax / aria-valuenow; Provide an accessible label via aria-label; Arrow keys adjust the value.
 
 **Do:** Use for adjustable numeric ranges; Show the current value for precision; Provide a clear label.
-**Don't:** Do not use for exact numeric entry - use Text Input instead; Do not use without min/max bounds.
+**Don't:** Do not use for exact numeric entry - use Number Input instead; Do not use without min/max bounds.
+
+**Choosing a variant:**
+- `showValue`: People set a level they need to know exactly, such as a similarity threshold.
+- `showValue="false"`: Only the position matters, such as playback volume.
+- `showLabel="false"`: Something next to it already says what it is, such as a zoom icon in a viewer toolbar. The label still names it for screen readers.
+- `disabled`: The setting depends on another one that is off. Say which under it.
 
 **Deprecated aliases** (do not use): `Range`, `Range slider`
 
@@ -125,9 +131,9 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   --primary:            #004080;
   --white:              #ffffff;
   --gray-300:           #D9D9D9;
-  --gray-600:           #7A7A7A;
+  --gray-700:           #595959;
   --text-primary:       rgba(0, 0, 0, 0.87);
-  --muted-foreground:   var(--gray-600);
+  --muted-foreground:   var(--gray-700);
   --radius-pill:        9999px;
   --focus-ring-width:   2px;
   --focus-ring-offset:  2px;

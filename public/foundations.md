@@ -27,8 +27,9 @@ this list.
 
 ### Colour - palette
 
-Each family runs 100 (lightest) to 900 (darkest). 600-900 are safe for text on
-a light background; 100-300 are surface tints.
+Each family runs 100 (lightest) to 900 (darkest); 100-300 are surface tints.
+For text, use this shade or a darker one - the lightest that reaches 4.5:1 on
+both white and the gray-100 canvas: gray 700, blue 700, green 700, red 600, yellow 800, orange 800, purple 600, pink 700.
 
 #### gray
 
@@ -148,13 +149,13 @@ Prefer a role token over a raw palette shade wherever one exists.
 
 **Interaction** - `var(--primary-hover-overlay)` rgba(0, 64, 128, 0.04), `var(--primary-focus-ring)` rgba(0, 64, 128, 0.3), `var(--action-active)` rgba(0, 0, 0, 0.56), `var(--action-hover)` rgba(0, 0, 0, 0.04), `var(--action-focus)` rgba(0, 0, 0, 0.12), `var(--action-disabled)` rgba(0, 0, 0, 0.38)
 
-**Text** - `var(--text-primary)` rgba(0, 0, 0, 0.87), `var(--text-secondary)` var(--gray-600), `var(--text-disabled)` var(--action-disabled), `var(--text-on-primary)` #ffffff
+**Text** - `var(--text-primary)` rgba(0, 0, 0, 0.87), `var(--text-secondary)` var(--gray-700), `var(--text-disabled)` var(--action-disabled), `var(--text-on-primary)` #ffffff
 
-**Status** - `var(--info-surface)` #E1F5FE, `var(--success-surface)` #E8F5E9, `var(--warning-surface)` #FFF3E0, `var(--error-surface)` #FFEBEE
+**Status** - `var(--info-surface)` #E1F5FE, `var(--success-surface)` #E8F5E9, `var(--warning-surface)` #FFF3E0, `var(--error-surface)` #FFEBEE, `var(--info-text)` var(--blue-800), `var(--success-text)` var(--green-800), `var(--warning-text)` var(--orange-800), `var(--error-text)` var(--red-700)
 
-**Controls** - `var(--border-control)` #C4C4C4, `var(--border-control-strong)` #8C8C8C, `var(--text-placeholder)` #8C8C8C, `var(--surface-disabled)` #F5F5F5, `var(--surface-readonly)` var(--gray-100), `var(--surface-neutral)` #F0F0F0, `var(--avatar-surface)` #E0E0E0
+**Controls** - `var(--border-control)` var(--gray-600), `var(--border-control-strong)` var(--gray-800), `var(--text-placeholder)` var(--gray-700), `var(--surface-disabled)` #F5F5F5, `var(--surface-readonly)` var(--gray-100), `var(--surface-neutral)` #F0F0F0, `var(--avatar-surface)` #E0E0E0
 
-**Surface** - `var(--background)` var(--gray-100), `var(--surface)` var(--white), `var(--surface-sunken)` var(--gray-100), `var(--border)` var(--gray-200), `var(--border-strong)` var(--gray-300), `var(--border-interactive)` var(--gray-500), `var(--muted-foreground)` var(--gray-600), `var(--scrim)` rgba(39, 39, 39, 0.48)
+**Surface** - `var(--background)` var(--gray-100), `var(--surface)` var(--white), `var(--surface-sunken)` var(--gray-100), `var(--border)` var(--gray-200), `var(--border-strong)` var(--gray-300), `var(--border-interactive)` var(--gray-500), `var(--muted-foreground)` var(--gray-700), `var(--scrim)` rgba(39, 39, 39, 0.48)
 
 ### Typography
 
@@ -255,20 +256,31 @@ Use the scale - no arbitrary pixel values.
 | `12` | `var(--space-12)` | 48px |
 | `16` | `var(--space-16)` | 64px |
 
+### Control height
+
+The height of a sized control. Small, Medium and Large mean these heights
+wherever a control offers them.
+
+| Token | CSS variable | Value | Use |
+| --- | --- | --- | --- |
+| `sm` | `var(--control-height-sm)` | 32px | Small - dense toolbars, table rows, actions beside small inputs |
+| `md` | `var(--control-height-md)` | 40px | Medium - the default |
+| `lg` | `var(--control-height-lg)` | 44px | Large - one prominent call to action, touch-first screens |
+
 ### Radius
 
-Small-to-medium radii: `sm` for controls, `md` for inputs and alerts,
-`lg` for cards and dialogs. Pills only for shapes that are conceptually round.
+Small-to-medium radii: `sm` for controls, including inputs, selects and
+pickers; `md` for panels and alerts; `lg` for cards and dialogs. Pills only
+for shapes that are conceptually round.
 
-"Used by" is read from the component source, so it reflects what the library
-actually does rather than what this document claims.
+"Used by" lists the components that use each radius, read from their source.
 
 | Token | CSS variable | Value | When to use | Used by |
 | --- | --- | --- | --- | --- |
 | `none` | `var(--radius-none)` | 0px | Flush edges - table cells, full-bleed surfaces, anything that meets another edge. | - |
-| `xs` | `var(--radius-xs)` | 2px | The smallest indicators, where 4px would read as a visible curve. | Checkbox, CommandPalette, Link, Rating |
-| `sm` | `var(--radius-sm)` | 4px | Controls: buttons, tags, segments, menu items. | Button, Combobox, CommandPalette, DatePicker, DateRangePicker, List, Menu, NumberInput, SegmentedControl, Select, Skeleton, Tabs, Tooltip, calendar |
-| `md` | `var(--radius-md)` | 8px | Inputs, alerts and floating panels - the system default. | Accordion, Alert, Combobox, DataGrid, DatePicker, DateRangePicker, Drawer, FileUpload, List, Menu, NumberInput, OtpInput, Pagination, Popover, SegmentedControl, Select, Skeleton, Snackbar, Table, Tabs, TextInput, Textarea |
+| `xs` | `var(--radius-xs)` | 2px | The smallest indicators, where 4px would read as a visible curve. | Checkbox, CommandPalette, Link, Rating, Tabs |
+| `sm` | `var(--radius-sm)` | 4px | Controls: buttons, input fields, tags, segments, menu items. | Button, Combobox, CommandPalette, DatePicker, DateRangePicker, List, Menu, NumberInput, OtpInput, Pagination, SegmentedControl, Select, Skeleton, Tabs, TextInput, Textarea, Tooltip, calendar |
+| `md` | `var(--radius-md)` | 8px | Alerts and floating panels - the system default. | Accordion, Alert, Combobox, DataGrid, DatePicker, DateRangePicker, Drawer, FileUpload, List, Menu, Popover, Select, Skeleton, Snackbar, Table |
 | `lg` | `var(--radius-lg)` | 12px | Large surfaces that contain other components: cards, dialogs, drawers. | Card, CommandPalette, Dialog, Stat |
 | `xl` | `var(--radius-xl)` | 16px | Reserved for oversized surfaces. Nothing uses it today; prefer lg. | - |
 | `pill` | `var(--radius-pill)` | fully round | Only for shapes that are conceptually round: toggles, badges, radios, avatars. | Avatar, AvatarGroup, Badge, Dialog, EmptyState, Progress, RadioButton, Skeleton, Slider, Stepper, Tag, Toggle |
@@ -331,7 +343,7 @@ Use the scale. Never an arbitrary value such as `99999`.
 | --- | --- | --- | --- |
 | `z.base` | `var(--z-base)` | 0 |  |
 | `z.sticky` | `var(--z-sticky)` | 100 | Sticky headers and toolbars |
-| `z.dropdown` | `var(--z-dropdown)` | 300 | Select and Menu panels |
+| `z.dropdown` | `var(--z-dropdown)` | 300 | Select and Menu panels. Inside a Dialog or Drawer, put the panel in the modal's overlay element, or it opens under the scrim |
 | `z.popover` | `var(--z-popover)` | 400 |  |
 | `z.overlay` | `var(--z-overlay)` | 500 | Dialog and Drawer scrim |
 | `z.modal` | `var(--z-modal)` | 600 | Dialog and Drawer surface |

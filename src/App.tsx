@@ -1,7 +1,8 @@
 import { Suspense, lazy, useEffect, useState } from 'react'
 import { componentList } from './data/components'
-import { artifactSize, fullSpec, publicPath } from './data/distribution'
+import { aiSpecBundle, fullSpec, publicPath } from './data/distribution'
 import Sidebar from './docs/Sidebar'
+import { downloadBundle } from './docs/zip'
 import FoundationsPage from './docs/FoundationsPage'
 import ComponentPage from './docs/ComponentPage'
 import IconsPage from './docs/IconsPage'
@@ -9,7 +10,7 @@ import IntegratePage from './docs/IntegratePage'
 import SpecPage from './docs/SpecPage'
 import { followLink } from './docs/links'
 
-// The prototyping kits are full screens of their own; load them when visited.
+// The screen templates are full screens of their own; load them when visited.
 const PagesPage = lazy(() => import('./docs/PagesPage'))
 
 // Lightweight hash routing keeps the docs shareable (deep links to a component)
@@ -29,6 +30,21 @@ export default function App() {
   const navigate = (h: string) => {
     window.location.hash = h
     document.getElementById('docs-scroll')?.scrollTo({ top: 0 })
+  }
+
+  // The AI spec is DESIGN.md and the full guide together; one without the
+  // other leaves DESIGN.md's references dangling. If the files cannot be
+  // fetched, the AI spec page is where that is explained.
+  const [zipping, setZipping] = useState(false)
+  async function downloadSpec() {
+    setZipping(true)
+    try {
+      await downloadBundle(aiSpecBundle)
+    } catch {
+      navigate('#/spec')
+    } finally {
+      setZipping(false)
+    }
   }
 
   const componentMatch = hash.match(/^#\/component\/(.+)$/)
@@ -63,15 +79,15 @@ export default function App() {
           onClick={followLink(navigate, '#/foundations')}
           style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}
         >
-          <span
-            style={{
-              width: 32, height: 32, borderRadius: 'var(--radius-md)', background: 'var(--primary)',
-              display: 'inline-flex', alignItems: 'center', justifyContent: 'center', color: 'var(--white)',
-              fontWeight: 600, fontSize: 16, letterSpacing: -0.5,
-            }}
-          >
-            I
-          </span>
+          {/* The Inspera mark - the same file the site uses as its favicon.
+              Decorative: the name beside it is the link's accessible text. */}
+          <img
+            src={`${import.meta.env.BASE_URL}favicon.png`}
+            alt=""
+            width={36}
+            height={36}
+            style={{ display: 'block', flexShrink: 0 }}
+          />
           <span style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.1, textAlign: 'left' }}>
             <span style={{ fontWeight: 600, fontSize: 15, color: 'var(--gray-900)' }}>Inspera</span>
             <span style={{ fontSize: 12, color: 'var(--muted-foreground)' }}>Component Library</span>
@@ -100,33 +116,35 @@ export default function App() {
                 color: 'var(--gray-800)', fontFamily: 'var(--font-sans)',
                 fontSize: 13, fontWeight: 500, textDecoration: 'none',
               }}
-              title={`The complete AI build guide - foundations + all ${componentList.length} components`}
+              title={`The AI spec: DESIGN.md and the full guide to all ${componentList.length} components`}
             >
               <span className="material-symbols-outlined" style={{ fontSize: 18 }} aria-hidden>description</span>
               AI spec
             </a>
-            <a
-              href={publicPath(fullSpec.file)}
-              download={fullSpec.saveAs}
+            <button
+              type="button"
+              onClick={downloadSpec}
+              disabled={zipping}
               style={{
                 display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                width: 32, height: 32,
+                width: 32, height: 32, padding: 0,
                 borderRadius: '0 var(--radius-sm) var(--radius-sm) 0',
                 border: '1px solid var(--border-strong)',
-                background: 'var(--surface)', color: 'var(--gray-800)', textDecoration: 'none',
+                background: 'var(--surface)', color: 'var(--gray-800)',
+                cursor: zipping ? 'progress' : 'pointer',
               }}
-              title={`Download as ${fullSpec.saveAs} - ${artifactSize(fullSpec.file, fullSpec.advice)}`}
-              aria-label={`Download the AI spec as ${fullSpec.saveAs}`}
+              title={`Download the AI spec - DESIGN.md and ${fullSpec.saveAs} - as ${aiSpecBundle.zipName}`}
+              aria-label={`Download the AI spec as ${aiSpecBundle.zipName}`}
             >
               <span className="material-symbols-outlined" style={{ fontSize: 18 }} aria-hidden>download</span>
-            </a>
+            </button>
           </div>
           <a
             href={publicPath('llms.txt')}
             target="_blank"
             rel="noreferrer"
             style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--muted-foreground)', textDecoration: 'none' }}
-            title="Short index that links a spec per component - paste this into a chat"
+            title="A short index with a link to each component's spec"
           >
             llms.txt
           </a>

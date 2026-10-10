@@ -78,7 +78,7 @@ export default function Select({
     onChange as ((v: string | undefined) => void) | undefined,
   )
   const [openState, setOpen] = useState(false)
-  const frozenOpen = forceState === 'Open'
+  const frozenOpen = forceState === 'Open' && !disabled
   const open = frozenOpen || openState
   const [active, setActive] = useState(0)
   const [query, setQuery] = useState('')
@@ -168,11 +168,11 @@ export default function Select({
     justifyContent: 'space-between',
     gap: 8,
     padding: '0 12px',
-    borderRadius: 'var(--radius-md)',
+    borderRadius: 'var(--radius-sm)',
     borderWidth: 'var(--border-width-default)',
     borderStyle: 'solid',
     background: disabled ? 'var(--surface-disabled)' : 'var(--white)',
-    color: current ? 'var(--text-primary)' : 'var(--muted-foreground)',
+    color: current ? 'var(--text-primary)' : 'var(--text-placeholder)',
     fontFamily: 'var(--font-sans)',
     fontSize: 16,
     cursor: disabled ? 'not-allowed' : 'pointer',
@@ -263,7 +263,7 @@ export default function Select({
   return (
     <div
       className={cx('inspera', className)}
-      style={{ display: 'flex', flexDirection: 'column', gap: 6, width: widthMode === 'Fixed' ? 220 : 'auto', fontFamily: 'var(--font-sans)', ...style }}
+      style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-1)', width: widthMode === 'Fixed' ? 220 : 'auto', fontFamily: 'var(--font-sans)', ...style }}
     >
       {field.ownLabel && (
         <span id={field.labelId} style={labelStyle}>{label}</span>
@@ -278,7 +278,7 @@ export default function Select({
           className="inspera-interactive inspera-field"
           // An open list keeps the focus ring even while the search box inside
           // it holds focus, so Open counts as a focused look.
-          data-force-state={open ? 'Open' : forceState}
+          data-force-state={open ? 'Open' : disabled ? undefined : forceState}
           data-invalid={field.invalid || undefined}
           data-disabled={disabled || undefined}
           role="combobox"

@@ -22,9 +22,11 @@ const INTEGRATE = {
 /** Full example screens assembled from components - a starting point to copy. */
 const PAGES = {
   hash: '#/pages',
-  label: 'Prototyping Kits',
+  label: 'Screen templates',
   icon: 'space_dashboard',
   detail: 'Full Inspera screens built from library components',
+  // The old name finds them too, like a component's legacy names.
+  terms: ['prototyping kits', 'kits', 'templates', 'screens', 'example pages'],
 }
 
 /** Iconography is a foundation, so Icons lives in that group. */
@@ -37,6 +39,16 @@ const ICONS = {
 }
 
 const TOP_LEVEL = [INTEGRATE, PAGES, ICONS]
+
+/** In the top bar rather than the sidebar, but searchable like everything else. */
+const SPEC: Searchable = {
+  id: '#/spec',
+  name: 'AI spec',
+  detail: 'DESIGN.md and the full guide, to give an AI tool',
+  group: 'Pages',
+  terms: ['design.md', 'design guide', 'llms.txt', 'spec', 'download', 'zip', 'ai', 'claude', 'chatgpt', 'cursor', 'copilot'],
+  href: '#/spec',
+}
 
 export default function Sidebar({ route, onNavigate }: SidebarProps) {
   const [query, setQuery] = useState('')
@@ -59,7 +71,7 @@ export default function Sidebar({ route, onNavigate }: SidebarProps) {
       name: p.label,
       detail: p.detail,
       group: 'Pages',
-      terms: ['tokens', 'design tokens', 'colour', 'color', 'guide', 'setup'],
+      terms: ['tokens', 'design tokens', 'colour', 'color', 'guide', 'setup', ...((p as { terms?: string[] }).terms ?? [])],
       href: p.hash,
     }))
     const comps: Searchable[] = Object.values(components).map((c) => ({
@@ -72,7 +84,7 @@ export default function Sidebar({ route, onNavigate }: SidebarProps) {
       terms: [...(c.keywords ?? []), ...c.deprecatedAliases],
       href: `#/component/${c.slug}`,
     }))
-    return [...comps, ...foundations, ...pages]
+    return [...comps, ...foundations, ...pages, SPEC]
   }, [])
 
   const hits = useMemo(() => search(query, index), [query, index])
@@ -135,7 +147,7 @@ export default function Sidebar({ route, onNavigate }: SidebarProps) {
     fontWeight: 600,
     letterSpacing: 0.8,
     textTransform: 'uppercase',
-    color: 'var(--gray-600)',
+    color: 'var(--text-secondary)',
   }
   const groupWrap: React.CSSProperties = {
     marginTop: 26,
@@ -168,7 +180,7 @@ export default function Sidebar({ route, onNavigate }: SidebarProps) {
 
   return (
     <nav
-      aria-label="Component navigation"
+      aria-label="Library navigation"
       style={{
         width: 260,
         flexShrink: 0,
@@ -198,8 +210,8 @@ export default function Sidebar({ route, onNavigate }: SidebarProps) {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={onInputKey}
-          placeholder="Search components..."
-          aria-label="Search components"
+          placeholder="Search the library..."
+          aria-label="Search the library"
           role="combobox"
           aria-expanded={searching}
           aria-controls="sidebar-search-results"
@@ -237,7 +249,7 @@ export default function Sidebar({ route, onNavigate }: SidebarProps) {
         <div id="sidebar-search-results" role="listbox" aria-label="Search results" ref={listRef}>
           {hits.length === 0 ? (
             <p style={{ margin: '12px 4px', fontSize: 13, color: 'var(--muted-foreground)', lineHeight: 1.5 }}>
-              Nothing matches "{query}". Try a related word - "modal", "dropdown", "toast".
+              No results for "{query}". Try another word, such as "modal" or "dropdown".
             </p>
           ) : (
             <>
@@ -317,7 +329,7 @@ export default function Sidebar({ route, onNavigate }: SidebarProps) {
             </span>
           </a>
 
-          {/* Prototyping Kits: full screens assembled from the components below. */}
+          {/* Screen templates: full screens assembled from the components below. */}
           <a
             href={PAGES.hash}
             onClick={follow(PAGES.hash)}
@@ -362,7 +374,7 @@ export default function Sidebar({ route, onNavigate }: SidebarProps) {
                 <span>{ICONS.label}</span>
                 <span style={{
                   fontSize: 10, fontWeight: 600, letterSpacing: 0.4,
-                  color: route === ICONS.hash ? 'var(--primary)' : 'var(--gray-500)',
+                  color: route === ICONS.hash ? 'var(--primary)' : 'var(--text-secondary)',
                   background: route === ICONS.hash ? 'var(--blue-100)' : 'var(--gray-100)',
                   borderRadius: 'var(--radius-xs)', padding: '1px 5px',
                 }}>
@@ -384,7 +396,7 @@ export default function Sidebar({ route, onNavigate }: SidebarProps) {
                     return (
                       <span key={item.slug} aria-disabled="true" style={linkStyle(false, true)}>
                         <span>{item.name}</span>
-                        <span style={{ fontSize: 10, fontWeight: 600, letterSpacing: 0.4, textTransform: 'uppercase', color: 'var(--gray-600)' }}>
+                        <span style={{ fontSize: 10, fontWeight: 600, letterSpacing: 0.4, textTransform: 'uppercase', color: 'var(--text-secondary)' }}>
                           Soon
                         </span>
                       </span>

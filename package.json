@@ -18,6 +18,7 @@
     "audit:pages": "tsx scripts/audit-pages.ts",
     "audit:ascii": "tsx scripts/audit-ascii.ts",
     "audit:spec": "tsx scripts/audit-spec-standalone.ts",
+    "audit:design-md": "tsx scripts/audit-design-md.ts",
     "test:visual": "tsx scripts/test-visual.ts",
     "test:visual:update": "tsx scripts/test-visual.ts --update",
     "test:a11y": "tsx scripts/test-a11y.ts",

@@ -96,7 +96,11 @@ export interface Command {
 **Accessibility** - role `dialog`, keyboard operable. Panel is a role="dialog" with aria-modal; The list uses role="listbox" and items role="option"; Cmd/Ctrl+K toggles it; Up / Down / Enter navigate and run.
 
 **Do:** Group commands by section; Bind a discoverable hotkey (Cmd/Ctrl+K); Filter commands as the user types.
-**Don't:** Do not bury primary navigation only here; Do not leave focus trapped when it closes.
+**Don't:** Do not make it the only way to reach main navigation; Do not leave focus inside it after it closes.
+
+**Choosing a variant:**
+- `hotkey`: Ctrl or Cmd K opens it from anywhere, for people who move around the product a lot. Show the shortcut where it can be opened.
+- `hotkey="false"`: Ctrl or Cmd K already does something on the page, such as inserting a link in the question editor. Open the palette from a button instead.
 
 **Deprecated aliases** (do not use): `Command menu`, `Quick actions`, `Spotlight`
 
@@ -145,12 +149,13 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 :root {
   --white:             #ffffff;
   --gray-200:          #EDEDED;
-  --gray-600:          #7A7A7A;
+  --gray-700:          #595959;
   --blue-100:          #F0F7FF;
   --action-active:     rgba(0, 0, 0, 0.56);
   --text-primary:      rgba(0, 0, 0, 0.87);
+  --text-placeholder:  var(--gray-700);
   --border:            var(--gray-200);
-  --muted-foreground:  var(--gray-600);
+  --muted-foreground:  var(--gray-700);
   --radius-xs:         2px;
   --radius-sm:         4px;
   --radius-lg:         12px;
@@ -189,6 +194,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   font-size: 18px;
   color: var(--text-primary);
 }
+.inspera-cmdk__input::placeholder { color: var(--text-placeholder); opacity: 1; }
 
 .inspera-cmdk__kbd {
   font-size: 12px;

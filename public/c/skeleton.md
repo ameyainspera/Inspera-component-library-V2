@@ -68,8 +68,13 @@ Also accepts any native `<span>` attribute (`id`, `name`, `aria-*`, `data-*`, ev
 
 **Accessibility** - role `presentation`. Skeletons are decorative and aria-hidden; Announce the real content once loaded; Mirror the layout of the content being loaded.
 
-**Do:** Match skeleton shapes to real content; Use for perceived performance on initial load; Replace with content as soon as it arrives.
-**Don't:** Do not animate skeletons indefinitely; Do not use for user-triggered actions - use Spinner.
+**Do:** Match skeleton shapes to real content; Use on first load, so the page feels faster; Replace with content as soon as it arrives.
+**Don't:** Do not leave skeletons animating indefinitely; Do not use for actions people start - use Spinner.
+
+**Choosing a variant:**
+- `variant="Text"`: Lines of text that are loading, such as the rows of a list.
+- `variant="Rect"`: Blocks such as a stat tile, a chart or an image.
+- `variant="Circle"`: Avatars and other round shapes.
 
 **Deprecated aliases** (do not use): `Placeholder`, `Shimmer`, `Ghost`
 

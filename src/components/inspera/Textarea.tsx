@@ -71,7 +71,7 @@ export default function Textarea({
     display: 'flex',
     flexDirection: 'column',
     padding: `${size === 'Small' ? 6 : 8}px 12px`,
-    borderRadius: 'var(--radius-md)',
+    borderRadius: 'var(--radius-sm)',
     borderWidth: 'var(--border-width-default)',
     borderStyle: 'solid',
     background: disabled ? 'var(--surface-disabled)' : readOnly ? 'var(--gray-100)' : 'var(--white)',
@@ -83,7 +83,7 @@ export default function Textarea({
   return (
     <div
       className={cx('inspera', className)}
-      style={{ display: 'flex', flexDirection: 'column', gap: 6, width: '100%', fontFamily: 'var(--font-sans)', ...style }}
+      style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-1)', width: '100%', fontFamily: 'var(--font-sans)', ...style }}
     >
       {field.ownLabel && (
         <label id={field.labelId} htmlFor={field.id} style={labelStyle}>
@@ -92,7 +92,7 @@ export default function Textarea({
       )}
       <div
         className="inspera-interactive inspera-field"
-        data-force-state={forceState}
+        data-force-state={disabled || (readOnly && forceState === 'Hover') ? undefined : forceState}
         data-invalid={field.invalid || undefined}
         data-disabled={disabled || undefined}
         data-readonly={readOnly || undefined}
@@ -115,7 +115,7 @@ export default function Textarea({
             border: 'none',
             outline: 'none',
             background: 'transparent',
-            resize: 'vertical',
+            resize: disabled || readOnly ? 'none' : 'vertical',
             fontFamily: 'var(--font-sans)',
             fontSize: 16,
             color: 'var(--text-primary)',

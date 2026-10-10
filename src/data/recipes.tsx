@@ -140,7 +140,7 @@ const button: Recipe = {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  height: 40px;
+  height: var(--control-height-md);
   min-width: 80px;
   padding: 0 16px;
   border-radius: var(--radius-sm);
@@ -161,19 +161,27 @@ const button: Recipe = {
     transform var(--duration-fast) var(--easing-standard);
 }
 
-/* Sizes change height, padding and gap only - never the 16px type. */
-.inspera-btn--small { height: 32px; padding: 0 12px; gap: 6px; }
-.inspera-btn--large { height: 48px; padding: 0 24px; gap: 10px; }
+/* Sizes change height and padding. Small also steps down to 14px type and a
+   16px icon (see the end of this block). */
+.inspera-btn--small {
+  height: var(--control-height-sm);
+  padding: 0 12px;
+  gap: 4px;
+  font-size: var(--medium-14-size);
+  line-height: var(--medium-14-line-height);
+}
+.inspera-btn--large { height: var(--control-height-lg); padding: 0 20px; }
 
 /* Icon only: a square the height of the button. It still needs aria-label. */
-.inspera-btn--icon-only { width: 40px; min-width: 0; padding: 0; }
-.inspera-btn--small.inspera-btn--icon-only { width: 32px; }
-.inspera-btn--large.inspera-btn--icon-only { width: 48px; }
+.inspera-btn--icon-only { width: var(--control-height-md); min-width: 0; padding: 0; }
+.inspera-btn--small.inspera-btn--icon-only { width: var(--control-height-sm); }
+.inspera-btn--large.inspera-btn--icon-only { width: var(--control-height-lg); }
 
 /* Solid intents differ only in fill; hover and pressed derive from it. */
 .inspera-btn--primary     { --btn-bg: var(--primary); }
 .inspera-btn--success     { --btn-bg: var(--success); }
-.inspera-btn--warning     { --btn-bg: var(--warning); }
+/* Warning takes dark text on orange-600: white on --warning is 3.08:1. */
+.inspera-btn--warning     { --btn-bg: var(--orange-600); --btn-fg: var(--gray-900); }
 .inspera-btn--destructive { --btn-bg: var(--error); }
 .inspera-btn--secondary {
   --btn-bg: var(--gray-100);
@@ -198,6 +206,8 @@ const button: Recipe = {
   background: var(--btn-bg-hover);
   box-shadow: var(--btn-shadow-hover);
 }
+/* A button that opens a menu keeps its hover fill while the menu is open. */
+.inspera-btn[aria-expanded='true'] { background: var(--btn-bg-hover); }
 .inspera-btn:active:not(:disabled) {
   background: var(--btn-bg-active);
   box-shadow: var(--btn-shadow-active);
@@ -209,7 +219,8 @@ const button: Recipe = {
 }
 .inspera-btn:disabled { opacity: 0.38; cursor: not-allowed; }
 
-.inspera-btn .material-symbols-outlined { font-size: 20px; }`,
+.inspera-btn .material-symbols-outlined { font-size: 20px; }
+.inspera-btn--small .material-symbols-outlined { font-size: 16px; }`,
   html: `<button type="button" class="inspera-btn inspera-btn--primary">Save</button>
 
 <button type="button" class="inspera-btn inspera-btn--secondary inspera-btn--small">Cancel</button>
@@ -304,10 +315,10 @@ const badge: Recipe = {
 /* Neutral is written out even though it matches the base, so the class name
    stays correct if the default ever moves. */
 .inspera-badge--neutral { --badge-bg: var(--surface-neutral); --badge-fg: var(--gray-900); }
-.inspera-badge--info    { --badge-bg: var(--info-surface);    --badge-fg: var(--info); }
-.inspera-badge--success { --badge-bg: var(--success-surface); --badge-fg: var(--success); }
-.inspera-badge--warning { --badge-bg: var(--warning-surface); --badge-fg: var(--warning); }
-.inspera-badge--error   { --badge-bg: var(--error-surface);   --badge-fg: var(--error); }
+.inspera-badge--info    { --badge-bg: var(--info-surface);    --badge-fg: var(--info-text); }
+.inspera-badge--success { --badge-bg: var(--success-surface); --badge-fg: var(--success-text); }
+.inspera-badge--warning { --badge-bg: var(--warning-surface); --badge-fg: var(--warning-text); }
+.inspera-badge--error   { --badge-bg: var(--error-surface);   --badge-fg: var(--error-text); }
 
 /* The icon is filled, not outlined, at 16px (14px in a small badge). */
 .inspera-badge .material-symbols-outlined {
@@ -315,12 +326,12 @@ const badge: Recipe = {
   font-variation-settings: 'FILL' 1;
 }
 .inspera-badge--small .material-symbols-outlined { font-size: 14px; }`,
-  html: `<span class="inspera-badge inspera-badge--success" role="status">Live</span>
+  html: `<span class="inspera-badge inspera-badge--success">Live</span>
 
-<span class="inspera-badge inspera-badge--neutral inspera-badge--small" role="status">Draft</span>
+<span class="inspera-badge inspera-badge--neutral inspera-badge--small">Draft</span>
 
 <!-- With an icon. Material Symbols Outlined, filled - never another set. -->
-<span class="inspera-badge inspera-badge--error" role="status">
+<span class="inspera-badge inspera-badge--error">
   <span class="material-symbols-outlined" aria-hidden="true">error</span>
   Failed
 </span>`,
@@ -331,7 +342,7 @@ const badge: Recipe = {
     const body = v.withIcon === 'true'
       ? `\n  <span class="material-symbols-outlined" aria-hidden="true">${icon}</span>\n  ${v.intent}\n`
       : v.intent
-    return `<span class="${cls}" role="status">${body}</span>`
+    return `<span class="${cls}">${body}</span>`
   },
   component: (v) => (
     <Badge label={v.intent} intent={v.intent as never} size={v.size as never} withIcon={v.withIcon === 'true'} />
@@ -342,6 +353,7 @@ const badge: Recipe = {
     'Neutral is `--surface-neutral` with `--gray-900` text, not a grey chip with white text.',
     'Every intent pairs a `*-surface` tint with the matching solid as the text colour.',
     'The icon is Material Symbols Outlined with `FILL 1`, at 16px (14px small).',
+    'Static text, not a live region: `role="status"` on every badge makes a table of 50 rows announce 50 times. Announce a status change once, from where it happened.',
   ],
 }
 
@@ -377,10 +389,10 @@ const tag: Recipe = {
 /* Neutral is written out even though it matches the base, so the class name
    stays correct if the default ever moves. */
 .inspera-tag--neutral { --tag-bg: var(--surface-neutral); --tag-fg: var(--gray-900); }
-.inspera-tag--info    { --tag-bg: var(--info-surface);    --tag-fg: var(--info); }
-.inspera-tag--success { --tag-bg: var(--success-surface); --tag-fg: var(--success); }
-.inspera-tag--warning { --tag-bg: var(--warning-surface); --tag-fg: var(--warning); }
-.inspera-tag--error   { --tag-bg: var(--error-surface);   --tag-fg: var(--error); }
+.inspera-tag--info    { --tag-bg: var(--info-surface);    --tag-fg: var(--info-text); }
+.inspera-tag--success { --tag-bg: var(--success-surface); --tag-fg: var(--success-text); }
+.inspera-tag--warning { --tag-bg: var(--warning-surface); --tag-fg: var(--warning-text); }
+.inspera-tag--error   { --tag-bg: var(--error-surface);   --tag-fg: var(--error-text); }
 
 .inspera-tag .material-symbols-outlined {
   font-size: 16px;
@@ -720,7 +732,7 @@ const emptyState: Recipe = {
 
 /* The action is a normal Button, spaced away from the copy. */
 .inspera-empty__action { margin-top: 8px; }`,
-  html: `<div class="inspera-empty" role="status">
+  html: `<div class="inspera-empty">
   <span class="inspera-empty__icon">
     <span class="material-symbols-outlined" aria-hidden="true">inbox</span>
   </span>
@@ -735,10 +747,10 @@ const emptyState: Recipe = {
     const cls = `inspera-empty${small ? ' inspera-empty--small' : ''}`
     const action = v.withAction === 'true'
       ? `\n  <div class="inspera-empty__action">\n` +
-        `    <button type="button" class="inspera-btn inspera-btn--primary${small ? ' inspera-btn--small' : ''}">New assessment</button>\n` +
+        `    <button type="button" class="inspera-btn inspera-btn--${v.actionIntent === 'Secondary' ? 'secondary' : 'primary'}${small ? ' inspera-btn--small' : ''}">New assessment</button>\n` +
         `  </div>`
       : ''
-    return `<div class="${cls}" role="status">
+    return `<div class="${cls}">
   <span class="inspera-empty__icon">
     <span class="material-symbols-outlined" aria-hidden="true">inbox</span>
   </span>
@@ -753,14 +765,15 @@ const emptyState: Recipe = {
       title="No assessments yet"
       description="Create your first assessment to get started."
       actionLabel={v.withAction === 'true' ? 'New assessment' : undefined}
+      actionIntent={v.actionIntent as never}
       size={v.size as never}
     />
   ),
   notes: [
     'The icon sits in an 80px circle of `--gray-100` (56px when small). Without the circle it reads as a broken image.',
     'Title 18px/500, body 14px `--muted-foreground` capped at 320px so it wraps to two short lines rather than one long one.',
-    'The action is the ordinary Button component, not a bespoke link.',
-    'Carry `role="status"` so the empty result is announced when a filter clears the list.',
+    'The action is the ordinary Button component, not a bespoke link: `inspera-btn--primary` when it is the main thing to do on the page, `inspera-btn--secondary` inside a panel or beside a page that already has its main action, so the view keeps one Primary.',
+    'Not a live region: an empty state is page content, and `role="status"` around it (action included) announces it every time it renders. When a filter empties a list, announce the result count from the filter, in a separate polite live region.',
   ],
 }
 
@@ -942,8 +955,6 @@ const card: Recipe = {
   border-radius: var(--radius-lg);
   background: var(--white);
   color: var(--text-primary);
-  /* Stated, not inherited. An interactive card is a <button>, and a button
-     falls back to the UA font rather than the page's. */
   font-family: var(--font-sans);
   /* A transparent border at rest, so switching to Outlined does not resize the
      card. Dropping it and adding a border only on the modifier shifts layout. */
@@ -976,11 +987,38 @@ const card: Recipe = {
   outline: var(--focus-ring-width) solid var(--focus-ring-color);
   outline-offset: var(--focus-ring-offset);
 }
+
+/* Hover and keyboard focus lift the card; pressing sinks it below its rest
+   and lays the neutral --action-hover wash over the white. */
 .inspera-card--interactive:hover,
 .inspera-card--interactive:has(:focus-visible) { box-shadow: var(--shadow-300); }
+.inspera-card--interactive:active {
+  background: linear-gradient(var(--action-hover), var(--action-hover)), var(--white);
+  box-shadow: var(--shadow-100);
+}
 
-/* Interactive cards are <button>, so they are focusable and operable by
-   keyboard for free. A div with onclick is not. */
+/* Selectable: the link toggles aria-pressed. The right padding keeps room for
+   the tick whether or not the card is selected, so selecting never reflows. */
+.inspera-card--selectable { padding-right: 44px; }
+.inspera-card--compact.inspera-card--selectable  { padding-right: 40px; }
+.inspera-card--spacious.inspera-card--selectable { padding-right: 52px; }
+
+/* Selected: a 2px primary edge - the border plus an outline just inside it,
+   so the card keeps its size - and a tick, so colour is not the only cue. */
+.inspera-card--selected {
+  border-color: var(--primary);
+  outline: 1px solid var(--primary);
+  outline-offset: -2px;
+}
+.inspera-card__tick {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  font-size: 20px;
+  color: var(--primary);
+}
+.inspera-card--compact  .inspera-card__tick { top: 12px; right: 12px; }
+.inspera-card--spacious .inspera-card__tick { top: 24px; right: 24px; }
 
 .inspera-card__title {
   margin: 0;
@@ -996,31 +1034,46 @@ const card: Recipe = {
 }`,
   html: `<article class="inspera-card inspera-card--raised">
   <h3 class="inspera-card__title">Algebra Quiz</h3>
-  <p class="inspera-card__body">24 questions | 45 minutes.</p>
+  <p class="inspera-card__body">24 questions, 45 minutes.</p>
 </article>
 
-<!-- Interactive: a real button, never a div with a click handler. -->
-<button type="button" class="inspera-card inspera-card--outlined inspera-card--interactive">
+<!-- Interactive: the card stays an <article>; one button stretched over it, named by the title. -->
+<article class="inspera-card inspera-card--outlined inspera-card--interactive">
   <h3 class="inspera-card__title">History Midterm</h3>
   <p class="inspera-card__body">Open the assessment.</p>
-</button>`,
+  <button type="button" class="inspera-card__link" aria-label="History Midterm"></button>
+</article>
+
+<!-- Selected: a toggle. Flip aria-pressed and the --selected class together, and show the tick. -->
+<article class="inspera-card inspera-card--outlined inspera-card--interactive inspera-card--selectable inspera-card--selected">
+  <h3 class="inspera-card__title">Multiple choice</h3>
+  <p class="inspera-card__body">One or more correct answers.</p>
+  <span class="material-symbols-outlined inspera-card__tick" aria-hidden="true">check_circle</span>
+  <button type="button" class="inspera-card__link" aria-label="Multiple choice" aria-pressed="true"></button>
+</article>`,
   markup: (v) => {
     const pad = v.padding === 'Default' ? '' : ` inspera-card--${v.padding.toLowerCase()}`
     const elev = v.elevation === 'Flat' ? '' : ` inspera-card--${v.elevation.toLowerCase()}`
-    const interactive = v.interactive === 'true'
-    const cls = `inspera-card${elev}${pad}${interactive ? ' inspera-card--interactive' : ''}`
+    const selected = v.selected === 'true'
+    const interactive = v.interactive === 'true' || selected
+    const cls = `inspera-card${elev}${pad}${interactive ? ' inspera-card--interactive' : ''}` +
+      `${selected ? ' inspera-card--selectable inspera-card--selected' : ''}`
     const inner = `  <h3 class="inspera-card__title">Algebra Quiz</h3>\n` +
-      `  <p class="inspera-card__body">24 questions | 45 minutes. Group related content in a contained surface.</p>\n`
-    const link = interactive ? `  <button type="button" class="inspera-card__link" aria-label="Algebra Quiz"></button>\n` : ''
-    return `<article class="${cls}">\n${inner}${link}</article>`
+      `  <p class="inspera-card__body">24 questions, 45 minutes. Covers linear equations and inequalities.</p>\n`
+    const tick = selected ? `  <span class="material-symbols-outlined inspera-card__tick" aria-hidden="true">check_circle</span>\n` : ''
+    const link = interactive
+      ? `  <button type="button" class="inspera-card__link" aria-label="Algebra Quiz"${selected ? ' aria-pressed="true"' : ''}></button>\n`
+      : ''
+    return `<article class="${cls}">\n${inner}${tick}${link}</article>`
   },
   component: (v) => (
     <Card
       title="Algebra Quiz"
-      body="24 questions | 45 minutes. Group related content in a contained surface."
+      body="24 questions, 45 minutes. Covers linear equations and inequalities."
       elevation={v.elevation as never}
       padding={v.padding as never}
       interactive={v.interactive === 'true'}
+      defaultSelected={v.selected === 'true' || undefined}
     />
   ),
   notes: [
@@ -1028,6 +1081,8 @@ const card: Recipe = {
     'Flat has neither border nor shadow, Raised adds `--shadow-200`, Outlined adds a 1px `--border-strong`. Never both a shadow and a strong border.',
     'The transparent 1px border at rest is deliberate: without it, Outlined would be 2px wider than Flat.',
     'An interactive card stays an `<article>` with one transparent `<button class="inspera-card__link">` stretched over it, named by the title. Never wrap the card in a `<button>` (headings inside a button are invalid) and never put a click handler on a `<div>`.',
+    'Interactive states: hover and keyboard focus lift to `--shadow-300`; pressed sinks to `--shadow-100` with the `--action-hover` wash over the white; keyboard focus also draws the standard focus ring around the whole card.',
+    'A selectable card is a toggle: the button carries `aria-pressed`. Selected is a 2px `--primary` edge (border plus a 1px outline inset by 2px) and a `check_circle` tick at the top right; the right padding keeps room for the tick at all times.',
     'Title 16px/500, body 16px/1.4 in `--gray-700` - the body is not smaller than the title.',
   ],
 }
@@ -1056,7 +1111,7 @@ const link: Recipe = {
 
 .inspera-link--small { font-size: 14px; }
 
-.inspera-link--muted { color: var(--gray-600); }
+.inspera-link--muted { color: var(--text-secondary); }
 
 /* Underline behaviour. Hover is the default; the other two are explicit. */
 .inspera-link:hover { text-decoration: underline; }
@@ -1154,7 +1209,9 @@ const alert: Recipe = {
   className: 'inspera-alert',
   css: `.inspera-alert {
   --alert-bg: var(--info-surface);
-  --alert-fg: var(--info);
+  --alert-border: var(--info);
+  /* Icon and action: the solid colours miss 4.5:1 on their own tints. */
+  --alert-fg: var(--info-text);
 
   display: flex;
   align-items: flex-start;
@@ -1164,15 +1221,15 @@ const alert: Recipe = {
   padding: 12px 16px;
   border-radius: var(--radius-md);
   background: var(--alert-bg);
-  border: 1px solid var(--alert-fg);
+  border: 1px solid var(--alert-border);
   color: var(--text-primary);
   font-family: var(--font-sans);
 }
 
-.inspera-alert--info    { --alert-bg: var(--info-surface);    --alert-fg: var(--info); }
-.inspera-alert--success { --alert-bg: var(--success-surface); --alert-fg: var(--success); }
-.inspera-alert--warning { --alert-bg: var(--warning-surface); --alert-fg: var(--warning); }
-.inspera-alert--error   { --alert-bg: var(--error-surface);   --alert-fg: var(--error); }
+.inspera-alert--info    { --alert-bg: var(--info-surface);    --alert-border: var(--info);    --alert-fg: var(--info-text); }
+.inspera-alert--success { --alert-bg: var(--success-surface); --alert-border: var(--success); --alert-fg: var(--success-text); }
+.inspera-alert--warning { --alert-bg: var(--warning-surface); --alert-border: var(--warning); --alert-fg: var(--warning-text); }
+.inspera-alert--error   { --alert-bg: var(--error-surface);   --alert-border: var(--error);   --alert-fg: var(--error-text); }
 
 /* No tint: the accent moves to a 4px left edge instead. */
 .inspera-alert--plain {
@@ -1518,10 +1575,10 @@ const avatarGroup: Recipe = {
   display: inline-flex;
   border-radius: 9999px;
   box-shadow: 0 0 0 2px var(--white);
-  margin-left: -12px;
+  margin-left: -8px;
 }
-.inspera-avatar-group--small .inspera-avatar-group__item { margin-left: -10px; }
-.inspera-avatar-group--large .inspera-avatar-group__item { margin-left: -17px; }
+.inspera-avatar-group--small .inspera-avatar-group__item { margin-left: -6px; }
+.inspera-avatar-group--large .inspera-avatar-group__item { margin-left: -12px; }
 
 /* Last, so it outranks the size modifiers above: nothing overlaps the first. */
 .inspera-avatar-group__item:first-child { margin-left: 0; }
@@ -1583,7 +1640,7 @@ ${shown}${more}
     />
   ),
   notes: [
-    'Overlap is 30% of the diameter as a negative left margin - 10 / 12 / 17px for small / medium / large - and the first item has none.',
+    'Overlap is about 20% of the diameter as a negative left margin - 6 / 8 / 12px for small / medium / large - and the first item has none. With the 2px ring, each avatar stops short of the initials it overlaps; more overlap hides their second letter.',
     'The separating ring is a `box-shadow`, not a border: a border would grow each avatar and break the spacing.',
     'The overflow chip is `+N` on `--gray-200` at 34% of the diameter, sized identically to an avatar.',
     'The group carries `role="group"` and a count in its label; the chip carries "N more". Overlapping avatars are meaningless to a screen reader without both.',
@@ -1761,6 +1818,14 @@ const breadcrumb: Recipe = {
   flex-wrap: wrap;
 }
 
+/* Each separator sits in the item of the crumb before it, so a wrapped trail
+   breaks after a separator and never starts a line with one. */
+.inspera-breadcrumb__list > li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
 /* A crumb. Rendered as <button> in the React component because navigation runs
    through a router callback; with real URLs, use <a href> and the same class. */
 .inspera-breadcrumb__crumb {
@@ -1785,8 +1850,8 @@ const breadcrumb: Recipe = {
 }
 .inspera-breadcrumb--small .inspera-breadcrumb__current { font-size: 14px; }
 
-/* The separator sizes its own glyph rather than setting a size on the <li>,
-   so the chevron can run 2px larger than the text while the slash matches it. */
+/* The separator sizes its own glyph, so the chevron can run 2px larger than
+   the text while the slash matches it. */
 .inspera-breadcrumb__separator {
   color: var(--gray-400);
   display: inline-flex;
@@ -1800,13 +1865,13 @@ const breadcrumb: Recipe = {
 .inspera-breadcrumb--small .inspera-breadcrumb__slash { font-size: 14px; }`,
   html: `<nav class="inspera-breadcrumb" aria-label="Breadcrumb">
   <ol class="inspera-breadcrumb__list">
-    <li><a class="inspera-breadcrumb__crumb" href="/">Home</a></li>
-    <li class="inspera-breadcrumb__separator" aria-hidden="true">
-      <span class="material-symbols-outlined">chevron_right</span>
+    <li>
+      <a class="inspera-breadcrumb__crumb" href="/">Home</a>
+      <span class="inspera-breadcrumb__separator" aria-hidden="true"><span class="material-symbols-outlined">chevron_right</span></span>
     </li>
-    <li><a class="inspera-breadcrumb__crumb" href="/assessments">Assessments</a></li>
-    <li class="inspera-breadcrumb__separator" aria-hidden="true">
-      <span class="material-symbols-outlined">chevron_right</span>
+    <li>
+      <a class="inspera-breadcrumb__crumb" href="/assessments">Assessments</a>
+      <span class="inspera-breadcrumb__separator" aria-hidden="true"><span class="material-symbols-outlined">chevron_right</span></span>
     </li>
     <li><span class="inspera-breadcrumb__current" aria-current="page">Algebra Quiz</span></li>
   </ol>
@@ -1815,15 +1880,14 @@ const breadcrumb: Recipe = {
     const items = ['Home', 'Assessments', 'Mathematics', 'Algebra Quiz']
     const small = v.size === 'Small' ? ' inspera-breadcrumb--small' : ''
     const sep = v.separator === 'Chevron'
-      ? `    <li class="inspera-breadcrumb__separator" aria-hidden="true"><span class="material-symbols-outlined">chevron_right</span></li>`
-      : `    <li class="inspera-breadcrumb__separator" aria-hidden="true"><span class="inspera-breadcrumb__slash">/</span></li>`
+      ? `<span class="inspera-breadcrumb__separator" aria-hidden="true"><span class="material-symbols-outlined">chevron_right</span></span>`
+      : `<span class="inspera-breadcrumb__separator" aria-hidden="true"><span class="inspera-breadcrumb__slash">/</span></span>`
     const rows: string[] = []
     items.forEach((item, i) => {
       const last = i === items.length - 1
       rows.push(last
         ? `    <li><span class="inspera-breadcrumb__current" aria-current="page">${item}</span></li>`
-        : `    <li><button type="button" class="inspera-breadcrumb__crumb">${item}</button></li>`)
-      if (!last) rows.push(sep)
+        : `    <li>\n      <button type="button" class="inspera-breadcrumb__crumb">${item}</button>\n      ${sep}\n    </li>`)
     })
     return `<nav class="inspera-breadcrumb${small}" aria-label="Breadcrumb">
   <ol class="inspera-breadcrumb__list">
@@ -1837,7 +1901,7 @@ ${rows.join('\n')}
   notes: [
     'It is a `<nav aria-label="Breadcrumb">` wrapping an `<ol>` - order is the meaning, so not a `<div>` of spans.',
     'The last crumb is the current page: `aria-current="page"`, `--text-primary` at 500 weight, and not a control.',
-    'Separators live in their own `<li>` marked `aria-hidden="true"`. Left announced, a screen reader reads "chevron right" between every crumb.',
+    'Each separator is an `aria-hidden="true"` span inside the item of the crumb before it, so a wrapped trail never starts a line with one. Left announced, a screen reader reads "chevron right" between every crumb.',
     'Crumbs are 16px (14px small) in `--primary`, underlined on hover only. The chevron runs 2px larger than the text.',
     'With real URLs use `<a href>` rather than `<button>`, keeping the same class - a breadcrumb should be openable in a new tab.',
   ],
@@ -1852,7 +1916,7 @@ const textInput: Recipe = {
   css: `.inspera-input {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
   width: 100%;
   font-family: var(--font-sans);
 }
@@ -1871,7 +1935,7 @@ const textInput: Recipe = {
   align-items: center;
   gap: 8px;
   padding: 0 12px;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   border: var(--border-width-default) solid var(--border-control);
   background: var(--white);
   transition:
@@ -1901,6 +1965,8 @@ const textInput: Recipe = {
   font-size: 16px;
   color: var(--text-primary);
 }
+/* Set, not left to the browser: its default can fall under 4.5:1. */
+.inspera-input__control::placeholder { color: var(--text-placeholder); opacity: 1; }
 
 .inspera-input__field .material-symbols-outlined {
   font-size: 20px;
@@ -1963,16 +2029,15 @@ const textInput: Recipe = {
     const disabled = v.disabled === 'true'
     const readOnly = v.readOnly === 'true'
     const state = `${error ? ' data-invalid="true"' : ''}${disabled ? ' data-disabled="true"' : ''}${readOnly ? ' data-readonly="true"' : ''}`
-    const input = `${v.withValue === 'true' ? ' value="jane.cooper@inspera.com"' : ''}${disabled ? ' disabled' : ''}${readOnly ? ' readonly' : ''}${error ? ' aria-invalid="true"' : ''}`
     const message = error
-      ? `<span class="inspera-input__error" id="email-msg">Enter a valid email address.</span>`
-      : `<span class="inspera-input__help" id="email-msg">We'll never share your email.</span>`
+      ? `\n  <span class="inspera-input__error" id="email-msg">Enter a valid email address.</span>`
+      : v.showHelp === 'true' ? `\n  <span class="inspera-input__help" id="email-msg">We'll never share your email.</span>` : ''
+    const input = `${v.withValue === 'true' ? ' value="jane.cooper@inspera.com"' : ''}${disabled ? ' disabled' : ''}${readOnly ? ' readonly' : ''}${error ? ' aria-invalid="true"' : ''}${message ? ' aria-describedby="email-msg"' : ''}`
     return `<div class="inspera-input${small}">
   <label class="inspera-input__label" for="email">Email address</label>
   <div class="inspera-input__field"${state}>${lead}
-    <input class="inspera-input__control" id="email" placeholder="jane@inspera.com"${input} aria-describedby="email-msg" />${trail}
-  </div>
-  ${message}
+    <input class="inspera-input__control" id="email" placeholder="jane@inspera.com"${input} />${trail}
+  </div>${message}
 </div>`
   },
   component: (v) => (
@@ -1983,7 +2048,7 @@ const textInput: Recipe = {
       size={v.size as never}
       leadingIcon={v.leadingIcon === 'true' ? 'mail' : undefined}
       trailingIcon={v.trailingIcon === 'true' ? 'close' : undefined}
-      helpText="We'll never share your email."
+      helpText={v.showHelp === 'true' ? "We'll never share your email." : undefined}
       errorText="Enter a valid email address."
       error={v.error === 'true'}
       disabled={v.disabled === 'true'}
@@ -1993,8 +2058,8 @@ const textInput: Recipe = {
   notes: [
     'The border belongs to the wrapper, not the `<input>`. The input itself has no border, no outline and no background - otherwise icons cannot sit inside the field.',
     'Focus is `:focus-within` on the wrapper, drawn as `--effect-state-focus` (a 3px box-shadow) plus a `--primary` border. Fields ring with a shadow; buttons ring with an outline.',
-    'Height is 40px (32px small), radius `--radius-md`, resting border `--border-control` #C4C4C4 going to `--border-control-strong` on hover.',
-    'Help and error text are 12px. Only one shows at a time, and `aria-describedby` points at whichever it is.',
+    'Height is 40px (32px small), radius `--radius-sm`, resting border `--border-control` (gray-600) going to `--border-control-strong` on hover.',
+    'Help and error text are 12px. Help text is optional. Only one shows at a time, and `aria-describedby` points at whichever it is - leave it off when neither shows.',
     'A visible `<label>` with `for` is required. A placeholder is not a label.',
   ],
 }
@@ -2010,7 +2075,7 @@ const textarea: Recipe = {
   css: `.inspera-textarea {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
   width: 100%;
   font-family: var(--font-sans);
 }
@@ -2026,7 +2091,7 @@ const textarea: Recipe = {
   display: flex;
   flex-direction: column;
   padding: 8px 12px;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   border: var(--border-width-default) solid var(--border-control);
   background: var(--white);
   transition:
@@ -2055,6 +2120,7 @@ const textarea: Recipe = {
   font-size: 16px;
   color: var(--text-primary);
 }
+.inspera-textarea__control::placeholder { color: var(--text-placeholder); opacity: 1; }
 
 .inspera-textarea__count {
   align-self: flex-end;
@@ -2140,6 +2206,10 @@ const textarea: Recipe = {
 // stay in the DOM and stay focusable; hiding it with display:none breaks both
 // keyboard access and form submission.
 // ---------------------------------------------------------------------------
+/** The playground's description and error lines, shared by the recipe's markup and its component. */
+const CHECKBOX_DESCRIPTION = 'One email a month. Unsubscribe at any time.'
+const CHECKBOX_ERROR = 'Tick this box to continue.'
+
 const checkbox: Recipe = {
   className: 'inspera-checkbox',
   css: `.inspera-checkbox {
@@ -2163,10 +2233,10 @@ const checkbox: Recipe = {
 }
 
 .inspera-checkbox__box {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   border-radius: var(--radius-xs);
-  border: 2px solid var(--border-control-strong);
+  border: 2px solid var(--border-control);
   background: var(--white);
   display: inline-flex;
   align-items: center;
@@ -2176,14 +2246,11 @@ const checkbox: Recipe = {
   transition: all 120ms ease;
 }
 
-.inspera-checkbox--small .inspera-checkbox__box { width: 16px; height: 16px; }
-
 /* The tick is a Material Symbol at the box size minus 4. */
 .inspera-checkbox__box .material-symbols-outlined {
-  font-size: 16px;
+  font-size: 14px;
   font-variation-settings: 'wght' 600;
 }
-.inspera-checkbox--small .inspera-checkbox__box .material-symbols-outlined { font-size: 12px; }
 
 .inspera-checkbox__input:checked + .inspera-checkbox__box,
 .inspera-checkbox__input:indeterminate + .inspera-checkbox__box,
@@ -2212,17 +2279,48 @@ const checkbox: Recipe = {
 
 .inspera-checkbox:active .inspera-checkbox__box { transform: scale(0.92); }
 
+/* In error the border is red whether or not the box is checked, so a group
+   in error reads as one. A checked box keeps its blue fill, and only an
+   unchecked one takes the red hover tint. */
 .inspera-checkbox--error .inspera-checkbox__box { border-color: var(--error); }
-.inspera-checkbox--error:hover .inspera-checkbox__box { border-color: var(--error); }
+.inspera-checkbox--error:hover .inspera-checkbox__box { border-color: var(--error); background: var(--error-surface); }
+.inspera-checkbox--error .inspera-checkbox__input:checked + .inspera-checkbox__box,
+.inspera-checkbox--error .inspera-checkbox__input:indeterminate + .inspera-checkbox__box,
+.inspera-checkbox--error.inspera-checkbox--mixed .inspera-checkbox__box,
+.inspera-checkbox--error:hover .inspera-checkbox__input:checked + .inspera-checkbox__box,
+.inspera-checkbox--error:hover .inspera-checkbox__input:indeterminate + .inspera-checkbox__box,
+.inspera-checkbox--error.inspera-checkbox--mixed:hover .inspera-checkbox__box {
+  border-color: var(--error);
+  background: var(--primary);
+}
 
 .inspera-checkbox--disabled {
   cursor: not-allowed;
   opacity: 0.38;
 }
 .inspera-checkbox--disabled:hover .inspera-checkbox__box {
-  border-color: var(--border-control-strong);
+  border-color: var(--border-control);
   background: var(--white);
-}`,
+}
+
+/* A line under the label: a description, or the error in its place. The
+   field stacks the row and the line. The line starts under the label text
+   (the 18px box plus its 8px gap) and sits 4px under it, pulled up into the
+   row's 8px padding. It is not dimmed with a disabled box: it often says why
+   the option is unavailable. */
+.inspera-checkbox-field {
+  display: inline-flex;
+  flex-direction: column;
+  font-family: var(--font-sans);
+}
+.inspera-checkbox__message {
+  margin-top: -4px;
+  padding-left: 26px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--muted-foreground);
+}
+.inspera-checkbox__message--error { color: var(--error); }`,
   html: `<label class="inspera-checkbox" for="updates">
   <input class="inspera-checkbox__input" id="updates" type="checkbox" />
   <span class="inspera-checkbox__box" aria-hidden="true">
@@ -2242,37 +2340,47 @@ const checkbox: Recipe = {
   <span>Select all</span>
 </label>`,
   markup: (v) => {
-    const small = v.size === 'Small' ? ' inspera-checkbox--small' : ''
     const mixed = v.indeterminate === 'true'
     const checked = v.checked === 'true'
-    const mods = `${small}${mixed ? ' inspera-checkbox--mixed' : ''}${v.error === 'true' ? ' inspera-checkbox--error' : ''}${v.disabled === 'true' ? ' inspera-checkbox--disabled' : ''}`
+    const mods = `${mixed ? ' inspera-checkbox--mixed' : ''}${v.error === 'true' ? ' inspera-checkbox--error' : ''}${v.disabled === 'true' ? ' inspera-checkbox--disabled' : ''}`
     const glyph = mixed ? 'remove' : checked ? 'check' : ''
     const withLabel = v.withLabel === 'true'
     const label = withLabel ? `\n  <span>Send me product updates</span>` : ''
     // A hidden label still has to name the box.
-    const attrs = `${checked ? ' checked' : ''}${v.disabled === 'true' ? ' disabled' : ''}${v.error === 'true' ? ' aria-invalid="true"' : ''}${withLabel ? '' : ' aria-label="Send me product updates"'}`
-    return `<label class="inspera-checkbox${mods}" for="updates">
+    // The line under the label: the error while in error, else the description.
+    const failing = v.error === 'true'
+    const message = !withLabel ? '' : failing ? CHECKBOX_ERROR : v.showDescription === 'true' ? CHECKBOX_DESCRIPTION : ''
+    const attrs = `${checked ? ' checked' : ''}${v.disabled === 'true' ? ' disabled' : ''}${failing ? ' aria-invalid="true"' : ''}${withLabel ? '' : ' aria-label="Send me product updates"'}${message ? ' aria-describedby="updates-msg"' : ''}`
+    const control = `<label class="inspera-checkbox${mods}" for="updates">
   <input class="inspera-checkbox__input" id="updates" type="checkbox"${attrs} />
   <span class="inspera-checkbox__box" aria-hidden="true">${glyph ? `\n    <span class="material-symbols-outlined">${glyph}</span>\n  ` : ''}</span>${label}
 </label>`
+    if (!message) return control
+    return `<div class="inspera-checkbox-field">
+  ${control.replace(/\n/g, '\n  ')}
+  <span class="inspera-checkbox__message${failing ? ' inspera-checkbox__message--error' : ''}" id="updates-msg">${message}</span>
+</div>`
   },
   component: (v) => (
     <Checkbox
       label="Send me product updates"
-      size={v.size as never}
       defaultChecked={v.checked === 'true'}
       indeterminate={v.indeterminate === 'true'}
       withLabel={v.withLabel === 'true'}
       disabled={v.disabled === 'true'}
       error={v.error === 'true'}
+      description={v.showDescription === 'true' ? CHECKBOX_DESCRIPTION : undefined}
+      errorText={v.error === 'true' ? CHECKBOX_ERROR : undefined}
     />
   ),
   notes: [
     'Keep the native `<input type="checkbox">` in the DOM, visually hidden with `position: absolute; opacity: 0; width: 0; height: 0`. `display: none` removes it from the tab order and from form submission.',
     'Draw the focus ring on the box via `:focus-visible + .box`. A ring on a 0x0 input is invisible - this is the detail custom checkboxes miss most often.',
-    'The box is 20px (16px small) with a 2px border and `--radius-xs`. Unchecked is `--border-control-strong`; checked fills with `--primary`.',
+    'The box is 18px, one size, with a 2px border and `--radius-xs`. Unchecked is `--border-control`; checked fills with `--primary`.',
+    'In error the border is `--error`, checked or not; a checked or mixed box keeps its `--primary` fill. An unchecked box takes an `--error-surface` hover tint, and the focus ring stays `--primary`.',
     'Indeterminate is a DOM property (`el.indeterminate = true`), not an HTML attribute; a native checkbox then announces as mixed by itself, so do not add `aria-checked`. Its glyph is `remove`, not a tick. Static markup that cannot run script uses the `inspera-checkbox--mixed` class instead.',
     'The whole row is the `<label>`, so the text is part of the hit target.',
+    'A description or error goes under the label in `.inspera-checkbox__message`, linked with `aria-describedby`. It starts where the label text starts (26px in) and stays at full contrast when the box is disabled.',
   ],
 }
 
@@ -2280,6 +2388,8 @@ const checkbox: Recipe = {
 // Radio - the same pattern as Checkbox, with a dot instead of a tick, and the
 // `name` attribute doing the grouping.
 // ---------------------------------------------------------------------------
+const RADIO_DESCRIPTION = 'Arrives in 3 to 5 working days.'
+
 const radioButton: Recipe = {
   className: 'inspera-radio',
   css: `.inspera-radio {
@@ -2304,7 +2414,7 @@ const radioButton: Recipe = {
   width: 20px;
   height: 20px;
   border-radius: var(--radius-pill);
-  border: 2px solid var(--border-control-strong);
+  border: 2px solid var(--border-control);
   background: var(--white);
   display: inline-flex;
   align-items: center;
@@ -2333,10 +2443,30 @@ const radioButton: Recipe = {
 
 .inspera-radio:active .inspera-radio__circle { transform: scale(0.92); }
 
-.inspera-radio--error .inspera-radio__circle { border-color: var(--error); }
-.inspera-radio--error:hover .inspera-radio__circle { border-color: var(--error); }
+/* In error the ring is red whether or not the radio is selected, so a group
+   in error reads as one. The dot stays blue. */
+.inspera-radio--error .inspera-radio__circle,
+.inspera-radio--error .inspera-radio__input:checked + .inspera-radio__circle { border-color: var(--error); }
+.inspera-radio--error:hover .inspera-radio__circle { border-color: var(--error); background: var(--error-surface); }
 
-.inspera-radio--disabled { cursor: not-allowed; opacity: 0.38; }`,
+.inspera-radio--disabled { cursor: not-allowed; opacity: 0.38; }
+
+/* A description under the label, linked with aria-describedby. It starts
+   where the label text starts (the 20px circle plus its 8px gap) and sits 4px
+   under it, pulled up into the row's 8px padding. Not dimmed when disabled:
+   it often says why the option is unavailable. */
+.inspera-radio-field {
+  display: inline-flex;
+  flex-direction: column;
+  font-family: var(--font-sans);
+}
+.inspera-radio__message {
+  margin-top: -4px;
+  padding-left: 28px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--muted-foreground);
+}`,
   html: `<!-- Every radio in one group shares a name. Radios with no name, or with
      a shared generic name across unrelated questions, will fight each other. -->
 <label class="inspera-radio" for="standard">
@@ -2357,12 +2487,18 @@ const radioButton: Recipe = {
     const selected = v.selected === 'true'
     const mods = `${v.error === 'true' ? ' inspera-radio--error' : ''}${v.disabled === 'true' ? ' inspera-radio--disabled' : ''}`
     const label = withLabel ? `\n  <span>Standard delivery</span>` : ''
-    const attrs = `${selected ? ' checked' : ''}${v.disabled === 'true' ? ' disabled' : ''}${v.error === 'true' ? ' aria-invalid="true"' : ''}${withLabel ? '' : ' aria-label="Standard delivery"'}`
+    const message = withLabel && v.showDescription === 'true' ? RADIO_DESCRIPTION : ''
+    const attrs = `${selected ? ' checked' : ''}${v.disabled === 'true' ? ' disabled' : ''}${v.error === 'true' ? ' aria-invalid="true"' : ''}${withLabel ? '' : ' aria-label="Standard delivery"'}${message ? ' aria-describedby="standard-msg"' : ''}`
     const dot = selected ? '\n    <span class="inspera-radio__dot"></span>\n  ' : ''
-    return `<label class="inspera-radio${mods}" for="standard">
+    const control = `<label class="inspera-radio${mods}" for="standard">
   <input class="inspera-radio__input" id="standard" type="radio" name="delivery"${attrs} />
   <span class="inspera-radio__circle" aria-hidden="true">${dot}</span>${label}
 </label>`
+    if (!message) return control
+    return `<div class="inspera-radio-field">
+  ${control.replace(/\n/g, '\n  ')}
+  <span class="inspera-radio__message" id="standard-msg">${message}</span>
+</div>`
   },
   component: (v) => (
     <RadioButton
@@ -2372,13 +2508,16 @@ const radioButton: Recipe = {
       defaultSelected={v.selected === 'true'}
       disabled={v.disabled === 'true'}
       error={v.error === 'true'}
+      description={v.showDescription === 'true' ? RADIO_DESCRIPTION : undefined}
     />
   ),
   notes: [
     'Identical structure to Checkbox: a visually hidden native `<input type="radio">` plus a drawn circle, with the ring on the circle.',
     'The circle is 20px with a 2px border and `--radius-pill`; the selected dot is a 10px child element, not a background, so it stays centred while the circle scales on press.',
+    'In error the ring is `--error`, selected or not; the dot stays `--primary`. The hover tint is `--error-surface`, and the focus ring stays `--primary`.',
     'Grouping is the `name` attribute. Every radio in one question shares it, and unrelated questions must not - two groups sharing a name become one.',
     'For a set of options prefer the Radio Group component, which owns the name and the group label for you.',
+    'An option that needs a line of its own (what it means, or why it is unavailable) takes a description under its label in `.inspera-radio__message`, linked with `aria-describedby`, 28px in. The error belongs to the group, not to one option.',
   ],
 }
 
@@ -2386,6 +2525,8 @@ const radioButton: Recipe = {
 // Toggle - an immediate on/off switch. It needs role="switch"; a bare checkbox
 // announces as a checkbox, which is a different promise.
 // ---------------------------------------------------------------------------
+const TOGGLE_DESCRIPTION = 'Email and push, as soon as something changes.'
+
 const toggle: Recipe = {
   className: 'inspera-toggle',
   css: `.inspera-toggle {
@@ -2448,7 +2589,24 @@ const toggle: Recipe = {
   outline-offset: var(--focus-ring-offset);
 }
 
-.inspera-toggle--disabled { cursor: not-allowed; opacity: 0.38; }`,
+.inspera-toggle--disabled { cursor: not-allowed; opacity: 0.38; }
+
+/* A description under the label, linked with aria-describedby. It starts
+   where the label text starts (the track plus its 8px gap) and sits 4px under
+   the row. Not dimmed when disabled: it often says why the setting is locked. */
+.inspera-toggle-field {
+  display: inline-flex;
+  flex-direction: column;
+  font-family: var(--font-sans);
+}
+.inspera-toggle__message {
+  margin-top: 4px;
+  padding-left: 52px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--muted-foreground);
+}
+.inspera-toggle--small + .inspera-toggle__message { padding-left: 44px; }`,
   html: `<label class="inspera-toggle" for="notify">
   <input class="inspera-toggle__input" id="notify" type="checkbox" role="switch" />
   <span class="inspera-toggle__track" aria-hidden="true">
@@ -2461,13 +2619,19 @@ const toggle: Recipe = {
     const disabled = v.disabled === 'true'
     const withLabel = v.withLabel === 'true'
     const label = withLabel ? `\n  <span>Enable notifications</span>` : ''
-    const attrs = `${v.checked === 'true' ? ' checked' : ''}${disabled ? ' disabled' : ''}${withLabel ? '' : ' aria-label="Enable notifications"'}`
-    return `<label class="inspera-toggle${small}${disabled ? ' inspera-toggle--disabled' : ''}" for="notify">
+    const message = withLabel && v.showDescription === 'true' ? TOGGLE_DESCRIPTION : ''
+    const attrs = `${v.checked === 'true' ? ' checked' : ''}${disabled ? ' disabled' : ''}${withLabel ? '' : ' aria-label="Enable notifications"'}${message ? ' aria-describedby="notify-msg"' : ''}`
+    const control = `<label class="inspera-toggle${small}${disabled ? ' inspera-toggle--disabled' : ''}" for="notify">
   <input class="inspera-toggle__input" id="notify" type="checkbox" role="switch"${attrs} />
   <span class="inspera-toggle__track" aria-hidden="true">
     <span class="inspera-toggle__thumb"></span>
   </span>${label}
 </label>`
+    if (!message) return control
+    return `<div class="inspera-toggle-field">
+  ${control.replace(/\n/g, '\n  ')}
+  <span class="inspera-toggle__message" id="notify-msg">${message}</span>
+</div>`
   },
   component: (v) => (
     <Toggle
@@ -2476,6 +2640,7 @@ const toggle: Recipe = {
       withLabel={v.withLabel === 'true'}
       defaultChecked={v.checked === 'true'}
       disabled={v.disabled === 'true'}
+      description={v.showDescription === 'true' ? TOGGLE_DESCRIPTION : undefined}
     />
   ),
   notes: [
@@ -2484,42 +2649,59 @@ const toggle: Recipe = {
     'The track fill is `--border-control` off and `--primary` on. It does not tint on hover - only the thumb shadow deepens.',
     'The focus ring goes on the track, since the real input is 0x0.',
     'A toggle applies immediately. If the change needs a Save button, use a Checkbox instead.',
+    'A description goes under the label in `.inspera-toggle__message`, linked with `aria-describedby`: 52px in (44px when small), 4px under the row.',
   ],
 }
 
 // ---------------------------------------------------------------------------
-// Segmented control - a radiogroup of buttons on a tinted track. The selected
-// segment is a raised white card, not just a colour change.
+// Segmented control - a radiogroup of joined, outlined buttons. The selected
+// segment is tinted blue and bold, so it never rests on colour alone.
 // ---------------------------------------------------------------------------
+/** The playground's labels; its Segments control takes the first 2, 3 or 4. */
+export const SEGMENT_LABELS = ['Day', 'Week', 'Month', 'Year']
+
 const segmentedControl: Recipe = {
   className: 'inspera-segmented',
-  css: `.inspera-segmented {
-  display: inline-flex;
-  gap: 2px;
-  padding: 4px;
-  background: var(--gray-100);
-  border-radius: var(--radius-md);
-}
-
+  css: `.inspera-segmented { display: inline-flex; }
 .inspera-segmented--full { width: 100%; }
 
 .inspera-segmented__item {
-  height: 40px;
-  padding: 0 16px;
-  border: none;
-  border-radius: var(--radius-sm);
-  background: transparent;
-  box-shadow: none;
-  color: var(--muted-foreground);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--control-height-md);
+  padding: 0 12px;
+  border: var(--border-width-default) solid var(--border-control);
+  border-radius: 0;
+  background: var(--surface);
+  color: var(--gray-800);
   font-family: var(--font-sans);
-  font-size: 14px;
-  font-weight: 500;
+  font-size: var(--default-16-regular-size);
+  line-height: var(--default-16-regular-line-height);
+  font-weight: 400;
+  white-space: nowrap;
   cursor: pointer;
-  transition: all 120ms ease;
+  transition: background var(--duration-fast) var(--easing-standard);
 }
 
-.inspera-segmented--small .inspera-segmented__item { height: 32px; }
+/* Neighbours overlap by one border, so each join is a single line. Only the
+   outer corners are rounded. */
+.inspera-segmented__item + .inspera-segmented__item { margin-left: calc(var(--border-width-default) * -1); }
+.inspera-segmented__item:first-child { border-radius: var(--radius-sm) 0 0 var(--radius-sm); }
+.inspera-segmented__item:last-child { border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
+.inspera-segmented__item:only-child { border-radius: var(--radius-sm); }
+
+.inspera-segmented--small .inspera-segmented__item {
+  height: var(--control-height-sm);
+  font-size: var(--medium-14-size);
+  line-height: var(--medium-14-line-height);
+}
 .inspera-segmented--full .inspera-segmented__item { flex: 1; }
+
+.inspera-segmented__item[aria-checked='false']:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--surface) 96%, black);
+}
 
 .inspera-segmented__item:focus-visible {
   outline: var(--focus-ring-width) solid var(--focus-ring-color);
@@ -2529,32 +2711,52 @@ const segmentedControl: Recipe = {
 .inspera-segmented--disabled { opacity: 0.38; }
 .inspera-segmented--disabled .inspera-segmented__item { cursor: not-allowed; }
 
-/* Selected: a raised white card on the tinted track. Colour alone is not
-   enough separation at 14px. */
+/* Selected: raised above its neighbours so the blue border shows on all four
+   sides, and bold as well as blue - blue against gray text alone would leave
+   the choice to colour. */
 .inspera-segmented__item[aria-checked='true'] {
-  background: var(--surface);
-  box-shadow: var(--shadow-100);
+  z-index: 1;
+  background: var(--blue-100);
   color: var(--primary);
+  border-color: var(--blue-700);
   font-weight: 600;
+}
+
+/* A hidden bold copy of the label holds the bold width, so selecting a
+   segment does not shift the ones after it. */
+.inspera-segmented__label {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+}
+.inspera-segmented__label::after {
+  content: attr(data-label);
+  content: attr(data-label) / '';
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+  font-weight: 600;
+  pointer-events: none;
+  user-select: none;
 }`,
   html: `<!-- Roving tabindex: the group is one tab stop and the arrows move inside it. -->
 <div class="inspera-segmented" role="radiogroup" aria-label="Date range">
-  <button type="button" class="inspera-segmented__item" role="radio" aria-checked="true" tabindex="0">Day</button>
-  <button type="button" class="inspera-segmented__item" role="radio" aria-checked="false" tabindex="-1">Week</button>
-  <button type="button" class="inspera-segmented__item" role="radio" aria-checked="false" tabindex="-1">Month</button>
+  <button type="button" class="inspera-segmented__item" role="radio" aria-checked="true" tabindex="0"><span class="inspera-segmented__label" data-label="Day">Day</span></button>
+  <button type="button" class="inspera-segmented__item" role="radio" aria-checked="false" tabindex="-1"><span class="inspera-segmented__label" data-label="Week">Week</span></button>
+  <button type="button" class="inspera-segmented__item" role="radio" aria-checked="false" tabindex="-1"><span class="inspera-segmented__label" data-label="Month">Month</span></button>
 </div>`,
   markup: (v) => {
     const size = v.size === 'Small' ? ' inspera-segmented--small' : ''
     const full = v.fullWidth === 'true' ? ' inspera-segmented--full' : ''
     const disabled = v.disabled === 'true'
-    const items = ['Day', 'Week', 'Month'].map((label, i) =>
-      `  <button type="button" class="inspera-segmented__item" role="radio" aria-checked="${i === 1}" tabindex="${i === 1 ? 0 : -1}"${disabled ? ' disabled' : ''}>${label}</button>`)
+    const items = SEGMENT_LABELS.slice(0, Number(v.segments)).map((label, i) =>
+      `  <button type="button" class="inspera-segmented__item" role="radio" aria-checked="${i === 1}" tabindex="${i === 1 ? 0 : -1}"${disabled ? ' disabled' : ''}><span class="inspera-segmented__label" data-label="${label}">${label}</span></button>`)
     return `<div class="inspera-segmented${size}${full}${disabled ? ' inspera-segmented--disabled' : ''}" role="radiogroup" aria-label="Date range"${disabled ? ' aria-disabled="true"' : ''}>\n${items.join('\n')}\n</div>`
   },
   component: (v) => (
     <SegmentedControl
       label="Date range"
-      items={['Day', 'Week', 'Month']}
+      items={SEGMENT_LABELS.slice(0, Number(v.segments))}
       defaultValue="Week"
       size={v.size as never}
       fullWidth={v.fullWidth === 'true'}
@@ -2562,9 +2764,10 @@ const segmentedControl: Recipe = {
     />
   ),
   notes: [
-    'The track is `--gray-100` with 4px padding and `--radius-md`; segments are `--radius-sm` inside it.',
-    'The selected segment becomes a white `--surface` card with `--shadow-100` and `--primary` text at 600 weight. Colour alone is not enough at 14px.',
-    'Segment height is 40px (32px small) and the type stays 14px at both.',
+    'Segments are joined and outlined: white `--surface`, `--gray-800` text and a `--border-control` border, overlapping by one border so each join is a single line. Only the outer corners take `--radius-sm`.',
+    'The selected segment is `--blue-100` with `--primary` (blue-800) text and a `--blue-700` border, at 600 weight. It sits above its neighbours so the blue border shows on all four sides, and the weight marks it as well as the colour.',
+    'Heights and type match Button: 40px with 16px text, or 32px with 14px text when small - the same heights as Text Input, so they line up in a toolbar.',
+    'A hidden bold copy of the label (`::after` from `data-label`) holds the bold width, so selecting a segment does not shift the others.',
     'Use `role="radiogroup"` with `role="radio"` children and a roving tabindex: the selected item is the only tab stop, and arrows move between them.',
     'For more than about four options, or for anything not mutually exclusive, use Tabs or a Select instead.',
   ],
@@ -2732,7 +2935,7 @@ const rating: Recipe = {
 .inspera-rating__star {
   font-size: 28px;
   line-height: 1;
-  color: var(--gray-400);
+  color: var(--border-control);
   /* Same glyph, different fill axis. Swapping to a "star_outline" glyph shifts
      the shape and makes the row jump as you hover across it. */
   font-variation-settings: 'FILL' 0;
@@ -2794,7 +2997,7 @@ ${stars.join('\n')}
   props: ['font-variation-settings'],
   notes: [
     "One glyph - `star` - with the variable font's FILL axis at 0 or 1. Swapping to a different outline glyph changes the shape and makes the row jump on hover.",
-    'Filled stars are `--warning` #EF6C00; empty ones `--gray-400`. Stars are 28px (20px small) with a 2px gap.',
+    'Filled stars are `--warning` #EF6C00; empty ones `--border-control`. Stars are 28px (20px small) with a 2px gap.',
     '`role="radiogroup"` with `role="radio"` stars, a roving tabindex, and arrow keys that both move focus and set the value.',
     'Every star needs its own label ("3 stars"), or the control announces as five unlabelled radios.',
     'Hovering previews the rating up to the pointer; leaving restores the committed value.',
@@ -2817,7 +3020,7 @@ const otpInput: Recipe = {
   height: 48px;
   text-align: center;
   border: var(--border-width-default) solid var(--border-control);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   background: var(--white);
   /* Monospace so the digits do not shift as they are typed. */
   font-family: var(--font-mono);
@@ -2878,7 +3081,7 @@ const otpInput: Recipe = {
     />
   ),
   notes: [
-    'One `<input>` per digit, 44x48, `--radius-md`, in `--font-mono` at 20px so the digits do not shift as they are typed.',
+    'One `<input>` per digit, 44x48, `--radius-sm`, in `--font-mono` at 20px so the digits do not shift as they are typed.',
     '`autocomplete="one-time-code"` goes on the first box only, and `off` on the rest. On every box the platform offers the code once per field.',
     'Wrap the boxes in `role="group"` named for the code ("Verification code"); each box is `aria-label="Digit N of 6"` with `inputmode="numeric"`.',
     'Keep one slot per box: a digit typed into box 3 stays in box 3, and Backspace clears only its own box. Storing the code as one string collapses the gaps.',
@@ -2896,7 +3099,7 @@ const formField: Recipe = {
   css: `.inspera-field-group {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
   width: 100%;
   font-family: var(--font-sans);
 }
@@ -2962,7 +3165,7 @@ ${message}
     'The wrapper owns three links the control cannot make for itself: `for` -> the control id, `aria-describedby` -> the message id, and `aria-invalid` when the message is an error.',
     'Only one message shows at a time. When there is an error it replaces the help text; it does not stack under it.',
     "The red asterisk is `aria-hidden` decoration. Requiredness is announced from the control's own `required` attribute - the asterisk alone tells a screen reader nothing.",
-    'Gap between label, control and message is 6px; message text is 12px.',
+    'Gap between label, control and message is 4px (space-1); message text is 12px.',
     'The nested control keeps its own label markup off (there is already one here) but still needs an accessible name via the outer `for`.',
   ],
 }
@@ -2976,7 +3179,7 @@ const select: Recipe = {
   css: `.inspera-select {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
   width: 220px;
   font-family: var(--font-sans);
 }
@@ -3002,11 +3205,11 @@ const select: Recipe = {
   justify-content: space-between;
   gap: 8px;
   padding: 0 12px;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   border: var(--border-width-default) solid var(--border-control);
   background: var(--white);
-  /* Muted while showing the placeholder; --text-primary once a value is set. */
-  color: var(--muted-foreground);
+  /* Placeholder colour until a value is set, then --text-primary. */
+  color: var(--text-placeholder);
   font-family: var(--font-sans);
   font-size: 16px;
   cursor: pointer;
@@ -3161,7 +3364,7 @@ const datePicker: Recipe = {
   css: `.inspera-datepicker {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
   width: 100%;
   position: relative;
   font-family: var(--font-sans);
@@ -3180,7 +3383,7 @@ const datePicker: Recipe = {
   align-items: center;
   gap: 8px;
   padding: 0 12px;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   border: var(--border-width-default) solid var(--border-control);
   background: var(--white);
   cursor: pointer;
@@ -3337,7 +3540,7 @@ const datePicker: Recipe = {
     const error = v.error === 'true'
     const disabled = v.disabled === 'true'
     const trigger = (open: boolean) => `<button class="inspera-datepicker__trigger" id="due" type="button" aria-haspopup="dialog" aria-expanded="${open}"${error ? ' data-invalid="true" aria-describedby="due-msg"' : ''}${disabled ? ' disabled' : ''}>
-      <span class="inspera-datepicker__value${filled ? ' inspera-datepicker__value--set' : ''}">${filled ? '2026-08-19' : 'Select date'}</span>
+      <span class="inspera-datepicker__value${filled ? ' inspera-datepicker__value--set' : ''}">${filled ? '19 Aug 2026' : 'Select date'}</span>
       <span class="material-symbols-outlined" aria-hidden="true">calendar_today</span>
     </button>`
     const message = error ? `\n  <span class="inspera-datepicker__error" id="due-msg">Choose a date after today.</span>` : ''
@@ -3404,7 +3607,7 @@ ${days.join('\n')}
     'Every day button needs a full `aria-label` ("March 1, 2026"). A bare "1" tells a screen reader nothing.',
     'Today is outlined with a 1px `--primary` border; the selected day is filled with `--primary`. A day that is both shows only the fill.',
     'The panel is anchored under the trigger, `--radius-md` on `--surface` with `--shadow-200`, and closes on Escape and on an outside click.',
-    'Store and emit ISO `YYYY-MM-DD`, never a locale-formatted string.',
+    'Store and emit ISO `YYYY-MM-DD`, never a locale-formatted string. Show it as people read a date: "19 Aug 2026", as Date Range Picker does.',
   ],
 }
 
@@ -3425,20 +3628,13 @@ const fileUpload: Recipe = {
   width: 100%;
   padding: 32px 24px;
   /* Dashed, and 2px - a 1px dashed border reads as a table rule at this size. */
-  border: 2px dashed var(--gray-400);
+  border: 2px dashed var(--border-control);
   border-radius: var(--radius-md);
   background: var(--surface);
   cursor: pointer;
   text-align: center;
   font-family: var(--font-sans);
   transition: all var(--duration-fast) var(--easing-standard);
-}
-
-/* Both the real drag state and the pointer share one look. */
-.inspera-upload:hover,
-.inspera-upload--dragging {
-  border-color: var(--primary);
-  background: var(--blue-100);
 }
 
 /* The input inside has the focus; the zone draws the ring for it. */
@@ -3483,10 +3679,24 @@ const fileUpload: Recipe = {
 .inspera-upload--error .inspera-upload__icon,
 .inspera-upload--error .inspera-upload__help { color: var(--error); }
 
+/* The pointer and a drag share one look. A drag shows even in error - the
+   zone is about to take a new file - while hover keeps an error's red. */
+.inspera-upload:not(.inspera-upload--disabled):not(.inspera-upload--error):hover,
+.inspera-upload--dragging {
+  border-color: var(--primary);
+  background: var(--blue-100);
+}
+.inspera-upload--dragging .inspera-upload__icon { color: var(--primary); }
+
 .inspera-upload--disabled {
   cursor: not-allowed;
-  opacity: 0.6;
-}`,
+}
+/* Disabled dims the icon and the prompt, not the help text: it usually says
+   why uploading is not possible, so it stays readable. "browse" stops looking
+   like a link. */
+.inspera-upload--disabled .inspera-upload__icon,
+.inspera-upload--disabled .inspera-upload__prompt { opacity: 0.6; }
+.inspera-upload--disabled .inspera-upload__browse { color: inherit; font-weight: inherit; }`,
   html: `<!-- A <label> around the file input: clicking anywhere opens the picker
      natively, and the input stays the one focusable, named control. -->
 <label class="inspera-upload" for="attachments">
@@ -3527,9 +3737,10 @@ const fileUpload: Recipe = {
   notes: [
     'The zone is a `<label>` around a visually hidden `<input type="file">`. Clicking the zone opens the picker natively, and the input is the one focusable control, named by `aria-label` and described by the help text. Do not use a `<div role="button">` with the input inside it - that nests one control in another.',
     'Filter dropped files by the same `accept` and `multiple` rules as the picker, and reset the input value after each choice so picking the same file twice still fires.',
-    'Border is 2px dashed `--gray-400`; a 1px dash reads as a table rule at this size.',
-    'The drag state and hover share one look: `--primary` border on a `--blue-100` wash. Handle `dragover`, `dragleave` and `drop`, and `preventDefault` on dragover or the browser opens the file instead.',
+    'Border is 2px dashed `--border-control`; a 1px dash reads as a table rule at this size.',
+    'The drag state and hover share one look: `--primary` border on a `--blue-100` wash. A drag shows it even in error, because the zone is about to take a new file; hover keeps the error red. Handle `dragover`, `dragleave` and `drop`, and `preventDefault` on dragover or the browser opens the file instead.',
     'Always state the constraint ("PNG, JPG or PDF up to 10MB") - a bare drop zone gives no way to know what will be rejected.',
+    'Disabled dims the icon and the prompt to 0.6 and drops the link look from "browse", but not the help text: say there why uploading is not possible, and keep it readable.',
   ],
 }
 
@@ -3591,7 +3802,8 @@ const radioGroup: Recipe = {
     const mods = `${error ? ' inspera-radio--error' : ''}${disabled ? ' inspera-radio--disabled' : ''}`
     const options = ['Standard', 'Express', 'Overnight'].map((label, i) => {
       const id = `d-${label.toLowerCase()}`
-      const checked = i === 0
+      // Nothing selected in error, so the radios and the message agree.
+      const checked = i === 0 && !error
       return `    <label class="inspera-radio${mods}" for="${id}">
       <input class="inspera-radio__input" id="${id}" type="radio" name="delivery" value="${label.toLowerCase()}"${checked ? ' checked' : ''}${disabled ? ' disabled' : ''}${error ? ' aria-invalid="true"' : ''} />
       <span class="inspera-radio__circle" aria-hidden="true">${checked ? '\n        <span class="inspera-radio__dot"></span>\n      ' : ''}</span>
@@ -3610,7 +3822,7 @@ ${options.join('\n')}
     <RadioGroup
       label="Delivery speed"
       name="delivery"
-      defaultValue="standard"
+      defaultValue={v.error === 'true' ? undefined : 'standard'}
       errorText="Choose a delivery speed."
       error={v.error === 'true'}
       disabled={v.disabled === 'true'}
@@ -3683,10 +3895,11 @@ const checkboxGroup: Recipe = {
     const horizontal = v.orientation === 'Horizontal' ? ' inspera-checkbox-group--horizontal' : ''
     const error = v.error === 'true'
     const disabled = v.disabled === 'true'
-    const mods = `${v.size === 'Small' ? ' inspera-checkbox--small' : ''}${error ? ' inspera-checkbox--error' : ''}${disabled ? ' inspera-checkbox--disabled' : ''}`
+    const mods = `${error ? ' inspera-checkbox--error' : ''}${disabled ? ' inspera-checkbox--disabled' : ''}`
     const options = ['Email', 'SMS', 'Push'].map((label, i) => {
       const id = `n-${label.toLowerCase()}`
-      const checked = i === 0
+      // Nothing ticked in error, so the boxes and the message agree.
+      const checked = i === 0 && !error
       return `    <label class="inspera-checkbox${mods}" for="${id}">
       <input class="inspera-checkbox__input" id="${id}" type="checkbox" value="${label.toLowerCase()}"${checked ? ' checked' : ''}${disabled ? ' disabled' : ''}${error ? ' aria-invalid="true"' : ''} />
       <span class="inspera-checkbox__box" aria-hidden="true">${checked ? '\n        <span class="material-symbols-outlined">check</span>\n      ' : ''}</span>
@@ -3704,8 +3917,7 @@ ${options.join('\n')}
   component: (v) => (
     <CheckboxGroup
       label="Notifications"
-      defaultValue={['email']}
-      size={v.size as never}
+      defaultValue={v.error === 'true' ? undefined : ['email']}
       errorText="Choose at least one channel."
       error={v.error === 'true'}
       disabled={v.disabled === 'true'}
@@ -4201,7 +4413,7 @@ const tabs: Recipe = {
   padding: 4px;
   border-bottom: none;
   background: var(--gray-100);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
 }
 
 .inspera-tabs__tab {
@@ -4241,7 +4453,7 @@ const tabs: Recipe = {
 .inspera-tabs--contained .inspera-tabs__tab {
   height: 40px;
   border-bottom: none;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-xs);
   margin-bottom: 0;
 }
 .inspera-tabs--contained.inspera-tabs--small .inspera-tabs__tab { height: 32px; }
@@ -4356,7 +4568,7 @@ const stepper: Recipe = {
   font-size: 13px;
   font-weight: 600;
   background: transparent;
-  color: var(--gray-600);
+  color: var(--text-secondary);
   border: 2px solid var(--border-strong);
   box-shadow: none;
   transition: background 140ms ease, box-shadow 140ms ease;
@@ -4401,7 +4613,7 @@ const stepper: Recipe = {
 .inspera-stepper__label {
   font-size: 14px;
   font-weight: 500;
-  color: var(--gray-600);
+  color: var(--text-secondary);
 }
 .inspera-stepper--small .inspera-stepper__label { font-size: 13px; }
 
@@ -4542,7 +4754,7 @@ const pagination: Recipe = {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   border: none;
   background: transparent;
   color: var(--text-primary);
@@ -4631,6 +4843,7 @@ const pagination: Recipe = {
 // ---------------------------------------------------------------------------
 const menu: Recipe = {
   className: 'inspera-menu',
+  composes: ['button'],
   css: `.inspera-menu {
   position: relative;
   display: inline-block;
@@ -4638,12 +4851,12 @@ const menu: Recipe = {
 }
 
 .inspera-menu__trigger {
-  height: 40px;
+  height: var(--control-height-md);
   display: inline-flex;
   align-items: center;
   gap: 6px;
   padding: 0 12px;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   border: 1px solid var(--border-strong);
   background: var(--white);
   color: var(--text-primary);
@@ -4664,6 +4877,18 @@ const menu: Recipe = {
   transition: transform 140ms ease;
 }
 .inspera-menu__trigger[aria-expanded='true'] .material-symbols-outlined { transform: rotate(180deg); }
+
+/* Small: 32px, with 14px text and a 16px chevron, as a Small button. */
+.inspera-menu__trigger--small {
+  height: var(--control-height-sm);
+  gap: 4px;
+  padding: 0 8px;
+  font-size: 14px;
+}
+.inspera-menu__trigger--small .material-symbols-outlined { font-size: 16px; }
+
+/* Icon only (table rows, card headers, toolbars): the trigger is the canonical
+   Text icon-only button with more_vert, and the menu sits beside it as usual. */
 
 .inspera-menu__list {
   position: absolute;
@@ -4736,9 +4961,28 @@ const menu: Recipe = {
       <span class="material-symbols-outlined" aria-hidden="true">delete</span>Delete
     </button>
   </div>
+</div>
+
+<!-- Icon only, for a table row or a card: the trigger is named for what it acts on. -->
+<div class="inspera-menu">
+  <button type="button" class="inspera-btn inspera-btn--text inspera-btn--small inspera-btn--icon-only"
+          aria-haspopup="menu" aria-expanded="false" aria-label="Actions for Ada Lovelace">
+    <span class="material-symbols-outlined" aria-hidden="true">more_vert</span>
+  </button>
 </div>`,
   markup: (v) => {
     const end = v.placement === 'BottomEnd' ? ' inspera-menu__list--end' : ''
+    const small = v.size === 'Small'
+    const iconOnly = v.iconOnly === 'true'
+    const name = iconOnly ? 'Actions for Algebra Quiz' : 'Actions'
+    const trigger = iconOnly
+      ? `<button type="button" class="inspera-btn inspera-btn--text${small ? ' inspera-btn--small' : ''} inspera-btn--icon-only" aria-haspopup="menu" aria-expanded="true" aria-controls="actions-menu" aria-label="${name}">
+    <span class="material-symbols-outlined" aria-hidden="true">more_vert</span>
+  </button>`
+      : `<button type="button" class="inspera-menu__trigger${small ? ' inspera-menu__trigger--small' : ''}" aria-haspopup="menu" aria-expanded="true" aria-controls="actions-menu">
+    Actions
+    <span class="material-symbols-outlined" aria-hidden="true">expand_more</span>
+  </button>`
     const items = [
       { label: 'Edit', icon: 'edit' },
       { label: 'Duplicate', icon: 'content_copy' },
@@ -4751,20 +4995,19 @@ const menu: Recipe = {
       : `    <button type="button" class="inspera-menu__item${item.danger ? ' inspera-menu__item--danger' : ''}" role="menuitem" tabindex="-1">` +
         `<span class="material-symbols-outlined" aria-hidden="true">${item.icon}</span>${item.label}</button>`)
     return `<div class="inspera-menu">
-  <button type="button" class="inspera-menu__trigger" aria-haspopup="menu" aria-expanded="true" aria-controls="actions-menu">
-    Actions
-    <span class="material-symbols-outlined" aria-hidden="true">expand_more</span>
-  </button>
-  <div class="inspera-menu__list${end}" id="actions-menu" role="menu" aria-label="Actions">
+  ${trigger}
+  <div class="inspera-menu__list${end}" id="actions-menu" role="menu" aria-label="${name}">
 ${rows.join('\n')}
   </div>
 </div>`
   },
   component: (v) => (
     <Menu
-      label="Actions"
+      label={v.iconOnly === 'true' ? 'Actions for Algebra Quiz' : 'Actions'}
       forceVisible
       placement={v.placement as never}
+      size={v.size as never}
+      iconOnly={v.iconOnly === 'true'}
       items={[
         { label: 'Edit', icon: 'edit' },
         { label: 'Duplicate', icon: 'content_copy' },
@@ -4779,7 +5022,8 @@ ${rows.join('\n')}
     'Focus stays on the trigger and the arrows move a highlight, so hover and the keyboard cursor must drive the same `--active` state.',
     'Separators are `role="separator"` and `aria-hidden`, 1px of `--border` with a 4px margin.',
     'Destructive items are `--error` text, never a red fill - a filled row reads as selected.',
-    'Panel is `--radius-md` on `--surface` with `--shadow-200` and a 180px floor, anchored 4px under the trigger. Bottom End flips it to `right: 0` for menus near the viewport edge.',
+    'The trigger is `--radius-sm`, like the buttons and fields beside it: 40px, or 32px with 14px text for Small. The panel is `--radius-md` on `--surface` with `--shadow-200` and a 180px floor, anchored 4px under the trigger. Bottom End flips it to `right: 0` for menus near the viewport edge.',
+    'For row and card actions, use the icon-only trigger: a Text icon-only button with `more_vert`, keeping its hover fill while open. It shows no text, so its `aria-label` names the thing it acts on ("Actions for Ada Lovelace").',
     'Escape closes and returns focus to the trigger; an outside click closes without moving focus.',
   ],
 }
@@ -4816,8 +5060,7 @@ const dialog: Recipe = {
   font-family: var(--font-sans);
 }
 
-.inspera-dialog--small { width: 400px; }
-.inspera-dialog--large { width: 560px; }
+.inspera-dialog--large { width: 640px; }
 
 .inspera-dialog__header {
   display: flex;
@@ -4875,6 +5118,15 @@ const dialog: Recipe = {
   border-top: 1px solid var(--border);
   flex-wrap: wrap;
   flex-shrink: 0;
+}
+
+/* Optional status before the actions. The auto margin keeps the actions at
+   the end, wherever the row wraps. */
+.inspera-dialog__footer-start {
+  margin-right: auto;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--text-secondary);
 }`,
   composes: ['button'],
   html: `<!-- The scrim is required. Without it the page behind stays clickable and
@@ -4901,11 +5153,16 @@ const dialog: Recipe = {
       ? `\n    <button type="button" class="inspera-dialog__close" aria-label="Close dialog">\n` +
         `      <span class="material-symbols-outlined" aria-hidden="true">close</span>\n    </button>`
       : ''
-    const footer = v.hasActions === 'true'
-      ? `\n  <div class="inspera-dialog__footer">
-    <button type="button" class="inspera-btn inspera-btn--text">Cancel</button>
-    <button type="button" class="inspera-btn inspera-btn--primary">Continue</button>
-  </div>`
+    const confirm = v.confirmIntent === 'Destructive' ? 'destructive' : 'primary'
+    const status = v.footerStart === 'true'
+      ? `\n    <div class="inspera-dialog__footer-start">Starts 14 Oct 2026, 09:00</div>`
+      : ''
+    const actions = v.hasActions === 'true'
+      ? `\n    <button type="button" class="inspera-btn inspera-btn--text">Cancel</button>
+    <button type="button" class="inspera-btn inspera-btn--${confirm}">Continue</button>`
+      : ''
+    const footer = status || actions
+      ? `\n  <div class="inspera-dialog__footer">${status}${actions}\n  </div>`
       : ''
     return `<div class="inspera-dialog${size}" role="dialog" aria-modal="true" aria-labelledby="dlg-title" tabindex="-1">
   <div class="inspera-dialog__header">
@@ -4922,14 +5179,17 @@ const dialog: Recipe = {
       size={v.size as never}
       hasCloseButton={v.hasCloseButton === 'true'}
       hasActions={v.hasActions === 'true'}
+      confirmIntent={v.confirmIntent as never}
+      footerStart={v.footerStart === 'true' ? 'Starts 14 Oct 2026, 09:00' : undefined}
     >
       This is the dialog body. Provide context or a clear description of the action the user is about to take.
     </Dialog>
   ),
   notes: [
-    'Widths are exactly 400 / 480 / 560 with `max-width: 100%`, `--radius-lg` and `--shadow-500`.',
+    'Widths are exactly 480 (Medium) and 640 (Large) with `max-width: 100%`, `--radius-lg` and `--shadow-500`.',
     'Wrap the panel in the scrim: `--scrim`, fixed, full-viewport, at `--z-modal`. Without it the page behind stays clickable and this is a floating card, not a modal.',
-    'The footer actions are the canonical Button - `inspera-btn--text` to cancel, `inspera-btn--primary` (or `--destructive`) to confirm. Do not style dialog buttons separately.',
+    'The footer actions are the canonical Button - `inspera-btn--text` to cancel, `inspera-btn--primary` to confirm, or `inspera-btn--destructive` when confirming deletes something or cannot be undone (`confirmIntent="Destructive"`). Do not style dialog buttons separately.',
+    'A short status can lead the footer (`footerStart`, `inspera-dialog__footer-start`): what confirming will do, such as "2 filters set". It is text, never a second action - extra actions belong in the body.',
     '`role="dialog"` with `aria-modal="true"` and `aria-labelledby` pointing at the title id. Generate a unique id - a hardcoded one collides the moment two dialogs exist on a page.',
     'Behaviour the markup cannot express, and that you must add: move focus into the panel on open, trap Tab inside it, return focus to the trigger on close, close on Escape and on a scrim click, and lock body scroll while open.',
     'The title uses the `--h2-*` type tokens (22.78px/500) - an exact export from Figma, not a rounded 24.',
@@ -5044,7 +5304,7 @@ const drawer: Recipe = {
   <div class="inspera-drawer__header">
     <h2 class="inspera-drawer__title" id="drawer-title">Assessment details</h2>${close}
   </div>
-  <div class="inspera-drawer__body">Drawer body content.</div>
+  <div class="inspera-drawer__body">Algebra Quiz, 24 questions. Created by Jane Cooper.</div>
 </div>`
   },
   // The side only moves the fixed panel; the embedded preview both sides compare
@@ -5059,7 +5319,7 @@ const drawer: Recipe = {
       hasCloseButton={v.hasCloseButton === 'true'}
       title="Assessment details"
     >
-      Drawer body content.
+      Algebra Quiz, 24 questions. Created by Jane Cooper.
     </Drawer>
   ),
   notes: [
@@ -5159,7 +5419,7 @@ const popover: Recipe = {
        role="dialog" aria-labelledby="filters-title">
     <span class="inspera-popover__arrow" aria-hidden="true"></span>
     <h3 class="inspera-popover__title" id="filters-title">Filter results</h3>
-    <div class="inspera-popover__body">Popovers can hold interactive content.</div>
+    <div class="inspera-popover__body">Show only published assessments.</div>
   </div>
 </span>`,
   markup: (v) => {
@@ -5168,8 +5428,8 @@ const popover: Recipe = {
   <button type="button" class="inspera-btn inspera-btn--outline" aria-expanded="true" aria-haspopup="dialog" aria-controls="pop-panel">Filters</button>
   <div class="inspera-popover__panel inspera-popover__panel--${place}" id="pop-panel" role="dialog" aria-labelledby="pop-title">
     <span class="inspera-popover__arrow" aria-hidden="true"></span>
-    <h3 class="inspera-popover__title" id="pop-title">Popover title</h3>
-    <div class="inspera-popover__body">Popover content with interactive elements.</div>
+    <h3 class="inspera-popover__title" id="pop-title">Filter results</h3>
+    <div class="inspera-popover__body">Show only published assessments.</div>
   </div>
 </span>`
   },
@@ -5178,8 +5438,8 @@ const popover: Recipe = {
       forceVisible
       placement={v.placement as never}
       trigger={<Button label="Filters" intent="Outline" />}
-      title="Popover title"
-      content="Popover content with interactive elements."
+      title="Filter results"
+      content="Show only published assessments."
     />
   ),
   notes: [
@@ -5293,7 +5553,7 @@ const tooltip: Recipe = {
     <span class="material-symbols-outlined" aria-hidden="true">help</span>
   </button>
   <span class="inspera-tooltip__bubble inspera-tooltip__bubble--top" id="tip-1" role="tooltip">
-    Supplementary help text
+    Get help with this page
     <span class="inspera-tooltip__arrow" aria-hidden="true"></span>
   </span>
 </span>`,
@@ -5306,14 +5566,14 @@ const tooltip: Recipe = {
     <span class="material-symbols-outlined" aria-hidden="true">help</span>
   </button>
   <span class="inspera-tooltip__bubble inspera-tooltip__bubble--${place}${theme}${type}" id="tip-1" role="tooltip" style="opacity: 1">
-    Supplementary help text shown on hover or focus.
+    Get help with this page
     <span class="inspera-tooltip__arrow" aria-hidden="true"></span>
   </span>
 </span>`
   },
   component: (v) => (
     <Tooltip
-      content="Supplementary help text shown on hover or focus."
+      content="Get help with this page"
       placement={v.placement as never}
       theme={v.theme as never}
       variant={v.variant as never}
@@ -5335,16 +5595,18 @@ const tooltip: Recipe = {
 // Keyed by component slug - this is what ComponentPage and the generator look
 // up, so a camelCase key would silently mean "no recipe".
 // ---------------------------------------------------------------------------
-// Number input - a text field whose border lives on the wrapper, with a unit
-// suffix and a pair of stepper buttons sharing that border.
+// Number input - a decrease button, a value box holding the number and its
+// unit, and an increase button: three controls side by side.
 // ---------------------------------------------------------------------------
 const numberInput: Recipe = {
   className: 'inspera-number',
+  composes: ['button'],
   css: `.inspera-number {
-  display: flex;
+  display: inline-flex;
   flex-direction: column;
-  gap: 6px;
-  width: 100%;
+  gap: 4px;
+  max-width: 100%;
+  vertical-align: top;
   font-family: var(--font-sans);
 }
 
@@ -5354,19 +5616,32 @@ const numberInput: Recipe = {
   color: var(--text-primary);
 }
 
-/* The border is on the wrapper. Steppers and input sit inside it unstyled. */
-.inspera-number__field {
-  height: 40px;
+/* Decrease, the value, increase: three separate controls, 8px apart. The
+   steppers are the canonical icon-only Primary button. */
+.inspera-number__row {
   display: flex;
   align-items: center;
-  gap: 4px;
-  padding: 0 4px 0 12px;
-  border-radius: var(--radius-md);
-  border: var(--border-width-default) solid var(--border-control);
-  background: var(--white);
+  gap: 8px;
 }
 
-.inspera-number--small .inspera-number__field { height: 32px; }
+/* The value box: the number and its unit centred together, never under 80px. */
+.inspera-number__row > * { flex-shrink: 0; }
+
+.inspera-number__field {
+  height: var(--control-height-md);
+  min-width: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 0 8px;
+  border-radius: var(--radius-sm);
+  border: var(--border-width-default) solid var(--border-control);
+  background: var(--white);
+  cursor: text;
+}
+
+.inspera-number--small .inspera-number__field { height: var(--control-height-sm); }
 
 .inspera-number__field:hover { border-color: var(--border-control-strong); }
 .inspera-number__field:focus-within {
@@ -5374,44 +5649,33 @@ const numberInput: Recipe = {
   box-shadow: var(--effect-state-focus);
 }
 
-/* The input carries no chrome; the UA spinner is hidden so it never doubles
-   up with our own steppers. */
+/* Only as wide as what it holds - set width to (characters)ch + 2px - so the
+   number and the unit read as one: "45 min". Tabular figures make every digit
+   exactly 1ch. The UA spinner is hidden: it doubles up with the steppers, and
+   Chrome keeps its slot even under appearance: textfield. */
 .inspera-number__control {
-  flex: 1;
-  min-width: 0;
+  padding: 0;
   border: none;
   outline: none;
   background: transparent;
   font-family: var(--font-sans);
   font-size: 16px;
   color: var(--text-primary);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  cursor: inherit;
   appearance: textfield;
   -webkit-appearance: textfield;
 }
+.inspera-number__control::placeholder { color: var(--text-placeholder); opacity: 1; }
 .inspera-number__control::-webkit-outer-spin-button,
 .inspera-number__control::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 
 .inspera-number__suffix {
-  font-size: 14px;
-  color: var(--muted-foreground);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  color: var(--text-primary);
 }
-
-.inspera-number__steppers { display: inline-flex; }
-
-.inspera-number__step {
-  width: 28px;
-  height: 28px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  background: transparent;
-  border-radius: var(--radius-sm);
-  color: var(--action-active);
-  cursor: pointer;
-}
-.inspera-number__step:disabled { color: var(--action-disabled); cursor: not-allowed; }
-.inspera-number__step .material-symbols-outlined { font-size: 20px; }
 
 .inspera-number__help  { font-size: 12px; color: var(--muted-foreground); }
 .inspera-number__error { font-size: 12px; color: var(--error); }
@@ -5426,29 +5690,30 @@ const numberInput: Recipe = {
 .inspera-number__field[data-disabled='true'] {
   background: var(--surface-disabled);
   opacity: 0.6;
+  cursor: not-allowed;
 }
 .inspera-number__field[data-readonly='true'] { background: var(--gray-100); }
 .inspera-number__field[data-readonly='true']:hover { border-color: var(--border-control); }`,
   html: `<div class="inspera-number">
   <label class="inspera-number__label" for="duration">Duration</label>
-  <div class="inspera-number__field">
-    <input class="inspera-number__control" id="duration" type="number"
-           inputmode="numeric" aria-label="Duration" />
-    <span class="inspera-number__suffix">min</span>
-    <span class="inspera-number__steppers">
-      <button type="button" class="inspera-number__step" aria-label="Decrease Duration">
-        <span class="material-symbols-outlined" aria-hidden="true">remove</span>
-      </button>
-      <button type="button" class="inspera-number__step" aria-label="Increase Duration">
-        <span class="material-symbols-outlined" aria-hidden="true">add</span>
-      </button>
-    </span>
+  <div class="inspera-number__row">
+    <button type="button" class="inspera-btn inspera-btn--primary inspera-btn--icon-only" aria-label="Decrease Duration">
+      <span class="material-symbols-outlined" aria-hidden="true">remove</span>
+    </button>
+    <div class="inspera-number__field">
+      <input class="inspera-number__control" id="duration" type="number" inputmode="numeric"
+             min="0" max="240" step="5" value="45" style="width: calc(2ch + 2px)" />
+      <span class="inspera-number__suffix">min</span>
+    </div>
+    <button type="button" class="inspera-btn inspera-btn--primary inspera-btn--icon-only" aria-label="Increase Duration">
+      <span class="material-symbols-outlined" aria-hidden="true">add</span>
+    </button>
   </div>
 </div>`,
   markup: (v) => {
-    const small = v.size === 'Small' ? ' inspera-number--small' : ''
+    const small = v.size === 'Small'
     const suffix = v.suffix && v.suffix !== 'None'
-      ? `\n    <span class="inspera-number__suffix">${v.suffix}</span>` : ''
+      ? `\n      <span class="inspera-number__suffix">${v.suffix}</span>` : ''
     const error = v.error === 'true'
     const disabled = v.disabled === 'true'
     const readOnly = v.readOnly === 'true'
@@ -5457,18 +5722,18 @@ const numberInput: Recipe = {
     const message = error
       ? `<span class="inspera-number__error" id="duration-msg">Enter a valid duration.</span>`
       : `<span class="inspera-number__help" id="duration-msg">Between 0 and 240.</span>`
-    return `<div class="inspera-number${small}">
+    const step = (dir: 'Decrease' | 'Increase', icon: string) =>
+      `<button type="button" class="inspera-btn inspera-btn--primary${small ? ' inspera-btn--small' : ''} inspera-btn--icon-only" aria-label="${dir} Duration"${locked}>
+      <span class="material-symbols-outlined" aria-hidden="true">${icon}</span>
+    </button>`
+    return `<div class="inspera-number${small ? ' inspera-number--small' : ''}">
   <label class="inspera-number__label" for="duration">Duration</label>
-  <div class="inspera-number__field"${state}>
-    <input class="inspera-number__control" id="duration" type="number" inputmode="numeric" min="0" max="240" step="5" value="45"${disabled ? ' disabled' : ''}${readOnly ? ' readonly' : ''}${error ? ' aria-invalid="true"' : ''} aria-describedby="duration-msg" />${suffix}
-    <span class="inspera-number__steppers">
-      <button type="button" class="inspera-number__step" aria-label="Decrease Duration"${locked}>
-        <span class="material-symbols-outlined" aria-hidden="true">remove</span>
-      </button>
-      <button type="button" class="inspera-number__step" aria-label="Increase Duration"${locked}>
-        <span class="material-symbols-outlined" aria-hidden="true">add</span>
-      </button>
-    </span>
+  <div class="inspera-number__row">
+    ${step('Decrease', 'remove')}
+    <div class="inspera-number__field"${state}>
+      <input class="inspera-number__control" id="duration" type="number" inputmode="numeric" min="0" max="240" step="5" value="45" style="width: calc(2ch + 2px)"${disabled ? ' disabled' : ''}${readOnly ? ' readonly' : ''}${error ? ' aria-invalid="true"' : ''} aria-describedby="duration-msg" />${suffix}
+    </div>
+    ${step('Increase', 'add')}
   </div>
   ${message}
 </div>`
@@ -5490,11 +5755,12 @@ const numberInput: Recipe = {
     />
   ),
   notes: [
-    'The border belongs to the `__field` wrapper, not the `<input>`; the input and both steppers are unstyled so they share one border.',
-    'Hide the native spinner (`appearance: textfield` plus the `-webkit` pseudo-elements) or it doubles up with the custom steppers.',
-    'Steppers are 28px square, `--radius-sm`, `--action-active`, and go `--action-disabled` at min / max. Up / Down arrows do the same as the buttons.',
+    'Three separate controls in a row, 8px apart: a decrease button, the value box, an increase button. The steppers sit outside the box, not inside its border.',
+    'The steppers are icon-only Primary buttons (`remove` and `add`), square at the field height: 40px, or 32px for Small. Each is named "Decrease <label>" / "Increase <label>" and is disabled at min / max, or when the field is disabled or read-only.',
+    'The value box is at least 80px wide, with the number and its unit centred together ("45 min"). Size the `<input>` to its characters (`width: calc(<n>ch + 2px)`) with tabular figures, and give the unit the same 16px `--text-primary` as the number.',
+    'Hide the native spinner (`appearance: textfield` plus the `-webkit` pseudo-elements): it doubles up with the steppers, and in Chrome it keeps a 14px slot that clips the number.',
     'Resting border is `--border-control`, going `--border-control-strong` on hover and `--primary` with `--effect-state-focus` on `:focus-within`.',
-    'Clamp to min / max and emit a real `number`, not a string.',
+    'Clamp to min / max and emit a real `number`, not a string. Up / Down arrows step like the buttons.',
   ],
 }
 
@@ -5507,7 +5773,7 @@ const combobox: Recipe = {
   css: `.inspera-combobox {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
   width: 100%;
   position: relative;
   font-family: var(--font-sans);
@@ -5527,7 +5793,7 @@ const combobox: Recipe = {
   align-items: center;
   gap: 8px;
   padding: 0 12px;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   border: var(--border-width-default) solid var(--border-control);
   background: var(--white);
 }
@@ -5548,6 +5814,7 @@ const combobox: Recipe = {
   font-size: 16px;
   color: var(--text-primary);
 }
+.inspera-combobox__control::placeholder { color: var(--text-placeholder); opacity: 1; }
 
 .inspera-combobox__icon {
   font-size: 20px;
@@ -5645,7 +5912,7 @@ const combobox: Recipe = {
   notes: [
     'The resting element is the closed field only - a search icon, an unstyled input, and a chevron. The listbox mounts on focus and unmounts on blur or Escape.',
     'The input is `role="combobox"` with `aria-expanded` and `aria-controls`; each option is `role="option"` with `aria-selected`, and `aria-activedescendant` tracks the highlighted one.',
-    'Field chrome is identical to the text input: 40px, `--radius-md`, `--border-control` to `--primary` on focus with `--effect-state-focus`.',
+    'Field chrome is identical to the text input: 40px, `--radius-sm`, `--border-control` to `--primary` on focus with `--effect-state-focus`.',
     'The active option is filled `--blue-100`. Up / Down move it, Enter commits, Escape closes.',
     'Only allow a typed value that matches no option when free text is genuinely valid; otherwise force a choice from the list.',
   ],
@@ -5660,7 +5927,7 @@ const dateRangePicker: Recipe = {
   css: `.inspera-daterange {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
   width: 100%;
   position: relative;
   font-family: var(--font-sans);
@@ -5679,7 +5946,7 @@ const dateRangePicker: Recipe = {
   align-items: center;
   gap: 8px;
   padding: 0 12px;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   border: var(--border-width-default) solid var(--border-control);
   background: var(--white);
   cursor: pointer;
@@ -5762,7 +6029,7 @@ const dateRangePicker: Recipe = {
     'The popover shows two months side by side (each a `repeat(7, 1fr)` grid) so a range that crosses a month boundary is visible without paging.',
     'The two endpoints are filled `--primary` with white text; every day between them is filled `--blue-100`. First click sets the start, second click sets the end and closes.',
     'The trigger shows "start - end" once both are chosen (`__value--set`), placeholder text otherwise. Store and emit ISO `YYYY-MM-DD`.',
-    'Trigger chrome matches the other fields: 40px, `--radius-md`, `--border-control` to `--primary` with `--effect-state-focus`.',
+    'Trigger chrome matches the other fields: 40px, `--radius-sm`, `--border-control` to `--primary` with `--effect-state-focus`.',
   ],
 }
 
@@ -5808,6 +6075,7 @@ const commandPalette: Recipe = {
   font-size: 18px;
   color: var(--text-primary);
 }
+.inspera-cmdk__input::placeholder { color: var(--text-placeholder); opacity: 1; }
 
 .inspera-cmdk__kbd {
   font-size: 12px;
@@ -5976,7 +6244,7 @@ const toast: Recipe = {
 const dataGrid: Recipe = {
   className: 'inspera-datagrid',
   rootOnly: true,
-  composes: ['checkbox', 'pagination', 'select', 'menu'],
+  composes: ['checkbox', 'pagination', 'select', 'menu', 'button'],
   css: `.inspera-datagrid { width: 100%; font-family: var(--font-sans); }
 
 .inspera-datagrid__table {
@@ -6011,7 +6279,8 @@ const dataGrid: Recipe = {
   color: var(--gray-700);
 }
 .inspera-datagrid__select { width: 44px; text-align: center; }
-.inspera-datagrid__actions { width: 96px; text-align: right; }
+/* Width 1px shrinks the column to the trigger it holds. */
+.inspera-datagrid__actions { width: 1px; text-align: right; }
 
 /* The sortable header is a bare button carrying the arrow. */
 .inspera-datagrid__sort {
@@ -6035,9 +6304,9 @@ const dataGrid: Recipe = {
 .inspera-datagrid__row--selected { background: var(--blue-100); }
 .inspera-datagrid__row:hover { background: var(--action-hover); }
 
-/* Row actions wait for hover or keyboard focus, but stay in the tab order -
-   and are always shown where there is no hover to reveal them. */
-.inspera-datagrid__actions > * { opacity: 0; transition: opacity var(--duration-fast) var(--easing-standard); }
+/* Row actions are always visible. They sit back at rest (0.7 keeps the icon
+   above 3:1) and come to full strength on row hover or keyboard focus. */
+.inspera-datagrid__actions > * { opacity: 0.7; transition: opacity var(--duration-fast) var(--easing-standard); }
 .inspera-datagrid__row:hover .inspera-datagrid__actions > *,
 .inspera-datagrid__row:focus-within .inspera-datagrid__actions > * { opacity: 1; }
 @media (hover: none) {
@@ -6085,9 +6354,8 @@ const dataGrid: Recipe = {
       const menu = actions
         ? `\n          <td class="inspera-datagrid__td inspera-datagrid__actions">
             <div class="inspera-menu">
-              <button type="button" class="inspera-menu__trigger" aria-haspopup="menu" aria-expanded="false" aria-label="Actions for ${name}">
-                Actions
-                <span class="material-symbols-outlined" aria-hidden="true">expand_more</span>
+              <button type="button" class="inspera-btn inspera-btn--text inspera-btn--small inspera-btn--icon-only" aria-haspopup="menu" aria-expanded="false" aria-label="Actions for ${name}">
+                <span class="material-symbols-outlined" aria-hidden="true">more_vert</span>
               </button>
             </div>
           </td>`
@@ -6101,7 +6369,7 @@ const dataGrid: Recipe = {
     const actionsTh = actions ? `\n        <th class="inspera-datagrid__th inspera-datagrid__actions" scope="col"><span class="inspera-datagrid__visually-hidden">Actions</span></th>` : ''
     const foot = footer ? `
   <div class="inspera-datagrid__footer">
-    <span class="inspera-datagrid__range">61 - 62 of 242</span>
+    <span class="inspera-datagrid__range">61 - 80 of 242</span>
     ${pagination.markup({ size: 'Small', showEdges: 'true' }).replace(/\n/g, '\n    ')}
     <div class="inspera-datagrid__pagesize">
       <span class="inspera-datagrid__pagesize-label" aria-hidden="true">Rows per page</span>
@@ -6154,7 +6422,7 @@ ${rows}
       selectedIds={['0']}
       sort={{ key: 'name', direction: 'Ascending' }}
       rowActions={v.rowActions === 'true'
-        ? (row) => <Menu label="Actions" aria-label={`Actions for ${String(row.name)}`} items={[{ label: 'Edit', icon: 'edit' }]} />
+        ? (row) => <Menu iconOnly size="Small" label={`Actions for ${String(row.name)}`} items={[{ label: 'Edit', icon: 'edit' }]} />
         : undefined}
     />
   ),
@@ -6162,8 +6430,8 @@ ${rows}
     'A data grid is a Table plus four things: a leading selection column, sortable headers, per-row actions, and a footer pager. Each is a documented component - Checkbox, Menu, Pagination and Select - so reach for those rather than rebuilding them.',
     'Sortable headers are buttons inside the `<th>`; the `<th>` carries `aria-sort` (`ascending` / `descending` / `none`). The active column is `--primary` with a solid arrow.',
     'Selection keys on a stable row id, never the row position - sort the table and the selection must stay on the same rows. Select-all acts on the rows on screen and is mixed when only some are selected.',
-    'Every row-action trigger needs its own name ("Actions for Ada Lovelace"): a column of identical "Actions" buttons is indistinguishable to a screen reader. Actions reveal on row hover and on keyboard focus, and are always visible on touch screens.',
-    'The footer shows "start - end of total", the pager, and a rows-per-page Select. Page long datasets rather than rendering every row.',
+    'Row actions are one Menu per row behind a Small icon-only `more_vert` trigger (32px, a Text button), not a labelled button. Each trigger needs its own name ("Actions for Ada Lovelace"): a column of identical names is indistinguishable to a screen reader. Actions are always visible, at 0.7 opacity at rest and full strength on row hover, keyboard focus and touch screens, so people can see a row has actions without hovering it.',
+    'The footer shows "start - end of total", the pager, and a rows-per-page Select. Page long datasets rather than rendering every row. When the rows are one page of a larger set, the range comes from the page and the page size: page 4 of 20 rows is "61 - 80", and only the last page ends early.',
   ],
 }
 

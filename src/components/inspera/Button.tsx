@@ -13,7 +13,7 @@ export interface ButtonProps {
   label: string
   /** Visual role / semantic weight. */
   intent?: ButtonIntent
-  /** Height 32 / 40 / 48. */
+  /** Height 32 / 40 / 44 (`--control-height-sm/md/lg`). Small also steps down to 14px text and a 16px icon. */
   size?: ButtonSize
   /** Material Symbols name shown before the label. */
   leadingIcon?: string
@@ -37,14 +37,18 @@ const intentMap: Record<ButtonIntent, { bg: string; fg: string; border: string }
   Outline: { bg: 'transparent', fg: 'var(--primary)', border: 'var(--primary)' },
   Text: { bg: 'transparent', fg: 'var(--primary)', border: 'transparent' },
   Success: { bg: 'var(--success)', fg: 'var(--white)', border: 'transparent' },
-  Warning: { bg: 'var(--warning)', fg: 'var(--white)', border: 'transparent' },
+  // Not white on --warning: that is 3.08:1. Dark text on orange-600 holds 4.5:1
+  // through hover and pressed (7.07, 5.76, 4.81), which darken the fill.
+  Warning: { bg: 'var(--orange-600)', fg: 'var(--gray-900)', border: 'transparent' },
   Destructive: { bg: 'var(--error)', fg: 'var(--white)', border: 'transparent' },
 }
 
-const sizeMap: Record<ButtonSize, { h: number; px: number; gap: number }> = {
-  Small: { h: 32, px: 12, gap: 6 },
-  Medium: { h: 40, px: 16, gap: 8 },
-  Large: { h: 48, px: 24, gap: 10 },
+// Padding and gap stay on the 4px grid. Only Small changes the type: 14px
+// text and a 16px icon, as Primer, Carbon and Atlassian do at this height.
+const sizeMap: Record<ButtonSize, { h: string; px: number; gap: number; type: string; icon: number }> = {
+  Small: { h: 'var(--control-height-sm)', px: 12, gap: 4, type: 'medium-14', icon: 16 },
+  Medium: { h: 'var(--control-height-md)', px: 16, gap: 8, type: 'default-16-medium', icon: 20 },
+  Large: { h: 'var(--control-height-lg)', px: 20, gap: 8, type: 'default-16-medium', icon: 20 },
 }
 
 /**
@@ -99,9 +103,9 @@ export default function Button({
     borderWidth: 'var(--border-width-default)',
     borderStyle: 'solid',
     fontFamily: 'var(--font-sans)',
-    fontSize: 'var(--default-16-medium-size)',
+    fontSize: `var(--${s.type}-size)`,
     fontWeight: 600,
-    lineHeight: 'var(--default-16-medium-line-height)',
+    lineHeight: `var(--${s.type}-line-height)`,
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -112,7 +116,7 @@ export default function Button({
   }
 
   const icon = (name: string) => (
-    <span className="material-symbols-outlined" style={{ fontSize: 20 }} aria-hidden>
+    <span className="material-symbols-outlined" style={{ fontSize: s.icon }} aria-hidden>
       {name}
     </span>
   )
@@ -121,7 +125,7 @@ export default function Button({
     <button
       type={type}
       className={cx('inspera inspera-interactive inspera-button', className)}
-      data-force-state={forceState}
+      data-force-state={disabled ? undefined : forceState}
       style={vars}
       disabled={disabled}
       onClick={onClick}

@@ -78,10 +78,15 @@ export interface Step {
 }
 ```
 
-**Accessibility** - role `list`. Use an ordered list for step semantics; Mark the current step with aria-current="step"; Convey completion with an icon, not color alone.
+**Accessibility** - role `list`. Use an ordered list for step semantics; Mark the current step with aria-current="step"; Convey completion with an icon, not colour alone.
 
 **Do:** Use for multi-step flows and wizards; Show completed, current, and upcoming states; Keep step labels short.
-**Don't:** Do not use for non-sequential navigation - use Tabs; Do not exceed a handful of steps.
+**Don't:** Do not use for non-sequential navigation - use Tabs; Do not use more than a handful of steps.
+
+**Choosing a variant:**
+- `orientation="Horizontal"`: Across the top of a flow of a few steps, such as New test.
+- `orientation="Vertical"`: Beside the content, when each step needs a line of detail, such as what is left before a test can be published.
+- `size="Small"`: Inside dialogs and panels, such as importing candidates.
 
 **Deprecated aliases** (do not use): `Wizard`, `Progress steps`, `Step indicator`
 
@@ -132,12 +137,13 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   --white:               #ffffff;
   --gray-200:            #EDEDED;
   --gray-300:            #D9D9D9;
-  --gray-600:            #7A7A7A;
+  --gray-700:            #595959;
   --primary-focus-ring:  rgba(0, 64, 128, 0.3);
   --text-primary:        rgba(0, 0, 0, 0.87);
+  --text-secondary:      var(--gray-700);
   --border:              var(--gray-200);
   --border-strong:       var(--gray-300);
-  --muted-foreground:    var(--gray-600);
+  --muted-foreground:    var(--gray-700);
   --radius-pill:         9999px;
   --font-sans:           'Inter', system-ui, -apple-system, sans-serif;
 }
@@ -205,7 +211,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   font-size: 13px;
   font-weight: 600;
   background: transparent;
-  color: var(--gray-600);
+  color: var(--text-secondary);
   border: 2px solid var(--border-strong);
   box-shadow: none;
   transition: background 140ms ease, box-shadow 140ms ease;
@@ -250,7 +256,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 .inspera-stepper__label {
   font-size: 14px;
   font-weight: 500;
-  color: var(--gray-600);
+  color: var(--text-secondary);
 }
 .inspera-stepper--small .inspera-stepper__label { font-size: 13px; }
 

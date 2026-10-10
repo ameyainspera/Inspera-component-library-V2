@@ -117,7 +117,7 @@
 
   /* Text */
   --text-primary: rgba(0, 0, 0, 0.87); /* Body and heading text */
-  --text-secondary: var(--gray-600); /* Supporting and helper text */
+  --text-secondary: var(--gray-700); /* Supporting and helper text. gray-700, not 600: gray-600 is 4.29:1 on white */
   --text-disabled: var(--action-disabled); /* Disabled text */
   --text-on-primary: #ffffff; /* Text on a primary-filled surface */
 
@@ -126,11 +126,15 @@
   --success-surface: #E8F5E9; /* Success fill. Pending Figma verification */
   --warning-surface: #FFF3E0; /* Warning fill. Pending Figma verification */
   --error-surface: #FFEBEE; /* Error fill. Pending Figma verification */
+  --info-text: var(--blue-800); /* Text and icons on info-surface - 9.14:1 */
+  --success-text: var(--green-800); /* Text and icons on success-surface - 6.30:1 */
+  --warning-text: var(--orange-800); /* Text and icons on warning-surface - 6.01:1 */
+  --error-text: var(--red-700); /* Text and icons on error-surface - 6.90:1 */
 
   /* Controls */
-  --border-control: #C4C4C4;      /* Resting border on inputs, select, toggle track. Pending Figma verification */
-  --border-control-strong: #8C8C8C; /* Hover border; checkbox and radio resting border. Pending Figma verification */
-  --text-placeholder: #8C8C8C;    /* Placeholder text. Pending Figma verification */
+  --border-control: var(--gray-600); /* Resting outline of every control: fields, checkbox, radio, toggle track, empty rating star */
+  --border-control-strong: var(--gray-800); /* Field border on hover */
+  --text-placeholder: var(--gray-700); /* Placeholder text - 7.00:1 on white */
   --surface-disabled: #F5F5F5;    /* Disabled control fill. Pending Figma verification */
   --surface-readonly: var(--gray-100); /* Read-only control fill */
   --surface-neutral: #F0F0F0;     /* Neutral Badge/Tag fill. Pending Figma verification */
@@ -143,7 +147,7 @@
   --border: var(--gray-200);   /* Hairline separator */
   --border-strong: var(--gray-300); /* Control outline */
   --border-interactive: var(--gray-500); /* Control outline on hover */
-  --muted-foreground: var(--gray-600); /* De-emphasised label text */
+  --muted-foreground: var(--gray-700); /* De-emphasised label text */
   --scrim: rgba(39, 39, 39, 0.48); /* Backdrop behind Dialog, Drawer and Command Palette */
 
   /* Spacing */
@@ -158,6 +162,11 @@
   --space-10: 40px;
   --space-12: 48px;
   --space-16: 64px;
+
+  /* Control height */
+  --control-height-sm: 32px;  /* Small - dense toolbars, table rows, actions beside small inputs */
+  --control-height-md: 40px;  /* Medium - the default */
+  --control-height-lg: 44px;  /* Large - one prominent call to action, touch-first screens */
 
   /* Radius */
   --radius-none: 0px;
@@ -214,7 +223,7 @@
   /* Layering */
   --z-base: 0;
   --z-sticky: 100;     /* Sticky headers and toolbars */
-  --z-dropdown: 300;   /* Select and Menu panels */
+  --z-dropdown: 300;   /* Select and Menu panels. Inside a Dialog or Drawer, put the panel in the modal's overlay element, or it opens under the scrim */
   --z-popover: 400;
   --z-overlay: 500;    /* Dialog and Drawer scrim */
   --z-modal: 600;      /* Dialog and Drawer surface */

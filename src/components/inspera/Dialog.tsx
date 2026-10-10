@@ -1,10 +1,11 @@
-import { type CSSProperties, type ReactNode, useId } from 'react'
+import { type CSSProperties, type ReactNode, useId, useState } from 'react'
 import Button from './Button'
-import { Portal, useEscapeLayer, useScrimDismiss } from './overlay'
+import { ModalLayer, Portal, useEscapeLayer, useScrimDismiss } from './overlay'
 import { cx, type NativeAttrs } from './types'
 import { useModalBehavior } from './useModalBehavior'
 
-export type DialogSize = 'Small' | 'Medium' | 'Large'
+export type DialogSize = 'Medium' | 'Large'
+export type DialogConfirmIntent = 'Primary' | 'Destructive'
 
 export interface DialogProps {
   /** Whether the dialog is shown. Controlled - pair with onClose. */
@@ -13,7 +14,7 @@ export interface DialogProps {
   title: string
   /** Dialog content. */
   children?: ReactNode
-  /** Panel width 400 / 480 / 560. */
+  /** Panel width 480 / 640. Medium for a question or confirmation, Large for a summary or short form to check first. */
   size?: DialogSize
   /** Show the header close button. */
   hasCloseButton?: boolean
@@ -21,8 +22,15 @@ export interface DialogProps {
   hasActions?: boolean
   /** Label for the confirming action. Name the action - "Delete", not "OK". */
   confirmLabel?: string
+  /** The confirming button's intent. Destructive when the action deletes something or cannot be undone. */
+  confirmIntent?: DialogConfirmIntent
   /** Label for the dismissing action. */
   cancelLabel?: string
+  /**
+   * Short text at the start of the footer, before the actions - what confirming
+   * will do, such as "2 filters set". Not for a second action.
+   */
+  footerStart?: ReactNode
   /** Fired on the close button, Cancel, the scrim, and Escape. */
   onClose?: () => void
   /** Fired when the confirming action is activated. */
@@ -31,7 +39,7 @@ export interface DialogProps {
   embedded?: boolean
 }
 
-const widthMap: Record<DialogSize, number> = { Small: 400, Medium: 480, Large: 560 }
+const widthMap: Record<DialogSize, number> = { Medium: 480, Large: 640 }
 
 export default function Dialog({
   open,
@@ -41,7 +49,9 @@ export default function Dialog({
   hasCloseButton = true,
   hasActions = true,
   confirmLabel = 'Continue',
+  confirmIntent = 'Primary',
   cancelLabel = 'Cancel',
+  footerStart,
   onClose,
   onConfirm,
   embedded = false,
@@ -55,6 +65,8 @@ export default function Dialog({
   const panel = useModalBehavior(modal)
   const scrim = useScrimDismiss(onClose)
   useEscapeLayer(modal, () => onClose?.())
+  // The scrim element, handed to the panels inside so they open above the dialog.
+  const [layer, setLayer] = useState<HTMLDivElement | null>(null)
 
   if (!embedded && !open) return null
 
@@ -118,13 +130,21 @@ export default function Dialog({
       </div>
 
       {/* Footer - the library's own Button, so dialog actions match every other button. */}
-      {hasActions && (
+      {(hasActions || footerStart) && (
         <div style={{
           display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: 8,
           padding: '16px 24px', borderTop: 'var(--border-width-default) solid var(--border)', flexWrap: 'wrap', flexShrink: 0,
         }}>
-          <Button label={cancelLabel} intent="Text" onClick={onClose} />
-          <Button label={confirmLabel} intent="Primary" onClick={onConfirm} />
+          {/* margin-right: auto pushes the actions to the end, wherever the row wraps. */}
+          {footerStart && (
+            <div style={{ marginRight: 'auto', fontSize: 14, lineHeight: 1.4, color: 'var(--text-secondary)' }}>{footerStart}</div>
+          )}
+          {hasActions && (
+            <>
+              <Button label={cancelLabel} intent="Text" onClick={onClose} />
+              <Button label={confirmLabel} intent={confirmIntent} onClick={onConfirm} />
+            </>
+          )}
         </div>
       )}
     </div>
@@ -133,8 +153,9 @@ export default function Dialog({
   if (embedded) return content
 
   return (
-    <Portal>
+    <Portal modal>
       <div
+        ref={setLayer}
         {...scrim}
         className="inspera"
         style={{
@@ -143,7 +164,7 @@ export default function Dialog({
           padding: 16, zIndex: 'var(--z-modal)',
         }}
       >
-        {content}
+        <ModalLayer.Provider value={layer}>{content}</ModalLayer.Provider>
       </div>
     </Portal>
   )

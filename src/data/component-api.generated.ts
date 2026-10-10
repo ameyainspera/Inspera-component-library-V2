@@ -79,7 +79,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "'Info' | 'Success' | 'Warning' | 'Error'",
         "required": false,
         "default": "'Info'",
-        "description": "Severity / color. Warning and Error interrupt screen readers; Info and Success wait."
+        "description": "Severity and colour. Warning and Error interrupt screen readers; Info and Success wait."
       },
       {
         "name": "background",
@@ -172,7 +172,7 @@ export const componentApi: Record<string, ComponentApi> = {
       },
       {
         "name": "size",
-        "type": "AvatarSize",
+        "type": "'Small' | 'Medium' | 'Large'",
         "required": false,
         "default": "'Medium'",
         "description": "Avatar diameter."
@@ -196,7 +196,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "'Neutral' | 'Info' | 'Success' | 'Warning' | 'Error'",
         "required": false,
         "default": "'Neutral'",
-        "description": "Semantic color."
+        "description": "Semantic colour."
       },
       {
         "name": "size",
@@ -283,7 +283,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "'Small' | 'Medium' | 'Large'",
         "required": false,
         "default": "'Medium'",
-        "description": "Height 32 / 40 / 48."
+        "description": "Height 32 / 40 / 44 (`--control-height-sm/md/lg`). Small also steps down to 14px text and a 16px icon."
       },
       {
         "name": "leadingIcon",
@@ -361,7 +361,25 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "boolean",
         "required": false,
         "default": "false",
-        "description": "The whole card becomes one click target, with hover elevation and a focus ring."
+        "description": "The whole card becomes one click target: it lifts on hover, sinks when pressed and takes a focus ring."
+      },
+      {
+        "name": "selected",
+        "type": "boolean",
+        "required": false,
+        "description": "Selected state. Controlled - pair with onSelectedChange. Setting it makes the card a toggle: interactive, and selected or not with each click."
+      },
+      {
+        "name": "defaultSelected",
+        "type": "boolean",
+        "required": false,
+        "description": "Starting selection when uncontrolled. Also makes the card a toggle."
+      },
+      {
+        "name": "onSelectedChange",
+        "type": "(selected: boolean) => void",
+        "required": false,
+        "description": "Fired with the new selection when the card is clicked."
       },
       {
         "name": "children",
@@ -421,13 +439,6 @@ export const componentApi: Record<string, ComponentApi> = {
         "description": "Render the label text. When false, the label becomes `aria-label`."
       },
       {
-        "name": "size",
-        "type": "'Small' | 'Medium'",
-        "required": false,
-        "default": "'Medium'",
-        "description": "Indicator size."
-      },
-      {
         "name": "disabled",
         "type": "boolean",
         "required": false,
@@ -439,7 +450,19 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "boolean",
         "required": false,
         "default": "false",
-        "description": "Marks the control invalid: red border and `aria-invalid`."
+        "description": "Marks the control invalid: a red border, checked or not, and `aria-invalid` on the input."
+      },
+      {
+        "name": "description",
+        "type": "ReactNode",
+        "required": false,
+        "description": "A line under the label: what the option does, or why it is unavailable. Shown with a visible label, and linked to the box with `aria-describedby`."
+      },
+      {
+        "name": "errorText",
+        "type": "string",
+        "required": false,
+        "description": "Replaces the description while `error` is set. Say what to do: \"Confirm the marks to submit them.\""
       }
     ],
     "relatedTypes": {},
@@ -484,13 +507,6 @@ export const componentApi: Record<string, ComponentApi> = {
         "required": false,
         "default": "'Vertical'",
         "description": "Layout direction."
-      },
-      {
-        "name": "size",
-        "type": "CheckboxSize",
-        "required": false,
-        "default": "'Medium'",
-        "description": "Size of every checkbox in the group."
       },
       {
         "name": "helpText",
@@ -715,7 +731,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "boolean",
         "required": false,
         "default": "true",
-        "description": "Highlight rows on hover and reveal row actions on hover."
+        "description": "Highlight rows on hover, and bring row actions to full strength on hover."
       },
       {
         "name": "caption",
@@ -778,7 +794,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "name": "rowActions",
         "type": "(row: DataGridRow, index: number) => ReactNode",
         "required": false,
-        "description": "Trailing per-row actions. Revealed on hover and focus when `hoverable`."
+        "description": "Trailing per-row actions. Always visible; quieter at rest, full strength on row hover and focus when `hoverable`. Use an icon-only Small Menu named for its row: `<Menu iconOnly size=\"Small\" label={`Actions for ${row.name}`} ... />`."
       },
       {
         "name": "onRowClick",
@@ -797,7 +813,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "name": "total",
         "type": "number",
         "required": false,
-        "description": "Total row count across all pages. Defaults to the rendered row count."
+        "description": "Total row count across all pages, when `rows` is one page of a larger set fetched page by page. The range then reads from the page and page size (\"21 - 40 of 179\"). Defaults to the rendered row count."
       },
       {
         "name": "pageCount",
@@ -1061,10 +1077,10 @@ export const componentApi: Record<string, ComponentApi> = {
       },
       {
         "name": "size",
-        "type": "'Small' | 'Medium' | 'Large'",
+        "type": "'Medium' | 'Large'",
         "required": false,
         "default": "'Medium'",
-        "description": "Panel width 400 / 480 / 560."
+        "description": "Panel width 480 / 640. Medium for a question or confirmation, Large for a summary or short form to check first."
       },
       {
         "name": "hasCloseButton",
@@ -1088,11 +1104,24 @@ export const componentApi: Record<string, ComponentApi> = {
         "description": "Label for the confirming action. Name the action - \"Delete\", not \"OK\"."
       },
       {
+        "name": "confirmIntent",
+        "type": "'Primary' | 'Destructive'",
+        "required": false,
+        "default": "'Primary'",
+        "description": "The confirming button's intent. Destructive when the action deletes something or cannot be undone."
+      },
+      {
         "name": "cancelLabel",
         "type": "string",
         "required": false,
         "default": "'Cancel'",
         "description": "Label for the dismissing action."
+      },
+      {
+        "name": "footerStart",
+        "type": "ReactNode",
+        "required": false,
+        "description": "Short text at the start of the footer, before the actions - what confirming will do, such as \"2 filters set\". Not for a second action."
       },
       {
         "name": "onClose",
@@ -1123,14 +1152,14 @@ export const componentApi: Record<string, ComponentApi> = {
         "name": "label",
         "type": "string",
         "required": false,
-        "description": "Optional centered label (horizontal only)."
+        "description": "Optional centred label (horizontal only)."
       },
       {
         "name": "spacing",
         "type": "'Compact' | 'Default' | 'Spacious'",
         "required": false,
         "default": "'Default'",
-        "description": "Surrounding margin."
+        "description": "Surrounding margin, 8 / 16 / 24px on each side."
       }
     ],
     "relatedTypes": {},
@@ -1212,13 +1241,20 @@ export const componentApi: Record<string, ComponentApi> = {
         "name": "actionLabel",
         "type": "string",
         "required": false,
-        "description": "Optional primary action label."
+        "description": "Optional action label."
       },
       {
         "name": "onAction",
         "type": "() => void",
         "required": false,
         "description": "Fired when the action is activated. Only rendered when actionLabel is set."
+      },
+      {
+        "name": "actionIntent",
+        "type": "'Primary' | 'Secondary'",
+        "required": false,
+        "default": "'Primary'",
+        "description": "The action's emphasis. Primary when it is the main thing to do on the page; Secondary inside a panel, or beside a page that already has its own main action, so the view keeps one Primary."
       },
       {
         "name": "size",
@@ -1414,7 +1450,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "'Default' | 'Muted'",
         "required": false,
         "default": "'Default'",
-        "description": "Color emphasis."
+        "description": "Colour emphasis."
       },
       {
         "name": "size",
@@ -1428,7 +1464,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "'Always' | 'Hover' | 'None'",
         "required": false,
         "default": "'Hover'",
-        "description": "Underline behavior."
+        "description": "Underline behaviour."
       },
       {
         "name": "external",
@@ -1513,7 +1549,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "name": "label",
         "type": "string",
         "required": true,
-        "description": "Trigger text. Pass `aria-label` too when the text alone is ambiguous, e.g. per-row \"Actions\"."
+        "description": "Trigger text. With `iconOnly` it is not shown but names the trigger and the menu, so make it specific: \"Actions for Algebra Quiz\", not \"Actions\"."
       },
       {
         "name": "items",
@@ -1527,6 +1563,27 @@ export const componentApi: Record<string, ComponentApi> = {
         "required": false,
         "default": "'BottomStart'",
         "description": "Aligns the menu to the trigger's start or end edge."
+      },
+      {
+        "name": "size",
+        "type": "'Small' | 'Medium'",
+        "required": false,
+        "default": "'Medium'",
+        "description": "Trigger height 32 / 40 (`--control-height-sm/md`). Small also steps down to 14px text and a 16px icon."
+      },
+      {
+        "name": "iconOnly",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Show only an icon - a Text icon-only Button. The overflow trigger for table rows, card headers and toolbars."
+      },
+      {
+        "name": "icon",
+        "type": "string",
+        "required": false,
+        "default": "'more_vert'",
+        "description": "Material Symbols name for the icon-only trigger."
       },
       {
         "name": "open",
@@ -1595,13 +1652,13 @@ export const componentApi: Record<string, ComponentApi> = {
         "name": "min",
         "type": "number",
         "required": false,
-        "description": "Minimum allowed value."
+        "description": "Minimum allowed value. The decrease button turns off at it."
       },
       {
         "name": "max",
         "type": "number",
         "required": false,
-        "description": "Maximum allowed value."
+        "description": "Maximum allowed value. The increase button turns off at it."
       },
       {
         "name": "step",
@@ -1615,7 +1672,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "'Small' | 'Medium'",
         "required": false,
         "default": "'Medium'",
-        "description": "Control height."
+        "description": "Height 32 / 40 (`--control-height-sm/md`), for the value box and both steppers."
       },
       {
         "name": "showLabel",
@@ -1628,7 +1685,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "name": "suffix",
         "type": "string",
         "required": false,
-        "description": "Unit suffix shown inside the field, e.g. \"min\" or \"%\"."
+        "description": "Unit shown after the number inside the value box, e.g. \"min\" or \"%\"."
       },
       {
         "name": "helpText",
@@ -1654,14 +1711,14 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "boolean",
         "required": false,
         "default": "false",
-        "description": "Blocks editing and dims the field."
+        "description": "Blocks editing and dims the field and both steppers."
       },
       {
         "name": "readOnly",
         "type": "boolean",
         "required": false,
         "default": "false",
-        "description": "Shows the value without allowing edits."
+        "description": "Shows the value without allowing edits. The steppers turn off."
       }
     ],
     "relatedTypes": {},
@@ -1876,7 +1933,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "'Primary' | 'Success' | 'Warning' | 'Error'",
         "required": false,
         "default": "'Primary'",
-        "description": "Fill color."
+        "description": "Fill colour."
       },
       {
         "name": "showValue",
@@ -1941,7 +1998,13 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "boolean",
         "required": false,
         "default": "false",
-        "description": "Marks the control invalid: red ring and `aria-invalid`."
+        "description": "Marks the control invalid: a red ring, selected or not, and `aria-invalid` on the input."
+      },
+      {
+        "name": "description",
+        "type": "ReactNode",
+        "required": false,
+        "description": "A line under the label: what the option means, or why it is unavailable. Shown with a visible label, and linked to the radio with `aria-describedby`. An error belongs to the group (Radio Group's `errorText`), not to one option."
       }
     ],
     "relatedTypes": {},
@@ -2323,7 +2386,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "name": "formatValue",
         "type": "(value: number) => string",
         "required": false,
-        "description": "Formats the shown value and what assistive tech announces, e.g. `(v) => `${v}%``."
+        "description": "Formats the shown value and what assistive tech announces, e.g. `(v) => v + '%'`."
       },
       {
         "name": "showValue",
@@ -2363,7 +2426,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "'Neutral' | 'Info' | 'Success' | 'Warning' | 'Error'",
         "required": false,
         "default": "'Neutral'",
-        "description": "Accent icon color."
+        "description": "Accent icon colour."
       },
       {
         "name": "actionLabel",
@@ -2408,7 +2471,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "'Primary' | 'Neutral' | 'Inverse'",
         "required": false,
         "default": "'Primary'",
-        "description": "Arc color."
+        "description": "Arc colour."
       },
       {
         "name": "label",
@@ -2657,7 +2720,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "'Neutral' | 'Info' | 'Success' | 'Warning' | 'Error'",
         "required": false,
         "default": "'Neutral'",
-        "description": "Semantic color."
+        "description": "Semantic colour."
       },
       {
         "name": "size",
@@ -2961,6 +3024,12 @@ export const componentApi: Record<string, ComponentApi> = {
         "required": false,
         "default": "false",
         "description": "Blocks interaction and dims the control."
+      },
+      {
+        "name": "description",
+        "type": "ReactNode",
+        "required": false,
+        "description": "A line under the label: what the setting does, or why it is locked. Shown with a visible label, and linked to the switch with `aria-describedby`."
       }
     ],
     "relatedTypes": {},
@@ -2992,7 +3061,7 @@ export const componentApi: Record<string, ComponentApi> = {
         "type": "'Light' | 'Dark'",
         "required": false,
         "default": "'Dark'",
-        "description": "Surface color."
+        "description": "Surface colour."
       },
       {
         "name": "variant",

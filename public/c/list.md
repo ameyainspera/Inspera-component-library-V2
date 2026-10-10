@@ -107,6 +107,12 @@ export interface ListItem {
 **Do:** Use for settings, results, and simple records; Keep primary text scannable; Use secondary text for supporting detail.
 **Don't:** Do not use for comparable tabular data - use Table; Do not make only part of a row clickable.
 
+**Choosing a variant:**
+- `size="Default"`: Lists people read item by item, such as the activity on a test. The default size.
+- `size="Compact"`: Dense side panels, such as the candidates who need help in Monitor.
+- `interactive`: Each row opens something, such as a page of settings. The whole row is the target.
+- `divided="false"`: Short lists that read as one group, where whitespace separates the rows.
+
 **Deprecated aliases** (do not use): `List view`, `Item list`
 
 #### One-time setup
@@ -154,11 +160,11 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   --primary:           #004080;
   --white:             #ffffff;
   --gray-200:          #EDEDED;
-  --gray-600:          #7A7A7A;
+  --gray-700:          #595959;
   --action-hover:      rgba(0, 0, 0, 0.04);
   --text-primary:      rgba(0, 0, 0, 0.87);
   --border:            var(--gray-200);
-  --muted-foreground:  var(--gray-600);
+  --muted-foreground:  var(--gray-700);
   --radius-sm:         4px;
   --radius-md:         8px;
   --focus-ring-width:  2px;

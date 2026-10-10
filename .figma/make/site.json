@@ -1,7 +1,11 @@
 {
+  "title": "Inspera Component Library",
   "description": "Access an interactive online component library showcasing defined components and their states, enhancing collaboration for AI mockup projects.",
   "robots": {
     "index": false
+  },
+  "customScripts": {
+    "headEnd": "<link rel=\"icon\" type=\"image/png\" href=\"/favicon.png\" media=\"(prefers-color-scheme: light)\" />\n<link rel=\"icon\" type=\"image/png\" href=\"/favicon-dark-mode.png\" media=\"(prefers-color-scheme: dark)\" />"
   },
   "accessibility": {
     "addBypassLinks": false,

@@ -77,10 +77,17 @@ import { TextInput } from '@inspera/components'
 
 Also accepts any native `<input>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<input>`. `className` and `style` go on the outermost element.
 
-**Accessibility** - role `textbox`, keyboard operable. Always associate label with input using htmlFor/id; Error text must be linked via aria-describedby; Required fields must use aria-required.
+**Accessibility** - role `textbox`, keyboard operable. Always associate the label with the input using htmlFor/id; Link error text with aria-describedby; Required fields must use aria-required.
 
-**Do:** Always include a visible label; Provide clear placeholder text as a hint; Show error messages below the input.
-**Don't:** Do not use placeholder as the only label; Do not disable inputs without explanation.
+**Do:** Always include a visible label; Use placeholder text only as an example of the expected input; Show error messages below the input.
+**Don't:** Do not use the placeholder as the label; Do not disable an input without saying why.
+
+**Choosing a variant:**
+- `size="Medium"`: Forms and settings. The default size.
+- `size="Small"`: Dense areas such as table toolbars, filter bars and side panels.
+- `error`: The value is invalid. Say what to fix in errorText, under the field.
+- `readOnly`: The value matters but cannot be changed here, such as the code of a published test. It can still be selected and copied.
+- `disabled`: The field does not apply right now. Say nearby what makes it available.
 
 **Deprecated aliases** (do not use): `Text inputs`, `Content`, `Content (small)`
 
@@ -119,8 +126,8 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 - The border belongs to the wrapper, not the `<input>`. The input itself has no border, no outline and no background - otherwise icons cannot sit inside the field.
 - Focus is `:focus-within` on the wrapper, drawn as `--effect-state-focus` (a 3px box-shadow) plus a `--primary` border. Fields ring with a shadow; buttons ring with an outline.
-- Height is 40px (32px small), radius `--radius-md`, resting border `--border-control` #C4C4C4 going to `--border-control-strong` on hover.
-- Help and error text are 12px. Only one shows at a time, and `aria-describedby` points at whichever it is.
+- Height is 40px (32px small), radius `--radius-sm`, resting border `--border-control` (gray-600) going to `--border-control-strong` on hover.
+- Help and error text are 12px. Help text is optional. Only one shows at a time, and `aria-describedby` points at whichever it is - leave it off when neither shows.
 - A visible `<label>` with `for` is required. A placeholder is not a label.
 
 ```css
@@ -131,15 +138,18 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   --white:                  #ffffff;
   --gray-100:               #F7F7F7;
   --gray-600:               #7A7A7A;
+  --gray-700:               #595959;
+  --gray-800:               #404040;
   --blue-300:               #B3D9FF;
   --red-300:                #F9B8B8;
   --action-active:          rgba(0, 0, 0, 0.56);
   --text-primary:           rgba(0, 0, 0, 0.87);
-  --border-control:         #C4C4C4;
-  --border-control-strong:  #8C8C8C;
+  --border-control:         var(--gray-600);
+  --border-control-strong:  var(--gray-800);
+  --text-placeholder:       var(--gray-700);
   --surface-disabled:       #F5F5F5;
-  --muted-foreground:       var(--gray-600);
-  --radius-md:              8px;
+  --muted-foreground:       var(--gray-700);
+  --radius-sm:              4px;
   --effect-state-focus:     0px 0px 0px 3px var(--blue-300);
   --effect-state-error:     0px 0px 0px 3px var(--red-300);
   --border-width-default:   1px;
@@ -151,7 +161,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 .inspera-input {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
   width: 100%;
   font-family: var(--font-sans);
 }
@@ -170,7 +180,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   align-items: center;
   gap: 8px;
   padding: 0 12px;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   border: var(--border-width-default) solid var(--border-control);
   background: var(--white);
   transition:
@@ -200,6 +210,8 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   font-size: 16px;
   color: var(--text-primary);
 }
+/* Set, not left to the browser: its default can fall under 4.5:1. */
+.inspera-input__control::placeholder { color: var(--text-placeholder); opacity: 1; }
 
 .inspera-input__field .material-symbols-outlined {
   font-size: 20px;

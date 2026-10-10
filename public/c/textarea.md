@@ -79,10 +79,18 @@ import { Textarea } from '@inspera/components'
 
 Also accepts any native `<textarea>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<textarea>`. `className` and `style` go on the outermost element.
 
-**Accessibility** - role `textbox`, keyboard operable. Always associate label with textarea using htmlFor/id; Error text must be linked via aria-describedby; aria-invalid reflects the error state.
+**Accessibility** - role `textbox`, keyboard operable. Always associate the label with the textarea using htmlFor/id; Link error text with aria-describedby; aria-invalid reflects the error state.
 
 **Do:** Always include a visible label; Use rows to hint expected length; Show a character counter when a max length applies.
-**Don't:** Do not use for single-line input - use Text Input instead; Do not disable resize without reason.
+**Don't:** Do not use for single-line input - use Text Input instead; Do not turn off resizing without a reason.
+
+**Choosing a variant:**
+- `size="Medium"`: Forms and settings. The default size.
+- `size="Small"`: Dense panels, such as a comment under each criterion while marking.
+- `showCount`: There is a length limit people need to watch, such as a message to candidates' screens. Set maxLength with it.
+- `error`: The text is required or invalid. Say what to fix in errorText, such as a marking guide that AI-supported marking needs.
+- `readOnly`: The text matters but can no longer change here, such as feedback once marks are confirmed. It can still be selected and copied.
+- `disabled`: The field does not apply yet. Say what makes it available, such as choosing Custom message.
 
 **Deprecated aliases** (do not use): `Text area`, `Multiline input`, `Comment box`
 
@@ -132,14 +140,17 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   --white:                  #ffffff;
   --gray-100:               #F7F7F7;
   --gray-600:               #7A7A7A;
+  --gray-700:               #595959;
+  --gray-800:               #404040;
   --blue-300:               #B3D9FF;
   --red-300:                #F9B8B8;
   --text-primary:           rgba(0, 0, 0, 0.87);
-  --border-control:         #C4C4C4;
-  --border-control-strong:  #8C8C8C;
+  --border-control:         var(--gray-600);
+  --border-control-strong:  var(--gray-800);
+  --text-placeholder:       var(--gray-700);
   --surface-disabled:       #F5F5F5;
-  --muted-foreground:       var(--gray-600);
-  --radius-md:              8px;
+  --muted-foreground:       var(--gray-700);
+  --radius-sm:              4px;
   --effect-state-focus:     0px 0px 0px 3px var(--blue-300);
   --effect-state-error:     0px 0px 0px 3px var(--red-300);
   --border-width-default:   1px;
@@ -151,7 +162,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 .inspera-textarea {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
   width: 100%;
   font-family: var(--font-sans);
 }
@@ -167,7 +178,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   display: flex;
   flex-direction: column;
   padding: 8px 12px;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   border: var(--border-width-default) solid var(--border-control);
   background: var(--white);
   transition:
@@ -196,6 +207,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   font-size: 16px;
   color: var(--text-primary);
 }
+.inspera-textarea__control::placeholder { color: var(--text-placeholder); opacity: 1; }
 
 .inspera-textarea__count {
   align-self: flex-end;

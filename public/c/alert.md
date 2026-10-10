@@ -61,7 +61,7 @@ import { Alert } from '@inspera/components'
 | --- | --- | --- | --- |
 | `message` **(required)** | `string` | - | Supporting detail. Keep it to one or two sentences. |
 | `title` | `string` | - | Short headline stating what happened. Optional. |
-| `intent` | `'Info' \| 'Success' \| 'Warning' \| 'Error'` | `'Info'` | Severity / color. Warning and Error interrupt screen readers; Info and Success wait. |
+| `intent` | `'Info' \| 'Success' \| 'Warning' \| 'Error'` | `'Info'` | Severity and colour. Warning and Error interrupt screen readers; Info and Success wait. |
 | `background` | `boolean` | `true` | Tinted fill; false draws a left accent bar on a clear background. |
 | `actionLabel` | `string` | - | Label for an inline action link, e.g. "View details". Shown when set. |
 | `onAction` | `() => void` | - | Fired when the inline action is activated. |
@@ -72,8 +72,14 @@ Also accepts any native `<div>` attribute (`id`, `name`, `aria-*`, `data-*`, eve
 
 **Accessibility** - role `alert`, keyboard operable. Error and Warning announce as role="alert"; Info and Success as a polite role="status" - never both on one element, since role="alert" already implies assertive; Close button must have aria-label="Close alert".
 
-**Do:** Use for contextual inline messages; Match intent to message severity; Keep alert text concise.
+**Do:** Use for messages about the content around them; Match the intent to how serious the message is; Keep alert text concise.
 **Don't:** Do not stack more than 2 alerts in the same area; Do not use alerts for permanent content.
+
+**Choosing a variant:**
+- `intent="Info"`: Context people need before they act, such as grading still being in progress.
+- `intent="Success"`: Confirms an outcome that stays relevant on the page, such as a published test. For a passing confirmation, use Snackbar.
+- `intent="Warning"`: A problem that does not block progress but needs attention, such as candidates who have not started.
+- `intent="Error"`: Something blocks the whole form or section. Say what to fix; field errors still go on the fields.
 
 #### One-time setup
 
@@ -122,19 +128,29 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   --info:             #0288D1;
   --success:          #2E7D32;
   --gray-700:         #595959;
+  --blue-800:         #004080;
+  --green-800:        #106542;
+  --red-700:          #A50D0D;
+  --orange-800:       #7E5501;
   --action-active:    rgba(0, 0, 0, 0.56);
   --text-primary:     rgba(0, 0, 0, 0.87);
   --info-surface:     #E1F5FE;
   --success-surface:  #E8F5E9;
   --warning-surface:  #FFF3E0;
   --error-surface:    #FFEBEE;
+  --info-text:        var(--blue-800);
+  --success-text:     var(--green-800);
+  --warning-text:     var(--orange-800);
+  --error-text:       var(--red-700);
   --radius-md:        8px;
   --font-sans:        'Inter', system-ui, -apple-system, sans-serif;
 }
 
 .inspera-alert {
   --alert-bg: var(--info-surface);
-  --alert-fg: var(--info);
+  --alert-border: var(--info);
+  /* Icon and action: the solid colours miss 4.5:1 on their own tints. */
+  --alert-fg: var(--info-text);
 
   display: flex;
   align-items: flex-start;
@@ -144,15 +160,15 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   padding: 12px 16px;
   border-radius: var(--radius-md);
   background: var(--alert-bg);
-  border: 1px solid var(--alert-fg);
+  border: 1px solid var(--alert-border);
   color: var(--text-primary);
   font-family: var(--font-sans);
 }
 
-.inspera-alert--info    { --alert-bg: var(--info-surface);    --alert-fg: var(--info); }
-.inspera-alert--success { --alert-bg: var(--success-surface); --alert-fg: var(--success); }
-.inspera-alert--warning { --alert-bg: var(--warning-surface); --alert-fg: var(--warning); }
-.inspera-alert--error   { --alert-bg: var(--error-surface);   --alert-fg: var(--error); }
+.inspera-alert--info    { --alert-bg: var(--info-surface);    --alert-border: var(--info);    --alert-fg: var(--info-text); }
+.inspera-alert--success { --alert-bg: var(--success-surface); --alert-border: var(--success); --alert-fg: var(--success-text); }
+.inspera-alert--warning { --alert-bg: var(--warning-surface); --alert-border: var(--warning); --alert-fg: var(--warning-text); }
+.inspera-alert--error   { --alert-bg: var(--error-surface);   --alert-border: var(--error);   --alert-fg: var(--error-text); }
 
 /* No tint: the accent moves to a 4px left edge instead. */
 .inspera-alert--plain {

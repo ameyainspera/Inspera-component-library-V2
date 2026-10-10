@@ -72,8 +72,14 @@ Also accepts any native `<div>` attribute (`id`, `name`, `aria-*`, `data-*`, eve
 
 **Accessibility** - role `radiogroup`, keyboard operable. Container uses role="radiogroup" with an accessible label; Each star is a radio with aria-checked and an aria-label; Arrow keys adjust the rating.
 
-**Do:** Use for feedback and review scores; Show hover preview when interactive; Use read-only mode to display aggregate scores.
+**Do:** Use for feedback and review scores; Preview the rating on hover when interactive; Use read-only mode to show an average score.
 **Don't:** Do not use for precise numeric input; Do not omit accessible labels on stars.
+
+**Choosing a variant:**
+- `size="Medium"`: A single rating people give in a form. The default size.
+- `size="Small"`: Dense lists, such as rating each question in a review.
+- `readOnly`: A rating people read but cannot change, such as the average of several reviews.
+- `showValue`: The exact score matters, such as when people compare ratings down a list.
 
 **Deprecated aliases** (do not use): `Star rating`, `Stars`
 
@@ -111,7 +117,7 @@ component, and it is complete: do not substitute a radius, colour, spacing or
 font weight of your own, and do not restyle it with a UI kit's defaults.
 
 - One glyph - `star` - with the variable font's FILL axis at 0 or 1. Swapping to a different outline glyph changes the shape and makes the row jump on hover.
-- Filled stars are `--warning` #EF6C00; empty ones `--gray-400`. Stars are 28px (20px small) with a 2px gap.
+- Filled stars are `--warning` #EF6C00; empty ones `--border-control`. Stars are 28px (20px small) with a 2px gap.
 - `role="radiogroup"` with `role="radio"` stars, a roving tabindex, and arrow keys that both move focus and set the value.
 - Every star needs its own label ("3 stars"), or the control announces as five unlabelled radios.
 - Hovering previews the rating up to the pointer; leaving restores the committed value.
@@ -121,9 +127,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 :root {
   --primary:            #004080;
   --warning:            #EF6C00;
-  --gray-400:           #BCBCBC;
   --gray-600:           #7A7A7A;
-  --muted-foreground:   var(--gray-600);
+  --gray-700:           #595959;
+  --border-control:     var(--gray-600);
+  --muted-foreground:   var(--gray-700);
   --radius-xs:          2px;
   --focus-ring-width:   2px;
   --focus-ring-offset:  2px;
@@ -145,7 +152,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 .inspera-rating__star {
   font-size: 28px;
   line-height: 1;
-  color: var(--gray-400);
+  color: var(--border-control);
   /* Same glyph, different fill axis. Swapping to a "star_outline" glyph shifts
      the shape and makes the row jump as you hover across it. */
   font-variation-settings: 'FILL' 0;

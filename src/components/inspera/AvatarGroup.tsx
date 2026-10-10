@@ -17,10 +17,16 @@ export interface AvatarGroupProps {
   /** How many to show before collapsing the rest into "+N". */
   max?: number
   /** Avatar diameter. */
-  size?: AvatarSize
+  size?: 'Small' | 'Medium' | 'Large'
 }
 
 const sizeMap: Record<AvatarSize, number> = { Small: 32, Medium: 40, Large: 56 }
+/**
+ * How far each avatar pulls over the one before: about 20% of the diameter,
+ * as in MUI's AvatarGroup (8px at 40px). With the 2px ring, the next avatar
+ * stops short of the initials it overlaps; at 30% it hid their second letter.
+ */
+const overlapMap: Record<AvatarSize, number> = { Small: 6, Medium: 8, Large: 12 }
 
 export default function AvatarGroup({
   avatars,
@@ -31,7 +37,7 @@ export default function AvatarGroup({
   ...rest
 }: AvatarGroupProps & NativeAttrs<'div', AvatarGroupProps>) {
   const dim = sizeMap[size]
-  const overlap = Math.round(dim * 0.3)
+  const overlap = overlapMap[size]
   const visible = avatars.slice(0, max)
   const overflow = avatars.length - visible.length
 

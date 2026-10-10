@@ -18,15 +18,26 @@ export const components: Record<string, ComponentSpec> = {
       'Primary button', 'Secondary button', 'Outline button', 'Text button',
       'Success button', 'Warning button',
     ],
-    tokens: ['primary.main #004080', 'body.semiBold16', 'radius.sm', 'spacing 12/16/24', 'primary.focusRing'],
+    tokens: ['primary.main #004080', 'body.semiBold16 (Small: 14px)', 'radius.sm', 'control-height sm/md/lg 32/40/44', 'spacing 12/16/20', 'primary.focusRing'],
     accessibility: {
       role: 'button',
       keyboard: true,
       ariaNotes: ['Icon-only buttons must have an accessible label'],
     },
     usage: {
-      do: ['Use Primary for main actions', 'Use Secondary for alternative actions', 'Use Destructive only for destructive flows'],
-      dont: ['Do not create separate component files per intent', 'Do not use deprecated alias names'],
+      do: ['Use Primary for the main action', 'Use Secondary for an alternative to the main action', 'Use Destructive only for actions that delete data or cannot be undone'],
+      dont: ['Do not create a separate component for each intent - set the intent prop', 'Do not use deprecated alias names'],
+      variants: [
+        { prop: 'intent', value: 'Primary', when: 'The one main action of a page, form or dialog, such as New test or Publish. Use one per view.' },
+        { prop: 'intent', value: 'Secondary', when: 'An alternative to the main action, placed next to it, such as Save draft beside Next or Publish.' },
+        { prop: 'intent', value: 'Outline', when: 'A standalone action on the content around it, such as Export in a table toolbar.' },
+        { prop: 'intent', value: 'Text', when: 'A low-emphasis action: Cancel in a form footer, View all in a card header.' },
+        { prop: 'intent', value: 'Success', when: "A positive decision, such as approving a candidate's request for more time. Keep the way to decline beside it." },
+        { prop: 'intent', value: 'Warning', when: "An action with consequences that can be undone, such as pausing a candidate's test." },
+        { prop: 'intent', value: 'Destructive', when: 'An action that deletes data or cannot be undone, such as deleting a test. Say what will be lost next to it.' },
+        { prop: 'size', value: 'Small', when: 'Dense areas such as table rows, toolbars and filter bars, next to Small inputs.' },
+        { prop: 'size', value: 'Large', when: 'One prominent call to action, such as Start test, or a touch-first screen. Not a whole row of buttons.' },
+      ],
     },
   },
 
@@ -38,15 +49,22 @@ export const components: Record<string, ComponentSpec> = {
     keywords: ['textbox', 'field', 'input', 'form', 'entry', 'single line'],
     status: 'ready',
     deprecatedAliases: ['Text inputs', 'Content', 'Content (small)'],
-    tokens: ['border #C4C4C4', 'body.mdRegular', 'radius.md', 'primary focus ring', 'body.caption (help)'],
+    tokens: ['border-control (gray-600)', 'body.mdRegular', 'radius.sm', 'primary focus ring', 'body.caption (help)'],
     accessibility: {
       role: 'textbox',
       keyboard: true,
-      ariaNotes: ['Always associate label with input using htmlFor/id', 'Error text must be linked via aria-describedby', 'Required fields must use aria-required'],
+      ariaNotes: ['Always associate the label with the input using htmlFor/id', 'Link error text with aria-describedby', 'Required fields must use aria-required'],
     },
     usage: {
-      do: ['Always include a visible label', 'Provide clear placeholder text as a hint', 'Show error messages below the input'],
-      dont: ['Do not use placeholder as the only label', 'Do not disable inputs without explanation'],
+      do: ['Always include a visible label', 'Use placeholder text only as an example of the expected input', 'Show error messages below the input'],
+      dont: ['Do not use the placeholder as the label', 'Do not disable an input without saying why'],
+      variants: [
+        { prop: 'size', value: 'Medium', when: 'Forms and settings. The default size.' },
+        { prop: 'size', value: 'Small', when: 'Dense areas such as table toolbars, filter bars and side panels.' },
+        { prop: 'error', value: 'true', when: 'The value is invalid. Say what to fix in errorText, under the field.' },
+        { prop: 'readOnly', value: 'true', when: 'The value matters but cannot be changed here, such as the code of a published test. It can still be selected and copied.' },
+        { prop: 'disabled', value: 'true', when: 'The field does not apply right now. Say nearby what makes it available.' },
+      ],
     },
   },
 
@@ -58,15 +76,21 @@ export const components: Record<string, ComponentSpec> = {
     keywords: ['tick', 'check', 'boolean', 'multi select', 'opt in'],
     status: 'ready',
     deprecatedAliases: ['Checkbox/Unchecked', 'Checkbox/Checked', 'Checkbox with label', 'Checkbox (fill width)', 'Checkbox (Cards)'],
-    tokens: ['border #8C8C8C', 'primary.main (checked)', 'radius.xs', 'body.mdRegular', 'indicator 20'],
+    tokens: ['border-control (gray-600)', 'primary.main (checked)', 'error.main (error border)', 'radius.xs', 'body.mdRegular', 'indicator 18'],
     accessibility: {
       role: 'checkbox',
       keyboard: true,
-      ariaNotes: ['Use aria-checked to reflect state', 'Group related checkboxes with fieldset and legend'],
+      ariaNotes: ['Use aria-checked to reflect state', 'Group related checkboxes with fieldset and legend', 'The description or errorText under the label is linked with aria-describedby'],
     },
     usage: {
-      do: ['Use for multi-select scenarios', 'Always provide a label for each checkbox', 'Group related options together'],
-      dont: ['Do not use for mutually exclusive options - use Radio Button instead', 'Do not use without a label'],
+      do: ['Use when people can choose more than one option', 'Always provide a label for each checkbox', 'Group related options together', 'Say why a disabled option is unavailable in its description, right under it', 'Say what to do in errorText, under the box: "Confirm the marks to submit them"'],
+      dont: ['Do not use for mutually exclusive options - use Radio Group instead', 'Do not use without a label'],
+      variants: [
+        { prop: 'indeterminate', value: 'true', when: 'A select-all box when only some of the rows are selected.' },
+        { prop: 'withLabel', value: 'false', when: 'The row already names it, such as a question in a selection list. Keep the label for screen readers.' },
+        { prop: 'error', value: 'true', when: 'A required tick is missing, such as confirming that marks are final. Say what to do right under it.' },
+        { prop: 'disabled', value: 'true', when: 'The option does not apply right now. Say under it what makes it available.' },
+      ],
     },
   },
 
@@ -78,15 +102,21 @@ export const components: Record<string, ComponentSpec> = {
     keywords: ['option', 'single select', 'choice', 'radio'],
     status: 'ready',
     deprecatedAliases: ['Radiobutton', 'Radiobuttons', 'Radio Button New-BonW', 'Radio Button New-BonY', 'Radio Button New-WonB', 'Radio Button New-YonB'],
-    tokens: ['border #8C8C8C', 'primary.main (selected)', 'radius.pill', 'body.mdRegular', 'indicator 20'],
+    tokens: ['border-control (gray-600)', 'primary.main (selected)', 'error.main (error ring)', 'radius.pill', 'body.mdRegular', 'indicator 20'],
     accessibility: {
       role: 'radio',
       keyboard: true,
-      ariaNotes: ['Use role="radiogroup" for the group container', 'Use aria-checked to indicate selected state', 'Arrow keys navigate between options in the group'],
+      ariaNotes: ['Use role="radiogroup" for the group container', 'Use aria-checked to indicate selected state', 'Arrow keys navigate between options in the group', 'The description under the label is linked with aria-describedby'],
     },
     usage: {
-      do: ['Use for mutually exclusive options', 'Always group inside a radiogroup', 'Pre-select a default when appropriate'],
-      dont: ['Do not use for multi-select - use Checkbox instead', 'Do not use a single radio button alone'],
+      do: ['Use for mutually exclusive options', 'Always group inside a radiogroup', 'Pre-select a sensible default', 'Give an option a description when it needs a line of its own, such as why it is unavailable'],
+      dont: ['Do not use when people can choose more than one option - use Checkbox instead', 'Do not use a single radio button on its own'],
+      variants: [
+        { prop: 'withLabel', value: 'true', when: 'Each option needs a description or content of its own under it, so the options are laid out one by one. Otherwise use Radio Group.' },
+        { prop: 'withLabel', value: 'false', when: 'The row next to it names the option, such as a template in a list. Keep the label for screen readers.' },
+        { prop: 'error', value: 'true', when: 'No option is chosen and one is required. Mark every option in the set and say what to choose.' },
+        { prop: 'disabled', value: 'true', when: "One option can't be chosen here. Say why under it." },
+      ],
     },
   },
 
@@ -98,7 +128,7 @@ export const components: Record<string, ComponentSpec> = {
     keywords: ['dropdown', 'drop down', 'combobox', 'picker', 'listbox', 'choose', 'options'],
     status: 'ready',
     deprecatedAliases: ['Select / Fixed width', 'Select / Content adaptable', 'Dropdown', 'Dropdown with Label'],
-    tokens: ['border #C4C4C4', 'body.mdRegular', 'radius.md', 'shadow.200 (menu)', 'primary focus ring'],
+    tokens: ['border-control (gray-600)', 'body.mdRegular', 'radius.sm (field) / radius.md (menu)', 'shadow.200 (menu)', 'primary focus ring'],
     accessibility: {
       role: 'combobox',
       keyboard: true,
@@ -106,7 +136,13 @@ export const components: Record<string, ComponentSpec> = {
     },
     usage: {
       do: ['Use for 5+ options where space is limited', 'Always provide a label', 'Show a clear placeholder when no option is selected'],
-      dont: ['Do not use for fewer than 3 options - use Radio Button instead', 'Do not nest selects inside other selects'],
+      dont: ['Do not use for fewer than 3 options - use Radio Group instead', 'Do not nest selects inside other selects'],
+      variants: [
+        { prop: 'widthMode', value: 'Fixed', when: 'Forms. The trigger keeps one width (220px) whatever is chosen, so the form does not shift as values change.' },
+        { prop: 'widthMode', value: 'Hug', when: 'Toolbars and filter bars, where the trigger is only as wide as its value.' },
+        { prop: 'search', value: 'true', when: 'Long lists, roughly 10 options or more, so people can type to narrow them.' },
+        { prop: 'error', value: 'true', when: 'A required choice is missing. Say what to choose in errorText.' },
+      ],
     },
   },
 
@@ -118,15 +154,21 @@ export const components: Record<string, ComponentSpec> = {
     keywords: ['switch', 'on off', 'boolean', 'flip', 'enable'],
     status: 'ready',
     deprecatedAliases: ['Switch', 'Toggle switch'],
-    tokens: ['track #C4C4C4', 'primary.main (on)', 'radius.pill', 'track 44 / thumb 20', 'body.mdRegular'],
+    tokens: ['track border-control (gray-600)', 'primary.main (on)', 'radius.pill', 'track 44 / thumb 20', 'body.mdRegular'],
     accessibility: {
       role: 'switch',
       keyboard: true,
-      ariaNotes: ['Use role="switch" for the toggle', 'Use aria-checked to reflect on/off state', 'Space key toggles the switch'],
+      ariaNotes: ['Use role="switch" for the toggle', 'Use aria-checked to reflect on/off state', 'Space key toggles the switch', 'The description under the label is linked with aria-describedby'],
     },
     usage: {
-      do: ['Use for immediate on/off settings', 'Provide a clear label describing the setting', 'Show the current state visually'],
-      dont: ['Do not use for form submissions - use Checkbox instead', 'Do not use without a visible label'],
+      do: ['Use for settings that take effect immediately', 'Provide a clear label describing the setting', 'Show the current state visually', 'Say what the setting does, or why it is locked, in its description'],
+      dont: ['Do not use for choices that only apply when a form is submitted - use Checkbox instead', 'Do not hide the label unless the row already names the setting'],
+      variants: [
+        { prop: 'size', value: 'Medium', when: 'Settings pages, one setting per row. The default size.' },
+        { prop: 'size', value: 'Small', when: 'Dense lists, such as settings in a side panel.' },
+        { prop: 'withLabel', value: 'false', when: 'The row already names the setting, with the switch at the end of the row, as in a settings list. Keep the label for screen readers.' },
+        { prop: 'disabled', value: 'true', when: 'The setting is locked, for example by an admin policy. Say why next to it.' },
+      ],
     },
   },
 
@@ -138,15 +180,24 @@ export const components: Record<string, ComponentSpec> = {
     keywords: ['panel', 'tile', 'container', 'surface', 'box'],
     status: 'ready',
     deprecatedAliases: [],
-    tokens: ['radius.lg', 'shadow.200', 'border #E5E7EB', 'spacing 12/16/24', 'heading.h5 (title)'],
+    tokens: ['radius.lg', 'shadow.200 (rest) / 300 (hover, focus) / 100 (pressed)', 'border-strong (outlined)', 'primary (selected edge and tick)', 'spacing 12/16/24', 'heading.h5 (title)'],
     accessibility: {
       role: 'article',
       keyboard: true,
-      ariaNotes: ['Interactive cards should use role="button" or be wrapped in an anchor', 'Non-interactive cards use role="article" or a semantic section'],
+      ariaNotes: ['An interactive card is an article with one button stretched over it, named by the title', 'A selectable card is a toggle: its button carries aria-pressed, and the selected tick is a second cue besides the border colour', 'Non-interactive cards use role="article" or a semantic section'],
     },
     usage: {
       do: ['Use to group related content', 'Maintain consistent padding within a view', 'Use raised elevation for primary content cards'],
-      dont: ['Do not nest cards inside other cards', 'Do not use cards for layout-only purposes without content'],
+      dont: ['Do not nest cards inside other cards', 'Do not use an empty card just for layout'],
+      variants: [
+        { prop: 'elevation', value: 'Raised', when: 'Cards that lead a page on the grey canvas, such as what to continue on the home page.' },
+        { prop: 'elevation', value: 'Flat', when: "Page content on the grey canvas, such as the summaries on a test's overview. No shadow, so it stays quiet." },
+        { prop: 'elevation', value: 'Outlined', when: 'Cards on a white page, where a shadow would be heavy, such as tests in the Cards view.' },
+        { prop: 'padding', value: 'Compact', when: 'Dense grids and side panels, where many cards share the space.' },
+        { prop: 'padding', value: 'Spacious', when: 'A card with one main message that needs room to read, such as a summary before publishing.' },
+        { prop: 'interactive', value: 'true', when: 'The whole card opens one thing, such as a question type to start from. Put no other buttons or links inside it.' },
+        { prop: 'selected', value: 'true', when: 'People pick options laid out as cards, such as the question types to add to a set. Each click selects or clears the card.' },
+      ],
     },
   },
 
@@ -158,15 +209,24 @@ export const components: Record<string, ComponentSpec> = {
     keywords: ['chip', 'count', 'label', 'status', 'pill', 'indicator'],
     status: 'ready',
     deprecatedAliases: ['Status Badge', 'Tag', 'Chip'],
-    tokens: ['radius.pill', 'body.caption', 'intentMap backgrounds', 'spacing 4/8'],
+    tokens: ['radius.pill', 'body.caption', 'status surfaces + status text (--info-text, --warning-text...)', 'spacing 4/8'],
     accessibility: {
       role: 'status',
       keyboard: false,
       ariaNotes: ['Use aria-label for icon-only badges', 'Use role="status" for dynamic count badges'],
     },
     usage: {
-      do: ['Use for status indicators and counts', 'Keep labels short - 1 to 2 words', 'Use intent colors consistently'],
-      dont: ['Do not use for long text content', 'Do not make badges interactive without clear affordance'],
+      do: ['Use for status indicators and counts', 'Keep labels short - 1 to 2 words', 'Use each intent for the same meaning everywhere'],
+      dont: ['Do not use for long text', 'Do not make badges interactive - use Tag or Button'],
+      variants: [
+        { prop: 'intent', value: 'Neutral', when: 'A status with no judgement, such as Draft or Archived.' },
+        { prop: 'intent', value: 'Info', when: 'Something upcoming or for information, such as Scheduled.' },
+        { prop: 'intent', value: 'Success', when: 'A good or finished state, such as Live or Graded.' },
+        { prop: 'intent', value: 'Warning', when: 'Needs attention soon, such as Needs grading.' },
+        { prop: 'intent', value: 'Error', when: 'Something has gone wrong, such as Overdue or Failed.' },
+        { prop: 'size', value: 'Medium', when: 'Next to a page or card title.' },
+        { prop: 'size', value: 'Small', when: 'Inside dense rows, such as the status column of a table.' },
+      ],
     },
   },
 
@@ -178,7 +238,7 @@ export const components: Record<string, ComponentSpec> = {
     keywords: ['profile', 'user', 'photo', 'initials', 'picture'],
     status: 'ready',
     deprecatedAliases: [],
-    tokens: ['radius.pill', 'body.mdMedium (initials)', 'background #E0E0E0', 'status colors'],
+    tokens: ['radius.pill', 'body.mdMedium (initials)', 'background #E0E0E0', 'status colours'],
     accessibility: {
       role: 'img',
       keyboard: false,
@@ -186,7 +246,15 @@ export const components: Record<string, ComponentSpec> = {
     },
     usage: {
       do: ['Use for user profiles and participant lists', 'Provide meaningful alt text', 'Use consistent sizing within a context'],
-      dont: ['Do not stretch or distort avatar images', 'Do not use random colors - use a deterministic palette'],
+      dont: ['Do not stretch or distort avatar images', 'Do not use random colours - the same person always gets the same colour'],
+      variants: [
+        { prop: 'size', value: 'Small', when: 'Dense rows, such as who wrote each comment in a thread.' },
+        { prop: 'size', value: 'Medium', when: 'Lists and request rows. The default size.' },
+        { prop: 'size', value: 'Large', when: "The header of a page or panel about one person, such as a candidate's details." },
+        { prop: 'status', value: 'Online', when: 'The person is available now, such as a grader you could hand a script to. Say it in words beside it.' },
+        { prop: 'status', value: 'Offline', when: 'The person is not connected. Say since when, such as Last seen 14:02.' },
+        { prop: 'status', value: 'Busy', when: 'The person is busy with something others have to wait for, such as marking the script you opened.' },
+      ],
     },
   },
 
@@ -205,8 +273,14 @@ export const components: Record<string, ComponentSpec> = {
       ariaNotes: ['Error and Warning announce as role="alert"; Info and Success as a polite role="status" - never both on one element, since role="alert" already implies assertive', 'Close button must have aria-label="Close alert"'],
     },
     usage: {
-      do: ['Use for contextual inline messages', 'Match intent to message severity', 'Keep alert text concise'],
+      do: ['Use for messages about the content around them', 'Match the intent to how serious the message is', 'Keep alert text concise'],
       dont: ['Do not stack more than 2 alerts in the same area', 'Do not use alerts for permanent content'],
+      variants: [
+        { prop: 'intent', value: 'Info', when: 'Context people need before they act, such as grading still being in progress.' },
+        { prop: 'intent', value: 'Success', when: 'Confirms an outcome that stays relevant on the page, such as a published test. For a passing confirmation, use Snackbar.' },
+        { prop: 'intent', value: 'Warning', when: 'A problem that does not block progress but needs attention, such as candidates who have not started.' },
+        { prop: 'intent', value: 'Error', when: 'Something blocks the whole form or section. Say what to fix; field errors still go on the fields.' },
+      ],
     },
   },
 
@@ -225,8 +299,15 @@ export const components: Record<string, ComponentSpec> = {
       ariaNotes: ['Use role="dialog" with aria-modal="true"', 'Set aria-labelledby to the dialog title', 'Trap focus inside the dialog when open', 'Return focus to trigger element on close', 'Escape key closes the dialog'],
     },
     usage: {
-      do: ['Use for confirmations and critical decisions', 'Always provide a way to close the dialog', 'Keep dialog content focused and concise'],
-      dont: ['Do not open dialogs from other dialogs', 'Do not use for non-blocking information - use Alert instead'],
+      do: ['Use for confirmations and critical decisions', 'Always provide a way to close the dialog', 'Keep dialog content focused and concise', 'Set confirmIntent="Destructive" when confirming deletes something or cannot be undone, and name the action: "Delete assessment"', 'Use footerStart for a short status of what confirming will do, such as "2 filters set"'],
+      dont: ['Do not open dialogs from other dialogs', 'Do not put a second action in footerStart - it is for text only', 'Do not use for non-blocking information - use Alert instead'],
+      variants: [
+        { prop: 'size', value: 'Medium', when: 'A question or a confirmation, such as releasing results or pausing a test. The default.' },
+        { prop: 'size', value: 'Large', when: 'A confirmation with a summary or a short form to check first, such as the settings before publishing.' },
+        { prop: 'confirmIntent', value: 'Primary', when: 'Confirming moves something forward, such as releasing results. Name the action on the button.' },
+        { prop: 'confirmIntent', value: 'Destructive', when: "Confirming deletes something or can't be undone, such as deleting a test. Name the object and say what will be lost." },
+        { prop: 'hasActions', value: 'false', when: 'The dialog only shows information, such as keyboard shortcuts. The close button is the way out.' },
+      ],
     },
   },
 
@@ -247,6 +328,13 @@ export const components: Record<string, ComponentSpec> = {
     usage: {
       do: ['Use for brief confirmation messages', 'Include an undo action when appropriate', 'Limit to one snackbar at a time'],
       dont: ['Do not use for critical errors - use Alert or Dialog instead', 'Do not stack multiple snackbars'],
+      variants: [
+        { prop: 'intent', value: 'Neutral', when: 'A routine change just happened, such as Draft saved. The default.' },
+        { prop: 'intent', value: 'Info', when: 'Something people may want to know now, such as a newer version being available.' },
+        { prop: 'intent', value: 'Success', when: 'A task just finished, such as moving a question. Offer Undo when it can be undone.' },
+        { prop: 'intent', value: 'Warning', when: 'Something is not quite right, but work can go on, such as being offline while changes are kept.' },
+        { prop: 'intent', value: 'Error', when: "An action failed and can be tried again, such as Couldn't save. Put Try again on it." },
+      ],
     },
   },
 
@@ -255,19 +343,25 @@ export const components: Record<string, ComponentSpec> = {
     name: 'Toast',
     exportName: 'ToastProvider',
     category: 'feedback',
-    purpose: 'Fire transient notifications imperatively from anywhere.',
+    purpose: 'Show brief notifications by calling toast() from anywhere in the app.',
     keywords: ['notification', 'snackbar', 'alert', 'message', 'flash', 'toast'],
     status: 'ready',
     deprecatedAliases: ['Notification', 'Flash message', 'Snackbar stack'],
-    tokens: ['radius-md', 'shadow-300', 'surface', 'intent colors (success/error/info/warning)', 'font-sans'],
+    tokens: ['radius-md', 'shadow-300', 'surface', 'intent colours (success/error/info/warning)', 'font-sans'],
     accessibility: {
       role: 'region',
       keyboard: true,
       ariaNotes: ['The stack is a role="region" labelled "Notifications" with aria-live', 'Each toast is announced when it appears', 'Action and dismiss buttons are focusable'],
     },
     usage: {
-      do: ['Mount ToastProvider once near the app root', 'Call toast() for brief, dismissible feedback', 'Give errors a longer or manual timeout'],
+      do: ['Mount ToastProvider once near the app root', 'Call toast() for brief, dismissible feedback', 'Keep errors on screen longer, or until dismissed'],
       dont: ['Do not use for blocking confirmation - use Dialog', 'Do not stack more toasts than the screen can show'],
+      variants: [
+        { prop: 'position', value: 'BottomRight', when: 'Most screens. Away from the page title and its main action. The default.' },
+        { prop: 'position', value: 'BottomLeft', when: 'Screens with a panel on the right, such as the question settings in Author.' },
+        { prop: 'position', value: 'TopCenter', when: 'Screens with a bar fixed to the bottom, such as the step footer of New test.' },
+        { prop: 'position', value: 'BottomCenter', when: 'Touch screens and narrow windows, such as Monitor on an iPad.' },
+      ],
     },
   },
 
@@ -288,7 +382,11 @@ export const components: Record<string, ComponentSpec> = {
     },
     usage: {
       do: ['Group commands by section', 'Bind a discoverable hotkey (Cmd/Ctrl+K)', 'Filter commands as the user types'],
-      dont: ['Do not bury primary navigation only here', 'Do not leave focus trapped when it closes'],
+      dont: ['Do not make it the only way to reach main navigation', 'Do not leave focus inside it after it closes'],
+      variants: [
+        { prop: 'hotkey', value: 'true', when: 'Ctrl or Cmd K opens it from anywhere, for people who move around the product a lot. Show the shortcut where it can be opened.' },
+        { prop: 'hotkey', value: 'false', when: 'Ctrl or Cmd K already does something on the page, such as inserting a link in the question editor. Open the palette from a button instead.' },
+      ],
     },
   },
 
@@ -307,8 +405,16 @@ export const components: Record<string, ComponentSpec> = {
       ariaNotes: ['Use role="tooltip" on the tooltip element', 'Link trigger and tooltip with aria-describedby', 'Escape key dismisses the tooltip', 'Tooltip must not contain interactive content'],
     },
     usage: {
-      do: ['Use for supplementary information', 'Keep tooltip text short and scannable', 'Position to avoid clipping viewport edges'],
+      do: ['Use for supplementary information', 'Keep tooltip text short and scannable', 'Place it so it is not cut off at the edge of the screen'],
       dont: ['Do not put critical information only in tooltips', 'Do not use for interactive content - use Popover instead'],
+      variants: [
+        { prop: 'placement', value: 'Top', when: 'Most tooltips, above the control, such as icon buttons in a toolbar. The default.' },
+        { prop: 'placement', value: 'Bottom', when: 'Controls near the top of the screen, such as icon buttons in the page header.' },
+        { prop: 'placement', value: 'Right', when: 'Controls on the left of the screen, such as a flag at the end of a row in a narrow list.' },
+        { prop: 'placement', value: 'Left', when: 'Controls at the right edge, such as the last icon on a table row.' },
+        { prop: 'theme', value: 'Light', when: 'Dark surfaces, such as the navy tool rail of the question set editor, where a dark bubble would disappear.' },
+        { prop: 'variant', value: 'Accessibility', when: 'A longer explanation, such as what a statistical term means, in larger text that is easier to read.' },
+      ],
     },
   },
 
@@ -316,7 +422,7 @@ export const components: Record<string, ComponentSpec> = {
     slug: 'tabs',
     name: 'Tabs',
     category: 'navigation',
-    purpose: 'Organize content into switchable panels.',
+    purpose: 'Organise content into switchable panels.',
     keywords: ['tabbed', 'sections', 'switcher', 'panels'],
     status: 'ready',
     deprecatedAliases: ['Tab bar', 'Tab navigation'],
@@ -327,8 +433,14 @@ export const components: Record<string, ComponentSpec> = {
       ariaNotes: ['Use role="tablist" on the tab container', 'Each tab uses role="tab" with aria-selected', 'Tab panels use role="tabpanel" linked by aria-labelledby', 'Arrow keys navigate between tabs'],
     },
     usage: {
-      do: ['Use to organize related content sections', 'Label tabs clearly and concisely', 'Use a maximum of 6 tabs per set'],
-      dont: ['Do not use tabs for sequential steps - use a stepper instead', 'Do not nest tab sets inside other tab sets'],
+      do: ['Use to organise related content sections', 'Label tabs clearly and concisely', 'Use a maximum of 6 tabs per set'],
+      dont: ['Do not use tabs for sequential steps - use Stepper instead', 'Do not nest tab sets inside other tab sets'],
+      variants: [
+        { prop: 'variant', value: 'Underline', when: "Sibling views of one thing, right under its title, such as a test's Overview, Candidates and Settings." },
+        { prop: 'variant', value: 'Contained', when: 'A compact switch inside a panel, such as the rubric and the marking guide beside a response.' },
+        { prop: 'size', value: 'Small', when: 'Inside cards and panels, such as the views of a chart.' },
+        { prop: 'fullWidth', value: 'true', when: 'A narrow panel, where the tabs share its width, such as Questions and Resources in the question set editor.' },
+      ],
     },
   },
 
@@ -347,8 +459,13 @@ export const components: Record<string, ComponentSpec> = {
       ariaNotes: ['Wrap in nav with aria-label="Breadcrumb"', 'Use an ordered list for semantic structure', 'Mark current page with aria-current="page"'],
     },
     usage: {
-      do: ['Use for hierarchical navigation structures', 'Always include the current page as the last item', 'Keep breadcrumb labels concise'],
-      dont: ['Do not use for flat navigation', 'Do not make the current page breadcrumb a link'],
+      do: ['Use where pages sit in a hierarchy', 'Always include the current page as the last item', 'Keep breadcrumb labels concise'],
+      dont: ['Do not use for flat navigation', 'Do not make the current page a link'],
+      variants: [
+        { prop: 'separator', value: 'Chevron', when: 'Pages in a hierarchy, in the location bar or above a page title. The default.' },
+        { prop: 'separator', value: 'Slash', when: 'A path of folders, such as where a question is saved in the question bank.' },
+        { prop: 'size', value: 'Small', when: "The location bar under the product's top bar." },
+      ],
     },
   },
 
@@ -360,15 +477,23 @@ export const components: Record<string, ComponentSpec> = {
     keywords: ['multiline', 'multi line', 'notes', 'comment', 'description', 'long text'],
     status: 'ready',
     deprecatedAliases: ['Text area', 'Multiline input', 'Comment box'],
-    tokens: ['border #C4C4C4', 'body.mdRegular', 'radius.md', 'primary focus ring', 'body.caption (help/count)'],
+    tokens: ['border-control (gray-600)', 'body.mdRegular', 'radius.sm', 'primary focus ring', 'body.caption (help/count)'],
     accessibility: {
       role: 'textbox',
       keyboard: true,
-      ariaNotes: ['Always associate label with textarea using htmlFor/id', 'Error text must be linked via aria-describedby', 'aria-invalid reflects the error state'],
+      ariaNotes: ['Always associate the label with the textarea using htmlFor/id', 'Link error text with aria-describedby', 'aria-invalid reflects the error state'],
     },
     usage: {
       do: ['Always include a visible label', 'Use rows to hint expected length', 'Show a character counter when a max length applies'],
-      dont: ['Do not use for single-line input - use Text Input instead', 'Do not disable resize without reason'],
+      dont: ['Do not use for single-line input - use Text Input instead', 'Do not turn off resizing without a reason'],
+      variants: [
+        { prop: 'size', value: 'Medium', when: 'Forms and settings. The default size.' },
+        { prop: 'size', value: 'Small', when: 'Dense panels, such as a comment under each criterion while marking.' },
+        { prop: 'showCount', value: 'true', when: "There is a length limit people need to watch, such as a message to candidates' screens. Set maxLength with it." },
+        { prop: 'error', value: 'true', when: 'The text is required or invalid. Say what to fix in errorText, such as a marking guide that AI-supported marking needs.' },
+        { prop: 'readOnly', value: 'true', when: 'The text matters but can no longer change here, such as feedback once marks are confirmed. It can still be selected and copied.' },
+        { prop: 'disabled', value: 'true', when: 'The field does not apply yet. Say what makes it available, such as choosing Custom message.' },
+      ],
     },
   },
 
@@ -376,7 +501,7 @@ export const components: Record<string, ComponentSpec> = {
     slug: 'form-field',
     name: 'Form Field',
     category: 'input-controls',
-    purpose: 'Standardize label, control, and help/error layout around any input.',
+    purpose: 'Lay out a label, control and help or error text consistently around any input.',
     keywords: ['label', 'wrapper', 'field', 'help text', 'form row'],
     status: 'ready',
     deprecatedAliases: ['Field wrapper', 'Input group'],
@@ -388,7 +513,10 @@ export const components: Record<string, ComponentSpec> = {
     },
     usage: {
       do: ['Wrap any single control for consistent spacing', 'Use htmlFor to link the label to the control', 'Show only one of help or error at a time'],
-      dont: ['Do not wrap multiple unrelated controls', 'Do not omit the label for accessibility'],
+      dont: ['Do not wrap several unrelated controls', 'Do not leave out the label - screen readers need it'],
+      variants: [
+        { prop: 'required', value: 'true', when: "The form can't be saved without it, in a form where most fields are optional. Mark only those, and say once what the asterisk means." },
+      ],
     },
   },
 
@@ -408,7 +536,13 @@ export const components: Record<string, ComponentSpec> = {
     },
     usage: {
       do: ['Use for adjustable numeric ranges', 'Show the current value for precision', 'Provide a clear label'],
-      dont: ['Do not use for exact numeric entry - use Text Input instead', 'Do not use without min/max bounds'],
+      dont: ['Do not use for exact numeric entry - use Number Input instead', 'Do not use without min/max bounds'],
+      variants: [
+        { prop: 'showValue', value: 'true', when: 'People set a level they need to know exactly, such as a similarity threshold.' },
+        { prop: 'showValue', value: 'false', when: 'Only the position matters, such as playback volume.' },
+        { prop: 'showLabel', value: 'false', when: 'Something next to it already says what it is, such as a zoom icon in a viewer toolbar. The label still names it for screen readers.' },
+        { prop: 'disabled', value: 'true', when: 'The setting depends on another one that is off. Say which under it.' },
+      ],
     },
   },
 
@@ -420,7 +554,7 @@ export const components: Record<string, ComponentSpec> = {
     keywords: ['switcher', 'button group', 'toggle group', 'filter'],
     status: 'ready',
     deprecatedAliases: ['Segment control', 'Toggle group', 'Button group'],
-    tokens: ['track var(--gray-100)', 'active var(--surface)', 'shadow.100 (active)', 'radius.md / radius.sm', 'primary.main (active text)'],
+    tokens: ['surface + gray-800 text + border-control (gray-600) (unselected)', 'blue-100 fill + primary text + blue-700 border (selected)', 'radius.sm (outer corners)', 'control-height.sm / md'],
     accessibility: {
       role: 'radiogroup',
       keyboard: true,
@@ -429,6 +563,12 @@ export const components: Record<string, ComponentSpec> = {
     usage: {
       do: ['Use for 2-4 mutually exclusive views', 'Keep labels short and parallel', 'Show the active segment clearly'],
       dont: ['Do not use for more than 4 options - use Tabs or Select', 'Do not use for multi-select'],
+      variants: [
+        { prop: 'size', value: 'Medium', when: 'A switch above the content it changes, such as how results are broken down. The default size.' },
+        { prop: 'size', value: 'Small', when: 'Card headers and dense toolbars, such as the period of a dashboard card.' },
+        { prop: 'fullWidth', value: 'true', when: 'A narrow panel, where the segments share its width, such as the device in a preview panel.' },
+        { prop: 'disabled', value: 'true', when: 'The views are not available yet. Say why next to it.' },
+      ],
     },
   },
 
@@ -440,7 +580,7 @@ export const components: Record<string, ComponentSpec> = {
     keywords: ['calendar', 'date', 'day', 'schedule', 'deadline', 'due'],
     status: 'ready',
     deprecatedAliases: ['Calendar input', 'Date field'],
-    tokens: ['border #C4C4C4', 'radius.md', 'surface (popover)', 'shadow.200 (popover)', 'primary.main (selected day)'],
+    tokens: ['border-control (gray-600)', 'radius.sm (field) / radius.md (popover)', 'surface (popover)', 'shadow.200 (popover)', 'primary.main (selected day)'],
     accessibility: {
       role: 'dialog',
       keyboard: true,
@@ -449,6 +589,10 @@ export const components: Record<string, ComponentSpec> = {
     usage: {
       do: ['Use for selecting a single calendar date', 'Highlight today and the selected day', 'Provide clear month navigation'],
       dont: ['Do not use for free-form date typing without validation', 'Do not trap keyboard focus without an escape'],
+      variants: [
+        { prop: 'error', value: 'true', when: 'The date is missing or out of range. Say which date is allowed, such as an end date after the start date.' },
+        { prop: 'disabled', value: 'true', when: 'The date does not apply with the current settings. Say what makes it available.' },
+      ],
     },
   },
 
@@ -460,7 +604,7 @@ export const components: Record<string, ComponentSpec> = {
     keywords: ['dropzone', 'drop zone', 'attach', 'attachment', 'browse', 'file', 'import'],
     status: 'ready',
     deprecatedAliases: ['Dropzone', 'File dropzone', 'Uploader'],
-    tokens: ['dashed border var(--gray-400)', 'primary.main + var(--blue-100) (dragging)', 'error.main (error)', 'radius.md', 'surface'],
+    tokens: ['dashed border var(--border-control)', 'primary.main + var(--blue-100) (dragging)', 'error.main (error)', 'radius.md', 'surface'],
     accessibility: {
       role: 'button',
       keyboard: true,
@@ -468,7 +612,13 @@ export const components: Record<string, ComponentSpec> = {
     },
     usage: {
       do: ['Support both drag-and-drop and click-to-browse', 'State accepted file types and size limits', 'Give visible drag feedback'],
-      dont: ['Do not hide the browse affordance', 'Do not omit constraint help text'],
+      dont: ['Do not hide the option to browse', 'Do not leave out the accepted file types and size limit'],
+      variants: [
+        { prop: 'multiple', value: 'false', when: 'One file, which a new upload replaces, such as invigilator instructions.' },
+        { prop: 'multiple', value: 'true', when: 'Several files that go together, such as resources for a question set. List the files under the drop zone.' },
+        { prop: 'error', value: 'true', when: "The file can't be used. Say why and what to upload instead." },
+        { prop: 'disabled', value: 'true', when: "Uploading isn't possible here, such as for someone who doesn't own the test. Say why." },
+      ],
     },
   },
 
@@ -480,7 +630,7 @@ export const components: Record<string, ComponentSpec> = {
     keywords: ['options', 'single choice', 'radio buttons', 'either or'],
     status: 'ready',
     deprecatedAliases: ['Radio list', 'Option group'],
-    tokens: ['border #8C8C8C', 'primary.main (selected)', 'radius.pill', 'body.mdRegular', 'spacing 24 (horizontal)'],
+    tokens: ['border-control (gray-600)', 'primary.main (selected)', 'radius.pill', 'body.mdRegular', 'spacing 24 (horizontal)'],
     accessibility: {
       role: 'radiogroup',
       keyboard: true,
@@ -489,6 +639,12 @@ export const components: Record<string, ComponentSpec> = {
     usage: {
       do: ['Use for single selection among 2-6 options', 'Provide a group label', 'Pre-select a sensible default'],
       dont: ['Do not use for multi-select - use Checkbox Group', 'Do not use a single radio alone'],
+      variants: [
+        { prop: 'orientation', value: 'Vertical', when: 'Most groups. One option per line is the easiest to scan.' },
+        { prop: 'orientation', value: 'Horizontal', when: 'Two or three short options that fit on one line, such as file formats.' },
+        { prop: 'error', value: 'true', when: 'A required choice is missing. Say what to choose in errorText.' },
+        { prop: 'disabled', value: 'true', when: 'The choice is locked or does not apply. Say why in helpText, such as a setting locked while the test is live.' },
+      ],
     },
   },
 
@@ -500,7 +656,7 @@ export const components: Record<string, ComponentSpec> = {
     keywords: ['checklist', 'multi select', 'options', 'multiple choice'],
     status: 'ready',
     deprecatedAliases: ['Checkbox list', 'Multi-select group'],
-    tokens: ['border #8C8C8C', 'primary.main (checked)', 'radius.xs', 'body.mdRegular', 'spacing 24 (horizontal)'],
+    tokens: ['border-control (gray-600)', 'primary.main (checked)', 'radius.xs', 'body.mdRegular', 'spacing 24 (horizontal)'],
     accessibility: {
       role: 'group',
       keyboard: true,
@@ -509,6 +665,12 @@ export const components: Record<string, ComponentSpec> = {
     usage: {
       do: ['Use for selecting multiple related options', 'Provide a group label', 'Keep options parallel and concise'],
       dont: ['Do not use for mutually exclusive options - use Radio Group', 'Do not omit the group label'],
+      variants: [
+        { prop: 'orientation', value: 'Vertical', when: 'Most groups. One option per line is the easiest to scan.' },
+        { prop: 'orientation', value: 'Horizontal', when: 'Two or three short options that read as one line, such as Marks, Grades and Comments.' },
+        { prop: 'error', value: 'true', when: 'At least one option is required. Say so in errorText.' },
+        { prop: 'disabled', value: 'true', when: 'The choice depends on another setting that is off. Put the group under that setting and say how to turn it on.' },
+      ],
     },
   },
 
@@ -520,15 +682,21 @@ export const components: Record<string, ComponentSpec> = {
     keywords: ['stars', 'score', 'review', 'feedback', 'five star'],
     status: 'ready',
     deprecatedAliases: ['Star rating', 'Stars'],
-    tokens: ['warning.main #EF6C00 (filled)', 'var(--gray-400) (empty)', 'material star FILL 1 / 0', 'spacing 2/8'],
+    tokens: ['warning.main #EF6C00 (filled)', 'var(--border-control) (empty)', 'material star FILL 1 / 0', 'spacing 2/8'],
     accessibility: {
       role: 'radiogroup',
       keyboard: true,
       ariaNotes: ['Container uses role="radiogroup" with an accessible label', 'Each star is a radio with aria-checked and an aria-label', 'Arrow keys adjust the rating'],
     },
     usage: {
-      do: ['Use for feedback and review scores', 'Show hover preview when interactive', 'Use read-only mode to display aggregate scores'],
+      do: ['Use for feedback and review scores', 'Preview the rating on hover when interactive', 'Use read-only mode to show an average score'],
       dont: ['Do not use for precise numeric input', 'Do not omit accessible labels on stars'],
+      variants: [
+        { prop: 'size', value: 'Medium', when: 'A single rating people give in a form. The default size.' },
+        { prop: 'size', value: 'Small', when: 'Dense lists, such as rating each question in a review.' },
+        { prop: 'readOnly', value: 'true', when: 'A rating people read but cannot change, such as the average of several reviews.' },
+        { prop: 'showValue', value: 'true', when: 'The exact score matters, such as when people compare ratings down a list.' },
+      ],
     },
   },
 
@@ -543,7 +711,7 @@ export const components: Record<string, ComponentSpec> = {
     ],
     status: 'ready',
     deprecatedAliases: ['PIN input', 'Verification code', 'Code input'],
-    tokens: ['border #C4C4C4', 'error.main (error)', 'radius.md', 'box 44x48', 'font-mono'],
+    tokens: ['border-control (gray-600)', 'error.main (error)', 'radius.sm', 'box 44x48', 'font-mono'],
     accessibility: {
       role: 'textbox',
       keyboard: true,
@@ -551,7 +719,11 @@ export const components: Record<string, ComponentSpec> = {
     },
     usage: {
       do: ['Auto-advance focus as digits are entered', 'Support paste of the full code', 'Use a monospace font for even alignment'],
-      dont: ['Do not require manual box-by-box focus', 'Do not allow non-numeric characters'],
+      dont: ['Do not make people move between boxes by hand', 'Do not allow non-numeric characters'],
+      variants: [
+        { prop: 'error', value: 'true', when: 'The code is wrong or has expired. Say what to do next, such as check the code or send a new one.' },
+        { prop: 'disabled', value: 'true', when: 'Entry is paused, such as after too many tries. Say when people can try again.' },
+      ],
     },
   },
 
@@ -564,15 +736,22 @@ export const components: Record<string, ComponentSpec> = {
     keywords: ['stepper', 'quantity', 'spinner', 'numeric', 'increment', 'decrement', 'amount'],
     status: 'ready',
     deprecatedAliases: ['Stepper', 'Spinner input', 'Quantity picker'],
-    tokens: ['border-width-default', 'radius-md', 'gray-100 (stepper)', 'error (invalid)', 'surface-disabled', 'font-sans'],
+    tokens: ['primary (stepper buttons)', 'control-height sm/md 32/40', 'border-control', 'radius-sm', 'error (invalid)', 'surface-disabled', 'font-sans'],
     accessibility: {
       role: 'spinbutton',
       keyboard: true,
-      ariaNotes: ['Input carries aria-invalid in the error state', 'Up / Down arrows increment and decrement by step', 'Stepper buttons have aria-labels and are disabled at min / max'],
+      ariaNotes: ['Input carries aria-invalid in the error state', 'Up / Down arrows increment and decrement by step', 'Stepper buttons are named "Decrease <label>" and "Increase <label>" and are disabled at min / max'],
     },
     usage: {
       do: ['Clamp values between min and max', 'Show the unit as an inline suffix', 'Use a sensible step for the quantity'],
-      dont: ['Do not use for codes or IDs - use a text field', 'Do not hide the steppers when precise adjustment matters'],
+      dont: ['Do not use for codes or IDs - use Text Input', 'Do not hide the steppers when precise adjustment matters'],
+      variants: [
+        { prop: 'size', value: 'Medium', when: 'Forms and settings. The default size.' },
+        { prop: 'size', value: 'Small', when: 'Dense rows, such as adding time for one candidate in Monitor.' },
+        { prop: 'readOnly', value: 'true', when: "The number matters but can't change now, such as the duration of a live test." },
+        { prop: 'disabled', value: 'true', when: 'The number is worked out from other settings, or does not apply. Say why in helpText.' },
+        { prop: 'error', value: 'true', when: 'The number is outside its limits. Say which range is allowed.' },
+      ],
     },
   },
 
@@ -585,7 +764,7 @@ export const components: Record<string, ComponentSpec> = {
     keywords: ['autocomplete', 'typeahead', 'search select', 'dropdown', 'filter', 'suggest'],
     status: 'ready',
     deprecatedAliases: ['Autocomplete', 'Typeahead', 'Search select'],
-    tokens: ['border-strong', 'radius-md', 'shadow-200 (popover)', 'blue-100 (active option)', 'primary (focus)', 'font-sans'],
+    tokens: ['border-strong', 'radius-sm (field) / radius-md (popover)', 'shadow-200 (popover)', 'blue-100 (active option)', 'primary (focus)', 'font-sans'],
     accessibility: {
       role: 'combobox',
       keyboard: true,
@@ -594,6 +773,12 @@ export const components: Record<string, ComponentSpec> = {
     usage: {
       do: ['Filter options as the user types', 'Allow custom values only when free text is valid', 'Show an empty state when nothing matches'],
       dont: ['Do not use for a handful of fixed options - use Select', 'Do not commit a value the user has not confirmed'],
+      variants: [
+        { prop: 'allowCustomValue', value: 'false', when: 'Picking one item out of hundreds by typing its name, such as a grader from all staff.' },
+        { prop: 'allowCustomValue', value: 'true', when: 'Free text is a valid answer too, such as a new topic for a question.' },
+        { prop: 'error', value: 'true', when: 'Nothing valid is chosen. Say what to choose.' },
+        { prop: 'disabled', value: 'true', when: 'The field does not apply right now. Say why.' },
+      ],
     },
   },
 
@@ -606,7 +791,7 @@ export const components: Record<string, ComponentSpec> = {
     keywords: ['calendar', 'date range', 'from to', 'period', 'booking', 'dates'],
     status: 'ready',
     deprecatedAliases: ['Range calendar', 'Date range', 'Period picker'],
-    tokens: ['border', 'radius-md', 'shadow-200 (calendar)', 'blue-100 (range fill)', 'primary (endpoints)', 'font-sans'],
+    tokens: ['border', 'radius-sm (field) / radius-md (calendar)', 'shadow-200 (calendar)', 'blue-100 (range fill)', 'primary (endpoints)', 'font-sans'],
     accessibility: {
       role: 'dialog',
       keyboard: true,
@@ -615,6 +800,10 @@ export const components: Record<string, ComponentSpec> = {
     usage: {
       do: ['Show two months for cross-month ranges', 'Highlight the full span between endpoints', 'Confirm the range only once both ends are chosen'],
       dont: ['Do not use for a single date - use Date Picker', 'Do not allow an end date before the start date'],
+      variants: [
+        { prop: 'error', value: 'true', when: 'The range is incomplete or impossible, such as a window that ends before it starts. Say what to fix.' },
+        { prop: 'disabled', value: 'true', when: 'The range is set somewhere else, such as by the exam office. Say who sets it.' },
+      ],
     },
   },
 
@@ -635,6 +824,13 @@ export const components: Record<string, ComponentSpec> = {
     usage: {
       do: ['Use for comparable, structured records', 'Right-align numeric columns', 'Keep headers concise'],
       dont: ['Do not use tables for page layout', 'Do not overload rows with unrelated actions'],
+      variants: [
+        { prop: 'size', value: 'Default', when: 'Short tables people read row by row, such as the questions of a test. The default size.' },
+        { prop: 'size', value: 'Compact', when: 'Long rosters people scan, such as all tests in Deliver.' },
+        { prop: 'striped', value: 'true', when: 'Wide rows that people read across, such as a roster with many columns.' },
+        { prop: 'selectable', value: 'true', when: 'People act on several rows at once, such as messaging candidates. Show what they can do once rows are selected.' },
+        { prop: 'hoverable', value: 'false', when: 'Rows that open nothing, such as a summary of results. Without the hover, nothing suggests they can be clicked.' },
+      ],
     },
   },
 
@@ -656,6 +852,13 @@ export const components: Record<string, ComponentSpec> = {
     usage: {
       do: ['Use for dense, sortable, selectable datasets', 'Page long lists rather than rendering everything', 'Right-align numeric columns'],
       dont: ['Do not use for a few static rows - use Table', 'Do not overload every row with competing actions'],
+      variants: [
+        { prop: 'size', value: 'Compact', when: 'Long lists people scan, such as every test in Deliver.' },
+        { prop: 'striped', value: 'true', when: 'Many columns that people read across.' },
+        { prop: 'selectable', value: 'true', when: 'People act on several rows at once, such as assigning scripts to a grader.' },
+        { prop: 'footer', value: 'true', when: 'More rows than fit on one page. The footer says where people are and pages through the rest.' },
+        { prop: 'footer', value: 'false', when: 'A short set that fits on one page, such as the graders on one test.' },
+      ],
     },
   },
 
@@ -674,8 +877,14 @@ export const components: Record<string, ComponentSpec> = {
       ariaNotes: ['Header is a button with aria-expanded and aria-controls', 'Panel uses role="region" linked via aria-labelledby', 'Enter / Space toggle the section'],
     },
     usage: {
-      do: ['Use to progressively disclose content', 'Keep section titles scannable', 'Use Single mode when only one section is relevant at a time'],
+      do: ['Use to reveal detail only when people ask for it', 'Keep section titles scannable', 'Use Single mode when only one section is relevant at a time'],
       dont: ['Do not nest accordions deeply', 'Do not hide critical content behind collapsed sections'],
+      variants: [
+        { prop: 'selection', value: 'Single', when: 'Reference people look up one part at a time, such as what to do when a candidate loses connection.' },
+        { prop: 'selection', value: 'Multiple', when: "People work across several sections at once, such as the groups of a test's settings." },
+        { prop: 'iconPosition', value: 'Right', when: 'Most accordions. The title leads and the chevron sits at the end of the row.' },
+        { prop: 'iconPosition', value: 'Left', when: 'Lists that read like a tree, such as the sections of a question set, so the chevrons line up the levels.' },
+      ],
     },
   },
 
@@ -683,11 +892,11 @@ export const components: Record<string, ComponentSpec> = {
     slug: 'tag',
     name: 'Tag',
     category: 'data-display',
-    purpose: 'Label, categorize, or filter with a removable chip.',
+    purpose: 'Label, categorise or filter with a removable chip.',
     keywords: ['chip', 'label', 'pill', 'keyword', 'category', 'token'],
     status: 'ready',
     deprecatedAliases: ['Chip', 'Pill', 'Label'],
-    tokens: ['radius.pill', 'body.caption', 'intentMap backgrounds', 'spacing 4/8', 'close icon'],
+    tokens: ['radius.pill', 'body.caption', 'status surfaces + status text (--info-text, --warning-text...)', 'spacing 4/8', 'close icon'],
     accessibility: {
       role: 'status',
       keyboard: true,
@@ -696,6 +905,15 @@ export const components: Record<string, ComponentSpec> = {
     usage: {
       do: ['Use for filters, categories, and selections', 'Keep labels to 1-2 words', 'Provide a remove control when tags are dismissible'],
       dont: ['Do not use for status that never changes - use Badge', 'Do not pack long text into a tag'],
+      variants: [
+        { prop: 'intent', value: 'Neutral', when: "Labels with no judgement, such as a question's topic." },
+        { prop: 'intent', value: 'Info', when: 'A label that adds context people should notice, such as Calculator allowed.' },
+        { prop: 'intent', value: 'Success', when: 'A label that confirms something, such as Reviewed on a question.' },
+        { prop: 'intent', value: 'Warning', when: 'A label that asks for a second look, such as Needs review.' },
+        { prop: 'intent', value: 'Error', when: 'A label for a problem with the item, such as No answer key.' },
+        { prop: 'size', value: 'Small', when: 'Dense rows, such as the labels on each question in a list.' },
+        { prop: 'removable', value: 'true', when: 'Filters in use and values people chose, which they can take off again. A filter tag keeps the intent of the label it filters by.' },
+      ],
     },
   },
 
@@ -714,8 +932,14 @@ export const components: Record<string, ComponentSpec> = {
       ariaNotes: ['Use role="separator" with aria-orientation', 'Purely decorative dividers may be aria-hidden'],
     },
     usage: {
-      do: ['Use to group and separate related content', 'Use a labeled divider to introduce a section', 'Keep dividers hairline-thin'],
+      do: ['Use to group and separate related content', 'Use a labelled divider to introduce a section', 'Keep dividers hairline-thin'],
       dont: ['Do not overuse dividers where whitespace suffices', 'Do not use heavy rules'],
+      variants: [
+        { prop: 'orientation', value: 'Horizontal', when: 'Between groups stacked in a panel. Labelled or, it separates two ways to do the same thing, such as adding candidates.' },
+        { prop: 'orientation', value: 'Vertical', when: 'Between groups of controls in a row, such as the tool groups of an editor toolbar.' },
+        { prop: 'spacing', value: 'Compact', when: "Dense panels, such as between the groups of a question's settings." },
+        { prop: 'spacing', value: 'Spacious', when: 'Between the major sections of a long form.' },
+      ],
     },
   },
 
@@ -731,11 +955,17 @@ export const components: Record<string, ComponentSpec> = {
     accessibility: {
       role: 'status',
       keyboard: true,
-      ariaNotes: ['Announce dynamically-appearing empty states with role="status"', 'The action must be a real focusable button', 'The illustration/icon is decorative (aria-hidden)'],
+      ariaNotes: ['Announce an empty state that appears after load with role="status"', 'The action must be a real focusable button', 'The illustration or icon is decorative (aria-hidden)'],
     },
     usage: {
       do: ['Explain why the area is empty', 'Offer a clear next action when possible', 'Keep the tone helpful'],
       dont: ['Do not leave empty areas blank with no guidance', 'Do not use for transient loading - use Skeleton'],
+      variants: [
+        { prop: 'size', value: 'Medium', when: 'A page or a whole table with nothing in it yet, such as a first visit to Question sets.' },
+        { prop: 'size', value: 'Small', when: 'A card or panel with nothing in it, such as no candidates needing help.' },
+        { prop: 'actionIntent', value: 'Primary', when: 'The action is the main thing to do on the page, such as creating the first question set. The default.' },
+        { prop: 'actionIntent', value: 'Secondary', when: 'Inside a panel, or beside a page that already has its main action, so the view keeps one Primary.' },
+      ],
     },
   },
 
@@ -756,6 +986,11 @@ export const components: Record<string, ComponentSpec> = {
     usage: {
       do: ['Use for participant and collaborator lists', 'Cap visible avatars and show a +N overflow', 'Keep sizing consistent within a context'],
       dont: ['Do not show dozens of avatars inline', 'Do not omit the overflow count'],
+      variants: [
+        { prop: 'size', value: 'Small', when: 'Dense rows, such as the graders on each test in a table.' },
+        { prop: 'size', value: 'Medium', when: "Cards and headers, such as the graders on a test's overview. The default size." },
+        { prop: 'size', value: 'Large', when: 'The header of a page about one team, such as a marking committee.' },
+      ],
     },
   },
 
@@ -771,11 +1006,16 @@ export const components: Record<string, ComponentSpec> = {
     accessibility: {
       role: 'group',
       keyboard: false,
-      ariaNotes: ['Associate the value with its label for screen readers', 'Convey trend with text, not color alone', 'Use aria-label to summarize the metric and change'],
+      ariaNotes: ['Associate the value with its label for screen readers', 'Convey the trend with text, not colour alone', 'Use aria-label to summarise the metric and change'],
     },
     usage: {
       do: ['Use for dashboard summaries', 'Pair a value with a clear label', 'Indicate trend direction with an icon and text'],
-      dont: ['Do not rely on color alone for the delta', 'Do not crowd many stats without spacing'],
+      dont: ['Do not rely on colour alone for the change', 'Do not crowd many stats together without spacing'],
+      variants: [
+        { prop: 'deltaIntent', value: 'Up', when: 'The figure rose and that is good, such as a higher pass rate than last sitting. The arrow is green.' },
+        { prop: 'deltaIntent', value: 'Down', when: 'The figure fell and that needs attention, such as fewer submissions on time. The arrow is red.' },
+        { prop: 'deltaIntent', value: 'Neutral', when: 'No real change, or a change that is neither good nor bad. Still say it in words, such as Same as last sitting.' },
+      ],
     },
   },
 
@@ -796,6 +1036,12 @@ export const components: Record<string, ComponentSpec> = {
     usage: {
       do: ['Use for settings, results, and simple records', 'Keep primary text scannable', 'Use secondary text for supporting detail'],
       dont: ['Do not use for comparable tabular data - use Table', 'Do not make only part of a row clickable'],
+      variants: [
+        { prop: 'size', value: 'Default', when: 'Lists people read item by item, such as the activity on a test. The default size.' },
+        { prop: 'size', value: 'Compact', when: 'Dense side panels, such as the candidates who need help in Monitor.' },
+        { prop: 'interactive', value: 'true', when: 'Each row opens something, such as a page of settings. The whole row is the target.' },
+        { prop: 'divided', value: 'false', when: 'Short lists that read as one group, where whitespace separates the rows.' },
+      ],
     },
   },
 
@@ -814,8 +1060,19 @@ export const components: Record<string, ComponentSpec> = {
       ariaNotes: ['Use role="progressbar" with aria-valuenow / min / max', 'Omit aria-valuenow when indeterminate', 'Provide an accessible label for the task'],
     },
     usage: {
-      do: ['Use determinate progress when completion is known', 'Use indeterminate for unknown-duration waits', 'Match intent color to context'],
+      do: ['Show a value when you know how far along the task is', 'Use indeterminate when you do not know how long it will take', 'Match the intent colour to the context'],
       dont: ['Do not use for very short operations', 'Do not fake progress values'],
+      variants: [
+        { prop: 'variant', value: 'Circular', when: 'A compact place such as a dashboard tile, where a bar would not fit beside the figure.' },
+        { prop: 'intent', value: 'Primary', when: 'Work that is under way, such as marking. The default.' },
+        { prop: 'intent', value: 'Success', when: 'The work is done, such as every response marked.' },
+        { prop: 'intent', value: 'Warning', when: 'The work is behind, such as marking due tomorrow with most of it left.' },
+        { prop: 'intent', value: 'Error', when: 'The work has failed or is overdue. Say what to do next.' },
+        { prop: 'size', value: 'Small', when: 'Inside table rows and list items, with the count beside it.' },
+        { prop: 'size', value: 'Large', when: 'One task that is the focus of the screen, such as an import.' },
+        { prop: 'indeterminate', value: 'true', when: 'How long it will take is not known yet, such as preparing an export.' },
+        { prop: 'showValue', value: 'true', when: 'People need the exact percentage. Prefer a count in words beside the bar, such as 12 of 40.' },
+      ],
     },
   },
 
@@ -831,11 +1088,18 @@ export const components: Record<string, ComponentSpec> = {
     accessibility: {
       role: 'status',
       keyboard: false,
-      ariaNotes: ['Use role="status" with aria-live="polite"', 'Provide an accessible label via aria-label', 'Include visually-hidden loading text'],
+      ariaNotes: ['Use role="status" with aria-live="polite"', 'Provide an accessible label via aria-label', 'Include visually hidden loading text'],
     },
     usage: {
-      do: ['Use for short, indeterminate waits', 'Use Inverse on dark surfaces', 'Pair with context describing what is loading'],
-      dont: ['Do not use where determinate Progress is possible', 'Do not show multiple competing spinners'],
+      do: ['Use for short waits of unknown length', 'Use Inverse on dark surfaces', 'Say what is loading'],
+      dont: ['Do not use when you can show how far along it is - use Progress', 'Do not show several spinners at once'],
+      variants: [
+        { prop: 'size', value: 'Small', when: "Inline, beside the text it is about, such as Updating next to a roster's count." },
+        { prop: 'size', value: 'Medium', when: 'Inside a card or panel that is updating. The default size.' },
+        { prop: 'size', value: 'Large', when: 'A whole panel people are waiting on, such as a preview being built.' },
+        { prop: 'intent', value: 'Neutral', when: 'Loading that should not pull the eye, such as more of a list loading at its end.' },
+        { prop: 'intent', value: 'Inverse', when: 'Dark surfaces, such as a video player.' },
+      ],
     },
   },
 
@@ -854,8 +1118,13 @@ export const components: Record<string, ComponentSpec> = {
       ariaNotes: ['Skeletons are decorative and aria-hidden', 'Announce the real content once loaded', 'Mirror the layout of the content being loaded'],
     },
     usage: {
-      do: ['Match skeleton shapes to real content', 'Use for perceived performance on initial load', 'Replace with content as soon as it arrives'],
-      dont: ['Do not animate skeletons indefinitely', 'Do not use for user-triggered actions - use Spinner'],
+      do: ['Match skeleton shapes to real content', 'Use on first load, so the page feels faster', 'Replace with content as soon as it arrives'],
+      dont: ['Do not leave skeletons animating indefinitely', 'Do not use for actions people start - use Spinner'],
+      variants: [
+        { prop: 'variant', value: 'Text', when: 'Lines of text that are loading, such as the rows of a list.' },
+        { prop: 'variant', value: 'Rect', when: 'Blocks such as a stat tile, a chart or an image.' },
+        { prop: 'variant', value: 'Circle', when: 'Avatars and other round shapes.' },
+      ],
     },
   },
 
@@ -874,8 +1143,14 @@ export const components: Record<string, ComponentSpec> = {
       ariaNotes: ['Trigger uses aria-haspopup and aria-expanded', 'Panel uses role="dialog"', 'Escape and outside-click close the popover', 'May contain interactive content (unlike Tooltip)'],
     },
     usage: {
-      do: ['Use for rich, interactive overflow content', 'Anchor to the triggering element', 'Allow dismissal via Escape and outside click'],
+      do: ['Use for interactive content that does not fit inline', 'Anchor it to the element that opens it', 'Close it on Escape and on a click outside'],
       dont: ['Do not use for simple hover hints - use Tooltip', 'Do not stack popovers'],
+      variants: [
+        { prop: 'placement', value: 'Bottom', when: 'Under the button that opens it, such as Filters in a toolbar. The default.' },
+        { prop: 'placement', value: 'Top', when: 'Above a trigger low on the screen, such as in the bar at the foot of the marking view.' },
+        { prop: 'placement', value: 'Right', when: 'Beside an item in a list on the left, so the list stays in view.' },
+        { prop: 'placement', value: 'Left', when: 'Beside a trigger at the right edge, such as an action at the end of a table row.' },
+      ],
     },
   },
 
@@ -896,6 +1171,14 @@ export const components: Record<string, ComponentSpec> = {
     usage: {
       do: ['Use for secondary tasks and detail panels', 'Provide a clear close control', 'Return focus to the trigger on close'],
       dont: ['Do not use for critical confirmations - use Dialog', 'Do not open multiple drawers at once'],
+      variants: [
+        { prop: 'side', value: 'Right', when: 'Details of one row while the list stays in view, such as a question from the bank. The default.' },
+        { prop: 'side', value: 'Left', when: "Navigation and filters that belong at the left, such as a roster's saved views on a narrow screen." },
+        { prop: 'side', value: 'Bottom', when: 'Short actions on a touch screen, such as an invigilator on an iPad acting on one candidate.' },
+        { prop: 'size', value: 'Small', when: 'A few facts or actions.' },
+        { prop: 'size', value: 'Large', when: 'Richer detail that still belongs beside the list, such as a question preview. Never a table wider than 5 columns.' },
+        { prop: 'hasCloseButton', value: 'false', when: 'The drawer has its own way out, such as Close beside its actions, or a list where choosing an item closes it.' },
+      ],
     },
   },
 
@@ -911,11 +1194,17 @@ export const components: Record<string, ComponentSpec> = {
     accessibility: {
       role: 'navigation',
       keyboard: true,
-      ariaNotes: ['Wrap in nav with aria-label="Pagination"', 'Mark the current page with aria-current="page"', 'Disable and aria-disable prev/next at the bounds'],
+      ariaNotes: ['Wrap in nav with aria-label="Pagination"', 'Mark the current page with aria-current="page"', 'Disable Previous on the first page and Next on the last'],
     },
     usage: {
       do: ['Use for long, paged result sets', 'Show current, first, and last pages', 'Collapse large gaps with an ellipsis'],
       dont: ['Do not use for a handful of items', 'Do not hide the current page indicator'],
+      variants: [
+        { prop: 'size', value: 'Medium', when: 'Under a long list that fills the page, such as all tests. The default size.' },
+        { prop: 'size', value: 'Small', when: 'Dense or narrow places, such as stepping through responses while marking.' },
+        { prop: 'showEdges', value: 'true', when: 'Many pages, where jumping to the first or last one saves clicks.' },
+        { prop: 'showEdges', value: 'false', when: 'Up to about 7 pages, when every page number is already shown.' },
+      ],
     },
   },
 
@@ -927,15 +1216,21 @@ export const components: Record<string, ComponentSpec> = {
     keywords: ['dropdown', 'context menu', 'actions', 'overflow', 'kebab', 'more'],
     status: 'ready',
     deprecatedAliases: ['Dropdown menu', 'Action menu', 'Context menu', 'Overflow menu'],
-    tokens: ['surface', 'shadow.200', 'border var(--border)', 'radius.md', 'error.main (danger item)', 'action-hover'],
+    tokens: ['surface', 'shadow.200', 'border var(--border)', 'radius.sm (trigger) / radius.md (menu)', 'control-height sm/md 32/40', 'error.main (danger item)', 'action-hover'],
     accessibility: {
       role: 'menu',
       keyboard: true,
-      ariaNotes: ['Trigger uses aria-haspopup="menu" and aria-expanded', 'Items use role="menuitem"', 'Arrow keys move, Enter selects, Escape closes', 'Outside click closes the menu'],
+      ariaNotes: ['Trigger uses aria-haspopup="menu" and aria-expanded', 'An icon-only trigger is named by label, which says what it acts on: "Actions for Ada Lovelace"', 'Items use role="menuitem"', 'Arrow keys move, Enter selects, Escape closes', 'Outside click closes the menu'],
     },
     usage: {
-      do: ['Use for grouped actions and overflow', 'Separate destructive actions with a divider', 'Keep item labels action-oriented'],
+      do: ['Use for grouped actions and overflow', 'Separate destructive actions with a divider', 'Start item labels with a verb'],
       dont: ['Do not use for selecting a value - use Select', 'Do not nest menus more than one level'],
+      variants: [
+        { prop: 'placement', value: 'BottomStart', when: 'A trigger at the left of a toolbar, such as the actions for selected candidates. The menu lines up with its left edge.' },
+        { prop: 'placement', value: 'BottomEnd', when: 'A trigger at the right edge, such as More in a page header or the actions on a table row, so the menu opens inward.' },
+        { prop: 'iconOnly', value: 'true', when: 'The actions for one table row or one card, where a labelled trigger repeated on every row would crowd it. Name it for its row.' },
+        { prop: 'size', value: 'Small', when: 'Table rows and dense toolbars, beside Small buttons and inputs.' },
+      ],
     },
   },
 
@@ -951,11 +1246,16 @@ export const components: Record<string, ComponentSpec> = {
     accessibility: {
       role: 'list',
       keyboard: false,
-      ariaNotes: ['Use an ordered list for step semantics', 'Mark the current step with aria-current="step"', 'Convey completion with an icon, not color alone'],
+      ariaNotes: ['Use an ordered list for step semantics', 'Mark the current step with aria-current="step"', 'Convey completion with an icon, not colour alone'],
     },
     usage: {
       do: ['Use for multi-step flows and wizards', 'Show completed, current, and upcoming states', 'Keep step labels short'],
-      dont: ['Do not use for non-sequential navigation - use Tabs', 'Do not exceed a handful of steps'],
+      dont: ['Do not use for non-sequential navigation - use Tabs', 'Do not use more than a handful of steps'],
+      variants: [
+        { prop: 'orientation', value: 'Horizontal', when: 'Across the top of a flow of a few steps, such as New test.' },
+        { prop: 'orientation', value: 'Vertical', when: 'Beside the content, when each step needs a line of detail, such as what is left before a test can be published.' },
+        { prop: 'size', value: 'Small', when: 'Inside dialogs and panels, such as importing candidates.' },
+      ],
     },
   },
 
@@ -967,7 +1267,7 @@ export const components: Record<string, ComponentSpec> = {
     keywords: ['anchor', 'href', 'hyperlink', 'navigate', 'url'],
     status: 'ready',
     deprecatedAliases: ['Hyperlink', 'Text link', 'Anchor'],
-    tokens: ['primary.main (default)', 'gray-600 (muted)', 'action-disabled', 'primary.focusRing', 'open_in_new (external)'],
+    tokens: ['primary.main (default)', 'text-secondary (muted)', 'action-disabled', 'primary.focusRing', 'open_in_new (external)'],
     accessibility: {
       role: 'link',
       keyboard: true,
@@ -976,6 +1276,15 @@ export const components: Record<string, ComponentSpec> = {
     usage: {
       do: ['Use for navigation, not actions', 'Signal external links with an icon', 'Keep link text descriptive'],
       dont: ['Do not use links to trigger actions - use Button', 'Do not use "click here" as link text'],
+      variants: [
+        { prop: 'intent', value: 'Muted', when: 'Secondary links that should not compete, such as the links at the foot of a page.' },
+        { prop: 'size', value: 'Small', when: 'Tables, captions and other 14px text, such as test titles in a roster.' },
+        { prop: 'underline', value: 'Hover', when: 'Links that stand apart from other text, such as one under a card. The underline appears on hover. The default.' },
+        { prop: 'underline', value: 'Always', when: 'Links inside a sentence, where colour alone would not set them apart from the words around them.' },
+        { prop: 'underline', value: 'None', when: 'Only where the layout already says it is a link, such as the items of a side navigation.' },
+        { prop: 'external', value: 'true', when: 'Opens another site in a new tab, such as a download from a supplier. The icon says so.' },
+        { prop: 'disabled', value: 'true', when: "The page isn't available yet, such as results before marking ends. Say when it will be." },
+      ],
     },
   },
 }

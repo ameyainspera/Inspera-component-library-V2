@@ -6,6 +6,7 @@ import {
   type DialogProps, type DrawerProps, type DividerProps, type PopoverProps, type TooltipProps,
   type SpinnerProps, type SkeletonProps, type MenuProps,
 } from '../components/inspera'
+import { SEGMENT_LABELS } from '../data/recipes'
 import { raw, resolve, toJsx } from './jsx'
 
 // ---------------------------------------------------------------------------
@@ -72,8 +73,25 @@ export interface RegistryEntry {
     matrix?: GalleryMatrix
     /** Controls left out of the gallery. */
     omit?: string[]
+    /**
+     * Control values the States cells start from, on top of the defaults - for
+     * looks that only exist in one mode, such as an interactive card's hover.
+     */
+    stateBase?: Record<string, string>
   }
   layout?: EntryLayout
+  /**
+   * Controls that cannot apply with the current values, beyond the shared
+   * rules in `locksFor` - a close button that has to stay when a dialog has no
+   * actions, say.
+   */
+  locks?: (v: Record<string, string>) => Record<string, Lock>
+}
+
+/** A control held at one value while another value rules it out, and why. */
+export interface Lock {
+  value: string
+  reason: string
 }
 
 // ---------------------------------------------------------------------------
@@ -88,27 +106,77 @@ const preview = (...options: string[]): ControlDef => ({ label: 'Preview state',
 /** The `forceState` for the current preview control, or nothing. */
 const forced = (v: Record<string, string>) => (v.preview && v.preview !== 'None' ? v.preview : undefined)
 
+/** A Checkbox, Radio Button or Toggle shows its description only under a visible label. */
+const NO_LABEL_NO_DESCRIPTION: Lock = {
+  value: 'false',
+  reason: 'The description lines up under a visible label. With the label hidden, the row around the control describes it.',
+}
+
 /** Keys that describe state rather than variant, grouped under "States" in the gallery. */
-export const STATE_KEYS = ['disabled', 'error', 'readOnly']
+export const STATE_KEYS = ['disabled', 'error', 'readOnly', 'showError']
+
+/**
+ * The controls held while another control rules them out: Error on a
+ * disabled field, a hover look on one nobody can hover. Locked controls are
+ * greyed out in the sheet with the reason, and the preview, the scene and the
+ * code all use the locked value - so the playground never shows a state the
+ * component cannot really be in. The shared rules cover every entry with
+ * those controls; an entry adds its own with `locks`.
+ */
+export function locksFor(slug: string, v: Record<string, string>): Record<string, Lock> {
+  const entry = registry[slug]
+  const has = (key: string) => key in entry.controls
+  const out: Record<string, Lock> = {}
+  if (v.disabled === 'true') {
+    if (has('error')) out.error = { value: 'false', reason: "A disabled control can't be in error: there is nothing anyone can do to fix it." }
+    if (has('readOnly')) out.readOnly = { value: 'false', reason: 'Disabled already stops changes. Read only is for a value that still matters and can be selected.' }
+    if (has('preview')) out.preview = { value: 'None', reason: "A disabled control doesn't react to the pointer or the keyboard, and never opens." }
+  }
+  if (v.readOnly === 'true' && has('error') && !out.error) {
+    out.error = { value: 'false', reason: "A read-only value can't be fixed here, so it is never shown in error." }
+  }
+  if (v.readOnly === 'true' && !out.readOnly && has('withValue')) {
+    out.withValue = { value: 'true', reason: 'A read-only field is there to show a value, so it always has one.' }
+  }
+  if (v.error === 'true' && !out.error && has('showHelp')) {
+    out.showHelp = { value: v.showHelp, reason: "The error message takes the help text's place while the field is in error." }
+  }
+  // The entry's own rules see the values the shared rules leave, so an Error
+  // held off by Disabled rules nothing out.
+  const held = { ...v }
+  for (const [key, lock] of Object.entries(out)) held[key] = lock.value
+  return { ...out, ...entry.locks?.(held) }
+}
+
+/** The values the playground really shows: the chosen ones, with the locked controls held. */
+export function effectiveValues(slug: string, v: Record<string, string>): Record<string, string> {
+  const locks = locksFor(slug, v)
+  const next = { ...v }
+  for (const [key, lock] of Object.entries(locks)) next[key] = lock.value
+  return next
+}
 
 const components = Inspera as unknown as Record<string, ComponentType<Record<string, unknown>>>
 
-/** The resolved props for a set of control values. */
-export function propsFor(slug: string, v: Record<string, string>): Record<string, unknown> {
-  return resolve(registry[slug].props(v)) as Record<string, unknown>
+/**
+ * The resolved props for a set of control values. `copy` swaps display text
+ * (labels, options) for an in-context scene; an `undefined` in it drops the prop.
+ */
+export function propsFor(slug: string, v: Record<string, string>, copy?: Record<string, unknown>): Record<string, unknown> {
+  return resolve({ ...registry[slug].props(v), ...copy }) as Record<string, unknown>
 }
 
 /** The playground element for a set of control values. */
-export function renderLive(slug: string, v: Record<string, string>): ReactNode {
+export function renderLive(slug: string, v: Record<string, string>, copy?: Record<string, unknown>): ReactNode {
   const entry = registry[slug]
-  const p = propsFor(slug, v)
+  const p = propsFor(slug, v, copy)
   return entry.render ? entry.render(p, v) : createElement(components[entry.component], p)
 }
 
 /** The gallery element: the static form of an overlay, otherwise the live one. */
-export function renderStill(slug: string, v: Record<string, string>): ReactNode {
+export function renderStill(slug: string, v: Record<string, string>, copy?: Record<string, unknown>): ReactNode {
   const entry = registry[slug]
-  const p = propsFor(slug, v)
+  const p = propsFor(slug, v, copy)
   if (entry.still) return entry.still(p, v)
   return entry.render ? entry.render(p, v) : createElement(components[entry.component], p)
 }
@@ -134,16 +202,17 @@ export function galleryFor(slug: string): { sections: GallerySection[]; matrix?:
   const sections: GallerySection[] = []
   const options: GalleryCell[] = []
 
-  const states: GalleryCell[] = [{ label: 'Default', values: d }]
+  const sd = { ...d, ...entry.gallery?.stateBase }
+  const states: GalleryCell[] = [{ label: 'Default', values: sd }]
   for (const [key, c] of Object.entries(entry.controls)) {
     if (omit.has(key)) continue
     if (c.group === 'preview') {
       for (const o of c.options) {
-        if (o === d[key] || o === 'None') continue
-        states.push({ label: o, values: { ...d, [key]: o }, simulated: true })
+        if (o === sd[key] || o === 'None') continue
+        states.push({ label: o, values: { ...sd, [key]: o }, simulated: true })
       }
     } else if (isBool(c) && STATE_KEYS.includes(key)) {
-      states.push({ label: c.label, values: { ...d, [key]: d[key] === 'true' ? 'false' : 'true' } })
+      states.push({ label: c.label, values: { ...sd, [key]: sd[key] === 'true' ? 'false' : 'true' } })
     }
   }
 
@@ -189,7 +258,7 @@ function DrawerDemo(p: Record<string, unknown>) {
       <Button label="Open drawer" intent="Primary" onClick={() => setOpen(true)} />
       <Drawer {...as<DrawerProps>(p)} open={open} onClose={() => setOpen(false)}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12, fontSize: 14 }}>
-          <p style={{ margin: 0 }}>Drawers slide in from the edge for secondary tasks and detail views.</p>
+          <p style={{ margin: 0 }}>Changes apply the next time a candidate opens the test.</p>
           <FormField label="Title">
             <TextInput label="Title" placeholder="Algebra Quiz" />
           </FormField>
@@ -284,13 +353,14 @@ export const registry: Record<string, RegistryEntry> = {
       size: { label: 'Size', options: ['Small', 'Medium'] },
       leadingIcon: bool('Leading icon'),
       trailingIcon: bool('Trailing icon'),
+      showHelp: { label: 'Help text', options: ['false', 'true'] },
       withValue: bool('With value'),
       disabled: bool('Disabled'),
       readOnly: bool('Read only'),
       error: bool('Error'),
       preview: preview('Hover', 'Focused'),
     },
-    defaults: { size: 'Medium', leadingIcon: 'false', trailingIcon: 'false', withValue: 'false', disabled: 'false', readOnly: 'false', error: 'false', preview: 'None' },
+    defaults: { size: 'Medium', leadingIcon: 'false', trailingIcon: 'false', showHelp: 'true', withValue: 'false', disabled: 'false', readOnly: 'false', error: 'false', preview: 'None' },
     props: (v) => ({
       label: 'Email address',
       placeholder: 'jane@inspera.com',
@@ -298,7 +368,7 @@ export const registry: Record<string, RegistryEntry> = {
       size: v.size,
       leadingIcon: b(v.leadingIcon) ? 'mail' : undefined,
       trailingIcon: b(v.trailingIcon) ? 'close' : undefined,
-      helpText: "We'll never share your email.",
+      helpText: b(v.showHelp) ? "We'll never share your email." : undefined,
       errorText: b(v.error) ? 'Enter a valid email address.' : undefined,
       error: b(v.error),
       disabled: b(v.disabled),
@@ -342,24 +412,35 @@ export const registry: Record<string, RegistryEntry> = {
   checkbox: {
     component: 'Checkbox',
     controls: {
-      size: { label: 'Size', options: ['Small', 'Medium'] },
       checked: bool('Checked'),
       indeterminate: bool('Indeterminate'),
       withLabel: { label: 'Visible label', options: ['false', 'true'] },
+      showDescription: bool('Description'),
       disabled: bool('Disabled'),
       error: bool('Error'),
       preview: preview('Hover', 'Focused', 'Pressed'),
     },
-    defaults: { size: 'Medium', checked: 'false', indeterminate: 'false', withLabel: 'true', disabled: 'false', error: 'false', preview: 'None' },
+    defaults: { checked: 'false', indeterminate: 'false', withLabel: 'true', showDescription: 'false', disabled: 'false', error: 'false', preview: 'None' },
     props: (v) => ({
       label: 'Send me product updates',
       defaultChecked: b(v.checked),
-      size: v.size,
       indeterminate: b(v.indeterminate),
       withLabel: b(v.withLabel),
+      description: b(v.showDescription) ? 'One email a month. Unsubscribe at any time.' : undefined,
       disabled: b(v.disabled),
       error: b(v.error),
+      errorText: b(v.error) ? 'Tick this box to continue.' : undefined,
       forceState: forced(v),
+    }),
+    locks: (v): Record<string, Lock> => ({
+      ...(b(v.withLabel) ? {} : { showDescription: NO_LABEL_NO_DESCRIPTION }),
+      ...(b(v.error)
+        ? {
+            checked: { value: 'false', reason: 'The error asks people to tick the box, so it shows unticked.' },
+            indeterminate: { value: 'false', reason: 'The error asks people to tick the box, so it shows unticked.' },
+            showDescription: { value: v.showDescription, reason: "The error message takes the description's place until the box is ticked." },
+          }
+        : {}),
     }),
     layout: { cell: 200 },
   },
@@ -368,11 +449,10 @@ export const registry: Record<string, RegistryEntry> = {
     component: 'CheckboxGroup',
     controls: {
       orientation: { label: 'Orientation', options: ['Vertical', 'Horizontal'] },
-      size: { label: 'Size', options: ['Small', 'Medium'] },
       disabled: bool('Disabled'),
       error: bool('Error'),
     },
-    defaults: { orientation: 'Vertical', size: 'Medium', disabled: 'false', error: 'false' },
+    defaults: { orientation: 'Vertical', disabled: 'false', error: 'false' },
     props: (v) => ({
       label: 'Notifications',
       options: [
@@ -380,9 +460,9 @@ export const registry: Record<string, RegistryEntry> = {
         { label: 'SMS', value: 'sms' },
         { label: 'Push', value: 'push' },
       ],
-      defaultValue: ['email'],
+      // Nothing chosen in error, so the boxes and the message agree.
+      defaultValue: b(v.error) ? undefined : ['email'],
       orientation: v.orientation,
-      size: v.size,
       errorText: b(v.error) ? 'Choose at least one channel.' : undefined,
       error: b(v.error),
       disabled: b(v.disabled),
@@ -395,20 +475,23 @@ export const registry: Record<string, RegistryEntry> = {
     controls: {
       selected: bool('Selected'),
       withLabel: { label: 'Visible label', options: ['false', 'true'] },
+      showDescription: bool('Description'),
       disabled: bool('Disabled'),
       error: bool('Error'),
       preview: preview('Hover', 'Focused', 'Pressed'),
     },
-    defaults: { selected: 'false', withLabel: 'true', disabled: 'false', error: 'false', preview: 'None' },
+    defaults: { selected: 'false', withLabel: 'true', showDescription: 'false', disabled: 'false', error: 'false', preview: 'None' },
     props: (v) => ({
       label: 'Standard delivery',
       name: 'delivery',
       defaultSelected: b(v.selected),
       withLabel: b(v.withLabel),
+      description: b(v.showDescription) ? 'Arrives in 3 to 5 working days.' : undefined,
       disabled: b(v.disabled),
       error: b(v.error),
       forceState: forced(v),
     }),
+    locks: (v): Record<string, Lock> => (b(v.withLabel) ? {} : { showDescription: NO_LABEL_NO_DESCRIPTION }),
     layout: { cell: 200 },
   },
 
@@ -427,7 +510,8 @@ export const registry: Record<string, RegistryEntry> = {
         { label: 'Express', value: 'express' },
         { label: 'Overnight', value: 'overnight' },
       ],
-      defaultValue: 'standard',
+      // Nothing chosen in error, so the radios and the message agree.
+      defaultValue: b(v.error) ? undefined : 'standard',
       orientation: v.orientation,
       errorText: b(v.error) ? 'Choose a delivery speed.' : undefined,
       error: b(v.error),
@@ -467,18 +551,21 @@ export const registry: Record<string, RegistryEntry> = {
       size: { label: 'Size', options: ['Small', 'Medium'] },
       checked: bool('On'),
       withLabel: { label: 'Visible label', options: ['false', 'true'] },
+      showDescription: bool('Description'),
       disabled: bool('Disabled'),
       preview: preview('Hover', 'Focused'),
     },
-    defaults: { size: 'Medium', checked: 'false', withLabel: 'true', disabled: 'false', preview: 'None' },
+    defaults: { size: 'Medium', checked: 'false', withLabel: 'true', showDescription: 'false', disabled: 'false', preview: 'None' },
     props: (v) => ({
       label: 'Enable notifications',
       defaultChecked: b(v.checked),
       size: v.size,
       withLabel: b(v.withLabel),
+      description: b(v.showDescription) ? 'Email and push, as soon as something changes.' : undefined,
       disabled: b(v.disabled),
       forceState: forced(v),
     }),
+    locks: (v): Record<string, Lock> => (b(v.withLabel) ? {} : { showDescription: NO_LABEL_NO_DESCRIPTION }),
     layout: { cell: 220 },
   },
 
@@ -486,13 +573,15 @@ export const registry: Record<string, RegistryEntry> = {
     component: 'SegmentedControl',
     controls: {
       size: { label: 'Size', options: ['Small', 'Medium'] },
+      // 2-4: the range DESIGN.md allows. Beyond four, Tabs or a Select.
+      segments: { label: 'Segments', options: ['2', '3', '4'] },
       fullWidth: bool('Full width'),
       disabled: bool('Disabled'),
     },
-    defaults: { size: 'Medium', fullWidth: 'false', disabled: 'false' },
+    defaults: { size: 'Medium', segments: '3', fullWidth: 'false', disabled: 'false' },
     props: (v) => ({
       label: 'Date range',
-      items: ['Day', 'Week', 'Month'],
+      items: SEGMENT_LABELS.slice(0, Number(v.segments)),
       defaultValue: 'Week',
       size: v.size,
       fullWidth: b(v.fullWidth),
@@ -711,16 +800,27 @@ export const registry: Record<string, RegistryEntry> = {
       elevation: { label: 'Elevation', options: ['Flat', 'Raised', 'Outlined'] },
       padding: { label: 'Padding', options: ['Compact', 'Default', 'Spacious'] },
       interactive: bool('Interactive'),
+      selected: bool('Selected'),
+      preview: preview('Hover', 'Focused', 'Pressed'),
     },
-    defaults: { elevation: 'Raised', padding: 'Default', interactive: 'false' },
+    defaults: { elevation: 'Raised', padding: 'Default', interactive: 'false', selected: 'false', preview: 'None' },
     props: (v) => ({
       title: 'Algebra Quiz',
-      body: '24 questions | 45 minutes. Group related content in a contained surface.',
+      body: '24 questions, 45 minutes. Covers linear equations and inequalities.',
       elevation: v.elevation,
       padding: v.padding,
       interactive: b(v.interactive),
+      // A selected card is a toggle, which makes it interactive on its own.
+      defaultSelected: b(v.selected) || undefined,
       onClick: b(v.interactive) ? raw('openQuiz') : undefined,
+      forceState: forced(v),
     }),
+    // Hover, focus and pressed exist only on an interactive card.
+    gallery: { stateBase: { interactive: 'true' } },
+    locks: (v): Record<string, Lock> =>
+      !b(v.interactive) && !b(v.selected)
+        ? { preview: { value: 'None', reason: 'Hover, focus and pressed exist only on a card people can click: turn on Interactive or Selected.' } }
+        : {},
     layout: { width: 360, cell: 300 },
   },
 
@@ -782,11 +882,12 @@ export const registry: Record<string, RegistryEntry> = {
       selectable: b(v.selectable),
       rowActions: b(v.rowActions)
         ? raw(
-            "(row) => (\n    <Menu\n      label=\"Actions\"\n      aria-label={`Actions for ${row.name}`}\n      items={[{ label: 'Edit', icon: 'edit' }, { label: 'Delete', icon: 'delete', danger: true }]}\n    />\n  )",
+            "(row) => (\n    <Menu\n      iconOnly\n      size=\"Small\"\n      label={`Actions for ${row.name}`}\n      placement=\"BottomEnd\"\n      items={[{ label: 'Edit', icon: 'edit' }, { label: 'Duplicate', icon: 'content_copy' }, { label: '', divider: true }, { label: 'Delete', icon: 'delete', danger: true }]}\n    />\n  )",
             (row: Record<string, unknown>) => (
               <Menu
-                label="Actions"
-                aria-label={`Actions for ${String(row.name)}`}
+                iconOnly
+                size="Small"
+                label={`Actions for ${String(row.name)}`}
                 placement="BottomEnd"
                 items={[{ label: 'Edit', icon: 'edit' }, { label: 'Duplicate', icon: 'content_copy' }, { label: '', divider: true }, { label: 'Delete', icon: 'delete', danger: true }]}
               />
@@ -943,6 +1044,8 @@ export const registry: Record<string, RegistryEntry> = {
       spacing: v.spacing,
       label: b(v.withLabel) && v.orientation === 'Horizontal' ? 'OR' : undefined,
     }),
+    locks: (v): Record<string, Lock> =>
+      v.orientation === 'Vertical' ? { withLabel: { value: 'false', reason: 'A vertical divider has no room for a label. Labels go on horizontal dividers.' } } : {},
     // Shown between content so the rule has something to separate. The
     // horizontal one used to sit in a flex *row*, so "Above" and "Below"
     // rendered beside it on one line.
@@ -967,17 +1070,20 @@ export const registry: Record<string, RegistryEntry> = {
     component: 'EmptyState',
     controls: {
       size: { label: 'Size', options: ['Small', 'Medium'] },
+      actionIntent: { label: 'Action intent', options: ['Primary', 'Secondary'] },
       withAction: { label: 'Action', options: ['false', 'true'] },
     },
-    defaults: { size: 'Medium', withAction: 'true' },
+    defaults: { size: 'Medium', actionIntent: 'Primary', withAction: 'true' },
     props: (v) => ({
       icon: 'inbox',
       title: 'No assessments yet',
       description: 'Create your first assessment to get started.',
       actionLabel: b(v.withAction) ? 'New assessment' : undefined,
       onAction: b(v.withAction) ? raw('createAssessment') : undefined,
+      actionIntent: b(v.withAction) ? v.actionIntent : undefined,
       size: v.size,
     }),
+    locks: (v): Record<string, Lock> => (b(v.withAction) ? {} : { actionIntent: { value: 'Primary', reason: 'Turn on Action to choose how it looks.' } }),
     layout: { cell: 320 },
   },
 
@@ -1009,24 +1115,51 @@ export const registry: Record<string, RegistryEntry> = {
   dialog: {
     component: 'Dialog',
     controls: {
-      size: { label: 'Size', options: ['Small', 'Medium', 'Large'] },
+      size: { label: 'Size', options: ['Medium', 'Large'] },
       hasCloseButton: { label: 'Close button', options: ['false', 'true'] },
       hasActions: { label: 'Actions', options: ['false', 'true'] },
+      confirmIntent: { label: 'Confirm intent', options: ['Primary', 'Destructive'] },
+      footerStart: bool('Footer status'),
     },
-    defaults: { size: 'Medium', hasCloseButton: 'true', hasActions: 'true' },
-    props: (v) => ({
-      open: raw('open'),
-      title: 'Publish assessment?',
-      size: v.size,
-      hasCloseButton: b(v.hasCloseButton),
-      hasActions: b(v.hasActions),
-      confirmLabel: 'Publish',
-      onClose: raw('() => setOpen(false)'),
-      onConfirm: raw('handlePublish'),
-      children: 'Candidates will be able to start it at the scheduled time.',
-    }),
+    defaults: { size: 'Medium', hasCloseButton: 'true', hasActions: 'true', confirmIntent: 'Primary', footerStart: 'false' },
+    // A destructive confirmation is a different message, not a red Publish.
+    props: (v) => v.confirmIntent === 'Destructive'
+      ? {
+          open: raw('open'),
+          title: 'Delete assessment?',
+          size: v.size,
+          hasCloseButton: b(v.hasCloseButton),
+          hasActions: b(v.hasActions),
+          confirmLabel: 'Delete assessment',
+          confirmIntent: v.confirmIntent,
+          footerStart: b(v.footerStart) ? '248 responses' : undefined,
+          onClose: raw('() => setOpen(false)'),
+          onConfirm: raw('handleDelete'),
+          children: "Candidates' responses will be deleted. You can't undo this.",
+        }
+      : {
+          open: raw('open'),
+          title: 'Publish assessment?',
+          size: v.size,
+          hasCloseButton: b(v.hasCloseButton),
+          hasActions: b(v.hasActions),
+          confirmLabel: 'Publish',
+          confirmIntent: v.confirmIntent,
+          footerStart: b(v.footerStart) ? 'Starts 14 Oct 2026, 09:00' : undefined,
+          onClose: raw('() => setOpen(false)'),
+          onConfirm: raw('handlePublish'),
+          children: 'Candidates will be able to start it at the scheduled time.',
+        },
     // The real overlay: the snippet teaches `open` / `onClose`, so the preview
     // has to be the thing that opens and closes. The gallery shows the panel.
+    locks: (v): Record<string, Lock> =>
+      v.hasActions === 'false'
+        ? {
+            hasCloseButton: { value: 'true', reason: 'Without actions, the close button is the only way out of the dialog.' },
+            confirmIntent: { value: 'Primary', reason: 'Without actions there is nothing to confirm.' },
+            footerStart: { value: 'false', reason: 'Without actions there is no footer for the status to sit in.' },
+          }
+        : {},
     render: (p) => <DialogDemo {...p} />,
     still: (p) => <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}><Dialog {...as<DialogProps>(p)} open embedded /></div>,
     layout: { cell: 600 },
@@ -1050,12 +1183,18 @@ export const registry: Record<string, RegistryEntry> = {
       children: raw('{children}'),
     }),
     render: (p) => <DrawerDemo {...p} />,
+    // Each cell at its own size, so the Size cells show the three widths -
+    // 320, 400 and 560 - side by side in a cell wide enough for the largest.
+    // Every preview is cut to one height: a bottom sheet's size is a height,
+    // which the Side cells do not compare.
     still: (p) => (
       <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-        <Drawer {...as<DrawerProps>(p)} open embedded size="Small">Drawer body content.</Drawer>
+        <Drawer {...as<DrawerProps>(p)} open embedded style={{ height: 200 }}>
+          Algebra Quiz, 24 questions. Created by Jane Cooper.
+        </Drawer>
       </div>
     ),
-    layout: { cell: 380 },
+    layout: { cell: 600 },
   },
 
   popover: {
@@ -1073,7 +1212,7 @@ export const registry: Record<string, RegistryEntry> = {
       content: raw(
         '<FilterForm />',
         <div style={{ display: 'flex', flexDirection: 'column', gap: 4, fontSize: 14 }}>
-          <span>Popovers can hold interactive content.</span>
+          <span>Show only:</span>
           <Checkbox label="Only published" />
           <Checkbox label="Assigned to me" />
         </div>,
@@ -1162,7 +1301,7 @@ export const registry: Record<string, RegistryEntry> = {
     },
     defaults: { placement: 'Top', theme: 'Dark', variant: 'Default', preview: 'Pinned open' },
     props: (v) => ({
-      content: 'Supplementary help text shown on hover or focus.',
+      content: 'Get help with this page',
       placement: v.placement,
       theme: v.theme,
       variant: v.variant,
@@ -1205,6 +1344,13 @@ export const registry: Record<string, RegistryEntry> = {
       indeterminate: b(v.indeterminate),
       showValue: b(v.showValue),
     }),
+    locks: (v): Record<string, Lock> =>
+      b(v.indeterminate)
+        ? {
+            showValue: { value: 'false', reason: 'An indeterminate bar has no value to show.' },
+            intent: { value: 'Primary', reason: 'Indeterminate means the work is still going. Success, Warning and Error describe how it went.' },
+          }
+        : {},
     render: (p) => <div style={{ width: p.variant === 'Linear' ? '100%' : 'auto' }}>{createElement(Inspera.Progress, p as never)}</div>,
     layout: { width: 360, cell: 240 },
   },
@@ -1309,12 +1455,17 @@ export const registry: Record<string, RegistryEntry> = {
     component: 'Menu',
     controls: {
       placement: { label: 'Placement', options: ['BottomStart', 'BottomEnd'] },
+      size: { label: 'Size', options: ['Small', 'Medium'] },
+      iconOnly: bool('Icon only'),
     },
-    defaults: { placement: 'BottomStart' },
+    defaults: { placement: 'BottomStart', size: 'Medium', iconOnly: 'false' },
     props: (v) => ({
-      label: 'Actions',
+      // An icon-only trigger shows no text, so its name has to carry the context.
+      label: b(v.iconOnly) ? 'Actions for Algebra Quiz' : 'Actions',
       items: MENU_ITEMS,
       placement: v.placement,
+      size: v.size,
+      iconOnly: b(v.iconOnly),
       onSelect: raw('handleSelect'),
     }),
     render: (p) => <Menu {...as<MenuProps>(p)} defaultOpen />,
@@ -1365,6 +1516,8 @@ export const registry: Record<string, RegistryEntry> = {
       external: b(v.external),
       disabled: b(v.disabled),
     }),
+    locks: (v): Record<string, Lock> =>
+      b(v.disabled) ? { intent: { value: v.intent, reason: 'A disabled link is greyed out, whatever its intent.' } } : {},
     render: (p) => <span onClickCapture={(e) => e.preventDefault()}>{createElement(Inspera.Link, p as never)}</span>,
     layout: { cell: 180 },
   },

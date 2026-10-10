@@ -66,14 +66,21 @@ import { RadioButton } from '@inspera/components'
 | `name` | `string` | - | Shared form name. Every radio in a group must use the same value. Left unset, each radio gets its own generated name and stands alone. |
 | `withLabel` | `boolean` | `true` | Render the label text. When false, the label becomes `aria-label`. |
 | `disabled` | `boolean` | `false` | Blocks interaction and dims the control. |
-| `error` | `boolean` | `false` | Marks the control invalid: red ring and `aria-invalid`. |
+| `error` | `boolean` | `false` | Marks the control invalid: a red ring, selected or not, and `aria-invalid` on the input. |
+| `description` | `ReactNode` | - | A line under the label: what the option means, or why it is unavailable. Shown with a visible label, and linked to the radio with `aria-describedby`. An error belongs to the group (Radio Group's `errorText`), not to one option. |
 
 Also accepts any native `<input>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<input>`. `className` and `style` go on the outermost element.
 
-**Accessibility** - role `radio`, keyboard operable. Use role="radiogroup" for the group container; Use aria-checked to indicate selected state; Arrow keys navigate between options in the group.
+**Accessibility** - role `radio`, keyboard operable. Use role="radiogroup" for the group container; Use aria-checked to indicate selected state; Arrow keys navigate between options in the group; The description under the label is linked with aria-describedby.
 
-**Do:** Use for mutually exclusive options; Always group inside a radiogroup; Pre-select a default when appropriate.
-**Don't:** Do not use for multi-select - use Checkbox instead; Do not use a single radio button alone.
+**Do:** Use for mutually exclusive options; Always group inside a radiogroup; Pre-select a sensible default; Give an option a description when it needs a line of its own, such as why it is unavailable.
+**Don't:** Do not use when people can choose more than one option - use Checkbox instead; Do not use a single radio button on its own.
+
+**Choosing a variant:**
+- `withLabel`: Each option needs a description or content of its own under it, so the options are laid out one by one. Otherwise use Radio Group.
+- `withLabel="false"`: The row next to it names the option, such as a template in a list. Keep the label for screen readers.
+- `error`: No option is chosen and one is required. Mark every option in the set and say what to choose.
+- `disabled`: One option can't be chosen here. Say why under it.
 
 **Deprecated aliases** (do not use): `Radiobutton`, `Radiobuttons`, `Radio Button New-BonW`, `Radio Button New-BonY`, `Radio Button New-WonB`, `Radio Button New-YonB`
 
@@ -112,22 +119,28 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 - Identical structure to Checkbox: a visually hidden native `<input type="radio">` plus a drawn circle, with the ring on the circle.
 - The circle is 20px with a 2px border and `--radius-pill`; the selected dot is a 10px child element, not a background, so it stays centred while the circle scales on press.
+- In error the ring is `--error`, selected or not; the dot stays `--primary`. The hover tint is `--error-surface`, and the focus ring stays `--primary`.
 - Grouping is the `name` attribute. Every radio in one question shares it, and unrelated questions must not - two groups sharing a name become one.
 - For a set of options prefer the Radio Group component, which owns the name and the group label for you.
+- An option that needs a line of its own (what it means, or why it is unavailable) takes a description under its label in `.inspera-radio__message`, linked with `aria-describedby`, 28px in. The error belongs to the group, not to one option.
 
 ```css
 /* Tokens this component needs. Paste once, at `:root`. */
 :root {
-  --primary:                #004080;
-  --error:                  #D32F2F;
-  --white:                  #ffffff;
-  --text-primary:           rgba(0, 0, 0, 0.87);
-  --border-control-strong:  #8C8C8C;
-  --radius-pill:            9999px;
-  --focus-ring-width:       2px;
-  --focus-ring-offset:      2px;
-  --focus-ring-color:       var(--primary);
-  --font-sans:              'Inter', system-ui, -apple-system, sans-serif;
+  --primary:            #004080;
+  --error:              #D32F2F;
+  --white:              #ffffff;
+  --gray-600:           #7A7A7A;
+  --gray-700:           #595959;
+  --text-primary:       rgba(0, 0, 0, 0.87);
+  --error-surface:      #FFEBEE;
+  --border-control:     var(--gray-600);
+  --muted-foreground:   var(--gray-700);
+  --radius-pill:        9999px;
+  --focus-ring-width:   2px;
+  --focus-ring-offset:  2px;
+  --focus-ring-color:   var(--primary);
+  --font-sans:          'Inter', system-ui, -apple-system, sans-serif;
 }
 
 .inspera-radio {
@@ -152,7 +165,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   width: 20px;
   height: 20px;
   border-radius: var(--radius-pill);
-  border: 2px solid var(--border-control-strong);
+  border: 2px solid var(--border-control);
   background: var(--white);
   display: inline-flex;
   align-items: center;
@@ -181,10 +194,30 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 .inspera-radio:active .inspera-radio__circle { transform: scale(0.92); }
 
-.inspera-radio--error .inspera-radio__circle { border-color: var(--error); }
-.inspera-radio--error:hover .inspera-radio__circle { border-color: var(--error); }
+/* In error the ring is red whether or not the radio is selected, so a group
+   in error reads as one. The dot stays blue. */
+.inspera-radio--error .inspera-radio__circle,
+.inspera-radio--error .inspera-radio__input:checked + .inspera-radio__circle { border-color: var(--error); }
+.inspera-radio--error:hover .inspera-radio__circle { border-color: var(--error); background: var(--error-surface); }
 
 .inspera-radio--disabled { cursor: not-allowed; opacity: 0.38; }
+
+/* A description under the label, linked with aria-describedby. It starts
+   where the label text starts (the 20px circle plus its 8px gap) and sits 4px
+   under it, pulled up into the row's 8px padding. Not dimmed when disabled:
+   it often says why the option is unavailable. */
+.inspera-radio-field {
+  display: inline-flex;
+  flex-direction: column;
+  font-family: var(--font-sans);
+}
+.inspera-radio__message {
+  margin-top: -4px;
+  padding-left: 28px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--muted-foreground);
+}
 ```
 
 ```html

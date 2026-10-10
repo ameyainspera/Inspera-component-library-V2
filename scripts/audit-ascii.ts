@@ -25,6 +25,15 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
 const ROOTS = ['public', 'kit', 'packages/components']
 const SKIP = new Set(['node_modules', 'dist', '.git'])
+
+/**
+ * The design guide, published byte for byte from design-md/. Its text belongs
+ * to the design system team, and some of its non-ASCII characters carry
+ * meaning (the euro and degree signs in its UX writing rules), so it is not
+ * ours to fold to ASCII. The site shows it through the AI spec page, which
+ * decodes it as UTF-8, and the zip carries the bytes unchanged.
+ */
+const VERBATIM = 'public/design/'
 const EXTENSIONS = ['.md', '.txt', '.json', '.css', '.ts', '.tsx', '.windsurfrules', '.mdc']
 
 function walk(dir: string, out: string[] = []): string[] {
@@ -39,6 +48,7 @@ function walk(dir: string, out: string[] = []): string[] {
 
 const problems: string[] = []
 let scanned = 0
+let verbatim = 0
 
 for (const r of ROOTS) {
   const abs = join(root, r)
@@ -48,6 +58,10 @@ for (const r of ROOTS) {
     continue
   }
   for (const file of walk(abs)) {
+    if (relative(root, file).split('\\').join('/').startsWith(VERBATIM)) {
+      verbatim++
+      continue
+    }
     scanned++
     const lines = readFileSync(file, 'utf8').split('\n')
     for (let i = 0; i < lines.length; i++) {
@@ -71,4 +85,4 @@ if (problems.length > 0) {
   )
   process.exit(1)
 }
-console.log(`[ok] ascii: ${scanned} shipped files are plain ASCII`)
+console.log(`[ok] ascii: ${scanned} shipped files are plain ASCII (${verbatim} design guide file(s) published verbatim, not checked)`)

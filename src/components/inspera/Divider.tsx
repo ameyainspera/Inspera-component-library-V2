@@ -7,9 +7,9 @@ export type DividerSpacing = 'Compact' | 'Default' | 'Spacious'
 export interface DividerProps {
   /** Divider direction. A vertical divider needs a flex row around it. */
   orientation?: DividerOrientation
-  /** Optional centered label (horizontal only). */
+  /** Optional centred label (horizontal only). */
   label?: string
-  /** Surrounding margin. */
+  /** Surrounding margin, 8 / 16 / 24px on each side. */
   spacing?: DividerSpacing
 }
 

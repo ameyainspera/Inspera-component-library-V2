@@ -40,7 +40,7 @@ body,
   outline-offset: var(--focus-ring-offset);
 }
 
-/* Prototyping-kit cards: the title link stretches over the card, so the whole
+/* Screen-template cards: the title link stretches over the card, so the whole
    card is clickable while its Download button stays a separate control. */
 /* The main scroll area takes focus for keyboard scrolling; ring it inside. */
 #docs-scroll:focus-visible {
@@ -67,7 +67,7 @@ body,
   outline-offset: var(--focus-ring-offset);
 }
 
-/* Prototyping Kits guide (PagesGuide.tsx). Inline styles cannot express hover,
+/* Screen templates guide (PagesGuide.tsx). Inline styles cannot express hover,
    keyframes or media queries, so those parts live here. */
 @keyframes docs-guide-fade {
   from {

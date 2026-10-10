@@ -11,6 +11,9 @@
  *   - src/imports/tokens.css         :root custom properties for the docs app
  *   - public/llms.txt                index any LLM tool can paste
  *   - public/llms-full.txt           the same content, everything inline
+ *   - public/spec/*.md               that same text in parts: a core, then groups of components
+ *   - public/inspera-00-start-here.md  opens the AI spec zip: DESIGN.md and the full guide together
+ *   - public/design/**               the design guide (design-md/), copied byte for byte
  *   - public/c/<slug>.md             one self-contained file per component
  *   - public/tokens.w3c.json         W3C Design Tokens JSON
  *   - packages/components/styles.css  tokens + runtime CSS shipped by the npm package
@@ -22,23 +25,33 @@
  *
  * Run with: pnpm generate
  */
-import { readFileSync, writeFileSync, mkdirSync, readdirSync } from 'node:fs'
-import { dirname, join, resolve } from 'node:path'
+import { readFileSync, writeFileSync, mkdirSync, readdirSync, statSync, rmSync } from 'node:fs'
+import { dirname, join, relative, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import { componentList } from '../src/data/components'
 import { registry, snippetFor } from '../src/docs/registry'
-import { componentsPackage, artifacts } from '../src/data/distribution'
+import { contexts } from '../src/docs/contexts'
 import {
-  contract, precedence, whenUnsure, patterns,
+  componentsPackage, artifacts, fullSpec, specParts, specGuide, fileName, type SpecPart, aiSpecGuide,
+} from '../src/data/distribution'
+import {
+  contract, precedence, whenUnsure, patterns, designGuideNote,
   formRules, tableRules, feedbackHierarchy, checklist, workedScreen,
 } from '../src/data/guidance'
+import {
+  designGuideSource, designGuideServed, designGuideFiles, designGuideMarkers,
+  knownDifferences, projectInstructions, whichFileWins, aiWillAsk,
+} from '../src/data/design-md'
+import { examplePages } from '../src/docs/pages/registry'
+import { textSafeShades } from './contrast'
+import { checkDesignMd, summarise as summariseDesignMd } from './design-md-check'
 import { extractComponentProps, type PropDoc } from './extract-props'
 import type { ComponentSpec } from '../src/data/types'
 import { recipes } from '../src/data/recipes'
 import {
   brandColors, semanticColors, brandAccents, palette,
-  spacing, radius, shadows, typeScale,
+  spacing, controlHeights, radius, shadows, typeScale,
   systemTokens, fonts, baseColors,
   borderWidths, focusRing, motion, zIndex, breakpoints, fontWeights, effects,
 } from '../src/data/tokens'
@@ -102,6 +115,39 @@ const write = (rel: string, content: string) => {
   console.log('  ✓', rel)
 }
 
+/**
+ * Publish a file that arrives from outside this repo, byte for byte.
+ *
+ * The design guide (design-md/) is written by the design system team, and its
+ * text is theirs: it is published exactly as received, never rewritten. That
+ * includes its non-ASCII characters - some carry meaning, such as the euro and
+ * degree signs in its UX writing rules - so `assertAscii` does not apply.
+ * Everything else about a generated file does: `--check` compares the copy
+ * with the source, and the copy is measured like any other artifact.
+ */
+const copyVerbatim = (from: string, to: string) => {
+  const raw = readFileSync(join(root, from))
+  const content = raw.toString('utf8')
+  if (!Buffer.from(content, 'utf8').equals(raw)) {
+    throw new Error(`${from} is not valid UTF-8. Ask its authors for a UTF-8 copy; it cannot be published as it is.`)
+  }
+  produced.set(to, content)
+  const abs = join(root, to)
+  if (CHECK) {
+    let current: Buffer | null = null
+    try {
+      current = readFileSync(abs)
+    } catch {
+      /* missing counts as drift */
+    }
+    if (!current || !current.equals(raw)) drifted.push(to)
+    return
+  }
+  mkdirSync(dirname(abs), { recursive: true })
+  writeFileSync(abs, raw)
+  console.log('  ✓', to, '(verbatim)')
+}
+
 // ---------------------------------------------------------------------------
 // Token CSS - generated from src/data/tokens.ts, the single typed source.
 //
@@ -143,6 +189,7 @@ function buildRootCss(): string {
   }
 
   blocks.push(tokenBlock('Spacing', spacing.map((sp) => ({ name: `space-${sp.token}`, value: `${sp.value}px` }))))
+  blocks.push(tokenBlock('Control height', controlHeights.map((c) => ({ name: `control-height-${c.token}`, value: `${c.value}px`, note: c.note }))))
   blocks.push(tokenBlock('Radius', radius.map((r) => ({ name: `radius-${r.token}`, value: `${r.value}px` }))))
   blocks.push(tokenBlock('Elevation', shadows.map((sh) => ({ name: `shadow-${sh.token}`, value: sh.value }))))
   blocks.push(tokenBlock('Effects', effects.map((e) => ({ name: `effect-${e.name}`, value: e.value, note: e.note }))))
@@ -241,6 +288,7 @@ function buildW3CTokens() {
     $description: 'Inspera Design System tokens (W3C Design Tokens format). Generated - do not edit.',
     color,
     spacing: dimension(spacing),
+    controlHeight: dimension(controlHeights),
     radius: dimension(radius.map((r) => ({ token: r.token, value: r.value }))),
     shadow,
     typography,
@@ -453,7 +501,58 @@ ${nativeNote(native)}${relatedTypesBlock(relatedTypes)}
 
 **Do:** ${c.usage.do.join('; ')}.
 **Don't:** ${c.usage.dont.join('; ')}.
-${aliases}${recipeBlock(c.slug, standalone)}`
+${variantGuide(c)}${aliases}${recipeBlock(c.slug, standalone)}`
+}
+
+/** When to pick each variant - the same lines the site shows under its in-context scenes. */
+function variantGuide(c: ComponentSpec): string {
+  const lines = c.usage.variants ?? []
+  if (lines.length === 0) return ''
+  const name = (prop: string, value: string) => (value === 'true' ? `\`${prop}\`` : `\`${prop}="${value}"\``)
+  return `\n**Choosing a variant:**\n${lines.map((g) => `- ${name(g.prop, g.value)}: ${g.when}`).join('\n')}\n`
+}
+
+/**
+ * Fails generation when variant guidance or an in-context scene names a prop,
+ * value or control that does not exist - a typo would otherwise ship as advice
+ * for a variant the component does not have, or leave a scene with no caption.
+ */
+function checkVariantGuidance() {
+  for (const c of componentList) {
+    const where = `components.ts "${c.slug}" usage.variants`
+    const { props } = componentApi[exportNameFor(c)]
+    for (const g of c.usage.variants ?? []) {
+      const prop = props.find((p) => p.name === g.prop)
+      if (!prop) throw new Error(`${where}: "${g.prop}" is not a prop of ${exportNameFor(c)}.`)
+      const values = prop.type === 'boolean' ? ['true', 'false'] : [...prop.type.matchAll(/'([^']+)'/g)].map((m) => m[1])
+      if (!values.includes(g.value)) {
+        throw new Error(`${where}: ${g.prop}="${g.value}" is not a value of \`${prop.type}\`.`)
+      }
+    }
+  }
+  for (const [slug, scenes] of Object.entries(contexts)) {
+    const where = `contexts.tsx "${slug}"`
+    const entry = registry[slug]
+    const spec = componentList.find((c) => c.slug === slug)
+    if (!entry || !spec) throw new Error(`${where}: not a component slug.`)
+    const fallbacks = scenes!.filter((s) => !s.when).length
+    if (fallbacks !== 1) throw new Error(`${where}: needs exactly one scene without \`when\` (the fallback), found ${fallbacks}.`)
+    for (const s of scenes!) {
+      for (const [key, values] of Object.entries(s.when ?? {})) {
+        const control = entry.controls[key]
+        if (!control) throw new Error(`${where}: \`when\` uses "${key}", which is not a playground control.`)
+        for (const value of values) {
+          if (!control.options.includes(value)) throw new Error(`${where}: "${value}" is not an option of the ${key} control.`)
+          if (!spec.usage.variants?.some((g) => g.prop === key && g.value === value)) {
+            throw new Error(
+              `${where}: a scene is for ${key}="${value}", but components.ts has no usage.variants line for it, ` +
+                'so the scene would show without saying why that variant belongs there.',
+            )
+          }
+        }
+      }
+    }
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -483,6 +582,8 @@ ${packageBlock()}
 ## Rules
 
 ${RULES}
+
+${DESIGN_GUIDE}
 
 ${buildSetup()}
 
@@ -610,6 +711,7 @@ function buildKitManifest() {
 //   llms.txt        small index - what you paste
 //   c/<slug>.md     one component - what an agent fetches
 //   llms-full.txt   everything inline - the fallback
+//   spec/*.md       the same text in parts - for tools that cannot take it whole
 //   api.json        the prop API, machine-readable
 // ---------------------------------------------------------------------------
 const VERSION = JSON.parse(
@@ -648,6 +750,16 @@ ${num(precedence)}
 **When the spec does not answer your question:**
 
 ${whenUnsure.map((r) => `- ${r}`).join('\n')}`
+
+/**
+ * How this spec works beside DESIGN.md, the design guide it ships with. A
+ * section of its own, after the rules, rather than part of RULES: RULES is
+ * also repeated in every per-component file, which an agent fetches one at a
+ * time to build that component and which has no use for it.
+ */
+const DESIGN_GUIDE = `## Working with DESIGN.md
+
+${designGuideNote.map((r) => `- ${r}`).join('\n')}`
 
 /**
  * Everything a consumer needs before a single component will look right.
@@ -749,14 +861,46 @@ ${iconRule}
 \`\`\`
 
 **3. The tokens.** Every value in this document resolves through one of these.
-Component sections below repeat the subset each one needs, so pasting this block
-makes those repeats redundant - either is fine, this one covers everything
-including the spacing and type scales that the component blocks do not carry.
+Each component section below repeats the tokens it needs. If you paste this full
+block, you can skip those repeats; it also has the spacing and type scales, which
+the component blocks leave out.
 
 \`\`\`css
 ${buildRootCss()}
 \`\`\`
 `
+}
+
+/**
+ * The screen templates: the site's working copies of real Inspera screens.
+ * DESIGN.md sends an AI building a whole screen to this section by name, so
+ * the heading must stay "Screen templates". Only templates that are ready
+ * and built at least in part from library components are listed; a pasted
+ * reference screen is not a library template.
+ */
+function buildScreenTemplates(): string {
+  const listed = examplePages.filter((p) => p.status === 'ready' && p.uses.length > 0)
+  const rows = listed
+    .map((p) => `| [${p.name}](${url(`#/pages/${p.slug}`)}) | ${cell(p.location ?? '-')} | ${cell(p.description)} | ${p.uses.map((u) => `\`${u}\``).join(', ')} |`)
+    .join('\n')
+  return `## Screen templates
+
+Working copies of real Inspera screens, built at least in part from library
+components. When you build a whole screen or a large region, pick the template
+whose purpose matches the task and follow its layout, regions and component
+choices.
+
+- The global app shell in a template - the top bar and navigation - is the
+  existing product's. It stays as it is.
+- The parts of a template not yet rebuilt from library components keep the
+  existing product's styling. Treat them as the as-is reference, not as library
+  styling.
+- Each template's full source - its tokens, components and page - is one
+  download on the library's Screen templates page.
+
+| Template | Where in the product | What it shows | Library components |
+| --- | --- | --- | --- |
+${rows}`
 }
 
 /** Composition, form, table and feedback guidance - how to build a screen. */
@@ -808,6 +952,8 @@ Same screen without the package:
 ${workedScreen.html}
 \`\`\`
 
+${buildScreenTemplates()}
+
 ## Before you call it done
 
 ${checklist.map((c) => `**${c.group}**\n\n${c.items.map((i) => `- [ ] ${i}`).join('\n')}`).join('\n\n')}
@@ -847,6 +993,12 @@ function buildFoundations({ compact }: { compact: boolean }): string {
             .join('\n'))
         .join('\n\n')
 
+  // Measured against white and the gray-100 canvas, the two backgrounds text
+  // sits on. See scripts/contrast.ts for why this is computed.
+  const textSafe = Object.entries(textSafeShades(palette, [baseColors[0].value, palette.gray['100']]))
+    .map(([family, shade]) => `${family} ${shade}`)
+    .join(', ')
+
   const roles = Object.entries(systemTokens)
     .map(([label, entries]) =>
       `**${label}** - ` +
@@ -877,6 +1029,10 @@ function buildFoundations({ compact }: { compact: boolean }): string {
     .map((sp) => `| \`${sp.token}\` | \`var(--space-${sp.token})\` | ${sp.value}px |`)
     .join('\n')
 
+  const controlHeight = controlHeights
+    .map((c) => `| \`${c.token}\` | \`var(--control-height-${c.token})\` | ${c.value}px | ${c.note} |`)
+    .join('\n')
+
   const usage = radiusUsage()
   const rad = radius
     .map((r) => {
@@ -904,8 +1060,9 @@ ${brand}
 
 ### Colour - palette
 
-Each family runs 100 (lightest) to 900 (darkest). 600-900 are safe for text on
-a light background; 100-300 are surface tints.
+Each family runs 100 (lightest) to 900 (darkest); 100-300 are surface tints.
+For text, use this shade or a darker one - the lightest that reaches 4.5:1 on
+both white and the gray-100 canvas: ${textSafe}.
 
 ${paletteSection}
 
@@ -938,13 +1095,22 @@ Use the scale - no arbitrary pixel values.
 | --- | --- | --- |
 ${space}
 
+### Control height
+
+The height of a sized control. Small, Medium and Large mean these heights
+wherever a control offers them.
+
+| Token | CSS variable | Value | Use |
+| --- | --- | --- | --- |
+${controlHeight}
+
 ### Radius
 
-Small-to-medium radii: \`sm\` for controls, \`md\` for inputs and alerts,
-\`lg\` for cards and dialogs. Pills only for shapes that are conceptually round.
+Small-to-medium radii: \`sm\` for controls, including inputs, selects and
+pickers; \`md\` for panels and alerts; \`lg\` for cards and dialogs. Pills only
+for shapes that are conceptually round.
 
-"Used by" is read from the component source, so it reflects what the library
-actually does rather than what this document claims.
+"Used by" lists the components that use each radius, read from their source.
 
 | Token | CSS variable | Value | When to use | Used by |
 | --- | --- | --- | --- | --- |
@@ -1028,7 +1194,7 @@ this spec at runtime:
 npm i ${componentsPackage.name}
 \`\`\`
 \`\`\`tsx
-import '${componentsPackage.name}/tokens.css'
+import '${componentsPackage.name}/styles.css'
 import { Button, TextInput } from '${componentsPackage.name}'
 \`\`\`
 
@@ -1068,6 +1234,8 @@ ${packageBlock()}
 
 ${RULES}
 
+${DESIGN_GUIDE}
+
 ${buildFoundations({ compact: true })}
 
 ## Components
@@ -1078,14 +1246,17 @@ ${index}
 
 | File | What it is |
 | --- | --- |
-| [llms-full.txt](${url('llms-full.txt')}) | The complete document - foundations plus every component inline |
-| [foundations.md](${url('foundations.md')}) | Colour, typography, spacing, radius, depth on their own |
-| [guidance.md](${url('guidance.md')}) | Composition patterns, form and table rules, the done checklist |
-| [api.json](${url('api.json')}) | Prop API, derived from the TypeScript types |
-| [tokens.css](${url('tokens.css')}) | Token custom properties + icon/keyframe runtime |
+| [llms-full.txt](${url('llms-full.txt')}) | The complete document: foundations plus every component inline |
+| [${designGuideServed}/DESIGN.md](${url(`${designGuideServed}/DESIGN.md`)}) | The design guide: user roles, existing versus new UI, hierarchy, layout and UI text. Read it before designing a screen; its reference files are in \`${designGuideServed}/references/\` |
+| [${aiSpecGuide}](${url(aiSpecGuide)}) | How DESIGN.md and the full guide fit together, and the known differences between them |
+| [${specGuide}](${url(specGuide)}) | The complete document in ${specParts.length} parts: a core every component needs, then groups of components |
+| [foundations.md](${url('foundations.md')}) | Colour, typography, spacing, radius and depth only |
+| [guidance.md](${url('guidance.md')}) | Composition patterns, form and table rules, and a final checklist |
+| [api.json](${url('api.json')}) | Every prop, generated from the TypeScript types |
+| [tokens.css](${url('tokens.css')}) | Tokens as CSS custom properties, plus the icon and animation rules |
 | [inspera.theme.css](${url('inspera.theme.css')}) | Tailwind v4 \`@theme\` block |
 | [tokens.w3c.json](${url('tokens.w3c.json')}) | W3C Design Tokens format |
-| [aliases.json](${url('aliases.json')}) | Deprecated name -> canonical component |
+| [aliases.json](${url('aliases.json')}) | Old component names mapped to the current ones |
 `
 }
 
@@ -1106,6 +1277,375 @@ ${componentMarkdown(c, '@inspera/components')}
 Tokens: ${url('tokens.css')} | Full system: ${url('llms.txt')}
 `,
   }))
+}
+
+// ---------------------------------------------------------------------------
+// The guide in parts - public/spec/*.md
+//
+// llms-full.txt is right for an uploaded project file and far too big for a
+// tool that only takes what fits in a message. The parts are its text
+// regrouped: a core every component needs, then small groups of components, so
+// a designer hands their AI the core plus the groups they use. They are built
+// from the same functions as llms-full.txt rather than cut out of it, so the
+// two cannot disagree. Which component goes where is decided in
+// src/data/distribution.ts, beside the other downloads.
+// ---------------------------------------------------------------------------
+
+/**
+ * Past this a part is too big for the tools the parts exist for. The largest
+ * is about 19k today; the budget leaves room to grow, then fails the build
+ * rather than let the parts drift back into one big file.
+ */
+const SPEC_PART_BUDGET = 24_000
+
+/** Bytes over four - the same estimate every size on the site uses. */
+const estimateTokens = (text: string) => Math.round(Buffer.byteLength(text, 'utf8') / 4)
+
+interface ResolvedPart {
+  part: SpecPart
+  components: ComponentSpec[]
+}
+
+/**
+ * Each part's components, checked so every component lands in exactly one
+ * part. A component nobody assigned would otherwise vanish from the parts
+ * while staying in the full guide - the one failure nobody would notice.
+ */
+function resolveSpecParts(): ResolvedPart[] {
+  const where = 'specParts in src/data/distribution.ts'
+  const bySlug = new Map(componentList.map((c) => [c.slug, c]))
+  const placed = new Map<string, string>()
+
+  const resolved = specParts.map((part, i) => {
+    if ((i === 0) !== (part.components.length === 0)) {
+      throw new Error(
+        `${where}: the first part is the core and lists no components; every other part lists ` +
+          `at least one. "${part.file}" breaks that.`,
+      )
+    }
+    return {
+      part,
+      components: part.components.map((slug) => {
+        const c = bySlug.get(slug)
+        if (!c) throw new Error(`${where}: "${part.file}" lists "${slug}", which is not a component slug.`)
+        const other = placed.get(slug)
+        if (other) {
+          throw new Error(`${where}: "${slug}" is in both ${other} and ${part.file}. A component belongs to one part.`)
+        }
+        placed.set(slug, part.file)
+        return c
+      }),
+    }
+  })
+
+  const missing = componentList.filter((c) => !placed.has(c.slug))
+  if (missing.length > 0) {
+    throw new Error(
+      `${where}: ${missing.map((c) => `"${c.slug}"`).join(', ')} is in no part, so the parts ` +
+        'would leave it out. Add it to the part it belongs in.',
+    )
+  }
+  return resolved
+}
+
+/**
+ * The core: everything the component parts build on, plus a map of where each
+ * component lives. Without the map, an AI holding the core and one part would
+ * read a missing component as a gap in the system and build a lookalike.
+ */
+function buildSpecCore(parts: ResolvedPart[]): string {
+  const map = parts
+    .slice(1)
+    .map(({ part, components }) => `- \`${fileName(part.file)}\` - ${components.map((c) => c.name).join(', ')}`)
+    .join('\n')
+
+  return `${provenance()}
+
+# Inspera Design System - ${parts[0].part.title}
+
+> Version ${VERSION}. Part 1 of ${parts.length} of the AI spec: the rules, the setup (fonts,
+> icon class, tokens), the foundations, composition patterns and the done
+> checklist. Every other part builds on this one.
+
+${packageBlock()}
+
+## Where each component is specified
+
+Component specs are in the other parts, not in this one. If you need a component
+and its part is not in your context, ask for that part. Do not build the
+component from memory or substitute a lookalike.
+
+${map}
+
+## Rules
+
+${RULES}
+
+${DESIGN_GUIDE}
+
+${buildSetup()}
+
+${buildFoundations({ compact: false })}
+
+${buildGuidance()}
+`
+}
+
+/** One group of components, pointing back at the core it depends on. */
+function buildSpecPart(parts: ResolvedPart[], index: number): string {
+  const { part, components } = parts[index]
+  const byCategory: Record<string, ComponentSpec[]> = {}
+  for (const c of components) (byCategory[c.category] ??= []).push(c)
+  const sections = Object.entries(byCategory)
+    .map(([cat, list]) =>
+      `## Components - ${cat}\n\n${list.map((c) => componentMarkdown(c, '@inspera/components', false)).join('\n\n')}`)
+    .join('\n\n')
+
+  return `${provenance()}
+
+# Inspera Design System - ${part.title}
+
+> Version ${VERSION}. Part ${index + 1} of ${parts.length} of the AI spec: ${components.map((c) => c.name).join(', ')}.
+>
+> These specs build on \`${fileName(parts[0].part.file)}\` - its rules, its setup
+> (fonts, icon class, tokens) and its foundations. If that file is not in your
+> context, ask for it before building. Without it, fonts, icons and colours
+> come out wrong.
+
+${sections}
+`
+}
+
+// ---------------------------------------------------------------------------
+// The start-here notes. Each zip opens with one, written for the person who
+// unpacks it and for the AI it is handed to. Both zips carry the design guide
+// (DESIGN.md), so both say how it and the spec fit together.
+// ---------------------------------------------------------------------------
+
+/** `~13k tokens`, measured from what this run produced. */
+const tokensLabel = (tokens: number) =>
+  tokens >= 1000 ? `~${Math.round(tokens / 1000)}k tokens` : `~${tokens} tokens`
+
+/** The design guide's files, measured. They are copied before anything that describes them is built. */
+function designGuideRows(): string {
+  return designGuideFiles
+    .map((f) => {
+      const copy = produced.get(`public/${designGuideServed}/${f.path}`)
+      if (copy === undefined) throw new Error(`Copy ${designGuideSource}/${f.path} before building a note that describes it.`)
+      return `| \`${f.path}\` | ${cell(f.readWhen)} | ${tokensLabel(estimateTokens(copy))} |`
+    })
+    .join('\n')
+}
+
+/** DESIGN.md's own version as its authors wrote it, such as "draft v1.4". */
+function designGuideVersion(): string | null {
+  const v = produced.get(`public/${designGuideServed}/DESIGN.md`)?.match(/Draft v[\d.]+/)?.[0]
+  return v ? v.replace(/^Draft/, 'draft') : null
+}
+
+/** The split DESIGN.md states for itself, from the reader's side (src/data/design-md.ts). */
+const WHICH_FILE_WINS = `## Which file wins
+
+${whichFileWins.map((l) => `- ${l}`).join('\n')}`
+
+function knownDifferencesBlock(): string {
+  if (knownDifferences.length === 0) {
+    return '## Known differences\n\nNone. DESIGN.md and the full guide agree on everything the library checks.'
+  }
+  return `## Known differences
+
+DESIGN.md and the full guide disagree on these today. Until each one is fixed,
+do what the last column says.
+
+| Topic | DESIGN.md says | The library does | Follow |
+| --- | --- | --- | --- |
+${knownDifferences.map((d) => `| ${d.topic} | ${cell(d.designMd)} | ${cell(d.library)} | ${cell(d.follow)} |`).join('\n')}`
+}
+
+const WHAT_THE_AI_ASKS = `## What your AI will ask you
+
+DESIGN.md tells the AI to ask before it designs, so have these ready:
+
+${aiWillAsk.map((a) => `- **${a.what}** - ${a.detail}`).join('\n')}
+
+When it cannot ask, it states what it assumed, using the markers below.`
+
+function markersBlock(): string {
+  return `## Markers in the AI's answer
+
+| Marker | What it means | What to do |
+| --- | --- | --- |
+${designGuideMarkers.map((m) => `| \`${m.name}\` | ${cell(m.means)} | ${cell(m.action)} |`).join('\n')}`
+}
+
+/**
+ * The note at the top of the parts zip, for whoever opens the folder without
+ * having seen the AI spec page.
+ */
+function buildSpecGuide(parts: ResolvedPart[], tokensOf: (file: string) => number): string {
+  const k = (file: string) => tokensLabel(tokensOf(file))
+  const rows = parts
+    .map(({ part, components }) => {
+      const contents = components.length
+        ? `${part.summary}: ${components.map((c) => c.name).join(', ')}`
+        : part.summary
+      return `| \`${fileName(part.file)}\` | ${contents} | ${k(part.file)} |`
+    })
+    .join('\n')
+  const core = fileName(parts[0].part.file)
+
+  return `${provenance()}
+
+# Inspera Design System - the AI spec in parts
+
+Version ${VERSION}. The complete AI spec (\`${fullSpec.saveAs}\`, ${k(fullSpec.file)}) cut into
+${parts.length} smaller files, for AI tools that cannot take it in one piece, with the
+design guide that goes with it: \`DESIGN.md\` and its \`references/\` folder. The
+specs are word for word the same; only the packaging differs.
+
+## How to use it
+
+1. **Give your AI \`DESIGN.md\` first, every time.** It says how to design an
+   Inspera screen. Add a file from \`references/\` when DESIGN.md says to.
+2. **Always give your AI \`${core}\`.** It holds the rules, the
+   setup (fonts, icon class, tokens) and the foundations every component builds
+   on. Without it, fonts, icons and colours come out wrong.
+3. **Add the part for each component you use.** The table below says which
+   part holds which component.
+4. **Wherever DESIGN.md says "the full guide" or \`${fullSpec.saveAs}\`,** it
+   means \`${core}\` for the setup and tokens, plus the part that holds each
+   component.
+5. **If your tool takes large uploads** - Claude Projects, a custom GPT,
+   Cursor's docs - the AI spec zip is simpler: DESIGN.md and the whole spec in
+   one folder, nothing to choose.
+
+Keep the \`references/\` folder beside DESIGN.md. DESIGN.md refers to its files
+by those paths.
+
+## The design guide
+
+| File | Read it | Size |
+| --- | --- | --- |
+${designGuideRows()}
+
+## The parts
+
+| File | Contents | Size |
+| --- | --- | --- |
+${rows}
+
+Sizes are estimates, at about four characters per token.
+
+${WHICH_FILE_WINS}
+
+${knownDifferencesBlock()}
+
+${WHAT_THE_AI_ASKS}
+
+${markersBlock()}
+`
+}
+
+/**
+ * The note at the top of the AI spec zip: what each file is for, the read
+ * order, which file wins, how to set up a tool, and the known differences.
+ */
+function buildAiSpecGuide(): string {
+  const full = produced.get(`public/${fullSpec.file}`)
+  if (full === undefined) throw new Error(`Write public/${fullSpec.file} before ${aiSpecGuide}; it quotes its size.`)
+  const guideVersion = designGuideVersion()
+
+  return `${provenance()}
+
+# Inspera Design System - start here
+
+Version ${VERSION}${guideVersion ? `, with DESIGN.md ${guideVersion}` : ''}. Two documents that work
+together, for any AI tool that builds Inspera UI:
+
+- **\`DESIGN.md\`** - the design guide, from the design system team: how to design
+  an Inspera screen. Who it is for, existing versus new UI, information
+  hierarchy, layout and UI text. Its \`references/\` folder holds the detail.
+- **\`${fullSpec.saveAs}\`** - the full guide: how to build each component. The
+  setup, the tokens, and every component's props, HTML and CSS.
+
+## What is in this folder
+
+| File | Read it | Size |
+| --- | --- | --- |
+${designGuideRows()}
+| \`${fullSpec.saveAs}\` | The Setup section first, then the section for each component you use. | ${tokensLabel(estimateTokens(full))} |
+
+Keep the file names and the \`references/\` folder as they are. DESIGN.md refers
+to them by name.
+
+## Read order
+
+1. \`DESIGN.md\`, all of it.
+2. The Setup section of \`${fullSpec.saveAs}\`: fonts, the icon class and the tokens.
+3. A file in \`references/\` whenever DESIGN.md says to.
+4. The section of \`${fullSpec.saveAs}\` for each component you use.
+
+${WHICH_FILE_WINS}
+
+## Set up your AI tool
+
+- **Chat tools with project files** (Claude Projects, ChatGPT projects and custom
+  GPTs, Gemini Gems): upload every file in this folder, then paste the project
+  instructions below into the project's instructions.
+- **Coding agents** (Claude Code, Cursor, Copilot, Windsurf): put this folder in
+  the repository, for example at \`design/inspera/\`, and add one line to the
+  agent's rules file (CLAUDE.md, AGENTS.md, a Cursor rule or
+  copilot-instructions.md): "For any UI work, read design/inspera/DESIGN.md
+  first and follow it. Build components from design/inspera/${fullSpec.saveAs}."
+- **Tools that cannot take large files**: download the AI spec in parts instead.
+  It has the same DESIGN.md, with the full guide cut into smaller files.
+
+Project instructions:
+
+\`\`\`text
+${projectInstructions}
+\`\`\`
+
+${WHAT_THE_AI_ASKS}
+
+${markersBlock()}
+
+${knownDifferencesBlock()}
+
+## Check your setup
+
+Ask your AI: "Which Inspera files do you have, and which will you read first?"
+It should name DESIGN.md first. Then ask it to design a screen without saying
+who it is for: it should ask for the primary user role before it starts, or
+state \`USER_ROLE_ASSUMED\` in its answer.
+`
+}
+
+/** The parts and their start-here note, held to the budget before anything is written. */
+function buildSpecFiles(): { path: string; content: string }[] {
+  const parts = resolveSpecParts()
+  const contents = new Map(
+    parts.map(({ part }, i) => [part.file, i === 0 ? buildSpecCore(parts) : buildSpecPart(parts, i)]),
+  )
+  for (const [file, content] of contents) {
+    const tokens = estimateTokens(content)
+    if (tokens > SPEC_PART_BUDGET) {
+      throw new Error(
+        `public/${file} is ~${Math.round(tokens / 1000)}k tokens, over the ${SPEC_PART_BUDGET / 1000}k ` +
+          'budget for a part. Move some of its components to another part, or split it, in specParts ' +
+          'in src/data/distribution.ts.',
+      )
+    }
+  }
+
+  const full = produced.get(`public/${fullSpec.file}`)
+  if (full === undefined) throw new Error(`Write public/${fullSpec.file} before the parts; their guide quotes its size.`)
+  const tokensOf = (file: string) => estimateTokens(file === fullSpec.file ? full : contents.get(file)!)
+
+  return [
+    ...[...contents].map(([file, content]) => ({ path: `public/${file}`, content })),
+    { path: `public/${specGuide}`, content: buildSpecGuide(parts, tokensOf) },
+  ]
 }
 
 /**
@@ -1229,11 +1769,15 @@ All UI in this project uses the Inspera Design System (v${VERSION}).
 
 ${RULES}
 
+${DESIGN_GUIDE}
+
 ## Reference
 
 ${where}
 
-- \`llms.txt\` - component index. Read this first.
+- \`${designGuideServed}/DESIGN.md\` - the design guide: who the screen is for, existing versus new UI, hierarchy, layout and UI text. Read it before designing any screen.
+- \`${designGuideServed}/references/<file>.md\` - DESIGN.md's reference files. Read one when DESIGN.md says to.
+- \`llms.txt\` - component index. Read this first when building components.
 - \`c/<component>.md\` - full spec for one component. Fetch only what you use.
 - \`api.json\` - every prop, type and default, machine-readable.
 - \`tokens.css\` - import once at the app root.
@@ -1256,8 +1800,63 @@ ${buildGuidance()}
   ]
 }
 
+/** Every file under a folder, as `/`-separated paths relative to it. Skips Finder's .DS_Store. */
+function filesUnder(dir: string): string[] {
+  const base = join(root, dir)
+  const out: string[] = []
+  const walk = (d: string) => {
+    let names: string[]
+    try {
+      names = readdirSync(d)
+    } catch {
+      return
+    }
+    for (const name of names) {
+      if (name === '.DS_Store') continue
+      const abs = join(d, name)
+      if (statSync(abs).isDirectory()) walk(abs)
+      else out.push(relative(base, abs).split('\\').join('/'))
+    }
+  }
+  walk(base)
+  return out.sort()
+}
+
+/**
+ * The design guide, published exactly as the design system team wrote it.
+ * Only the files src/data/design-md.ts lists go out; anything else in the
+ * folder is reported here, and `pnpm audit:design-md` fails until it is listed.
+ */
+function publishDesignGuide() {
+  const listed = new Set(designGuideFiles.map((f) => f.path))
+  for (const f of designGuideFiles) {
+    const from = `${designGuideSource}/${f.path}`
+    try {
+      statSync(join(root, from))
+    } catch {
+      throw new Error(`${from} is listed in src/data/design-md.ts but is missing. Restore it, or take it off the list.`)
+    }
+    copyVerbatim(from, `public/${designGuideServed}/${f.path}`)
+  }
+  const unlisted = filesUnder(designGuideSource).filter((p) => !listed.has(p))
+  if (unlisted.length > 0) {
+    console.warn(`  ! ${designGuideSource}/ also holds ${unlisted.join(', ')}, which is not published. List it in src/data/design-md.ts.`)
+  }
+  // A copy whose source has gone would otherwise stay on the site.
+  for (const stale of filesUnder(`public/${designGuideServed}`).filter((p) => !listed.has(p))) {
+    const rel = `public/${designGuideServed}/${stale}`
+    if (CHECK) {
+      drifted.push(rel)
+    } else {
+      rmSync(join(root, rel))
+      console.log('  ✗', rel, '(removed: no longer in the design guide)')
+    }
+  }
+}
+
 // ---------------------------------------------------------------------------
 console.log('Generating distribution outputs from source of truth...')
+checkVariantGuidance()
 const distributedCss = buildDistributedCss()
 /**
  * Real byte and token counts for each published artifact.
@@ -1272,16 +1871,22 @@ const distributedCss = buildDistributedCss()
  */
 function artifactSizes(): Record<string, { bytes: number; tokens: number }> {
   const out: Record<string, { bytes: number; tokens: number }> = {}
-  for (const a of artifacts) {
-    const content = produced.get(`public/${a.file}`)
+  const files = new Set([
+    ...artifacts.map((a) => a.file),
+    specGuide,
+    ...specParts.map((p) => p.file),
+    aiSpecGuide,
+    ...designGuideFiles.map((f) => `${designGuideServed}/${f.path}`),
+  ])
+  for (const file of files) {
+    const content = produced.get(`public/${file}`)
     if (content === undefined) {
       throw new Error(
-        `distribution.ts lists "${a.file}" but public/${a.file} was not generated. ` +
-          'Remove it from the artifacts list, or emit it.',
+        `distribution.ts lists "${file}" but public/${file} was not generated. ` +
+          'Remove it from distribution.ts, or emit it.',
       )
     }
-    const bytes = Buffer.byteLength(content, 'utf8')
-    out[a.file] = { bytes, tokens: Math.round(bytes / 4) }
+    out[file] = { bytes: Buffer.byteLength(content, 'utf8'), tokens: estimateTokens(content) }
   }
   return out
 }
@@ -1321,14 +1926,18 @@ write(
   'src/imports/tokens.css',
   GENERATED_HEADER('src/data/tokens.ts') + buildRootCss() + '\n' + buildTypeClasses(),
 )
+// First: the notes below describe these files and measure them.
+publishDesignGuide()
 write('public/llms.txt', buildLlmsIndex())
 write('public/llms-full.txt', buildLlmsTxt())
+for (const f of buildSpecFiles()) write(f.path, f.content)
+write(`public/${aiSpecGuide}`, buildAiSpecGuide())
 write('public/foundations.md', buildFoundationsDoc())
 write(
   'public/guidance.md',
   `${provenance()}\n\n# Inspera Design System - Composition & rules\n\n` +
     `Version ${VERSION}. How to assemble the canonical components into screens.\n\n` +
-    `## Rules\n\n${RULES}\n\n${buildGuidance()}\n`,
+    `## Rules\n\n${RULES}\n\n${DESIGN_GUIDE}\n\n${buildGuidance()}\n`,
 )
 for (const f of buildComponentFiles()) write(f.path, f.content)
 write('public/api.json', JSON.stringify(buildApiJson(), null, 2) + '\n')
@@ -1350,7 +1959,9 @@ write(
     '// just written, so a size shown in the UI is never a stale guess. Do not edit.\n\n' +
     'export const artifactSizes: Record<string, { bytes: number; tokens: number }> = ' +
     JSON.stringify(artifactSizes(), null, 2) +
-    '\n',
+    '\n\n' +
+    '/** The version stamped into every file above. */\n' +
+    `export const artifactVersion = ${JSON.stringify(VERSION)}\n`,
 )
 
 if (CHECK) {
@@ -1362,5 +1973,12 @@ if (CHECK) {
   }
   console.log('All generated files are up to date.')
 } else {
+  // Not a gate - `pnpm audit:design-md` is. This only makes a new difference
+  // between DESIGN.md and the library visible the moment it appears.
+  try {
+    console.log(summariseDesignMd(checkDesignMd()))
+  } catch (e) {
+    console.warn(`  ! Could not check DESIGN.md: ${(e as Error).message}`)
+  }
   console.log('Done.')
 }

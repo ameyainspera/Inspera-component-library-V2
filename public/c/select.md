@@ -86,7 +86,13 @@ export interface SelectOption {
 **Accessibility** - role `combobox`, keyboard operable. Use aria-expanded to indicate open state; Use aria-activedescendant for highlighted option; Support arrow key navigation through options.
 
 **Do:** Use for 5+ options where space is limited; Always provide a label; Show a clear placeholder when no option is selected.
-**Don't:** Do not use for fewer than 3 options - use Radio Button instead; Do not nest selects inside other selects.
+**Don't:** Do not use for fewer than 3 options - use Radio Group instead; Do not nest selects inside other selects.
+
+**Choosing a variant:**
+- `widthMode="Fixed"`: Forms. The trigger keeps one width (220px) whatever is chosen, so the form does not shift as values change.
+- `widthMode="Hug"`: Toolbars and filter bars, where the trigger is only as wide as its value.
+- `search`: Long lists, roughly 10 options or more, so people can type to narrow them.
+- `error`: A required choice is missing. Say what to choose in errorText.
 
 **Deprecated aliases** (do not use): `Select / Fixed width`, `Select / Content adaptable`, `Dropdown`, `Dropdown with Label`
 
@@ -138,15 +144,18 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   --white:                  #ffffff;
   --gray-300:               #D9D9D9;
   --gray-600:               #7A7A7A;
+  --gray-700:               #595959;
+  --gray-800:               #404040;
   --blue-100:               #F0F7FF;
   --blue-300:               #B3D9FF;
   --red-300:                #F9B8B8;
   --text-primary:           rgba(0, 0, 0, 0.87);
-  --border-control:         #C4C4C4;
-  --border-control-strong:  #8C8C8C;
+  --border-control:         var(--gray-600);
+  --border-control-strong:  var(--gray-800);
+  --text-placeholder:       var(--gray-700);
   --surface-disabled:       #F5F5F5;
   --border-strong:          var(--gray-300);
-  --muted-foreground:       var(--gray-600);
+  --muted-foreground:       var(--gray-700);
   --radius-sm:              4px;
   --radius-md:              8px;
   --shadow-200:             0px 8px 8px rgba(39, 39, 39, 0.08), 0px 4px 6px rgba(39, 39, 39, 0.12);
@@ -162,7 +171,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 .inspera-select {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
   width: 220px;
   font-family: var(--font-sans);
 }
@@ -188,11 +197,11 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   justify-content: space-between;
   gap: 8px;
   padding: 0 12px;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   border: var(--border-width-default) solid var(--border-control);
   background: var(--white);
-  /* Muted while showing the placeholder; --text-primary once a value is set. */
-  color: var(--muted-foreground);
+  /* Placeholder colour until a value is set, then --text-primary. */
+  color: var(--text-placeholder);
   font-family: var(--font-sans);
   font-size: 16px;
   cursor: pointer;

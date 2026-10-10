@@ -104,6 +104,9 @@ export default function OtpInput({
     refs.current[Math.min(i + digits.length, length - 1)]?.focus()
   }
 
+  const firstEmpty = slots.findIndex((c) => !c)
+  const ringAt = firstEmpty === -1 ? length - 1 : firstEmpty
+
   const boxes = (
       <div
         role="group"
@@ -122,7 +125,7 @@ export default function OtpInput({
             textAlign: 'center',
             borderWidth: 'var(--border-width-default)',
             borderStyle: 'solid',
-            borderRadius: 'var(--radius-md)',
+            borderRadius: 'var(--radius-sm)',
             background: disabled ? 'var(--surface-disabled)' : 'var(--white)',
             fontFamily: 'var(--font-mono)',
             fontSize: 20,
@@ -136,9 +139,10 @@ export default function OtpInput({
               ref={(el) => { refs.current[i] = el }}
               id={`${id}-${i}`}
               className="inspera-interactive inspera-field"
-              // Only the first box carries the forced ring: every box lit at
-              // once reads as an error, not as focus.
-              data-force-state={forceState && i === 0 ? forceState : undefined}
+              // Only one box carries the forced ring - every box lit at once
+              // reads as an error, not as focus - and it is the box typing
+              // would go to next: the first empty one, or the last.
+              data-force-state={forceState && !disabled && i === ringAt ? forceState : undefined}
               data-invalid={error || undefined}
               data-disabled={disabled || undefined}
               type="text"
@@ -164,7 +168,7 @@ export default function OtpInput({
   return (
     <div
       className={cx('inspera', className)}
-      style={{ display: 'inline-flex', flexDirection: 'column', gap: 6, fontFamily: 'var(--font-sans)', ...style }}
+      style={{ display: 'inline-flex', flexDirection: 'column', gap: 'var(--space-1)', fontFamily: 'var(--font-sans)', ...style }}
       {...rest}
     >
       <span id={`${id}-label`} style={labelStyle}>{label}</span>

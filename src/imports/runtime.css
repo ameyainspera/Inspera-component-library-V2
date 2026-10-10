@@ -128,6 +128,12 @@
   box-shadow: var(--inspera-shadow-hover);
 }
 
+/* A Button that opens something (a Menu's icon-only trigger) keeps its hover
+   fill while that thing is open, so it is clear what the panel belongs to. */
+.inspera-button[aria-expanded='true'] {
+  background: var(--inspera-bg-hover);
+}
+
 .inspera-button:active:not(:disabled),
 .inspera-button[data-force-state='Pressed'] {
   background: var(--inspera-bg-active);
@@ -164,6 +170,15 @@
    The box-shadow replaces the outline rather than removing it. */
 .inspera-field:focus-visible {
   outline: none;
+}
+
+/* Number Input sizes its input to the digits it holds. `appearance: textfield`
+   hides Chrome and Safari's spinner but leaves its 14px slot, which clipped
+   the number; the steppers beside the field replace it. */
+.inspera input[type='number']::-webkit-inner-spin-button,
+.inspera input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 /* Invalid wins over hover and focus - the error must stay legible. */
@@ -220,22 +235,85 @@
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
 }
 
+/* --- Segmented control -----------------------------------------------------
+   The fill lives here, not inline, so an unselected segment's hover can win -
+   the same trap as Button. The selected segment does not respond: it is
+   already chosen. */
+
+.inspera-segment {
+  background: var(--inspera-bg);
+  color: var(--inspera-fg);
+  border-color: var(--inspera-border);
+  transition: background var(--duration-fast) var(--easing-standard);
+}
+
+.inspera-segment[aria-checked='false']:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--inspera-bg) 96%, black);
+}
+
+/* The label is bold when selected, which made it wider and shifted every
+   segment after it. A hidden bold copy holds the bold width all the time.
+   It is out of the accessibility tree: hidden, with empty alternative text
+   where the browser supports it. */
+.inspera-segment__label {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.inspera-segment__label::after {
+  content: attr(data-label);
+  content: attr(data-label) / '';
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+  font-weight: 600;
+  pointer-events: none;
+  user-select: none;
+}
+
 /* --- Card --------------------------------------------------------------------
    The resting shadow is a variable for the same reason as Button's fill: an
    inline box-shadow would outrank the hover rule. Hover used to be done with
    JS mouse handlers, so a keyboard user never saw the lift. */
 
 .inspera-card-hover {
+  background: var(--white);
   box-shadow: var(--inspera-card-shadow);
   transition: box-shadow var(--duration-fast) var(--easing-standard);
 }
 
 .inspera-card-hover--interactive:hover,
-.inspera-card-hover--interactive:has(:focus-visible) {
+.inspera-card-hover--interactive:has(:focus-visible),
+.inspera-card-hover--interactive[data-force-state='Hover'],
+.inspera-card-hover--interactive[data-force-state='Focused'] {
   box-shadow: var(--shadow-300);
 }
 
-/* --- Text links that underline on interaction (Breadcrumb, Pagination) ---- */
+/* Pressed sinks below the resting lift and takes the neutral wash rows use.
+   :active reaches the card from the button stretched over it, as it does
+   every ancestor. */
+.inspera-card-hover--interactive:active,
+.inspera-card-hover--interactive[data-force-state='Pressed'] {
+  background: linear-gradient(var(--action-hover), var(--action-hover)), var(--white);
+  box-shadow: var(--shadow-100);
+}
+
+/* Selected: a 2px primary edge. The component turns the border primary; the
+   second pixel is an outline just inside it, so the card keeps its size, and
+   box-shadow stays free for elevation. */
+.inspera-card-hover--selected {
+  outline: var(--border-width-default) solid var(--primary);
+  outline-offset: calc(var(--border-width-default) * -2);
+}
+
+/* --- Text links that underline on interaction (Link, Breadcrumb) ----------
+   The resting state lives here too. An inline `text-decoration: none` on the
+   element outranked the :hover rule, so the underline never appeared. */
+
+.inspera-underline-hover {
+  text-decoration: none;
+}
 
 .inspera-underline-hover:hover,
 .inspera-underline-hover:focus-visible {
@@ -244,7 +322,23 @@
 
 /* --- File drop zone --------------------------------------------------------
    The zone is a <label> around a visually hidden file input, so the ring has
-   to be drawn on the zone when the input inside it has keyboard focus. */
+   to be drawn on the zone when the input inside it has keyboard focus. Its
+   border and wash live here rather than inline, so hover and a drag can
+   change them. A drag shows even in error - the zone is about to take a new
+   file - while hover keeps an error's red. */
+
+.inspera-dropzone {
+  border: 2px dashed var(--border-control);
+  background: var(--surface);
+}
+.inspera-dropzone[data-error] {
+  border-color: var(--error);
+}
+.inspera-dropzone:not([data-disabled]):not([data-error]):hover,
+.inspera-dropzone[data-dragging] {
+  border-color: var(--primary);
+  background: var(--blue-100);
+}
 
 .inspera-dropzone:has(input:focus-visible) {
   outline: var(--focus-ring-width) solid var(--focus-ring-color);
@@ -272,19 +366,21 @@
   outline-offset: calc(var(--focus-ring-width) * -1);
 }
 
-/* Per-row actions (DataGrid) stay out of the way until the row is hovered or
-   holds keyboard focus. They remain in the accessibility tree throughout, so a
-   keyboard user reaches them; only the resting opacity changes. */
+/* Per-row actions (DataGrid) are always visible, so people can see that a row
+   has actions without hovering it first. They sit back at rest and come to
+   full strength when the row is hovered or holds keyboard focus. At 0.7 the
+   primary icon is still 4.5:1 on white and 4.2:1 on a striped row, above the
+   3:1 WCAG 1.4.11 asks of a control. */
 /* Scoped to hoverable rows: a DataGrid with hoverable={false} has no
-   .inspera-row, and its actions used to stay invisible for good. */
+   .inspera-row, and its actions show at full strength throughout. */
 /* The cell's contents fade, not the cell: fading the <td> took its border
    with it, and the row rule broke across the actions column. */
 .inspera-row .inspera-row-actions > * {
-  opacity: 0;
+  opacity: 0.7;
   transition: opacity var(--duration-fast) var(--easing-standard);
 }
 
-/* No hover on touch screens, so the actions are always shown there. */
+/* No hover on touch screens, so the actions are at full strength there. */
 @media (hover: none) {
   .inspera-row .inspera-row-actions > * {
     opacity: 1;
@@ -313,6 +409,17 @@
 [class*='inspera-'] *::before,
 [class*='inspera-'] *::after {
   box-sizing: border-box;
+}
+
+/* Placeholder text. Left unset, it was whatever the browser or app chose -
+   about 3.2:1 on the docs site, Tailwind's preflight - so it is set here.
+   Firefox dims placeholders with opacity, which would undo the colour. */
+.inspera ::placeholder,
+.inspera::placeholder,
+[class*='inspera-'] ::placeholder,
+[class*='inspera-']::placeholder {
+  color: var(--text-placeholder);
+  opacity: 1;
 }
 
 /* Reduced motion. Components animate with inline transitions, which outrank

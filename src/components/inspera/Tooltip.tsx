@@ -1,7 +1,7 @@
 import {
-  type CSSProperties, type ReactElement, cloneElement, isValidElement, useEffect, useId, useRef, useState,
+  type CSSProperties, type ReactElement, cloneElement, isValidElement, useContext, useEffect, useId, useRef, useState,
 } from 'react'
-import { Portal, type Side, useAnchoredPosition, useEscapeLayer } from './overlay'
+import { OverlayBoundary, Portal, type Side, useAnchoredPosition, useEscapeLayer } from './overlay'
 import { type NativeAttrs } from './types'
 
 export type TooltipPlacement = 'Top' | 'Bottom' | 'Left' | 'Right'
@@ -18,11 +18,15 @@ export interface TooltipProps {
   children: ReactElement
   /** Preferred side. It flips when there is no room. */
   placement?: TooltipPlacement
-  /** Surface color. */
+  /** Surface colour. */
   theme?: TooltipTheme
   /** Accessibility uses larger text and more padding. */
   variant?: TooltipVariant
-  /** @internal Keep the bubble visible, drawn inline - for documentation. */
+  /**
+   * @internal Keep the bubble visible - for documentation. Drawn inline in the
+   * gallery; inside an OverlayBoundary (an in-context scene) it is placed like
+   * a live tooltip, so it flips and shifts at the scene's edge.
+   */
   forceVisible?: boolean
 }
 
@@ -73,10 +77,13 @@ export default function Tooltip({
   const leaveTimer = useRef<number | undefined>(undefined)
   const shown = forceVisible || ((hovered || focused) && !dismissed)
   const live = shown && !forceVisible
+  // Pinned and drawn inline only where nothing bounds it (the gallery cells).
+  const boundary = useContext(OverlayBoundary)
+  const inline = forceVisible && boundary === null
 
   const anchor = useRef<HTMLSpanElement>(null)
   const bubbleRef = useRef<HTMLSpanElement>(null)
-  const pos = useAnchoredPosition(live, anchor, bubbleRef, { side: sideOf[placement], align: 'center', offset: GAP })
+  const pos = useAnchoredPosition(shown && !inline, anchor, bubbleRef, { side: sideOf[placement], align: 'center', offset: GAP })
 
   // WCAG 1.4.13: dismissible with Escape without moving focus. Registered as a
   // layer so Escape closes the tooltip, not the dialog it sits in.
@@ -92,7 +99,7 @@ export default function Tooltip({
   const leave = () => { leaveTimer.current = window.setTimeout(() => setHovered(false), 100) }
 
   const dark = theme === 'Dark'
-  const side = forceVisible ? sideOf[placement] : pos.side
+  const side = inline ? sideOf[placement] : pos.side
   const bubble: CSSProperties = {
     maxWidth: 240,
     width: 'max-content',
@@ -106,7 +113,7 @@ export default function Tooltip({
     lineHeight: 1.4,
     boxShadow: 'var(--shadow-100)',
     zIndex: 'var(--z-tooltip)',
-    ...(forceVisible ? inlinePosition(placement) : pos.style),
+    ...(inline ? inlinePosition(placement) : pos.style),
     ...style,
   }
 
@@ -135,7 +142,7 @@ export default function Tooltip({
       {...rest}
     >
       {content}
-      <span aria-hidden style={arrowStyle(side, dark, forceVisible ? null : pos.arrow)} />
+      <span aria-hidden style={arrowStyle(side, dark, inline ? null : pos.arrow)} />
     </span>
   )
 
@@ -150,7 +157,7 @@ export default function Tooltip({
       onBlur={() => setFocused(false)}
     >
       {trigger}
-      {forceVisible ? node : <Portal>{node}</Portal>}
+      {inline ? node : <Portal>{node}</Portal>}
     </span>
   )
 }

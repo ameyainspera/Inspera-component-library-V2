@@ -64,16 +64,23 @@ import { EmptyState } from '@inspera/components'
 | `title` **(required)** | `string` | - | Primary message, e.g. "No assessments yet". |
 | `description` | `string` | - | Supporting explanation: why it is empty, or what to do next. |
 | `icon` | `string` | `'inbox'` | Material Symbols icon name. |
-| `actionLabel` | `string` | - | Optional primary action label. |
+| `actionLabel` | `string` | - | Optional action label. |
 | `onAction` | `() => void` | - | Fired when the action is activated. Only rendered when actionLabel is set. |
+| `actionIntent` | `'Primary' \| 'Secondary'` | `'Primary'` | The action's emphasis. Primary when it is the main thing to do on the page; Secondary inside a panel, or beside a page that already has its own main action, so the view keeps one Primary. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Overall scale. |
 
 Also accepts any native `<div>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<div>`. `className` and `style` go on the outermost element.
 
-**Accessibility** - role `status`, keyboard operable. Announce dynamically-appearing empty states with role="status"; The action must be a real focusable button; The illustration/icon is decorative (aria-hidden).
+**Accessibility** - role `status`, keyboard operable. Announce an empty state that appears after load with role="status"; The action must be a real focusable button; The illustration or icon is decorative (aria-hidden).
 
 **Do:** Explain why the area is empty; Offer a clear next action when possible; Keep the tone helpful.
 **Don't:** Do not leave empty areas blank with no guidance; Do not use for transient loading - use Skeleton.
+
+**Choosing a variant:**
+- `size="Medium"`: A page or a whole table with nothing in it yet, such as a first visit to Question sets.
+- `size="Small"`: A card or panel with nothing in it, such as no candidates needing help.
+- `actionIntent="Primary"`: The action is the main thing to do on the page, such as creating the first question set. The default.
+- `actionIntent="Secondary"`: Inside a panel, or beside a page that already has its main action, so the view keeps one Primary.
 
 **Deprecated aliases** (do not use): `Blank slate`, `Zero state`, `No data`
 
@@ -112,32 +119,36 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 - The icon sits in an 80px circle of `--gray-100` (56px when small). Without the circle it reads as a broken image.
 - Title 18px/500, body 14px `--muted-foreground` capped at 320px so it wraps to two short lines rather than one long one.
-- The action is the ordinary Button component, not a bespoke link.
-- Carry `role="status"` so the empty result is announced when a filter clears the list.
+- The action is the ordinary Button component, not a bespoke link: `inspera-btn--primary` when it is the main thing to do on the page, `inspera-btn--secondary` inside a panel or beside a page that already has its main action, so the view keeps one Primary.
+- Not a live region: an empty state is page content, and `role="status"` around it (action included) announces it every time it renders. When a filter empties a list, announce the result count from the filter, in a separate polite live region.
 
 ```css
 /* Tokens this component needs. Paste once, at `:root`. */
 :root {
-  --primary:               #004080;
-  --error:                 #D32F2F;
-  --warning:               #EF6C00;
-  --success:               #2E7D32;
-  --white:                 #ffffff;
-  --gray-100:              #F7F7F7;
-  --gray-600:              #7A7A7A;
-  --gray-700:              #595959;
-  --gray-900:              #272727;
-  --text-primary:          rgba(0, 0, 0, 0.87);
-  --muted-foreground:      var(--gray-600);
-  --radius-sm:             4px;
-  --effect-button-shadow:  inset 0px -1px 0px rgba(0, 0, 0, 0.2), 0px 1px 0px rgba(0, 0, 0, 0.08);
-  --border-width-default:  1px;
-  --focus-ring-width:      2px;
-  --focus-ring-offset:     2px;
-  --focus-ring-color:      var(--primary);
-  --duration-fast:         100ms;
-  --easing-standard:       cubic-bezier(0.2, 0, 0, 1);
-  --font-sans:             'Inter', system-ui, -apple-system, sans-serif;
+  --primary:                #004080;
+  --error:                  #D32F2F;
+  --success:                #2E7D32;
+  --white:                  #ffffff;
+  --gray-100:               #F7F7F7;
+  --gray-700:               #595959;
+  --gray-900:               #272727;
+  --orange-600:             #F2A202;
+  --text-primary:           rgba(0, 0, 0, 0.87);
+  --muted-foreground:       var(--gray-700);
+  --control-height-sm:      32px;
+  --control-height-md:      40px;
+  --control-height-lg:      44px;
+  --radius-sm:              4px;
+  --effect-button-shadow:   inset 0px -1px 0px rgba(0, 0, 0, 0.2), 0px 1px 0px rgba(0, 0, 0, 0.08);
+  --border-width-default:   1px;
+  --focus-ring-width:       2px;
+  --focus-ring-offset:      2px;
+  --focus-ring-color:       var(--primary);
+  --duration-fast:          100ms;
+  --easing-standard:        cubic-bezier(0.2, 0, 0, 1);
+  --font-sans:              'Inter', system-ui, -apple-system, sans-serif;
+  --medium-14-size:         14px;
+  --medium-14-line-height:  1.4;
 }
 
 .inspera-btn {
@@ -155,7 +166,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   align-items: center;
   justify-content: center;
   gap: 8px;
-  height: 40px;
+  height: var(--control-height-md);
   min-width: 80px;
   padding: 0 16px;
   border-radius: var(--radius-sm);
@@ -176,19 +187,27 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
     transform var(--duration-fast) var(--easing-standard);
 }
 
-/* Sizes change height, padding and gap only - never the 16px type. */
-.inspera-btn--small { height: 32px; padding: 0 12px; gap: 6px; }
-.inspera-btn--large { height: 48px; padding: 0 24px; gap: 10px; }
+/* Sizes change height and padding. Small also steps down to 14px type and a
+   16px icon (see the end of this block). */
+.inspera-btn--small {
+  height: var(--control-height-sm);
+  padding: 0 12px;
+  gap: 4px;
+  font-size: var(--medium-14-size);
+  line-height: var(--medium-14-line-height);
+}
+.inspera-btn--large { height: var(--control-height-lg); padding: 0 20px; }
 
 /* Icon only: a square the height of the button. It still needs aria-label. */
-.inspera-btn--icon-only { width: 40px; min-width: 0; padding: 0; }
-.inspera-btn--small.inspera-btn--icon-only { width: 32px; }
-.inspera-btn--large.inspera-btn--icon-only { width: 48px; }
+.inspera-btn--icon-only { width: var(--control-height-md); min-width: 0; padding: 0; }
+.inspera-btn--small.inspera-btn--icon-only { width: var(--control-height-sm); }
+.inspera-btn--large.inspera-btn--icon-only { width: var(--control-height-lg); }
 
 /* Solid intents differ only in fill; hover and pressed derive from it. */
 .inspera-btn--primary     { --btn-bg: var(--primary); }
 .inspera-btn--success     { --btn-bg: var(--success); }
-.inspera-btn--warning     { --btn-bg: var(--warning); }
+/* Warning takes dark text on orange-600: white on --warning is 3.08:1. */
+.inspera-btn--warning     { --btn-bg: var(--orange-600); --btn-fg: var(--gray-900); }
 .inspera-btn--destructive { --btn-bg: var(--error); }
 .inspera-btn--secondary {
   --btn-bg: var(--gray-100);
@@ -213,6 +232,8 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   background: var(--btn-bg-hover);
   box-shadow: var(--btn-shadow-hover);
 }
+/* A button that opens a menu keeps its hover fill while the menu is open. */
+.inspera-btn[aria-expanded='true'] { background: var(--btn-bg-hover); }
 .inspera-btn:active:not(:disabled) {
   background: var(--btn-bg-active);
   box-shadow: var(--btn-shadow-active);
@@ -225,6 +246,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 .inspera-btn:disabled { opacity: 0.38; cursor: not-allowed; }
 
 .inspera-btn .material-symbols-outlined { font-size: 20px; }
+.inspera-btn--small .material-symbols-outlined { font-size: 16px; }
 
 .inspera-empty {
   display: flex;
@@ -278,7 +300,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 ```
 
 ```html
-<div class="inspera-empty" role="status">
+<div class="inspera-empty">
   <span class="inspera-empty__icon">
     <span class="material-symbols-outlined" aria-hidden="true">inbox</span>
   </span>

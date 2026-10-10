@@ -91,9 +91,11 @@ import { DataGrid } from '@inspera/components'
   selectable
   rowActions={(row) => (
     <Menu
-      label="Actions"
-      aria-label={`Actions for ${row.name}`}
-      items={[{ label: 'Edit', icon: 'edit' }, { label: 'Delete', icon: 'delete', danger: true }]}
+      iconOnly
+      size="Small"
+      label={`Actions for ${row.name}`}
+      placement="BottomEnd"
+      items={[{ label: 'Edit', icon: 'edit' }, { label: 'Duplicate', icon: 'content_copy' }, { label: '', divider: true }, { label: 'Delete', icon: 'delete', danger: true }]}
     />
   )}
   footer
@@ -109,7 +111,7 @@ import { DataGrid } from '@inspera/components'
 | `getRowId` | `(row: DataGridRow, index: number) => string` | - | Stable id per row. Defaults to the row's position in `rows` - its position as given, not as sorted, so a selection stays on the row it was made on. |
 | `size` | `'Compact' \| 'Default'` | `'Default'` | Row height density. |
 | `striped` | `boolean` | `false` | Zebra-stripe rows. |
-| `hoverable` | `boolean` | `true` | Highlight rows on hover and reveal row actions on hover. |
+| `hoverable` | `boolean` | `true` | Highlight rows on hover, and bring row actions to full strength on hover. |
 | `caption` | `string` | - | Describes the grid for screen readers. |
 | `selectable` | `boolean` | `false` | Add a leading selection column with a select-all header box. |
 | `selectedIds` | `string[]` | - | Selected row ids. Controlled - pair with onSelectionChange. |
@@ -119,10 +121,10 @@ import { DataGrid } from '@inspera/components'
 | `defaultSort` | `DataGridSort` | - | Starting sort when uncontrolled. |
 | `onSortChange` | `(sort: DataGridSort) => void` | - | Fired when a sortable header is activated. |
 | `manualSorting` | `boolean` | `false` | Rows arrive already sorted (server-side), so the grid only shows the state. |
-| `rowActions` | `(row: DataGridRow, index: number) => ReactNode` | - | Trailing per-row actions. Revealed on hover and focus when `hoverable`. |
+| `rowActions` | `(row: DataGridRow, index: number) => ReactNode` | - | Trailing per-row actions. Always visible; quieter at rest, full strength on row hover and focus when `hoverable`. Use an icon-only Small Menu named for its row: `<Menu iconOnly size="Small" label={`Actions for ${row.name}`} ... />`. |
 | `onRowClick` | `(row: DataGridRow, index: number) => void` | - | Makes rows clickable and keyboard-operable (Enter / Space). |
 | `footer` | `boolean` | `false` | Show the footer with the range summary, pager and page-size select. |
-| `total` | `number` | - | Total row count across all pages. Defaults to the rendered row count. |
+| `total` | `number` | - | Total row count across all pages, when `rows` is one page of a larger set fetched page by page. The range then reads from the page and page size ("21 - 40 of 179"). Defaults to the rendered row count. |
 | `pageCount` | `number` | `1` | Total number of pages. |
 | `page` | `number` | - | Current page (1-based). Controlled - pair with onPageChange. |
 | `defaultPage` | `number` | `1` | Starting page when uncontrolled. |
@@ -166,6 +168,13 @@ export interface DataGridSort {
 **Do:** Use for dense, sortable, selectable datasets; Page long lists rather than rendering everything; Right-align numeric columns.
 **Don't:** Do not use for a few static rows - use Table; Do not overload every row with competing actions.
 
+**Choosing a variant:**
+- `size="Compact"`: Long lists people scan, such as every test in Deliver.
+- `striped`: Many columns that people read across.
+- `selectable`: People act on several rows at once, such as assigning scripts to a grader.
+- `footer`: More rows than fit on one page. The footer says where people are and pages through the rest.
+- `footer="false"`: A short set that fits on one page, such as the graders on one test.
+
 **Deprecated aliases** (do not use): `Data table`, `Advanced table`, `Grid`
 
 #### One-time setup
@@ -204,40 +213,50 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 - A data grid is a Table plus four things: a leading selection column, sortable headers, per-row actions, and a footer pager. Each is a documented component - Checkbox, Menu, Pagination and Select - so reach for those rather than rebuilding them.
 - Sortable headers are buttons inside the `<th>`; the `<th>` carries `aria-sort` (`ascending` / `descending` / `none`). The active column is `--primary` with a solid arrow.
 - Selection keys on a stable row id, never the row position - sort the table and the selection must stay on the same rows. Select-all acts on the rows on screen and is mixed when only some are selected.
-- Every row-action trigger needs its own name ("Actions for Ada Lovelace"): a column of identical "Actions" buttons is indistinguishable to a screen reader. Actions reveal on row hover and on keyboard focus, and are always visible on touch screens.
-- The footer shows "start - end of total", the pager, and a rows-per-page Select. Page long datasets rather than rendering every row.
+- Row actions are one Menu per row behind a Small icon-only `more_vert` trigger (32px, a Text button), not a labelled button. Each trigger needs its own name ("Actions for Ada Lovelace"): a column of identical names is indistinguishable to a screen reader. Actions are always visible, at 0.7 opacity at rest and full strength on row hover, keyboard focus and touch screens, so people can see a row has actions without hovering it.
+- The footer shows "start - end of total", the pager, and a rows-per-page Select. Page long datasets rather than rendering every row. When the rows are one page of a larger set, the range comes from the page and the page size: page 4 of 20 rows is "61 - 80", and only the last page ends early.
 
 ```css
 /* Tokens this component needs. Paste once, at `:root`. */
 :root {
   --primary:                #004080;
   --error:                  #D32F2F;
+  --success:                #2E7D32;
   --white:                  #ffffff;
   --gray-100:               #F7F7F7;
   --gray-200:               #EDEDED;
   --gray-300:               #D9D9D9;
   --gray-600:               #7A7A7A;
   --gray-700:               #595959;
+  --gray-800:               #404040;
+  --gray-900:               #272727;
   --blue-100:               #F0F7FF;
   --blue-300:               #B3D9FF;
   --red-300:                #F9B8B8;
+  --orange-600:             #F2A202;
   --primary-focus-ring:     rgba(0, 64, 128, 0.3);
   --action-hover:           rgba(0, 0, 0, 0.04);
   --action-disabled:        rgba(0, 0, 0, 0.38);
   --text-primary:           rgba(0, 0, 0, 0.87);
-  --border-control:         #C4C4C4;
-  --border-control-strong:  #8C8C8C;
+  --error-surface:          #FFEBEE;
+  --border-control:         var(--gray-600);
+  --border-control-strong:  var(--gray-800);
+  --text-placeholder:       var(--gray-700);
   --surface-disabled:       #F5F5F5;
   --surface:                var(--white);
   --border:                 var(--gray-200);
   --border-strong:          var(--gray-300);
-  --muted-foreground:       var(--gray-600);
+  --muted-foreground:       var(--gray-700);
+  --control-height-sm:      32px;
+  --control-height-md:      40px;
+  --control-height-lg:      44px;
   --radius-xs:              2px;
   --radius-sm:              4px;
   --radius-md:              8px;
   --shadow-200:             0px 8px 8px rgba(39, 39, 39, 0.08), 0px 4px 6px rgba(39, 39, 39, 0.12);
   --effect-state-focus:     0px 0px 0px 3px var(--blue-300);
   --effect-state-error:     0px 0px 0px 3px var(--red-300);
+  --effect-button-shadow:   inset 0px -1px 0px rgba(0, 0, 0, 0.2), 0px 1px 0px rgba(0, 0, 0, 0.08);
   --border-width-default:   1px;
   --focus-ring-width:       2px;
   --focus-ring-offset:      2px;
@@ -246,6 +265,8 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   --easing-standard:        cubic-bezier(0.2, 0, 0, 1);
   --z-dropdown:             300;
   --font-sans:              'Inter', system-ui, -apple-system, sans-serif;
+  --medium-14-size:         14px;
+  --medium-14-line-height:  1.4;
 }
 
 .inspera-checkbox {
@@ -269,10 +290,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 }
 
 .inspera-checkbox__box {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   border-radius: var(--radius-xs);
-  border: 2px solid var(--border-control-strong);
+  border: 2px solid var(--border-control);
   background: var(--white);
   display: inline-flex;
   align-items: center;
@@ -282,14 +303,11 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   transition: all 120ms ease;
 }
 
-.inspera-checkbox--small .inspera-checkbox__box { width: 16px; height: 16px; }
-
 /* The tick is a Material Symbol at the box size minus 4. */
 .inspera-checkbox__box .material-symbols-outlined {
-  font-size: 16px;
+  font-size: 14px;
   font-variation-settings: 'wght' 600;
 }
-.inspera-checkbox--small .inspera-checkbox__box .material-symbols-outlined { font-size: 12px; }
 
 .inspera-checkbox__input:checked + .inspera-checkbox__box,
 .inspera-checkbox__input:indeterminate + .inspera-checkbox__box,
@@ -318,17 +336,48 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 .inspera-checkbox:active .inspera-checkbox__box { transform: scale(0.92); }
 
+/* In error the border is red whether or not the box is checked, so a group
+   in error reads as one. A checked box keeps its blue fill, and only an
+   unchecked one takes the red hover tint. */
 .inspera-checkbox--error .inspera-checkbox__box { border-color: var(--error); }
-.inspera-checkbox--error:hover .inspera-checkbox__box { border-color: var(--error); }
+.inspera-checkbox--error:hover .inspera-checkbox__box { border-color: var(--error); background: var(--error-surface); }
+.inspera-checkbox--error .inspera-checkbox__input:checked + .inspera-checkbox__box,
+.inspera-checkbox--error .inspera-checkbox__input:indeterminate + .inspera-checkbox__box,
+.inspera-checkbox--error.inspera-checkbox--mixed .inspera-checkbox__box,
+.inspera-checkbox--error:hover .inspera-checkbox__input:checked + .inspera-checkbox__box,
+.inspera-checkbox--error:hover .inspera-checkbox__input:indeterminate + .inspera-checkbox__box,
+.inspera-checkbox--error.inspera-checkbox--mixed:hover .inspera-checkbox__box {
+  border-color: var(--error);
+  background: var(--primary);
+}
 
 .inspera-checkbox--disabled {
   cursor: not-allowed;
   opacity: 0.38;
 }
 .inspera-checkbox--disabled:hover .inspera-checkbox__box {
-  border-color: var(--border-control-strong);
+  border-color: var(--border-control);
   background: var(--white);
 }
+
+/* A line under the label: a description, or the error in its place. The
+   field stacks the row and the line. The line starts under the label text
+   (the 18px box plus its 8px gap) and sits 4px under it, pulled up into the
+   row's 8px padding. It is not dimmed with a disabled box: it often says why
+   the option is unavailable. */
+.inspera-checkbox-field {
+  display: inline-flex;
+  flex-direction: column;
+  font-family: var(--font-sans);
+}
+.inspera-checkbox__message {
+  margin-top: -4px;
+  padding-left: 26px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--muted-foreground);
+}
+.inspera-checkbox__message--error { color: var(--error); }
 
 .inspera-pagination__list {
   display: flex;
@@ -350,7 +399,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   border: none;
   background: transparent;
   color: var(--text-primary);
@@ -393,7 +442,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 .inspera-select {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
   width: 220px;
   font-family: var(--font-sans);
 }
@@ -419,11 +468,11 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   justify-content: space-between;
   gap: 8px;
   padding: 0 12px;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   border: var(--border-width-default) solid var(--border-control);
   background: var(--white);
-  /* Muted while showing the placeholder; --text-primary once a value is set. */
-  color: var(--muted-foreground);
+  /* Placeholder colour until a value is set, then --text-primary. */
+  color: var(--text-placeholder);
   font-family: var(--font-sans);
   font-size: 16px;
   cursor: pointer;
@@ -514,12 +563,12 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 }
 
 .inspera-menu__trigger {
-  height: 40px;
+  height: var(--control-height-md);
   display: inline-flex;
   align-items: center;
   gap: 6px;
   padding: 0 12px;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   border: 1px solid var(--border-strong);
   background: var(--white);
   color: var(--text-primary);
@@ -540,6 +589,18 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   transition: transform 140ms ease;
 }
 .inspera-menu__trigger[aria-expanded='true'] .material-symbols-outlined { transform: rotate(180deg); }
+
+/* Small: 32px, with 14px text and a 16px chevron, as a Small button. */
+.inspera-menu__trigger--small {
+  height: var(--control-height-sm);
+  gap: 4px;
+  padding: 0 8px;
+  font-size: 14px;
+}
+.inspera-menu__trigger--small .material-symbols-outlined { font-size: 16px; }
+
+/* Icon only (table rows, card headers, toolbars): the trigger is the canonical
+   Text icon-only button with more_vert, and the menu sits beside it as usual. */
 
 .inspera-menu__list {
   position: absolute;
@@ -598,6 +659,103 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   margin: 4px 0;
 }
 
+.inspera-btn {
+  /* Fill, text and border come from the intent modifier below. */
+  --btn-bg: var(--primary);
+  --btn-fg: var(--white);
+  --btn-border: transparent;
+  --btn-shadow: var(--effect-button-shadow);
+  --btn-bg-hover: color-mix(in srgb, var(--btn-bg) 90%, black);
+  --btn-bg-active: color-mix(in srgb, var(--btn-bg) 82%, black);
+  --btn-shadow-hover: inset 0 -1px 0 rgba(0, 0, 0, 0.2), 0 2px 6px rgba(0, 64, 128, 0.24);
+  --btn-shadow-active: inset 0 1px 2px rgba(0, 0, 0, 0.24);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: var(--control-height-md);
+  min-width: 80px;
+  padding: 0 16px;
+  border-radius: var(--radius-sm);
+  border: var(--border-width-default) solid var(--btn-border);
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  box-shadow: var(--btn-shadow);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background var(--duration-fast) var(--easing-standard),
+    border-color var(--duration-fast) var(--easing-standard),
+    box-shadow var(--duration-fast) var(--easing-standard),
+    transform var(--duration-fast) var(--easing-standard);
+}
+
+/* Sizes change height and padding. Small also steps down to 14px type and a
+   16px icon (see the end of this block). */
+.inspera-btn--small {
+  height: var(--control-height-sm);
+  padding: 0 12px;
+  gap: 4px;
+  font-size: var(--medium-14-size);
+  line-height: var(--medium-14-line-height);
+}
+.inspera-btn--large { height: var(--control-height-lg); padding: 0 20px; }
+
+/* Icon only: a square the height of the button. It still needs aria-label. */
+.inspera-btn--icon-only { width: var(--control-height-md); min-width: 0; padding: 0; }
+.inspera-btn--small.inspera-btn--icon-only { width: var(--control-height-sm); }
+.inspera-btn--large.inspera-btn--icon-only { width: var(--control-height-lg); }
+
+/* Solid intents differ only in fill; hover and pressed derive from it. */
+.inspera-btn--primary     { --btn-bg: var(--primary); }
+.inspera-btn--success     { --btn-bg: var(--success); }
+/* Warning takes dark text on orange-600: white on --warning is 3.08:1. */
+.inspera-btn--warning     { --btn-bg: var(--orange-600); --btn-fg: var(--gray-900); }
+.inspera-btn--destructive { --btn-bg: var(--error); }
+.inspera-btn--secondary {
+  --btn-bg: var(--gray-100);
+  --btn-fg: var(--gray-900);
+  --btn-border: var(--gray-700);
+}
+
+/* Outline and Text carry no fill and no shadow; they tint on interaction. */
+.inspera-btn--outline,
+.inspera-btn--text {
+  --btn-bg: transparent;
+  --btn-fg: var(--primary);
+  --btn-shadow: none;
+  --btn-shadow-hover: none;
+  --btn-shadow-active: none;
+  --btn-bg-hover: color-mix(in srgb, var(--primary) 8%, transparent);
+  --btn-bg-active: color-mix(in srgb, var(--primary) 12%, transparent);
+}
+.inspera-btn--outline { --btn-border: var(--primary); }
+
+.inspera-btn:hover:not(:disabled) {
+  background: var(--btn-bg-hover);
+  box-shadow: var(--btn-shadow-hover);
+}
+/* A button that opens a menu keeps its hover fill while the menu is open. */
+.inspera-btn[aria-expanded='true'] { background: var(--btn-bg-hover); }
+.inspera-btn:active:not(:disabled) {
+  background: var(--btn-bg-active);
+  box-shadow: var(--btn-shadow-active);
+  transform: translateY(1px);
+}
+.inspera-btn:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+.inspera-btn:disabled { opacity: 0.38; cursor: not-allowed; }
+
+.inspera-btn .material-symbols-outlined { font-size: 20px; }
+.inspera-btn--small .material-symbols-outlined { font-size: 16px; }
+
 .inspera-datagrid { width: 100%; font-family: var(--font-sans); }
 
 .inspera-datagrid__table {
@@ -632,7 +790,8 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   color: var(--gray-700);
 }
 .inspera-datagrid__select { width: 44px; text-align: center; }
-.inspera-datagrid__actions { width: 96px; text-align: right; }
+/* Width 1px shrinks the column to the trigger it holds. */
+.inspera-datagrid__actions { width: 1px; text-align: right; }
 
 /* The sortable header is a bare button carrying the arrow. */
 .inspera-datagrid__sort {
@@ -656,9 +815,9 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 .inspera-datagrid__row--selected { background: var(--blue-100); }
 .inspera-datagrid__row:hover { background: var(--action-hover); }
 
-/* Row actions wait for hover or keyboard focus, but stay in the tab order -
-   and are always shown where there is no hover to reveal them. */
-.inspera-datagrid__actions > * { opacity: 0; transition: opacity var(--duration-fast) var(--easing-standard); }
+/* Row actions are always visible. They sit back at rest (0.7 keeps the icon
+   above 3:1) and come to full strength on row hover or keyboard focus. */
+.inspera-datagrid__actions > * { opacity: 0.7; transition: opacity var(--duration-fast) var(--easing-standard); }
 .inspera-datagrid__row:hover .inspera-datagrid__actions > *,
 .inspera-datagrid__row:focus-within .inspera-datagrid__actions > * { opacity: 1; }
 @media (hover: none) {
@@ -713,9 +872,8 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
           <td class="inspera-datagrid__td">Submitted</td>
           <td class="inspera-datagrid__td inspera-datagrid__actions">
             <div class="inspera-menu">
-              <button type="button" class="inspera-menu__trigger" aria-haspopup="menu" aria-expanded="false" aria-label="Actions for Ada Lovelace">
-                Actions
-                <span class="material-symbols-outlined" aria-hidden="true">expand_more</span>
+              <button type="button" class="inspera-btn inspera-btn--text inspera-btn--small inspera-btn--icon-only" aria-haspopup="menu" aria-expanded="false" aria-label="Actions for Ada Lovelace">
+                <span class="material-symbols-outlined" aria-hidden="true">more_vert</span>
               </button>
             </div>
           </td>
@@ -726,9 +884,8 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
           <td class="inspera-datagrid__td">In progress</td>
           <td class="inspera-datagrid__td inspera-datagrid__actions">
             <div class="inspera-menu">
-              <button type="button" class="inspera-menu__trigger" aria-haspopup="menu" aria-expanded="false" aria-label="Actions for Grace Hopper">
-                Actions
-                <span class="material-symbols-outlined" aria-hidden="true">expand_more</span>
+              <button type="button" class="inspera-btn inspera-btn--text inspera-btn--small inspera-btn--icon-only" aria-haspopup="menu" aria-expanded="false" aria-label="Actions for Grace Hopper">
+                <span class="material-symbols-outlined" aria-hidden="true">more_vert</span>
               </button>
             </div>
           </td>
@@ -736,7 +893,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
     </tbody>
   </table>
   <div class="inspera-datagrid__footer">
-    <span class="inspera-datagrid__range">61 - 62 of 242</span>
+    <span class="inspera-datagrid__range">61 - 80 of 242</span>
     <nav class="inspera-pagination inspera-pagination--small" aria-label="Pagination">
       <ul class="inspera-pagination__list">
         <li><button type="button" class="inspera-pagination__item" aria-label="First page"><span class="material-symbols-outlined" aria-hidden="true">first_page</span></button></li>

@@ -42,7 +42,7 @@ variant with no error at all. Variant *values* are Capitalised
 
 ### Toast
 
-Fire transient notifications imperatively from anywhere. - category: `feedback`.
+Show brief notifications by calling toast() from anywhere in the app. - category: `feedback`.
 
 > `@inspera/components` is **not published yet**. If you cannot resolve that import, do
 > not swap in another UI library - build the markup from the HTML and CSS under
@@ -67,8 +67,14 @@ toast('Assessment saved.', {
 
 **Accessibility** - role `region`, keyboard operable. The stack is a role="region" labelled "Notifications" with aria-live; Each toast is announced when it appears; Action and dismiss buttons are focusable.
 
-**Do:** Mount ToastProvider once near the app root; Call toast() for brief, dismissible feedback; Give errors a longer or manual timeout.
+**Do:** Mount ToastProvider once near the app root; Call toast() for brief, dismissible feedback; Keep errors on screen longer, or until dismissed.
 **Don't:** Do not use for blocking confirmation - use Dialog; Do not stack more toasts than the screen can show.
+
+**Choosing a variant:**
+- `position="BottomRight"`: Most screens. Away from the page title and its main action. The default.
+- `position="BottomLeft"`: Screens with a panel on the right, such as the question settings in Author.
+- `position="TopCenter"`: Screens with a bar fixed to the bottom, such as the step footer of New test.
+- `position="BottomCenter"`: Touch screens and narrow windows, such as Monitor on an iPad.
 
 **Deprecated aliases** (do not use): `Notification`, `Flash message`, `Snackbar stack`
 

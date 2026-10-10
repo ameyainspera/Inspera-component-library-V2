@@ -1,5 +1,5 @@
 import { type CSSProperties, type FocusEvent, useRef, useState } from 'react'
-import { CalendarMonth, MONTHS, addMonths, parseIso, toIso } from './calendar'
+import { CalendarMonth, MONTHS, addMonths, formatDay, parseIso, toIso } from './calendar'
 import { FieldMessage, labelStyle, useFieldA11y } from './FormField'
 import { Portal, useAnchoredPosition, useEscapeLayer, useOutsidePress } from './overlay'
 import { assignRef, cx, type ForceState, type NativeAttrs } from './types'
@@ -64,7 +64,7 @@ export default function DatePicker({
     onChange as ((v: string | undefined) => void) | undefined,
   )
   const [openState, setOpenState] = useControllableState(openProp, defaultOpen, onOpenChange)
-  const frozenOpen = forceState === 'Open'
+  const frozenOpen = forceState === 'Open' && !disabled
   const open = !disabled && (frozenOpen || openState)
 
   // The day holding the calendar's single tab stop. It also decides which
@@ -111,7 +111,7 @@ export default function DatePicker({
     alignItems: 'center',
     gap: 8,
     padding: '0 12px',
-    borderRadius: 'var(--radius-md)',
+    borderRadius: 'var(--radius-sm)',
     borderWidth: 'var(--border-width-default)',
     borderStyle: 'solid',
     background: disabled ? 'var(--surface-disabled)' : 'var(--white)',
@@ -170,7 +170,7 @@ export default function DatePicker({
   return (
     <div
       className={cx('inspera', className)}
-      style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: 6, width: '100%', fontFamily: 'var(--font-sans)', ...style }}
+      style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: 'var(--space-1)', width: '100%', fontFamily: 'var(--font-sans)', ...style }}
     >
       {field.ownLabel && (
         <label id={field.labelId} htmlFor={field.id} style={labelStyle}>{label}</label>
@@ -184,7 +184,7 @@ export default function DatePicker({
           id={field.id}
           type="button"
           className="inspera-interactive inspera-field"
-          data-force-state={open ? 'Open' : forceState}
+          data-force-state={open ? 'Open' : disabled ? undefined : forceState}
           data-invalid={field.invalid || undefined}
           data-disabled={disabled || undefined}
           disabled={disabled}
@@ -197,7 +197,7 @@ export default function DatePicker({
           {...rest}
         >
           <span style={{ flex: 1, fontSize: 16, color: current ? 'var(--text-primary)' : 'var(--text-placeholder)' }}>
-            {current || placeholder}
+            {formatDay(current) || placeholder}
           </span>
           <span className="material-symbols-outlined" style={{ fontSize: 20, color: 'var(--action-active)' }} aria-hidden>calendar_today</span>
         </button>

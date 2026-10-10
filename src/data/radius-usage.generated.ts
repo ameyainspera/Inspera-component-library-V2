@@ -7,7 +7,8 @@ export const radiusUsage: Record<string, string[]> = {
     "Checkbox",
     "CommandPalette",
     "Link",
-    "Rating"
+    "Rating",
+    "Tabs"
   ],
   "sm": [
     "Button",
@@ -18,10 +19,14 @@ export const radiusUsage: Record<string, string[]> = {
     "List",
     "Menu",
     "NumberInput",
+    "OtpInput",
+    "Pagination",
     "SegmentedControl",
     "Select",
     "Skeleton",
     "Tabs",
+    "TextInput",
+    "Textarea",
     "Tooltip",
     "calendar"
   ],
@@ -36,18 +41,11 @@ export const radiusUsage: Record<string, string[]> = {
     "FileUpload",
     "List",
     "Menu",
-    "NumberInput",
-    "OtpInput",
-    "Pagination",
     "Popover",
-    "SegmentedControl",
     "Select",
     "Skeleton",
     "Snackbar",
-    "Table",
-    "Tabs",
-    "TextInput",
-    "Textarea"
+    "Table"
   ],
   "lg": [
     "Card",

@@ -61,7 +61,7 @@ import { Snackbar } from '@inspera/components'
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `message` **(required)** | `string` | - | What happened. One short sentence. |
-| `intent` | `'Neutral' \| 'Info' \| 'Success' \| 'Warning' \| 'Error'` | `'Neutral'` | Accent icon color. |
+| `intent` | `'Neutral' \| 'Info' \| 'Success' \| 'Warning' \| 'Error'` | `'Neutral'` | Accent icon colour. |
 | `actionLabel` | `string` | - | Label for an inline action, typically "Undo". Shown when set. |
 | `onAction` | `() => void` | - | Fired when the inline action is activated. |
 | `dismissible` | `boolean` | `false` | Show a close button. Pair with onClose. |
@@ -73,6 +73,13 @@ Also accepts any native `<div>` attribute (`id`, `name`, `aria-*`, `data-*`, eve
 
 **Do:** Use for brief confirmation messages; Include an undo action when appropriate; Limit to one snackbar at a time.
 **Don't:** Do not use for critical errors - use Alert or Dialog instead; Do not stack multiple snackbars.
+
+**Choosing a variant:**
+- `intent="Neutral"`: A routine change just happened, such as Draft saved. The default.
+- `intent="Info"`: Something people may want to know now, such as a newer version being available.
+- `intent="Success"`: A task just finished, such as moving a question. Offer Undo when it can be undone.
+- `intent="Warning"`: Something is not quite right, but work can go on, such as being offline while changes are kept.
+- `intent="Error"`: An action failed and can be tried again, such as Couldn't save. Put Try again on it.
 
 **Deprecated aliases** (do not use): `Toast`, `Notification bar`
 

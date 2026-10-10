@@ -79,6 +79,10 @@ Also accepts any native `<button>` attribute (`id`, `name`, `aria-*`, `data-*`, 
 **Do:** Use for selecting a single calendar date; Highlight today and the selected day; Provide clear month navigation.
 **Don't:** Do not use for free-form date typing without validation; Do not trap keyboard focus without an escape.
 
+**Choosing a variant:**
+- `error`: The date is missing or out of range. Say which date is allowed, such as an end date after the start date.
+- `disabled`: The date does not apply with the current settings. Say what makes it available.
+
 **Deprecated aliases** (do not use): `Calendar input`, `Date field`
 
 #### One-time setup
@@ -119,7 +123,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 - Every day button needs a full `aria-label` ("March 1, 2026"). A bare "1" tells a screen reader nothing.
 - Today is outlined with a 1px `--primary` border; the selected day is filled with `--primary`. A day that is both shows only the fill.
 - The panel is anchored under the trigger, `--radius-md` on `--surface` with `--shadow-200`, and closes on Escape and on an outside click.
-- Store and emit ISO `YYYY-MM-DD`, never a locale-formatted string.
+- Store and emit ISO `YYYY-MM-DD`, never a locale-formatted string. Show it as people read a date: "19 Aug 2026", as Date Range Picker does.
 
 ```css
 /* Tokens this component needs. Paste once, at `:root`. */
@@ -129,17 +133,19 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   --white:                  #ffffff;
   --gray-200:               #EDEDED;
   --gray-600:               #7A7A7A;
+  --gray-700:               #595959;
+  --gray-800:               #404040;
   --blue-300:               #B3D9FF;
   --red-300:                #F9B8B8;
   --action-active:          rgba(0, 0, 0, 0.56);
   --text-primary:           rgba(0, 0, 0, 0.87);
-  --border-control:         #C4C4C4;
-  --border-control-strong:  #8C8C8C;
-  --text-placeholder:       #8C8C8C;
+  --border-control:         var(--gray-600);
+  --border-control-strong:  var(--gray-800);
+  --text-placeholder:       var(--gray-700);
   --surface-disabled:       #F5F5F5;
   --surface:                var(--white);
   --border:                 var(--gray-200);
-  --muted-foreground:       var(--gray-600);
+  --muted-foreground:       var(--gray-700);
   --radius-sm:              4px;
   --radius-md:              8px;
   --shadow-200:             0px 8px 8px rgba(39, 39, 39, 0.08), 0px 4px 6px rgba(39, 39, 39, 0.12);
@@ -155,7 +161,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 .inspera-datepicker {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
   width: 100%;
   position: relative;
   font-family: var(--font-sans);
@@ -174,7 +180,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   align-items: center;
   gap: 8px;
   padding: 0 12px;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   border: var(--border-width-default) solid var(--border-control);
   background: var(--white);
   cursor: pointer;

@@ -8,7 +8,7 @@ export interface AlertProps {
   message: string
   /** Short headline stating what happened. Optional. */
   title?: string
-  /** Severity / color. Warning and Error interrupt screen readers; Info and Success wait. */
+  /** Severity and colour. Warning and Error interrupt screen readers; Info and Success wait. */
   intent?: AlertIntent
   /** Tinted fill; false draws a left accent bar on a clear background. */
   background?: boolean
@@ -22,11 +22,13 @@ export interface AlertProps {
   onClose?: () => void
 }
 
-const intentMap: Record<AlertIntent, { bg: string; fg: string; icon: string }> = {
-  Info: { bg: 'var(--info-surface)', fg: 'var(--info)', icon: 'info' },
-  Success: { bg: 'var(--success-surface)', fg: 'var(--success)', icon: 'check_circle' },
-  Warning: { bg: 'var(--warning-surface)', fg: 'var(--warning)', icon: 'warning' },
-  Error: { bg: 'var(--error-surface)', fg: 'var(--error)', icon: 'error' },
+// The border takes the solid colour; the icon and action take the darker text
+// shade, since the solid colours miss 4.5:1 on their own tints.
+const intentMap: Record<AlertIntent, { bg: string; border: string; fg: string; icon: string }> = {
+  Info: { bg: 'var(--info-surface)', border: 'var(--info)', fg: 'var(--info-text)', icon: 'info' },
+  Success: { bg: 'var(--success-surface)', border: 'var(--success)', fg: 'var(--success-text)', icon: 'check_circle' },
+  Warning: { bg: 'var(--warning-surface)', border: 'var(--warning)', fg: 'var(--warning-text)', icon: 'warning' },
+  Error: { bg: 'var(--error-surface)', border: 'var(--error)', fg: 'var(--error-text)', icon: 'error' },
 }
 
 export default function Alert({
@@ -54,7 +56,7 @@ export default function Alert({
     borderRadius: 'var(--radius-md)',
     background: background ? c.bg : 'transparent',
     borderStyle: 'solid',
-    borderColor: c.fg,
+    borderColor: c.border,
     borderTopWidth: 1,
     borderRightWidth: 1,
     borderBottomWidth: 1,

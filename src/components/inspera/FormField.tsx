@@ -116,6 +116,38 @@ export function FieldMessage({ field }: { field: FieldA11y }) {
   )
 }
 
+/**
+ * The line under a checkbox, radio button or toggle label: its description, or
+ * its error. It starts where the label text starts (`indent` is the indicator
+ * plus its 8px gap) and sits 4px under it, the label-to-message spacing of
+ * every field. It is never dimmed with a disabled control: it often says why.
+ */
+export function ControlMessage({ id, children, error, indent, offset }: {
+  id: string
+  children: ReactNode
+  error: boolean
+  /** The indicator's width plus its gap, so the line starts under the label text. */
+  indent: number
+  /** Pulls the line up into the label's own vertical padding. */
+  offset: number
+}) {
+  return (
+    <span
+      id={id}
+      style={{
+        display: 'block',
+        marginTop: offset,
+        paddingLeft: indent,
+        fontSize: 12,
+        lineHeight: 1.4,
+        color: error ? 'var(--error)' : 'var(--muted-foreground)',
+      }}
+    >
+      {children}
+    </span>
+  )
+}
+
 export default function FormField({
   label,
   htmlFor,
@@ -138,7 +170,7 @@ export default function FormField({
     >
       <div
         className={cx('inspera', className)}
-        style={{ display: 'flex', flexDirection: 'column', gap: 6, width: '100%', fontFamily: 'var(--font-sans)', ...style }}
+        style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-1)', width: '100%', fontFamily: 'var(--font-sans)', ...style }}
         {...rest}
       >
         <label id={`${id}-label`} htmlFor={id} style={labelStyle}>

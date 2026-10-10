@@ -60,7 +60,7 @@ export default function Stepper({
           fontSize: 13,
           fontWeight: 600,
           background: completed || active ? 'var(--primary)' : 'transparent',
-          color: completed || active ? 'var(--white)' : 'var(--gray-600)',
+          color: completed || active ? 'var(--white)' : 'var(--text-secondary)',
           border: completed || active ? 'none' : '2px solid var(--border-strong)',
           boxShadow: active ? '0 0 0 4px var(--primary-focus-ring)' : 'none',
           transition: 'background var(--duration-fast) var(--easing-standard), box-shadow var(--duration-fast) var(--easing-standard)',
@@ -114,7 +114,7 @@ export default function Stepper({
                 )}
               </span>
               <span style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: 2, textAlign: vertical ? 'left' : 'center' }}>
-                <span style={{ fontSize, fontWeight: active || completed ? 600 : 500, color: active || completed ? 'var(--text-primary)' : 'var(--gray-600)' }}>
+                <span style={{ fontSize, fontWeight: active || completed ? 600 : 500, color: active || completed ? 'var(--text-primary)' : 'var(--text-secondary)' }}>
                   {/* The indicator is decorative, so status is spoken here. */}
                   <span style={srOnly}>{completed ? 'Completed: ' : active ? 'Current step: ' : `Step ${i + 1}: `}</span>
                   {step.label}

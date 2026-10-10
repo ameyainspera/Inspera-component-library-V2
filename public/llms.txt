@@ -4,10 +4,10 @@
 > This index is deliberately small. Fetch the linked file for each component
 > you actually use, rather than loading the whole system.
 
-> **`@inspera/components` is NOT published.** The package builds from this repo, but the @inspera scope is unclaimed, so `npm i @inspera/components` currently fails with a 404.
+> **`@inspera/components` is NOT published.** The package builds from this repo, but the @inspera npm scope has not been claimed, so installing it fails with a 404.
 > Do not tell anyone to install it, and do not assume it resolves.
 >
-> Use the portable spec below - llms.txt and the per-component files. Once a registry is chosen the package becomes the strictest option, but it will need authentication, which most AI builders cannot do.
+> Until it is published, use the AI spec: llms.txt and the per-component files. Once published, the package will be the most reliable option, but it will need registry authentication, which most AI builders cannot provide.
 
 Follow the definitions in this document verbatim. Import paths shown per
 component (`import { Button } from '@inspera/components'`) are the
@@ -54,6 +54,13 @@ variant with no error at all. Variant *values* are Capitalised
 - Do not infer a brand colour or visual style from framework defaults.
 - Mark a genuinely missing primitive `DESIGN_SYSTEM_GAP` rather than presenting it as canonical.
 
+## Working with DESIGN.md
+
+- If you also have DESIGN.md (the Inspera design guide), read it first. It decides who the screen is for, whether new UI matches the existing product or uses this library (the plane rule), the information hierarchy, the layout and the UI text.
+- This document decides the tokens and how each component is built: its props, HTML and CSS.
+- Where the two disagree, this document wins for a component's internals and DESIGN.md wins for screen composition. Corner radius is the exception: there, DESIGN.md wins.
+- With DESIGN.md present, its order for conflicting instructions replaces the one in this document. The start-here note in the AI spec download lists the known differences between the two, and which one to follow for each.
+
 ## Foundations
 
 Every value below is a CSS custom property, declared in the `:root` block under
@@ -76,8 +83,9 @@ this list.
 
 ### Colour - palette
 
-Each family runs 100 (lightest) to 900 (darkest). 600-900 are safe for text on
-a light background; 100-300 are surface tints.
+Each family runs 100 (lightest) to 900 (darkest); 100-300 are surface tints.
+For text, use this shade or a darker one - the lightest that reaches 4.5:1 on
+both white and the gray-100 canvas: gray 700, blue 700, green 700, red 600, yellow 800, orange 800, purple 600, pink 700.
 
 - **gray** - 100 `#F7F7F7` | 200 `#EDEDED` | 300 `#D9D9D9` | 400 `#BCBCBC` | 500 `#949494` | 600 `#7A7A7A` | 700 `#595959` | 800 `#404040` | 900 `#272727`
 - **blue** - 100 `#F0F7FF` | 200 `#DBEDFF` | 300 `#B3D9FF` | 400 `#7ABDFF` | 500 `#3399FF` | 600 `#007AF5` | 700 `#0059B3` | 800 `#004080` | 900 `#002E5C`
@@ -94,13 +102,13 @@ Prefer a role token over a raw palette shade wherever one exists.
 
 **Interaction** - `var(--primary-hover-overlay)` rgba(0, 64, 128, 0.04), `var(--primary-focus-ring)` rgba(0, 64, 128, 0.3), `var(--action-active)` rgba(0, 0, 0, 0.56), `var(--action-hover)` rgba(0, 0, 0, 0.04), `var(--action-focus)` rgba(0, 0, 0, 0.12), `var(--action-disabled)` rgba(0, 0, 0, 0.38)
 
-**Text** - `var(--text-primary)` rgba(0, 0, 0, 0.87), `var(--text-secondary)` var(--gray-600), `var(--text-disabled)` var(--action-disabled), `var(--text-on-primary)` #ffffff
+**Text** - `var(--text-primary)` rgba(0, 0, 0, 0.87), `var(--text-secondary)` var(--gray-700), `var(--text-disabled)` var(--action-disabled), `var(--text-on-primary)` #ffffff
 
-**Status** - `var(--info-surface)` #E1F5FE, `var(--success-surface)` #E8F5E9, `var(--warning-surface)` #FFF3E0, `var(--error-surface)` #FFEBEE
+**Status** - `var(--info-surface)` #E1F5FE, `var(--success-surface)` #E8F5E9, `var(--warning-surface)` #FFF3E0, `var(--error-surface)` #FFEBEE, `var(--info-text)` var(--blue-800), `var(--success-text)` var(--green-800), `var(--warning-text)` var(--orange-800), `var(--error-text)` var(--red-700)
 
-**Controls** - `var(--border-control)` #C4C4C4, `var(--border-control-strong)` #8C8C8C, `var(--text-placeholder)` #8C8C8C, `var(--surface-disabled)` #F5F5F5, `var(--surface-readonly)` var(--gray-100), `var(--surface-neutral)` #F0F0F0, `var(--avatar-surface)` #E0E0E0
+**Controls** - `var(--border-control)` var(--gray-600), `var(--border-control-strong)` var(--gray-800), `var(--text-placeholder)` var(--gray-700), `var(--surface-disabled)` #F5F5F5, `var(--surface-readonly)` var(--gray-100), `var(--surface-neutral)` #F0F0F0, `var(--avatar-surface)` #E0E0E0
 
-**Surface** - `var(--background)` var(--gray-100), `var(--surface)` var(--white), `var(--surface-sunken)` var(--gray-100), `var(--border)` var(--gray-200), `var(--border-strong)` var(--gray-300), `var(--border-interactive)` var(--gray-500), `var(--muted-foreground)` var(--gray-600), `var(--scrim)` rgba(39, 39, 39, 0.48)
+**Surface** - `var(--background)` var(--gray-100), `var(--surface)` var(--white), `var(--surface-sunken)` var(--gray-100), `var(--border)` var(--gray-200), `var(--border-strong)` var(--gray-300), `var(--border-interactive)` var(--gray-500), `var(--muted-foreground)` var(--gray-700), `var(--scrim)` rgba(39, 39, 39, 0.48)
 
 ### Typography
 
@@ -201,20 +209,31 @@ Use the scale - no arbitrary pixel values.
 | `12` | `var(--space-12)` | 48px |
 | `16` | `var(--space-16)` | 64px |
 
+### Control height
+
+The height of a sized control. Small, Medium and Large mean these heights
+wherever a control offers them.
+
+| Token | CSS variable | Value | Use |
+| --- | --- | --- | --- |
+| `sm` | `var(--control-height-sm)` | 32px | Small - dense toolbars, table rows, actions beside small inputs |
+| `md` | `var(--control-height-md)` | 40px | Medium - the default |
+| `lg` | `var(--control-height-lg)` | 44px | Large - one prominent call to action, touch-first screens |
+
 ### Radius
 
-Small-to-medium radii: `sm` for controls, `md` for inputs and alerts,
-`lg` for cards and dialogs. Pills only for shapes that are conceptually round.
+Small-to-medium radii: `sm` for controls, including inputs, selects and
+pickers; `md` for panels and alerts; `lg` for cards and dialogs. Pills only
+for shapes that are conceptually round.
 
-"Used by" is read from the component source, so it reflects what the library
-actually does rather than what this document claims.
+"Used by" lists the components that use each radius, read from their source.
 
 | Token | CSS variable | Value | When to use | Used by |
 | --- | --- | --- | --- | --- |
 | `none` | `var(--radius-none)` | 0px | Flush edges - table cells, full-bleed surfaces, anything that meets another edge. | - |
-| `xs` | `var(--radius-xs)` | 2px | The smallest indicators, where 4px would read as a visible curve. | Checkbox, CommandPalette, Link, Rating |
-| `sm` | `var(--radius-sm)` | 4px | Controls: buttons, tags, segments, menu items. | Button, Combobox, CommandPalette, DatePicker, DateRangePicker, List, Menu, NumberInput, SegmentedControl, Select, Skeleton, Tabs, Tooltip, calendar |
-| `md` | `var(--radius-md)` | 8px | Inputs, alerts and floating panels - the system default. | Accordion, Alert, Combobox, DataGrid, DatePicker, DateRangePicker, Drawer, FileUpload, List, Menu, NumberInput, OtpInput, Pagination, Popover, SegmentedControl, Select, Skeleton, Snackbar, Table, Tabs, TextInput, Textarea |
+| `xs` | `var(--radius-xs)` | 2px | The smallest indicators, where 4px would read as a visible curve. | Checkbox, CommandPalette, Link, Rating, Tabs |
+| `sm` | `var(--radius-sm)` | 4px | Controls: buttons, input fields, tags, segments, menu items. | Button, Combobox, CommandPalette, DatePicker, DateRangePicker, List, Menu, NumberInput, OtpInput, Pagination, SegmentedControl, Select, Skeleton, Tabs, TextInput, Textarea, Tooltip, calendar |
+| `md` | `var(--radius-md)` | 8px | Alerts and floating panels - the system default. | Accordion, Alert, Combobox, DataGrid, DatePicker, DateRangePicker, Drawer, FileUpload, List, Menu, Popover, Select, Skeleton, Snackbar, Table |
 | `lg` | `var(--radius-lg)` | 12px | Large surfaces that contain other components: cards, dialogs, drawers. | Card, CommandPalette, Dialog, Stat |
 | `xl` | `var(--radius-xl)` | 16px | Reserved for oversized surfaces. Nothing uses it today; prefer lg. | - |
 | `pill` | `var(--radius-pill)` | fully round | Only for shapes that are conceptually round: toggles, badges, radios, avatars. | Avatar, AvatarGroup, Badge, Dialog, EmptyState, Progress, RadioButton, Skeleton, Slider, Stepper, Tag, Toggle |
@@ -277,7 +296,7 @@ Use the scale. Never an arbitrary value such as `99999`.
 | --- | --- | --- | --- |
 | `z.base` | `var(--z-base)` | 0 |  |
 | `z.sticky` | `var(--z-sticky)` | 100 | Sticky headers and toolbars |
-| `z.dropdown` | `var(--z-dropdown)` | 300 | Select and Menu panels |
+| `z.dropdown` | `var(--z-dropdown)` | 300 | Select and Menu panels. Inside a Dialog or Drawer, put the panel in the modal's overlay element, or it opens under the scrim |
 | `z.popover` | `var(--z-popover)` | 400 |  |
 | `z.overlay` | `var(--z-overlay)` | 500 | Dialog and Drawer scrim |
 | `z.modal` | `var(--z-modal)` | 600 | Dialog and Drawer surface |
@@ -328,7 +347,7 @@ Focus is never removed, only replaced by something at least as visible:
 - [Select](./c/select.md) - Select one option from a list.
 - [Toggle](./c/toggle.md) - Switch a setting on or off instantly.
 - [Textarea](./c/textarea.md) - Collect multi-line text input.
-- [Form Field](./c/form-field.md) - Standardize label, control, and help/error layout around any input.
+- [Form Field](./c/form-field.md) - Lay out a label, control and help or error text consistently around any input.
 - [Slider](./c/slider.md) - Select a numeric value from a continuous range.
 - [Segmented Control](./c/segmented-control.md) - Choose one option from a small set of mutually exclusive segments.
 - [Date Picker](./c/date-picker.md) - Select a calendar date from a popover.
@@ -349,7 +368,7 @@ Focus is never removed, only replaced by something at least as visible:
 - [Table](./c/table.md) - Display structured data in rows and columns.
 - [Data Grid](./c/data-grid.md) - Display large datasets with sorting, selection and paging.
 - [Accordion](./c/accordion.md) - Show and hide sections of related content.
-- [Tag](./c/tag.md) - Label, categorize, or filter with a removable chip.
+- [Tag](./c/tag.md) - Label, categorise or filter with a removable chip.
 - [Divider](./c/divider.md) - Separate content with a thin rule.
 - [Empty State](./c/empty-state.md) - Communicate the absence of content and offer a next step.
 - [Avatar Group](./c/avatar-group.md) - Show a set of users as overlapping avatars with an overflow count.
@@ -361,7 +380,7 @@ Focus is never removed, only replaced by something at least as visible:
 - [Alert](./c/alert.md) - Display semantic inline feedback.
 - [Dialog](./c/dialog.md) - Present content or actions that require user attention.
 - [Snackbar](./c/snackbar.md) - Show brief, non-blocking feedback at the bottom of the screen.
-- [Toast](./c/toast.md) - Fire transient notifications imperatively from anywhere.
+- [Toast](./c/toast.md) - Show brief notifications by calling toast() from anywhere in the app.
 - [Command Palette](./c/command-palette.md) - Search and run commands from a keyboard-driven overlay.
 - [Tooltip](./c/tooltip.md) - Provide contextual help on hover or focus.
 - [Progress](./c/progress.md) - Show completion of an ongoing task.
@@ -372,7 +391,7 @@ Focus is never removed, only replaced by something at least as visible:
 
 ### navigation
 
-- [Tabs](./c/tabs.md) - Organize content into switchable panels.
+- [Tabs](./c/tabs.md) - Organise content into switchable panels.
 - [Breadcrumb](./c/breadcrumb.md) - Show the user's current location in a hierarchy.
 - [Pagination](./c/pagination.md) - Navigate between pages of content.
 - [Menu](./c/menu.md) - Present a list of actions in a dropdown.
@@ -383,11 +402,14 @@ Focus is never removed, only replaced by something at least as visible:
 
 | File | What it is |
 | --- | --- |
-| [llms-full.txt](./llms-full.txt) | The complete document - foundations plus every component inline |
-| [foundations.md](./foundations.md) | Colour, typography, spacing, radius, depth on their own |
-| [guidance.md](./guidance.md) | Composition patterns, form and table rules, the done checklist |
-| [api.json](./api.json) | Prop API, derived from the TypeScript types |
-| [tokens.css](./tokens.css) | Token custom properties + icon/keyframe runtime |
+| [llms-full.txt](./llms-full.txt) | The complete document: foundations plus every component inline |
+| [design/DESIGN.md](./design/DESIGN.md) | The design guide: user roles, existing versus new UI, hierarchy, layout and UI text. Read it before designing a screen; its reference files are in `design/references/` |
+| [inspera-00-start-here.md](./inspera-00-start-here.md) | How DESIGN.md and the full guide fit together, and the known differences between them |
+| [spec/inspera-00-start-here.md](./spec/inspera-00-start-here.md) | The complete document in 7 parts: a core every component needs, then groups of components |
+| [foundations.md](./foundations.md) | Colour, typography, spacing, radius and depth only |
+| [guidance.md](./guidance.md) | Composition patterns, form and table rules, and a final checklist |
+| [api.json](./api.json) | Every prop, generated from the TypeScript types |
+| [tokens.css](./tokens.css) | Tokens as CSS custom properties, plus the icon and animation rules |
 | [inspera.theme.css](./inspera.theme.css) | Tailwind v4 `@theme` block |
 | [tokens.w3c.json](./tokens.w3c.json) | W3C Design Tokens format |
-| [aliases.json](./aliases.json) | Deprecated name -> canonical component |
+| [aliases.json](./aliases.json) | Old component names mapped to the current ones |

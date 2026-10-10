@@ -42,7 +42,7 @@ variant with no error at all. Variant *values* are Capitalised
 
 ### Tabs
 
-Organize content into switchable panels. - category: `navigation`.
+Organise content into switchable panels. - category: `navigation`.
 
 > `@inspera/components` is **not published yet**. If you cannot resolve that import, do
 > not swap in another UI library - build the markup from the HTML and CSS under
@@ -88,8 +88,14 @@ export interface TabItem {
 
 **Accessibility** - role `tablist`, keyboard operable. Use role="tablist" on the tab container; Each tab uses role="tab" with aria-selected; Tab panels use role="tabpanel" linked by aria-labelledby; Arrow keys navigate between tabs.
 
-**Do:** Use to organize related content sections; Label tabs clearly and concisely; Use a maximum of 6 tabs per set.
-**Don't:** Do not use tabs for sequential steps - use a stepper instead; Do not nest tab sets inside other tab sets.
+**Do:** Use to organise related content sections; Label tabs clearly and concisely; Use a maximum of 6 tabs per set.
+**Don't:** Do not use tabs for sequential steps - use Stepper instead; Do not nest tab sets inside other tab sets.
+
+**Choosing a variant:**
+- `variant="Underline"`: Sibling views of one thing, right under its title, such as a test's Overview, Candidates and Settings.
+- `variant="Contained"`: A compact switch inside a panel, such as the rubric and the marking guide beside a response.
+- `size="Small"`: Inside cards and panels, such as the views of a chart.
+- `fullWidth`: A narrow panel, where the tabs share its width, such as Questions and Resources in the question set editor.
 
 **Deprecated aliases** (do not use): `Tab bar`, `Tab navigation`
 
@@ -141,8 +147,8 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   --gray-300:       #D9D9D9;
   --gray-700:       #595959;
   --border-strong:  var(--gray-300);
+  --radius-xs:      2px;
   --radius-sm:      4px;
-  --radius-md:      8px;
   --shadow-100:     0px 4px 4px rgba(39, 39, 39, 0.08), 0px 2px 4px rgba(39, 39, 39, 0.12);
   --font-sans:      'Inter', system-ui, -apple-system, sans-serif;
 }
@@ -165,7 +171,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   padding: 4px;
   border-bottom: none;
   background: var(--gray-100);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
 }
 
 .inspera-tabs__tab {
@@ -205,7 +211,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 .inspera-tabs--contained .inspera-tabs__tab {
   height: 40px;
   border-bottom: none;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-xs);
   margin-bottom: 0;
 }
 .inspera-tabs--contained.inspera-tabs--small .inspera-tabs__tab { height: 32px; }

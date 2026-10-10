@@ -64,6 +64,18 @@ export const spacing = [
 ]
 
 /**
+ * Control heights - one scale, so Small, Medium and Large mean the same height
+ * on every control that offers them. Button reads all three and Segmented
+ * Control the first two. Text Input and Number Input render 32 and 40 but do
+ * not read these yet. Large is 44 rather than 48: the WCAG 2.5.5 and Apple HIG touch target.
+ */
+export const controlHeights = [
+  { token: 'sm', value: 32, note: 'Small - dense toolbars, table rows, actions beside small inputs' },
+  { token: 'md', value: 40, note: 'Medium - the default' },
+  { token: 'lg', value: 44, note: 'Large - one prominent call to action, touch-first screens' },
+]
+
+/**
  * Corner radius. The system is deliberately restrained: small-to-medium radii
  * everywhere, and pills reserved for controls that are conceptually round.
  * `usage` says when to reach for each; which components actually use it is
@@ -72,8 +84,8 @@ export const spacing = [
 export const radius = [
   { token: 'none', value: 0, usage: 'Flush edges - table cells, full-bleed surfaces, anything that meets another edge.' },
   { token: 'xs', value: 2, usage: 'The smallest indicators, where 4px would read as a visible curve.' },
-  { token: 'sm', value: 4, usage: 'Controls: buttons, tags, segments, menu items.' },
-  { token: 'md', value: 8, usage: 'Inputs, alerts and floating panels - the system default.' },
+  { token: 'sm', value: 4, usage: 'Controls: buttons, input fields, tags, segments, menu items.' },
+  { token: 'md', value: 8, usage: 'Alerts and floating panels - the system default.' },
   { token: 'lg', value: 12, usage: 'Large surfaces that contain other components: cards, dialogs, drawers.' },
   { token: 'xl', value: 16, usage: 'Reserved for oversized surfaces. Nothing uses it today; prefer lg.' },
   { token: 'pill', value: 9999, usage: 'Only for shapes that are conceptually round: toggles, badges, radios, avatars.' },
@@ -219,10 +231,28 @@ export const statusSurfaces: SystemToken[] = [
   { name: 'error-surface', value: '#FFEBEE', note: `Error fill. ${PENDING}` },
 ]
 
+/**
+ * Text and icons on a status tint. The solid colours (--info, --warning and
+ * so on) fall short of 4.5:1 on their own tints - Warning is 2.81:1 - so text
+ * on a tint takes a darker palette shade from the same family. The solid
+ * colours stay for borders, accents and fills.
+ */
+export const statusText: SystemToken[] = [
+  { name: 'info-text', value: 'var(--blue-800)', note: 'Text and icons on info-surface - 9.14:1' },
+  { name: 'success-text', value: 'var(--green-800)', note: 'Text and icons on success-surface - 6.30:1' },
+  { name: 'warning-text', value: 'var(--orange-800)', note: 'Text and icons on warning-surface - 6.01:1' },
+  { name: 'error-text', value: 'var(--red-700)', note: 'Text and icons on error-surface - 6.90:1' },
+]
+
+/*
+ * Control outlines are gray-600: 4.29:1 on white and 4.01:1 on the gray-100
+ * canvas, over the 3:1 WCAG 1.4.11 asks of a control's boundary. The old
+ * #C4C4C4 was 1.74:1, and gray-500 still fails on the canvas (2.83:1).
+ */
 export const controlTokens: SystemToken[] = [
-  { name: 'border-control', value: '#C4C4C4', note: `Resting border on inputs, select, toggle track. ${PENDING}` },
-  { name: 'border-control-strong', value: '#8C8C8C', note: `Hover border; checkbox and radio resting border. ${PENDING}` },
-  { name: 'text-placeholder', value: '#8C8C8C', note: `Placeholder text. ${PENDING}` },
+  { name: 'border-control', value: 'var(--gray-600)', note: 'Resting outline of every control: fields, checkbox, radio, toggle track, empty rating star' },
+  { name: 'border-control-strong', value: 'var(--gray-800)', note: 'Field border on hover' },
+  { name: 'text-placeholder', value: 'var(--gray-700)', note: 'Placeholder text - 7.00:1 on white' },
   { name: 'surface-disabled', value: '#F5F5F5', note: `Disabled control fill. ${PENDING}` },
   { name: 'surface-readonly', value: 'var(--gray-100)', note: 'Read-only control fill' },
   { name: 'surface-neutral', value: '#F0F0F0', note: `Neutral Badge/Tag fill. ${PENDING}` },
@@ -299,7 +329,7 @@ export const motion = {
 export const zIndex = [
   { token: 'base', value: 0 },
   { token: 'sticky', value: 100, note: 'Sticky headers and toolbars' },
-  { token: 'dropdown', value: 300, note: 'Select and Menu panels' },
+  { token: 'dropdown', value: 300, note: 'Select and Menu panels. Inside a Dialog or Drawer, put the panel in the modal\'s overlay element, or it opens under the scrim' },
   { token: 'popover', value: 400 },
   { token: 'overlay', value: 500, note: 'Dialog and Drawer scrim' },
   { token: 'modal', value: 600, note: 'Dialog and Drawer surface' },
@@ -330,11 +360,11 @@ export const systemTokens: Record<string, SystemToken[]> = {
   ],
   Text: [
     { name: 'text-primary', value: 'rgba(0, 0, 0, 0.87)', note: 'Body and heading text' },
-    { name: 'text-secondary', value: 'var(--gray-600)', note: 'Supporting and helper text' },
+    { name: 'text-secondary', value: 'var(--gray-700)', note: 'Supporting and helper text. gray-700, not 600: gray-600 is 4.29:1 on white' },
     { name: 'text-disabled', value: 'var(--action-disabled)', note: 'Disabled text' },
     { name: 'text-on-primary', value: '#ffffff', note: 'Text on a primary-filled surface' },
   ],
-  Status: statusSurfaces,
+  Status: [...statusSurfaces, ...statusText],
   Controls: controlTokens,
   Surface: [
     { name: 'background', value: 'var(--gray-100)', note: 'App canvas' },
@@ -343,7 +373,7 @@ export const systemTokens: Record<string, SystemToken[]> = {
     { name: 'border', value: 'var(--gray-200)', note: 'Hairline separator' },
     { name: 'border-strong', value: 'var(--gray-300)', note: 'Control outline' },
     { name: 'border-interactive', value: 'var(--gray-500)', note: 'Control outline on hover' },
-    { name: 'muted-foreground', value: 'var(--gray-600)', note: 'De-emphasised label text' },
+    { name: 'muted-foreground', value: 'var(--gray-700)', note: 'De-emphasised label text' },
     { name: 'scrim', value: 'rgba(39, 39, 39, 0.48)', note: 'Backdrop behind Dialog, Drawer and Command Palette' },
   ],
 }

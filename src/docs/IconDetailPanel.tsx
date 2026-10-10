@@ -203,9 +203,8 @@ export default function IconDetailPanel({
       </div>
 
       <p style={{ margin: 0, fontSize: 12, color: 'var(--muted-foreground)', lineHeight: 1.5 }}>
-        Material Symbols is a variable font, so there is no SVG on this page to copy. The SVG
-        buttons fetch the matching file from Google&rsquo;s icon repository, which means they need
-        a network connection - and not every axis combination is published.
+        The SVG, path and React copies come from Google&rsquo;s icon repository, so they need an
+        internet connection, and some axis combinations are not available.
       </p>
     </aside>
   )

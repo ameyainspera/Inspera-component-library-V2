@@ -81,8 +81,13 @@ export interface BreadcrumbItem {
 
 **Accessibility** - role `navigation`, keyboard operable. Wrap in nav with aria-label="Breadcrumb"; Use an ordered list for semantic structure; Mark current page with aria-current="page".
 
-**Do:** Use for hierarchical navigation structures; Always include the current page as the last item; Keep breadcrumb labels concise.
-**Don't:** Do not use for flat navigation; Do not make the current page breadcrumb a link.
+**Do:** Use where pages sit in a hierarchy; Always include the current page as the last item; Keep breadcrumb labels concise.
+**Don't:** Do not use for flat navigation; Do not make the current page a link.
+
+**Choosing a variant:**
+- `separator="Chevron"`: Pages in a hierarchy, in the location bar or above a page title. The default.
+- `separator="Slash"`: A path of folders, such as where a question is saved in the question bank.
+- `size="Small"`: The location bar under the product's top bar.
 
 **Deprecated aliases** (do not use): `Breadcrumbs`, `Path navigation`
 
@@ -121,7 +126,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 - It is a `<nav aria-label="Breadcrumb">` wrapping an `<ol>` - order is the meaning, so not a `<div>` of spans.
 - The last crumb is the current page: `aria-current="page"`, `--text-primary` at 500 weight, and not a control.
-- Separators live in their own `<li>` marked `aria-hidden="true"`. Left announced, a screen reader reads "chevron right" between every crumb.
+- Each separator is an `aria-hidden="true"` span inside the item of the crumb before it, so a wrapped trail never starts a line with one. Left announced, a screen reader reads "chevron right" between every crumb.
 - Crumbs are 16px (14px small) in `--primary`, underlined on hover only. The chevron runs 2px larger than the text.
 - With real URLs use `<a href>` rather than `<button>`, keeping the same class - a breadcrumb should be openable in a new tab.
 
@@ -148,6 +153,14 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   flex-wrap: wrap;
 }
 
+/* Each separator sits in the item of the crumb before it, so a wrapped trail
+   breaks after a separator and never starts a line with one. */
+.inspera-breadcrumb__list > li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
 /* A crumb. Rendered as <button> in the React component because navigation runs
    through a router callback; with real URLs, use <a href> and the same class. */
 .inspera-breadcrumb__crumb {
@@ -172,8 +185,8 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 }
 .inspera-breadcrumb--small .inspera-breadcrumb__current { font-size: 14px; }
 
-/* The separator sizes its own glyph rather than setting a size on the <li>,
-   so the chevron can run 2px larger than the text while the slash matches it. */
+/* The separator sizes its own glyph, so the chevron can run 2px larger than
+   the text while the slash matches it. */
 .inspera-breadcrumb__separator {
   color: var(--gray-400);
   display: inline-flex;
@@ -190,13 +203,13 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 ```html
 <nav class="inspera-breadcrumb" aria-label="Breadcrumb">
   <ol class="inspera-breadcrumb__list">
-    <li><a class="inspera-breadcrumb__crumb" href="/">Home</a></li>
-    <li class="inspera-breadcrumb__separator" aria-hidden="true">
-      <span class="material-symbols-outlined">chevron_right</span>
+    <li>
+      <a class="inspera-breadcrumb__crumb" href="/">Home</a>
+      <span class="inspera-breadcrumb__separator" aria-hidden="true"><span class="material-symbols-outlined">chevron_right</span></span>
     </li>
-    <li><a class="inspera-breadcrumb__crumb" href="/assessments">Assessments</a></li>
-    <li class="inspera-breadcrumb__separator" aria-hidden="true">
-      <span class="material-symbols-outlined">chevron_right</span>
+    <li>
+      <a class="inspera-breadcrumb__crumb" href="/assessments">Assessments</a>
+      <span class="inspera-breadcrumb__separator" aria-hidden="true"><span class="material-symbols-outlined">chevron_right</span></span>
     </li>
     <li><span class="inspera-breadcrumb__current" aria-current="page">Algebra Quiz</span></li>
   </ol>

@@ -69,7 +69,15 @@ Also accepts any native `<span>` attribute (`id`, `name`, `aria-*`, `data-*`, ev
 **Accessibility** - role `img`. Provide alt text for image avatars; Use aria-label for initials and icon variants.
 
 **Do:** Use for user profiles and participant lists; Provide meaningful alt text; Use consistent sizing within a context.
-**Don't:** Do not stretch or distort avatar images; Do not use random colors - use a deterministic palette.
+**Don't:** Do not stretch or distort avatar images; Do not use random colours - the same person always gets the same colour.
+
+**Choosing a variant:**
+- `size="Small"`: Dense rows, such as who wrote each comment in a thread.
+- `size="Medium"`: Lists and request rows. The default size.
+- `size="Large"`: The header of a page or panel about one person, such as a candidate's details.
+- `status="Online"`: The person is available now, such as a grader you could hand a script to. Say it in words beside it.
+- `status="Offline"`: The person is not connected. Say since when, such as Last seen 14:02.
+- `status="Busy"`: The person is busy with something others have to wait for, such as marking the script you opened.
 
 #### One-time setup
 

@@ -36,7 +36,21 @@ export interface ComponentSpec {
   usage: {
     do: string[]
     dont: string[]
+    /**
+     * When to choose each value of a variant or state prop. Shown under the
+     * playground's in-context scene and written into the spec, so a model
+     * picks the variant a designer would. `prop` is the real prop name and
+     * `value` its value - `'true'` for a boolean. ASCII only: it ships in the
+     * generated spec.
+     */
+    variants?: VariantGuide[]
   }
+}
+
+export interface VariantGuide {
+  prop: string
+  value: string
+  when: string
 }
 
 export interface NavGroup {

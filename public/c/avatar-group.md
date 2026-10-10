@@ -67,7 +67,7 @@ import { AvatarGroup } from '@inspera/components'
 | --- | --- | --- | --- |
 | `avatars` **(required)** | `AvatarGroupItem[]` | - | People to show, in order. |
 | `max` | `number` | `4` | How many to show before collapsing the rest into "+N". |
-| `size` | `AvatarSize` | `'Medium'` | Avatar diameter. |
+| `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Avatar diameter. |
 
 Also accepts any native `<div>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<div>`. `className` and `style` go on the outermost element.
 
@@ -86,6 +86,11 @@ export interface AvatarGroupItem {
 
 **Do:** Use for participant and collaborator lists; Cap visible avatars and show a +N overflow; Keep sizing consistent within a context.
 **Don't:** Do not show dozens of avatars inline; Do not omit the overflow count.
+
+**Choosing a variant:**
+- `size="Small"`: Dense rows, such as the graders on each test in a table.
+- `size="Medium"`: Cards and headers, such as the graders on a test's overview. The default size.
+- `size="Large"`: The header of a page about one team, such as a marking committee.
 
 **Deprecated aliases** (do not use): `Avatar stack`, `Facepile`
 
@@ -122,7 +127,7 @@ Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
 font weight of your own, and do not restyle it with a UI kit's defaults.
 
-- Overlap is 30% of the diameter as a negative left margin - 10 / 12 / 17px for small / medium / large - and the first item has none.
+- Overlap is about 20% of the diameter as a negative left margin - 6 / 8 / 12px for small / medium / large - and the first item has none. With the 2px ring, each avatar stops short of the initials it overlaps; more overlap hides their second letter.
 - The separating ring is a `box-shadow`, not a border: a border would grow each avatar and break the spacing.
 - The overflow chip is `+N` on `--gray-200` at 34% of the diameter, sized identically to an avatar.
 - The group carries `role="group"` and a count in its label; the chip carries "N more". Overlapping avatars are meaningless to a screen reader without both.
@@ -215,10 +220,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   display: inline-flex;
   border-radius: 9999px;
   box-shadow: 0 0 0 2px var(--white);
-  margin-left: -12px;
+  margin-left: -8px;
 }
-.inspera-avatar-group--small .inspera-avatar-group__item { margin-left: -10px; }
-.inspera-avatar-group--large .inspera-avatar-group__item { margin-left: -17px; }
+.inspera-avatar-group--small .inspera-avatar-group__item { margin-left: -6px; }
+.inspera-avatar-group--large .inspera-avatar-group__item { margin-left: -12px; }
 
 /* Last, so it outranks the size modifiers above: nothing overlaps the first. */
 .inspera-avatar-group__item:first-child { margin-left: 0; }

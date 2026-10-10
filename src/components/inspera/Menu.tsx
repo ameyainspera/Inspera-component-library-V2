@@ -1,9 +1,11 @@
 import { type CSSProperties, type KeyboardEvent, useEffect, useId, useRef, useState } from 'react'
+import Button from './Button'
 import { Portal, useAnchoredPosition, useEscapeLayer, useOutsidePress } from './overlay'
 import { assignRef, cx, type NativeAttrs } from './types'
 import { useControllableState } from './useControllableState'
 
 export type MenuPlacement = 'BottomStart' | 'BottomEnd'
+export type MenuSize = 'Small' | 'Medium'
 
 export interface MenuItem {
   label: string
@@ -20,12 +22,21 @@ export interface MenuItem {
 }
 
 export interface MenuProps {
-  /** Trigger text. Pass `aria-label` too when the text alone is ambiguous, e.g. per-row "Actions". */
+  /**
+   * Trigger text. With `iconOnly` it is not shown but names the trigger and
+   * the menu, so make it specific: "Actions for Algebra Quiz", not "Actions".
+   */
   label: string
   /** Menu items, in order. */
   items: MenuItem[]
   /** Aligns the menu to the trigger's start or end edge. */
   placement?: MenuPlacement
+  /** Trigger height 32 / 40 (`--control-height-sm/md`). Small also steps down to 14px text and a 16px icon. */
+  size?: MenuSize
+  /** Show only an icon - a Text icon-only Button. The overflow trigger for table rows, card headers and toolbars. */
+  iconOnly?: boolean
+  /** Material Symbols name for the icon-only trigger. */
+  icon?: string
   /** Open state. Controlled - pair with onOpenChange. */
   open?: boolean
   /** Open on mount, when uncontrolled. */
@@ -42,6 +53,9 @@ export default function Menu({
   label,
   items,
   placement = 'BottomStart',
+  size = 'Medium',
+  iconOnly = false,
+  icon = 'more_vert',
   open,
   defaultOpen = false,
   onOpenChange,
@@ -126,18 +140,20 @@ export default function Menu({
     }
   }
 
+  const small = size === 'Small'
   const triggerStyle: CSSProperties = {
-    height: 40,
+    height: small ? 'var(--control-height-sm)' : 'var(--control-height-md)',
     display: 'inline-flex',
     alignItems: 'center',
-    gap: 6,
-    padding: '0 12px',
-    borderRadius: 'var(--radius-md)',
+    gap: small ? 4 : 6,
+    padding: small ? '0 8px' : '0 12px',
+    // A control, so 4px like the buttons and fields it sits beside; the panel is 8px.
+    borderRadius: 'var(--radius-sm)',
     border: 'var(--border-width-default) solid var(--border-strong)',
     background: 'var(--white)',
     color: 'var(--text-primary)',
     fontFamily: 'var(--font-sans)',
-    fontSize: 16,
+    fontSize: small ? 14 : 16,
     fontWeight: 500,
     cursor: 'pointer',
     // An open menu keeps a ring on its trigger, so it is clear what it belongs to.
@@ -212,32 +228,36 @@ export default function Menu({
     </div>
   )
 
+  const triggerProps = {
+    ref: (node: HTMLButtonElement | null) => {
+      trigger.current = node
+      assignRef(ref, node)
+    },
+    'aria-haspopup': 'menu' as const,
+    'aria-expanded': isOpen,
+    'aria-controls': isOpen ? menuId : undefined,
+    onClick: () => (isOpenState ? close(false) : openAt(-1)),
+    onKeyDown: onTriggerKey,
+  }
+
   return (
     <div className={cx('inspera', className)} style={{ position: 'relative', display: 'inline-block', fontFamily: 'var(--font-sans)' }}>
-      <button
-        ref={(node) => {
-          trigger.current = node
-          assignRef(ref, node)
-        }}
-        type="button"
-        className="inspera-interactive"
-        aria-haspopup="menu"
-        aria-expanded={isOpen}
-        aria-controls={isOpen ? menuId : undefined}
-        style={triggerStyle}
-        onClick={() => (isOpenState ? close(false) : openAt(-1))}
-        onKeyDown={onTriggerKey}
-        {...rest}
-      >
-        {label}
-        <span
-          className="material-symbols-outlined"
-          style={{ fontSize: 20, transform: isOpen ? 'rotate(180deg)' : 'none', transition: 'transform var(--duration-fast) var(--easing-standard)' }}
-          aria-hidden
-        >
-          expand_more
-        </span>
-      </button>
+      {iconOnly ? (
+        // The overflow trigger is the library's Text icon-only Button, so it
+        // matches every other icon button; it keeps its hover fill while open.
+        <Button label={label} intent="Text" size={size} leadingIcon={icon} iconOnly style={style} {...triggerProps} {...rest} />
+      ) : (
+        <button type="button" className="inspera-interactive" style={triggerStyle} {...triggerProps} {...rest}>
+          {label}
+          <span
+            className="material-symbols-outlined"
+            style={{ fontSize: small ? 16 : 20, transform: isOpen ? 'rotate(180deg)' : 'none', transition: 'transform var(--duration-fast) var(--easing-standard)' }}
+            aria-hidden
+          >
+            expand_more
+          </span>
+        </button>
+      )}
       {forceVisible ? menu : live && <Portal>{menu}</Portal>}
     </div>
   )

@@ -90,6 +90,12 @@ export interface RadioOption {
 **Do:** Use for single selection among 2-6 options; Provide a group label; Pre-select a sensible default.
 **Don't:** Do not use for multi-select - use Checkbox Group; Do not use a single radio alone.
 
+**Choosing a variant:**
+- `orientation="Vertical"`: Most groups. One option per line is the easiest to scan.
+- `orientation="Horizontal"`: Two or three short options that fit on one line, such as file formats.
+- `error`: A required choice is missing. Say what to choose in errorText.
+- `disabled`: The choice is locked or does not apply. Say why in helpText, such as a setting locked while the test is live.
+
 **Deprecated aliases** (do not use): `Radio list`, `Option group`
 
 #### One-time setup
@@ -133,16 +139,20 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 ```css
 /* Tokens this component needs. Paste once, at `:root`. */
 :root {
-  --primary:                #004080;
-  --error:                  #D32F2F;
-  --white:                  #ffffff;
-  --text-primary:           rgba(0, 0, 0, 0.87);
-  --border-control-strong:  #8C8C8C;
-  --radius-pill:            9999px;
-  --focus-ring-width:       2px;
-  --focus-ring-offset:      2px;
-  --focus-ring-color:       var(--primary);
-  --font-sans:              'Inter', system-ui, -apple-system, sans-serif;
+  --primary:            #004080;
+  --error:              #D32F2F;
+  --white:              #ffffff;
+  --gray-600:           #7A7A7A;
+  --gray-700:           #595959;
+  --text-primary:       rgba(0, 0, 0, 0.87);
+  --error-surface:      #FFEBEE;
+  --border-control:     var(--gray-600);
+  --muted-foreground:   var(--gray-700);
+  --radius-pill:        9999px;
+  --focus-ring-width:   2px;
+  --focus-ring-offset:  2px;
+  --focus-ring-color:   var(--primary);
+  --font-sans:          'Inter', system-ui, -apple-system, sans-serif;
 }
 
 .inspera-radio {
@@ -167,7 +177,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   width: 20px;
   height: 20px;
   border-radius: var(--radius-pill);
-  border: 2px solid var(--border-control-strong);
+  border: 2px solid var(--border-control);
   background: var(--white);
   display: inline-flex;
   align-items: center;
@@ -196,10 +206,30 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 .inspera-radio:active .inspera-radio__circle { transform: scale(0.92); }
 
-.inspera-radio--error .inspera-radio__circle { border-color: var(--error); }
-.inspera-radio--error:hover .inspera-radio__circle { border-color: var(--error); }
+/* In error the ring is red whether or not the radio is selected, so a group
+   in error reads as one. The dot stays blue. */
+.inspera-radio--error .inspera-radio__circle,
+.inspera-radio--error .inspera-radio__input:checked + .inspera-radio__circle { border-color: var(--error); }
+.inspera-radio--error:hover .inspera-radio__circle { border-color: var(--error); background: var(--error-surface); }
 
 .inspera-radio--disabled { cursor: not-allowed; opacity: 0.38; }
+
+/* A description under the label, linked with aria-describedby. It starts
+   where the label text starts (the 20px circle plus its 8px gap) and sits 4px
+   under it, pulled up into the row's 8px padding. Not dimmed when disabled:
+   it often says why the option is unavailable. */
+.inspera-radio-field {
+  display: inline-flex;
+  flex-direction: column;
+  font-family: var(--font-sans);
+}
+.inspera-radio__message {
+  margin-top: -4px;
+  padding-left: 28px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--muted-foreground);
+}
 
 .inspera-radio-group {
   display: flex;

@@ -73,7 +73,11 @@ Also accepts any native `<div>` attribute (`id`, `name`, `aria-*`, `data-*`, eve
 **Accessibility** - role `textbox`, keyboard operable. Each box has an aria-label "Digit N"; aria-invalid reflects the error state; Backspace moves focus to the previous box; paste distributes digits.
 
 **Do:** Auto-advance focus as digits are entered; Support paste of the full code; Use a monospace font for even alignment.
-**Don't:** Do not require manual box-by-box focus; Do not allow non-numeric characters.
+**Don't:** Do not make people move between boxes by hand; Do not allow non-numeric characters.
+
+**Choosing a variant:**
+- `error`: The code is wrong or has expired. Say what to do next, such as check the code or send a new one.
+- `disabled`: Entry is paused, such as after too many tries. Say when people can try again.
 
 **Deprecated aliases** (do not use): `PIN input`, `Verification code`, `Code input`
 
@@ -110,7 +114,7 @@ Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
 font weight of your own, and do not restyle it with a UI kit's defaults.
 
-- One `<input>` per digit, 44x48, `--radius-md`, in `--font-mono` at 20px so the digits do not shift as they are typed.
+- One `<input>` per digit, 44x48, `--radius-sm`, in `--font-mono` at 20px so the digits do not shift as they are typed.
 - `autocomplete="one-time-code"` goes on the first box only, and `off` on the rest. On every box the platform offers the code once per field.
 - Wrap the boxes in `role="group"` named for the code ("Verification code"); each box is `aria-label="Digit N of 6"` with `inputmode="numeric"`.
 - Keep one slot per box: a digit typed into box 3 stays in box 3, and Backspace clears only its own box. Storing the code as one string collapses the gaps.
@@ -123,13 +127,15 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   --primary:                #004080;
   --error:                  #D32F2F;
   --white:                  #ffffff;
+  --gray-600:               #7A7A7A;
+  --gray-800:               #404040;
   --blue-300:               #B3D9FF;
   --red-300:                #F9B8B8;
   --text-primary:           rgba(0, 0, 0, 0.87);
-  --border-control:         #C4C4C4;
-  --border-control-strong:  #8C8C8C;
+  --border-control:         var(--gray-600);
+  --border-control-strong:  var(--gray-800);
   --surface-disabled:       #F5F5F5;
-  --radius-md:              8px;
+  --radius-sm:              4px;
   --effect-state-focus:     0px 0px 0px 3px var(--blue-300);
   --effect-state-error:     0px 0px 0px 3px var(--red-300);
   --border-width-default:   1px;
@@ -148,7 +154,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   height: 48px;
   text-align: center;
   border: var(--border-width-default) solid var(--border-control);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   background: var(--white);
   /* Monospace so the digits do not shift as they are typed. */
   font-family: var(--font-mono);

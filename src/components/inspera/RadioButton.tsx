@@ -1,5 +1,9 @@
-import { type CSSProperties, useEffect, useId, useRef } from 'react'
+import { type CSSProperties, type ReactNode, useEffect, useId, useRef } from 'react'
+import { ControlMessage } from './FormField'
 import { assignRef, cx, type ForceState, type NativeAttrs } from './types'
+
+/** The ring's size. A circle needs 2px more than the 18px checkbox to look as large. */
+const RING = 20
 import { useControllableState } from './useControllableState'
 
 export interface RadioButtonProps {
@@ -20,8 +24,14 @@ export interface RadioButtonProps {
   withLabel?: boolean
   /** Blocks interaction and dims the control. */
   disabled?: boolean
-  /** Marks the control invalid: red ring and `aria-invalid`. */
+  /** Marks the control invalid: a red ring, selected or not, and `aria-invalid` on the input. */
   error?: boolean
+  /**
+   * A line under the label: what the option means, or why it is unavailable.
+   * Shown with a visible label, and linked to the radio with `aria-describedby`.
+   * An error belongs to the group (Radio Group's `errorText`), not to one option.
+   */
+  description?: ReactNode
   /** @internal Freezes a hover, focus or pressed look for the docs gallery. */
   forceState?: ForceState
 }
@@ -35,15 +45,21 @@ export default function RadioButton({
   withLabel = true,
   disabled = false,
   error = false,
+  description,
   forceState,
   className,
   style,
   id,
   ref,
+  'aria-describedby': describedByProp,
   ...rest
 }: RadioButtonProps & NativeAttrs<'input', RadioButtonProps>) {
   const generated = useId()
   const inputId = id ?? generated
+  // The line under the label, only beside a visible label it can line up with.
+  const withMessage = withLabel && description !== undefined && description !== null && description !== ''
+  const messageId = `${inputId}-msg`
+  const describedBy = [describedByProp, withMessage ? messageId : undefined].filter(Boolean).join(' ') || undefined
   const groupName = name ?? inputId
   const input = useRef<HTMLInputElement | null>(null)
   const controlled = selected !== undefined
@@ -64,19 +80,20 @@ export default function RadioButton({
     return () => document.removeEventListener('change', onGroupChange)
   }, [controlled, groupName, setSelected])
 
-  const resting = isSelected
-    ? 'var(--primary)'
-    : error ? 'var(--error)' : 'var(--border-control-strong)'
+  // In error the ring is red whether or not the radio is selected; the dot
+  // stays blue. A selected radio used to lose the red, so a group in error
+  // read as one right option among wrong ones.
+  const ring = error ? 'var(--error)' : isSelected ? 'var(--primary)' : 'var(--border-control)'
 
   // Colours only. Hover, focus and pressed are CSS (.inspera-control in
   // runtime.css), so the dot responds to a real pointer and a real Tab.
   const outer: CSSProperties & Record<string, string | number> = {
-    '--inspera-indicator-border': resting,
+    '--inspera-indicator-border': ring,
     '--inspera-indicator-bg': 'var(--white)',
-    '--inspera-indicator-border-hover': isSelected || error ? resting : 'var(--primary)',
-    '--inspera-indicator-bg-hover': 'var(--primary-hover-overlay)',
-    width: 20,
-    height: 20,
+    '--inspera-indicator-border-hover': isSelected || error ? ring : 'var(--primary)',
+    '--inspera-indicator-bg-hover': error ? 'var(--error-surface)' : 'var(--primary-hover-overlay)',
+    width: RING,
+    height: RING,
     borderRadius: 'var(--radius-pill)',
     borderWidth: 'var(--border-width-strong)',
     borderStyle: 'solid',
@@ -87,11 +104,12 @@ export default function RadioButton({
     transition: 'all var(--duration-fast) var(--easing-standard)',
   }
 
-  return (
+  const control = (
     <label
       htmlFor={inputId}
-      className={cx('inspera inspera-control', className)}
-      data-force-state={forceState}
+      // With a description, the outer wrapper takes the consumer's class and style.
+      className={cx('inspera inspera-control', withMessage ? undefined : className)}
+      data-force-state={disabled ? undefined : forceState}
       data-disabled={disabled || undefined}
       style={{
         display: 'inline-flex',
@@ -103,7 +121,7 @@ export default function RadioButton({
         color: 'var(--text-primary)',
         fontFamily: 'var(--font-sans)',
         fontSize: 16,
-        ...style,
+        ...(withMessage ? null : style),
       }}
     >
       <input
@@ -118,6 +136,7 @@ export default function RadioButton({
         disabled={disabled}
         aria-label={withLabel ? undefined : label}
         aria-invalid={error || undefined}
+        aria-describedby={describedBy}
         onChange={() => setSelected(true)}
         style={{ position: 'absolute', opacity: 0, width: 0, height: 0 }}
         {...rest}
@@ -129,5 +148,14 @@ export default function RadioButton({
       </span>
       {withLabel && <span>{label}</span>}
     </label>
+  )
+
+  if (!withMessage) return control
+  return (
+    <div className={cx('inspera', className)} style={{ display: 'inline-flex', flexDirection: 'column', fontFamily: 'var(--font-sans)', ...style }}>
+      {control}
+      {/* -4 leaves 4px under the label's padded row; the indent is the ring plus its gap. */}
+      <ControlMessage id={messageId} error={false} indent={RING + 8} offset={-4}>{description}</ControlMessage>
+    </div>
   )
 }

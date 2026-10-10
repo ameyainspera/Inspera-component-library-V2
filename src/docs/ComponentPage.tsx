@@ -1,14 +1,18 @@
-import { type CSSProperties, type ReactNode, useRef, useState } from 'react'
+import { type CSSProperties, type ReactNode, useLayoutEffect, useRef, useState } from 'react'
 import { components } from '../data/components'
 import { componentApi } from '../data/component-api.generated'
 import { componentDocs } from '../data/component-docs.generated'
 import { recipes } from '../data/recipes'
-import { Select, Toggle } from '../components/inspera'
+import { componentsPackage } from '../data/distribution'
+import { Select, Toggle, SegmentedControl as ViewSwitch } from '../components/inspera'
+import { srOnly } from '../components/inspera/types'
 import {
-  type ControlDef, type GalleryCell, registry, galleryFor, renderLive, renderStill, snippetFor,
+  type ControlDef, type GalleryCell, type Lock, STATE_KEYS, effectiveValues, galleryFor, locksFor, registry, renderLive,
+  renderStill, snippetFor,
 } from './registry'
+import { contexts, SceneFrame, sceneFor, sceneLocks, variantNotes } from './contexts'
 import {
-  Panel, SectionTitle, SegmentedControl, PreviewCanvas, CodeBlock, CodeTabs,
+  Panel, SectionTitle, SegmentedControl, PreviewCanvas, CodeBlock, CodeTabs, CollapsibleSection, InfoTip,
 } from './primitives'
 
 /**
@@ -26,7 +30,7 @@ function aiPrompt(name: string, doc: string): string {
 Rules:
 - Use the props exactly as named. Prop names are camelCase and case-sensitive;
   React silently ignores an unknown prop, so a wrong case renders the default
-  variant with no error. Variant *values* are Capitalized.
+  variant with no error. Variant *values* are Capitalised.
 - If you cannot install or import the package, do NOT substitute another UI
   library and do NOT style it yourself. Use the HTML and CSS under "Without the
   package" verbatim - that section is the component, not an approximation.
@@ -49,6 +53,12 @@ const CODE_FORMS = [
   { id: 'css', label: 'HTML + CSS' },
 ]
 
+/** Who each code form is for, shown at the foot of its code block. */
+const REACT_NOTE = componentsPackage.published
+  ? 'For React projects that use the package.'
+  : 'For React projects, once the package is published.'
+const HTML_NOTE = 'For projects that cannot use the package: another framework, an AI builder or a plain HTML page.'
+
 /**
  * The recipe's tokens and CSS as one pasteable block - the same content the
  * spec doc carries, so a reader who takes it from here and a model that takes
@@ -64,6 +74,11 @@ function recipeCss(slug: string): string {
   // icon rendered as its own name.
   const fences = [...doc.slice(from).matchAll(/```css\n([\s\S]*?)```/g)].map((m) => m[1].trimEnd())
   return fences.length > 0 ? fences.join('\n\n') : recipe.css
+}
+
+/** Prop descriptions are written in Markdown; show their `code` spans as code. */
+function withCode(text: string): ReactNode {
+  return text.split('`').map((part, i) => (i % 2 ? <code key={i} style={{ fontFamily: 'var(--font-mono)', fontSize: 13 }}>{part}</code> : part))
 }
 
 /** Names a copy block and says plainly when to reach for it. */
@@ -89,9 +104,66 @@ function BlockLabel({ badge, title, detail }: { badge?: string; title: string; d
           </span>
         )}
       </div>
-      <p style={{ margin: '4px 0 0', fontSize: 13, lineHeight: 1.5, color: 'var(--gray-600)', maxWidth: 720 }}>
+      <p style={{ margin: '4px 0 0', fontSize: 13, lineHeight: 1.5, color: 'var(--text-secondary)', maxWidth: 720 }}>
         {detail}
       </p>
+    </div>
+  )
+}
+
+
+/** A playground tool - Reset, Highlight. Docs chrome, so it stays quieter than the component under test. */
+function ToolButton({ icon, label, title, disabled = false, onClick }: { icon: string; label: string; title?: string; disabled?: boolean; onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      title={title}
+      disabled={disabled}
+      onClick={onClick}
+      style={{ display: 'inline-flex', alignItems: 'center', gap: 4, height: 32, padding: '0 10px', border: '1px solid var(--border-strong)', borderRadius: 'var(--radius-sm)', background: 'var(--surface)', color: 'var(--gray-800)', fontSize: 13, cursor: disabled ? 'default' : 'pointer', opacity: disabled ? 0.5 : 1, flexShrink: 0 }}
+    >
+      <span className="material-symbols-outlined" style={{ fontSize: 16 }} aria-hidden>{icon}</span>
+      {label}
+    </button>
+  )
+}
+
+const VIEWS = [
+  { value: 'component', label: 'Component' },
+  { value: 'context', label: 'In context' },
+]
+
+/** In context, the widest the playground grows past the page column. */
+const PLAYGROUND_MAX = 1280
+/** Below this width the scene and the props stack; side by side the scene would get too narrow. */
+const SIDE_BY_SIDE_MIN = 1040
+/** The props rail beside a scene. */
+const RAIL = 288
+
+/**
+ * Why the chosen variant fits the scene, from `usage.variants`. With no line
+ * for the values shown, the component's purpose stands in, in the same form.
+ */
+function SceneNotes({ slug, values, name, purpose, action }: {
+  slug: string
+  values: Record<string, string>
+  name: string
+  purpose: string
+  action: ReactNode
+}) {
+  const matched = variantNotes(slug, values)
+  const notes = matched.length > 0 ? matched : [{ label: name, when: purpose }]
+  return (
+    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12, marginTop: 12 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 6, flex: '1 1 320px', minWidth: 0 }}>
+        {notes.map((n) => (
+          <p key={n.label} style={{ display: 'flex', gap: 8, margin: 0, fontSize: 14, lineHeight: 1.5, color: 'var(--gray-800)', maxWidth: 720 }}>
+            <span className="material-symbols-outlined" style={{ fontSize: 18, color: 'var(--primary)', marginTop: 1 }} aria-hidden>lightbulb</span>
+            <span><strong style={{ fontWeight: 600 }}>{n.label}</strong> - {n.when}</span>
+          </p>
+        ))}
+      </div>
+      {action}
     </div>
   )
 }
@@ -103,38 +175,77 @@ const groupLabel: CSSProperties = {
   fontWeight: 600,
   letterSpacing: 0.8,
   textTransform: 'uppercase',
-  color: 'var(--gray-600)',
+  color: 'var(--text-secondary)',
 }
 
-/** One control, drawn to fit its type: a switch, a row of options, or a menu. */
-function Control({ def, value, dflt, onChange }: { def: ControlDef; value: string; dflt: string; onChange: (v: string) => void }) {
+/**
+ * One control, drawn to fit its type: a switch, a row of options, or a menu.
+ * It carries no visible name of its own - the property sheet row does.
+ */
+function Control({ def, value, dflt, lock, onChange }: { def: ControlDef; value: string; dflt: string; lock?: Lock; onChange: (v: string) => void }) {
+  // A locked control shows the value it is held at, greyed out; its reason is
+  // an info tip, beside the switch or beside the row name.
+  const shownValue = lock ? lock.value : value
   if (isBool(def)) {
     return (
-      <Toggle
-        label={def.label}
-        size="Small"
-        checked={value === 'true'}
-        onChange={(on) => onChange(on ? 'true' : 'false')}
-      />
+      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 2 }}>
+        <Toggle
+          label={def.label}
+          size="Small"
+          checked={shownValue === 'true'}
+          disabled={Boolean(lock)}
+          onChange={(on) => onChange(on ? 'true' : 'false')}
+          // The library's 16px label outweighed every other control in the
+          // sheet; 14px and a 32px line match the option buttons beside it.
+          style={{ fontSize: 14, minHeight: 32 }}
+        />
+        {lock && <InfoTip label={def.label} text={lock.reason} />}
+      </span>
     )
   }
-  if (def.options.length > 5) {
+  // A menu only for long lists. Each row has the panel's full width, so up to
+  // eight options fit as buttons - every choice visible and one click away.
+  if (def.options.length > 8) {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-        <span style={{ fontSize: 12, fontWeight: 600, letterSpacing: 0.4, textTransform: 'uppercase', color: 'var(--muted-foreground)' }}>
-          {def.label}
-        </span>
+      <div style={{ width: 240, maxWidth: '100%' }}>
         <Select
           label={def.label}
           showLabel={false}
           options={def.options.map((o) => ({ value: o, label: o === dflt ? `${o} (default)` : o }))}
-          value={value}
+          value={shownValue}
+          disabled={Boolean(lock)}
           onChange={onChange}
         />
       </div>
     )
   }
-  return <SegmentedControl label={def.label} options={def.options} value={value} defaultValue={dflt} onChange={onChange} />
+  return <SegmentedControl label={def.label} showLabel={false} options={def.options} value={shownValue} defaultValue={dflt} disabled={Boolean(lock)} onChange={onChange} />
+}
+
+/**
+ * A line of the property sheet: the name on the left, its controls on the
+ * right, as in Figma's properties panel. Every row shares the name column, so
+ * controls line up down the sheet; on a narrow panel the controls wrap below.
+ */
+function PropRow({ label, info, height = 32, children }: { label: string; info?: string; height?: number; children: ReactNode }) {
+  return (
+    <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', columnGap: 16, rowGap: 4 }}>
+      <span style={{ flex: '0 0 112px', display: 'flex', alignItems: 'center', gap: 2, minHeight: height, fontSize: 13, fontWeight: 600, color: 'var(--gray-700)' }}>
+        {label}
+        {info && <InfoTip label={label} text={info} />}
+      </span>
+      <div style={{ flex: '1 1 320px', minWidth: 0 }}>{children}</div>
+    </div>
+  )
+}
+
+/** On/off props in fixed columns, so the Options and States rows align with each other. */
+function SwitchGrid({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <div role="group" aria-label={label} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(170px, 1fr))', columnGap: 16 }}>
+      {children}
+    </div>
+  )
 }
 
 /** A gallery cell: the component, its label, and a way to open it in the playground. */
@@ -168,7 +279,7 @@ function Cell({
           ...(floating ? { overflow: 'visible' } : { overflowX: 'auto' }),
         }}
       >
-        {renderStill(slug, cell.values)}
+        {renderStill(slug, effectiveValues(slug, cell.values))}
       </div>
       {!bare && (
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, minHeight: 24 }}>
@@ -184,8 +295,8 @@ function Cell({
 function SimulatedTag() {
   return (
     <span
-      title="Frozen for display. In a real app this look comes from the pointer or keyboard; it is not a prop."
-      style={{ fontSize: 10, fontWeight: 600, letterSpacing: 0.4, textTransform: 'uppercase', color: 'var(--gray-600)', background: 'var(--gray-100)', borderRadius: 'var(--radius-xs)', padding: '1px 5px' }}
+      title="Preview only. In use, this state comes from the mouse or keyboard."
+      style={{ fontSize: 10, fontWeight: 600, letterSpacing: 0.4, textTransform: 'uppercase', color: 'var(--text-secondary)', background: 'var(--gray-100)', borderRadius: 'var(--radius-xs)', padding: '1px 5px' }}
     >
       Simulated
     </span>
@@ -219,7 +330,27 @@ export default function ComponentPage({ slug }: { slug: string }) {
   const recipe = recipes[slug]
   const [values, setValues] = useState<Record<string, string>>(entry?.defaults ?? {})
   const [form, setForm] = useState<'jsx' | 'css'>('jsx')
+  // Every component opens on the component itself. In context is a step you
+  // take from there, so it lasts while you stay on the page and is not carried
+  // to the next component.
+  const [view, setView] = useState('component')
+  const [pulse, setPulse] = useState(0)
+  // The combination whose overlay (or dismissible component) was closed in the
+  // scene. Any control change brings it back, as does Show again.
+  const [dismissedFor, setDismissedFor] = useState<string | null>(null)
   const playgroundRef = useRef<HTMLDivElement>(null)
+  // The width the docs column has to give, for the side-by-side layout.
+  const [room, setRoom] = useState(0)
+  useLayoutEffect(() => {
+    const main = document.getElementById('docs-scroll')
+    if (!main) return
+    // The column's horizontal padding is 40px a side.
+    const measure = () => setRoom(main.clientWidth - 80)
+    measure()
+    const ro = new ResizeObserver(measure)
+    ro.observe(main)
+    return () => ro.disconnect()
+  }, [])
 
   if (!spec || !entry) {
     return <div style={{ padding: 32 }}>Component not found.</div>
@@ -233,13 +364,40 @@ export default function ComponentPage({ slug }: { slug: string }) {
     playgroundRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 
+  // What the preview, the scene and the code show: the chosen values, with any
+  // control that another one rules out held at its locked value. In context,
+  // the scene may rule out a control it cannot show too, with its reason.
+  const hasScenes = Boolean(contexts[slug])
+  const inContext = hasScenes && view === 'context'
+  const held = effectiveValues(slug, values)
+  const heldByScene = inContext ? sceneLocks(slug, held) : {}
+  const locks = { ...locksFor(slug, values), ...heldByScene }
+  const shown = { ...held, ...Object.fromEntries(Object.entries(heldByScene).map(([key, lock]) => [key, lock.value])) }
+  const combination = JSON.stringify(shown)
+  const dismissed = dismissedFor === combination
+
+  const scene = inContext ? sceneFor(slug, shown) : undefined
+  // In context, the playground takes the docs column's full width, so the scene
+  // and the props sit side by side - every change in view without scrolling.
+  // Below that width it stacks, as the component view does.
+  const playgroundWidth = Math.min(room, PLAYGROUND_MAX)
+  const sideBySide = Boolean(scene) && playgroundWidth >= SIDE_BY_SIDE_MIN
+
   const controls = Object.entries(entry.controls)
+  // The sheet groups switches the way the gallery below does: what the
+  // component shows (Options), then the state it is in (States).
   const choices = controls.filter(([, c]) => c.group !== 'preview' && !isBool(c))
-  const switches = controls.filter(([, c]) => c.group !== 'preview' && isBool(c))
+  const options = controls.filter(([key, c]) => c.group !== 'preview' && isBool(c) && !STATE_KEYS.includes(key))
+  const states = controls.filter(([key, c]) => c.group !== 'preview' && isBool(c) && STATE_KEYS.includes(key))
   const previews = controls.filter(([, c]) => c.group === 'preview')
+  const control = ([key, def]: [string, ControlDef]) => (
+    <Control key={key} def={def} value={values[key]} dflt={entry.defaults[key]} lock={locks[key]} onChange={(v) => set(key, v)} />
+  )
 
   const gallery = galleryFor(slug)
   const matrix = gallery.matrix
+  const previewCount = (matrix ? matrix.rowOptions.length * matrix.cols.length : 0)
+    + gallery.sections.reduce((n, section) => n + section.cells.length, 0)
   const cellWidth = layout.cell ?? 220
   const cellHeight = layout.cellHeight ?? 80
   // Entries that reserve height do so for a panel that opens inside the cell.
@@ -254,6 +412,99 @@ export default function ComponentPage({ slug }: { slug: string }) {
     gap: 16,
   }
 
+  const sheet = (choices.length > 0 || options.length > 0 || states.length > 0 || previews.length > 0) && (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+      {(choices.length > 0 || options.length > 0 || states.length > 0) && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, paddingBottom: 12, borderBottom: '1px solid var(--border)' }}>
+            <h3 style={{ margin: 0, fontSize: 15, fontWeight: 600, color: 'var(--gray-900)' }}>Props</h3>
+            <ToolButton
+              icon="restart_alt"
+              label="Reset"
+              title={changed ? 'Reset to the default props' : 'The props are at their defaults'}
+              disabled={!changed}
+              onClick={() => setValues(entry.defaults)}
+            />
+          </div>
+          {choices.map(([key, def]) => (
+            <PropRow key={key} label={def.label} info={locks[key]?.reason} height={def.options.length > 8 ? 40 : 32}>
+              {control([key, def])}
+            </PropRow>
+          ))}
+          {options.length > 0 && (
+            <PropRow label="Options">
+              <SwitchGrid label="Options">{options.map(control)}</SwitchGrid>
+            </PropRow>
+          )}
+          {states.length > 0 && (
+            <PropRow label="States">
+              <SwitchGrid label="States">{states.map(control)}</SwitchGrid>
+            </PropRow>
+          )}
+        </div>
+      )}
+      {previews.length > 0 && (
+        <div style={{ paddingTop: 16, borderTop: '1px dashed var(--border-strong)' }}>
+          {previews.map(([key, def]) => (
+            <PropRow
+              key={key}
+              label="Interaction"
+              info={locks[key]?.reason ?? 'Shows a state that normally needs the mouse or keyboard, such as hover or focus. Preview only: it does not change the code.'}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 10 }}>
+                {control([key, { ...def, label: 'Interaction' }])}
+                <SimulatedTag />
+              </div>
+            </PropRow>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+
+  const notes = scene && (
+    <SceneNotes
+      slug={slug}
+      values={shown}
+      name={spec.name}
+      purpose={spec.purpose}
+      action={
+        <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
+          {dismissed && (
+            <ToolButton
+              icon="replay"
+              label="Show again"
+              title="Bring back what you closed in the scene"
+              onClick={() => {
+                setDismissedFor(null)
+              }}
+            />
+          )}
+          <ToolButton
+            icon="center_focus_strong"
+            label="Highlight"
+            title="Briefly highlight the component in the scene"
+            onClick={() => setPulse((n) => n + 1)}
+          />
+        </div>
+      }
+    />
+  )
+
+  // Full width and never clipped: a scene is a slice of a page, and an open
+  // panel inside it must stay whole. It has its own frame, so it sits on the
+  // panel without the preview canvas around it.
+  const frame = scene && (
+    <SceneFrame
+      slug={slug}
+      name={spec.name}
+      values={shown}
+      pulse={pulse}
+      dismissed={dismissed}
+      onDismiss={() => setDismissedFor(combination)}
+    />
+  )
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 24, width: '100%', maxWidth: 960 }}>
       {/* Header */}
@@ -265,106 +516,104 @@ export default function ComponentPage({ slug }: { slug: string }) {
         <p style={{ margin: 0, fontSize: 16, color: 'var(--muted-foreground)', maxWidth: 640 }}>{spec.purpose}</p>
       </header>
 
-      {/* Playground: live preview + controls */}
-      <div ref={playgroundRef} style={{ scrollMarginTop: 16 }}>
+      {/* Playground: live preview + controls. Side by side in context, it
+          widens past the page column, centred on it. */}
+      <div
+        ref={playgroundRef}
+        style={{ scrollMarginTop: 16, ...(sideBySide ? { width: playgroundWidth, alignSelf: 'center' } : null) }}
+      >
         <Panel>
-          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16 }}>
-            <SectionTitle sub="Change the props, then use the live component. The code below always builds exactly what is shown.">Playground</SectionTitle>
-            {changed && (
-              <button
-                type="button"
-                onClick={() => setValues(entry.defaults)}
-                style={{ display: 'inline-flex', alignItems: 'center', gap: 4, height: 32, padding: '0 10px', border: '1px solid var(--border-strong)', borderRadius: 'var(--radius-sm)', background: 'var(--surface)', color: 'var(--gray-800)', fontSize: 13, cursor: 'pointer', flexShrink: 0 }}
+          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
+            {/* The header holds only what the whole panel is about: its name and
+                which view it shows. Tools sit next to what they act on - Highlight
+                under the scene, Reset on the props. */}
+            <div style={{ flex: '1 1 320px', minWidth: 0 }}>
+              <SectionTitle
+                sub={inContext
+                  ? 'Each variant where it is used in Inspera.'
+                  : 'Change the props to update the preview and the code below.'}
               >
-                <span className="material-symbols-outlined" style={{ fontSize: 16 }} aria-hidden>restart_alt</span>
-                Reset
-              </button>
-            )}
-          </div>
-          <PreviewCanvas contentWidth={layout.width} minHeight={layout.minHeight} align={layout.align} floating={Boolean(layout.minHeight)}>
-            {/* Remounted per combination, so starting values (defaultValue,
-                defaultOpen) apply every time a control moves. */}
-            <div key={JSON.stringify(values)} style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-              {renderLive(slug, values)}
+                Playground
+              </SectionTitle>
             </div>
-          </PreviewCanvas>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 20, marginTop: 20 }}>
-            {(choices.length > 0 || switches.length > 0) && (
-              <div>
-                <div style={{ ...groupLabel, marginBottom: 12 }}>Props</div>
-                {choices.length > 0 && (
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 20 }}>
-                    {choices.map(([key, def]) => (
-                      <Control key={key} def={def} value={values[key]} dflt={entry.defaults[key]} onChange={(v) => set(key, v)} />
-                    ))}
-                  </div>
-                )}
-                {switches.length > 0 && (
-                  <div style={{ display: 'flex', flexWrap: 'wrap', columnGap: 24, marginTop: choices.length > 0 ? 12 : 0 }}>
-                    {switches.map(([key, def]) => (
-                      <Control key={key} def={def} value={values[key]} dflt={entry.defaults[key]} onChange={(v) => set(key, v)} />
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
-            {previews.length > 0 && (
-              <div style={{ paddingTop: 16, borderTop: '1px dashed var(--border-strong)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-                  <span style={groupLabel}>Preview only</span>
-                  <SimulatedTag />
-                </div>
-                <p style={{ margin: '0 0 12px', fontSize: 13, color: 'var(--muted-foreground)', maxWidth: 640 }}>
-                  Freezes a look that normally comes from the pointer or keyboard, so it can be inspected. It is not a prop and never appears in the code.
-                </p>
-                {previews.map(([key, def]) => (
-                  <Control key={key} def={{ ...def, label: 'State' }} value={values[key]} dflt={entry.defaults[key]} onChange={(v) => set(key, v)} />
-                ))}
-              </div>
+            {hasScenes && (
+              <ViewSwitch
+                label="Preview"
+                size="Small"
+                items={VIEWS}
+                value={view}
+                onChange={setView}
+              />
             )}
           </div>
+          {scene ? (
+            sideBySide ? (
+              <div style={{ display: 'grid', gridTemplateColumns: `minmax(0, 1fr) ${RAIL}px`, gap: 24, alignItems: 'start' }}>
+                <div style={{ minWidth: 0 }}>
+                  {frame}
+                  {notes}
+                </div>
+                {/* The props stay in view beside a scene taller than the window. */}
+                <aside aria-label="Props" style={{ position: 'sticky', top: 16, maxHeight: 'calc(100vh - 92px)', overflowY: 'auto', paddingRight: 4 }}>
+                  {sheet}
+                </aside>
+              </div>
+            ) : (
+              <>
+                {frame}
+                {notes}
+                <div style={{ marginTop: 24 }}>{sheet}</div>
+              </>
+            )
+          ) : (
+            <>
+              <PreviewCanvas contentWidth={layout.width} minHeight={layout.minHeight} align={layout.align} floating={Boolean(layout.minHeight)}>
+                {/* Remounted per combination, so starting values (defaultValue,
+                    defaultOpen) apply every time a control moves. */}
+                <div key={combination} style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+                  {renderLive(slug, shown)}
+                </div>
+              </PreviewCanvas>
+              <div style={{ marginTop: 24 }}>{sheet}</div>
+            </>
+          )}
 
           <div style={{ marginTop: 20 }}>
             {recipe ? (
               <>
-                <p style={{ margin: '0 0 8px', fontSize: 13, color: 'var(--muted-foreground)' }}>
-                  {form === 'jsx'
-                    ? 'For the product codebase, once the package is available.'
-                    : 'For anywhere you cannot install the package - another stack, an AI builder, a plain HTML page.'}
-                </p>
                 {form === 'jsx' ? (
                   <CodeBlock
-                    code={snippetFor(slug, values)}
+                    code={snippetFor(slug, shown)}
                     language="tsx"
                     copyLabel="Copy JSX"
                     headerLeft={<CodeTabs value={form} onChange={(v) => setForm(v as 'jsx' | 'css')} options={CODE_FORMS} />}
+                    footer={REACT_NOTE}
                   />
                 ) : (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                     <CodeBlock
-                      code={recipe.markup(values)}
+                      code={recipe.markup(shown)}
                       language="html"
                       copyLabel="Copy HTML"
                       maxHeight={0}
                       headerLeft={<CodeTabs value={form} onChange={(v) => setForm(v as 'jsx' | 'css')} options={CODE_FORMS} />}
                     />
-                    <CodeBlock code={recipeCss(slug)} language="css" copyLabel="Copy CSS" />
+                    <CodeBlock code={recipeCss(slug)} language="css" copyLabel="Copy CSS" footer={HTML_NOTE} />
                   </div>
                 )}
               </>
             ) : (
-              <CodeBlock code={snippetFor(slug, values)} language="tsx" copyLabel="Copy JSX" />
+              <CodeBlock code={snippetFor(slug, shown)} language="tsx" copyLabel="Copy JSX" footer={REACT_NOTE} />
             )}
           </div>
         </Panel>
       </div>
 
       {/* Variants & states */}
-      <Panel>
-        <SectionTitle sub="Every variant and state, derived from the playground's controls. Open any of them in the playground to try it.">
-          Variants &amp; states
-        </SectionTitle>
+      <CollapsibleSection
+        title="Variants & states"
+        summary={`${previewCount} previews of every variant and state. Open one in the playground to try it.`}
+      >
         <div style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
           {matrix && (
             <div>
@@ -420,16 +669,25 @@ export default function ComponentPage({ slug }: { slug: string }) {
             </div>
           ))}
         </div>
-      </Panel>
+      </CollapsibleSection>
 
       {/* Props / API */}
-      <Panel>
-        <SectionTitle sub="Derived from the component's TypeScript interface - this is the real API, not a transcription.">Props API</SectionTitle>
+      <CollapsibleSection
+        title="Props API"
+        info={`Props are the configurable properties of a component. This table lists all ${props.length} props ${spec.name} accepts, with each one's type, default value and description.`}
+      >
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
             <thead>
               <tr style={{ textAlign: 'left', color: 'var(--muted-foreground)' }}>
-                <th style={{ padding: '8px 12px', borderBottom: '2px solid var(--border)', fontWeight: 600 }}>Prop</th>
+                <th style={{ padding: '8px 12px', borderBottom: '2px solid var(--border)', fontWeight: 600 }}>
+                  {props.some((p) => p.required) ? (
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 2 }}>
+                      Prop
+                      <InfoTip label="required props" text="Props marked * are required. The component needs them to work." />
+                    </span>
+                  ) : 'Prop'}
+                </th>
                 <th style={{ padding: '8px 12px', borderBottom: '2px solid var(--border)', fontWeight: 600 }}>Type</th>
                 <th style={{ padding: '8px 12px', borderBottom: '2px solid var(--border)', fontWeight: 600 }}>Default</th>
                 <th style={{ padding: '8px 12px', borderBottom: '2px solid var(--border)', fontWeight: 600 }}>Description</th>
@@ -440,11 +698,16 @@ export default function ComponentPage({ slug }: { slug: string }) {
                 <tr key={p.name} style={{ verticalAlign: 'top' }}>
                   <td style={{ padding: '10px 12px', borderBottom: '1px solid var(--border)', fontFamily: 'var(--font-mono)', fontSize: 13, color: 'var(--primary)', whiteSpace: 'nowrap' }}>
                     {p.name}
-                    {p.required && <span style={{ color: 'var(--error)', marginLeft: 2 }} title="Required">*</span>}
+                    {p.required && (
+                      <>
+                        <span aria-hidden style={{ color: 'var(--error)', marginLeft: 2 }}>*</span>
+                        <span style={srOnly}> (required)</span>
+                      </>
+                    )}
                   </td>
                   <td style={{ padding: '10px 12px', borderBottom: '1px solid var(--border)', fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--gray-700)' }}>{p.type}</td>
                   <td style={{ padding: '10px 12px', borderBottom: '1px solid var(--border)', fontFamily: 'var(--font-mono)', fontSize: 12 }}>{p.default ?? '-'}</td>
-                  <td style={{ padding: '10px 12px', borderBottom: '1px solid var(--border)', color: 'var(--gray-700)' }}>{p.description ?? ''}</td>
+                  <td style={{ padding: '10px 12px', borderBottom: '1px solid var(--border)', color: 'var(--gray-700)' }}>{withCode(p.description ?? '')}</td>
                 </tr>
               ))}
             </tbody>
@@ -452,10 +715,10 @@ export default function ComponentPage({ slug }: { slug: string }) {
         </div>
         {api?.native && (
           <p style={{ margin: '12px 0 0', fontSize: 13, color: 'var(--muted-foreground)', maxWidth: 720 }}>
-            Also accepts any native <code style={{ fontFamily: 'var(--font-mono)' }}>&lt;{api.native}&gt;</code> attribute - <code style={{ fontFamily: 'var(--font-mono)' }}>id</code>, <code style={{ fontFamily: 'var(--font-mono)' }}>name</code>, <code style={{ fontFamily: 'var(--font-mono)' }}>aria-*</code>, event handlers, <code style={{ fontFamily: 'var(--font-mono)' }}>ref</code> - forwarded to it. <code style={{ fontFamily: 'var(--font-mono)' }}>className</code> and <code style={{ fontFamily: 'var(--font-mono)' }}>style</code> go on the outermost element.
+            Also accepts any native <code style={{ fontFamily: 'var(--font-mono)' }}>&lt;{api.native}&gt;</code> attribute, such as <code style={{ fontFamily: 'var(--font-mono)' }}>id</code>, <code style={{ fontFamily: 'var(--font-mono)' }}>name</code>, <code style={{ fontFamily: 'var(--font-mono)' }}>aria-*</code>, event handlers, <code style={{ fontFamily: 'var(--font-mono)' }}>ref</code>. <code style={{ fontFamily: 'var(--font-mono)' }}>className</code> and <code style={{ fontFamily: 'var(--font-mono)' }}>style</code> apply to the outermost element.
           </p>
         )}
-      </Panel>
+      </CollapsibleSection>
 
       {/* Tokens + Accessibility side by side */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 24 }}>
@@ -504,20 +767,20 @@ export default function ComponentPage({ slug }: { slug: string }) {
 
       {/* AI copy panel. Each block's copy affordance lives in the CodeBlock header. */}
       <Panel style={{ background: 'linear-gradient(180deg, var(--canvas-bg), var(--surface))', borderColor: 'color-mix(in srgb, var(--primary) 25%, transparent)' }}>
-        <SectionTitle sub="Two forms of the same content. If you are unsure, copy the first one.">AI copy blocks</SectionTitle>
+        <SectionTitle sub="The same spec in two forms. If you are not sure which you need, copy the prompt.">AI copy blocks</SectionTitle>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
           <div>
             <BlockLabel
               badge="Start here"
               title="Generation prompt"
-              detail="Paste into a chat - Claude, ChatGPT, Cursor, v0, Lovable, Bolt - then describe what you want. Contains the full spec below plus the rules that stop the model substituting its own styling."
+              detail="Paste it into an AI tool such as Claude, ChatGPT, Cursor, v0, Lovable or Bolt, then describe what you want. It holds the full spec plus rules that stop the model using its own styling."
             />
             <CodeBlock code={aiPrompt(spec.name, doc)} language="prompt" copyLabel="Copy prompt" />
           </div>
           <div>
             <BlockLabel
               title="Canonical spec"
-              detail="The same spec without the instructions. Use it when the rules are already in place - a rules file, a system prompt, or the project-wide spec from Integrate."
+              detail="The spec without the rules. Use it when your tool already has them, for example from a rules file, a system prompt or the full AI spec."
             />
             <CodeBlock code={doc} language="markdown" copyLabel="Copy spec" />
           </div>
@@ -527,10 +790,10 @@ export default function ComponentPage({ slug }: { slug: string }) {
       {/* Deprecated aliases */}
       {spec.deprecatedAliases.length > 0 && (
         <Panel>
-          <SectionTitle sub="These legacy names map to this canonical component. Never use them in new work.">Deprecated aliases</SectionTitle>
+          <SectionTitle sub="Old names for this component. Do not use them in new work.">Deprecated aliases</SectionTitle>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
             {spec.deprecatedAliases.map((a) => (
-              <span key={a} style={{ fontSize: 13, color: 'var(--gray-600)', background: 'var(--gray-100)', padding: '4px 10px', borderRadius: 'var(--radius-pill)', textDecoration: 'line-through' }}>{a}</span>
+              <span key={a} style={{ fontSize: 13, color: 'var(--text-secondary)', background: 'var(--gray-100)', padding: '4px 10px', borderRadius: 'var(--radius-pill)', textDecoration: 'line-through' }}>{a}</span>
             ))}
           </div>
         </Panel>

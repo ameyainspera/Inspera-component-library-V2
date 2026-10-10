@@ -234,7 +234,7 @@ export default function CommandPalette({
   if (embedded) return content
 
   return (
-    <Portal>
+    <Portal modal>
       <div
         {...scrim}
         className="inspera"

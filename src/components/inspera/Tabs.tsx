@@ -77,7 +77,7 @@ export default function Tabs({
     padding: contained ? 4 : 0,
     borderBottom: contained ? 'none' : 'var(--border-width-default) solid var(--border-strong)',
     background: contained ? 'var(--gray-100)' : 'transparent',
-    borderRadius: contained ? 'var(--radius-md)' : 0,
+    borderRadius: contained ? 'var(--radius-sm)' : 0,
     width: fullWidth ? '100%' : 'auto',
   }
 
@@ -104,7 +104,7 @@ export default function Tabs({
           borderRight: 'none',
           borderLeft: 'none',
           background: contained && on ? 'var(--white)' : 'transparent',
-          borderRadius: contained ? 'var(--radius-sm)' : 0,
+          borderRadius: contained ? 'var(--radius-xs)' : 0,
           boxShadow: contained && on ? 'var(--shadow-100)' : 'none',
           borderBottom: !contained ? `2px solid ${on ? 'var(--primary)' : 'transparent'}` : 'none',
           color: on ? 'var(--primary)' : 'var(--gray-700)',

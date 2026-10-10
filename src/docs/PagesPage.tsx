@@ -48,7 +48,7 @@ function PageView({ slug, onNavigate }: { slug: string; onNavigate: (hash: strin
       <div style={{ padding: 40, fontFamily: 'var(--font-sans)', color: 'var(--muted-foreground)' }}>
         <p style={{ marginBottom: 16 }}>That page does not exist yet.</p>
         <a href="#/pages" onClick={followLink(onNavigate, '#/pages')} style={{ color: 'var(--primary)', fontSize: 14 }}>
-          Back to Prototyping Kits
+          Back to Screen templates
         </a>
       </div>
     )
@@ -83,7 +83,7 @@ function PageView({ slug, onNavigate }: { slug: string; onNavigate: (hash: strin
             }}
           >
             <span className="material-symbols-outlined" style={{ fontSize: 18 }} aria-hidden>arrow_back</span>
-            Prototyping Kits
+            Screen templates
           </a>
           <div style={{ display: 'flex', flexDirection: 'column', minWidth: 0 }}>
             <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--gray-900)' }}>{page.name}</span>
@@ -230,7 +230,7 @@ function DownloadButton({ page }: { page: ExamplePage }) {
   return (
     <button
       type="button"
-      title="Download this page's code + design tokens as a single file for any AI assistant"
+      title="Download this screen's code and design tokens as one file for an AI tool"
       // The bundle builder carries the raw sources, so it loads on first use.
       onClick={() => void import('./pages/download').then((m) => m.downloadPageBundle(page))}
       {...hoverPill}
@@ -390,7 +390,7 @@ function ThumbnailPlaceholder() {
         width: '100%', aspectRatio: `${THUMB_WIDTH} / ${THUMB_HEIGHT}`,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         border: '1px dashed var(--border-strong)', borderRadius: 'var(--radius-md)',
-        background: 'var(--gray-100)', color: 'var(--gray-600)',
+        background: 'var(--gray-100)', color: 'var(--text-secondary)',
       }}
     >
       <span className="material-symbols-outlined" style={{ fontSize: 40 }}>{WORK_IN_PROGRESS_ICON}</span>
@@ -399,7 +399,7 @@ function ThumbnailPlaceholder() {
 }
 
 /**
- * One prototyping-kit tile. The title is the link and stretches over the whole
+ * One screen-template tile. The title is the link and stretches over the whole
  * card (index.css), so the card is still one big target - but the Download
  * button is a sibling, not a control nested inside another control. Enter on
  * Download used to open the page as well.
@@ -465,14 +465,14 @@ const galleryOrder = [
   ...examplePages.filter((page) => page.status === 'coming-soon'),
 ]
 
-/** Gallery: one card per prototyping kit. */
+/** Gallery: one card per screen template. */
 function Gallery({ onNavigate }: { onNavigate: (hash: string) => void }) {
   const [guideOpen, setGuideOpen] = useState(false)
   return (
     <div style={{ width: '100%', maxWidth: 1080, fontFamily: 'var(--font-sans)' }}>
       <header style={{ marginBottom: 28, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16 }}>
         <div style={{ minWidth: 0 }}>
-          <h1 style={{ margin: '0 0 8px', fontSize: 28, fontWeight: 600, color: 'var(--text-primary)' }}>Prototyping Kits</h1>
+          <h1 style={{ margin: '0 0 8px', fontSize: 28, fontWeight: 600, color: 'var(--text-primary)' }}>Screen templates</h1>
           <p style={{ margin: 0, fontSize: 16, lineHeight: 1.5, color: 'var(--muted-foreground)', maxWidth: 640 }}>
             Ready-made Inspera screens you can use as a starting point. Pick the one closest to
             your idea, then change it to show what you have in mind.

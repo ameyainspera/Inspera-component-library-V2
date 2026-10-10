@@ -42,7 +42,7 @@ variant with no error at all. Variant *values* are Capitalised
 
 ### Tag
 
-Label, categorize, or filter with a removable chip. - category: `data-display`.
+Label, categorise or filter with a removable chip. - category: `data-display`.
 
 > `@inspera/components` is **not published yet**. If you cannot resolve that import, do
 > not swap in another UI library - build the markup from the HTML and CSS under
@@ -60,7 +60,7 @@ import { Tag } from '@inspera/components'
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `label` **(required)** | `string` | - | Tag text. |
-| `intent` | `'Neutral' \| 'Info' \| 'Success' \| 'Warning' \| 'Error'` | `'Neutral'` | Semantic color. |
+| `intent` | `'Neutral' \| 'Info' \| 'Success' \| 'Warning' \| 'Error'` | `'Neutral'` | Semantic colour. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Tag height. |
 | `removable` | `boolean` | `false` | Show a remove button. Pair with onRemove. |
 | `leadingIcon` | `string` | - | Optional leading icon. |
@@ -73,6 +73,15 @@ Also accepts any native `<span>` attribute (`id`, `name`, `aria-*`, `data-*`, ev
 
 **Do:** Use for filters, categories, and selections; Keep labels to 1-2 words; Provide a remove control when tags are dismissible.
 **Don't:** Do not use for status that never changes - use Badge; Do not pack long text into a tag.
+
+**Choosing a variant:**
+- `intent="Neutral"`: Labels with no judgement, such as a question's topic.
+- `intent="Info"`: A label that adds context people should notice, such as Calculator allowed.
+- `intent="Success"`: A label that confirms something, such as Reviewed on a question.
+- `intent="Warning"`: A label that asks for a second look, such as Needs review.
+- `intent="Error"`: A label for a problem with the item, such as No answer key.
+- `size="Small"`: Dense rows, such as the labels on each question in a list.
+- `removable`: Filters in use and values people chose, which they can take off again. A filter tag keeps the intent of the label it filters by.
 
 **Deprecated aliases** (do not use): `Chip`, `Pill`, `Label`
 
@@ -117,15 +126,19 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 ```css
 /* Tokens this component needs. Paste once, at `:root`. */
 :root {
-  --error:            #D32F2F;
-  --warning:          #EF6C00;
-  --info:             #0288D1;
-  --success:          #2E7D32;
   --gray-900:         #272727;
+  --blue-800:         #004080;
+  --green-800:        #106542;
+  --red-700:          #A50D0D;
+  --orange-800:       #7E5501;
   --info-surface:     #E1F5FE;
   --success-surface:  #E8F5E9;
   --warning-surface:  #FFF3E0;
   --error-surface:    #FFEBEE;
+  --info-text:        var(--blue-800);
+  --success-text:     var(--green-800);
+  --warning-text:     var(--orange-800);
+  --error-text:       var(--red-700);
   --surface-neutral:  #F0F0F0;
   --radius-pill:      9999px;
   --font-sans:        'Inter', system-ui, -apple-system, sans-serif;
@@ -157,10 +170,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 /* Neutral is written out even though it matches the base, so the class name
    stays correct if the default ever moves. */
 .inspera-tag--neutral { --tag-bg: var(--surface-neutral); --tag-fg: var(--gray-900); }
-.inspera-tag--info    { --tag-bg: var(--info-surface);    --tag-fg: var(--info); }
-.inspera-tag--success { --tag-bg: var(--success-surface); --tag-fg: var(--success); }
-.inspera-tag--warning { --tag-bg: var(--warning-surface); --tag-fg: var(--warning); }
-.inspera-tag--error   { --tag-bg: var(--error-surface);   --tag-fg: var(--error); }
+.inspera-tag--info    { --tag-bg: var(--info-surface);    --tag-fg: var(--info-text); }
+.inspera-tag--success { --tag-bg: var(--success-surface); --tag-fg: var(--success-text); }
+.inspera-tag--warning { --tag-bg: var(--warning-surface); --tag-fg: var(--warning-text); }
+.inspera-tag--error   { --tag-bg: var(--error-surface);   --tag-fg: var(--error-text); }
 
 .inspera-tag .material-symbols-outlined {
   font-size: 16px;

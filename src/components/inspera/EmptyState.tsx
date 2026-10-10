@@ -3,6 +3,7 @@ import Button from './Button'
 import { cx, type NativeAttrs } from './types'
 
 export type EmptyStateSize = 'Small' | 'Medium'
+export type EmptyStateActionIntent = 'Primary' | 'Secondary'
 
 export interface EmptyStateProps {
   /** Primary message, e.g. "No assessments yet". */
@@ -11,10 +12,16 @@ export interface EmptyStateProps {
   description?: string
   /** Material Symbols icon name. */
   icon?: string
-  /** Optional primary action label. */
+  /** Optional action label. */
   actionLabel?: string
   /** Fired when the action is activated. Only rendered when actionLabel is set. */
   onAction?: () => void
+  /**
+   * The action's emphasis. Primary when it is the main thing to do on the
+   * page; Secondary inside a panel, or beside a page that already has its own
+   * main action, so the view keeps one Primary.
+   */
+  actionIntent?: EmptyStateActionIntent
   /** Overall scale. */
   size?: EmptyStateSize
 }
@@ -25,6 +32,7 @@ export default function EmptyState({
   icon = 'inbox',
   actionLabel,
   onAction,
+  actionIntent = 'Primary',
   size = 'Medium',
   className,
   style,
@@ -74,7 +82,7 @@ export default function EmptyState({
       )}
       {actionLabel && (
         <div style={{ marginTop: 8 }}>
-          <Button label={actionLabel} intent="Primary" size={small ? 'Small' : 'Medium'} onClick={onAction} />
+          <Button label={actionLabel} intent={actionIntent} size={small ? 'Small' : 'Medium'} onClick={onAction} />
         </div>
       )}
     </div>

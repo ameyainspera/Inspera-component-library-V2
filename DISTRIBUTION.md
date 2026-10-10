@@ -11,12 +11,14 @@ This repo is both the **interactive reference site** for the Inspera Design Syst
 
 Everything below is generated or packaged from these. Nothing is maintained twice.
 
+One input comes from outside: `design-md/`, the design guide (DESIGN.md and its references) from the design system team. It says how to design a screen - the user role, existing versus new UI, hierarchy, layout and UI text - and is published exactly as received: copied byte for byte to `public/design/` and zipped with the full guide on the AI spec page. `pnpm audit:design-md` keeps it in step with the library (see the README).
+
 ## The three outputs
 
 | Output | For | Enforcement | Command |
 | --- | --- | --- | --- |
 | **npm package** `@inspera/components` | Code-based builders (Cursor, v0, Lovable, Bolt) and hand-written React | Strong - real importable components | `pnpm build:pkg` (`packages/components/`) |
-| **Portable spec** `public/llms.txt`, `llms-full.txt`, `c/<slug>.md`, `api.json`, `tokens.w3c.json`, `rules/*` | Any LLM tool (Claude, ChatGPT, paste or link) | Advisory - the model follows it | `pnpm generate` |
+| **Portable spec** `public/llms.txt`, `llms-full.txt`, `spec/*.md`, `c/<slug>.md`, `api.json`, `tokens.w3c.json`, `rules/*`, with the design guide `design/DESIGN.md` and the start-here note | Any LLM tool (Claude, ChatGPT, paste or link) | Advisory - the model follows it | `pnpm generate` |
 | **Figma Make kit** `kit/` | Figma Make | Strongest, but Make-only | `pnpm generate`, then publish in Figma (`kit/README.md`) |
 
 The package is not published yet: the `@inspera` npm scope is unclaimed (`src/data/distribution.ts` holds that status, and the Integrate page shows it).
@@ -38,12 +40,13 @@ No browser needed:
 pnpm typecheck
 pnpm verify:generated
 pnpm audit:snippets   # every playground control reaches the JSX and the gallery
-pnpm audit:pages      # prototyping kits: component lists and download bundles
+pnpm audit:pages      # screen templates: component lists and download bundles
 pnpm audit:search
 pnpm audit:ascii      # shipped text files are plain ASCII
+pnpm audit:design-md  # DESIGN.md is still in step with the library
 ```
 
-Chrome, with the dev server running for the last two:
+These need Chrome. The last two also need the dev server running:
 
 ```bash
 pnpm audit:recipes    # HTML+CSS recipes match their components element for element
@@ -52,7 +55,7 @@ pnpm audit:layout     # playground and gallery fit on every component page
 pnpm test:a11y        # axe + keyboard interactions on every component page
 ```
 
-## Honest limits
+## Limits
 
 - **npm package** works only where dependencies can be installed; the consumer wires fonts (the package README lists the imports).
 - **Portable spec** is advisory - nothing enforces it; it's the universal fallback.

@@ -1,5 +1,5 @@
 import { useId } from 'react'
-import Checkbox, { type CheckboxSize } from './Checkbox'
+import Checkbox from './Checkbox'
 import { labelStyle } from './FormField'
 import { cx, type NativeAttrs } from './types'
 import { useControllableState } from './useControllableState'
@@ -24,8 +24,6 @@ export interface CheckboxGroupProps {
   onChange?: (value: string[]) => void
   /** Layout direction. */
   orientation?: CheckboxGroupOrientation
-  /** Size of every checkbox in the group. */
-  size?: CheckboxSize
   /** Guidance shown below the options. Replaced by errorText when `error` is set. */
   helpText?: string
   /** Validation message, shown while `error` is true. */
@@ -43,7 +41,6 @@ export default function CheckboxGroup({
   defaultValue = [],
   onChange,
   orientation = 'Vertical',
-  size = 'Medium',
   helpText,
   errorText,
   error = false,
@@ -89,7 +86,6 @@ export default function CheckboxGroup({
             key={opt.value}
             label={opt.label}
             value={opt.value}
-            size={size}
             checked={selected.includes(opt.value)}
             disabled={disabled}
             error={error}

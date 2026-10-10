@@ -16,7 +16,7 @@ export interface ProgressProps {
   indeterminate?: boolean
   /** Bar height / ring diameter. */
   size?: ProgressSize
-  /** Fill color. */
+  /** Fill colour. */
   intent?: ProgressIntent
   /** Render the percentage. */
   showValue?: boolean

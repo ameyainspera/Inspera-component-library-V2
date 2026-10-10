@@ -5,7 +5,8 @@
  *   1. axe-core is injected and run over the whole page; any serious or
  *      critical violation fails the run. (moderate/minor are reported, not
  *      failed - the docs chrome carries a few and they are not the system's job
- *      to fix here.)
+ *      to fix here.) Text contrast is checked on the gallery cells alone,
+ *      and any failure there fails the run.
  *   2. A handful of targeted interaction assertions for the new stateful
  *      components, so "it renders" is not mistaken for "it works": DataGrid
  *      sort flips aria-sort, Combobox filters as you type, Toast appears then
@@ -41,8 +42,7 @@ async function runAxe(slug: string) {
     // @ts-expect-error - axe is attached to window by the injected script.
     return await window.axe.run(document, {
       resultTypes: ['violations'],
-      // Contrast needs pixels; the docs preview canvas is fine, skip the noisy
-      // rule that flags gradient backgrounds it cannot sample.
+      // Contrast runs separately, on the components alone (runContrast below).
       rules: { 'color-contrast': { enabled: false } },
     })
   })) as AxeResult
@@ -50,6 +50,40 @@ async function runAxe(slug: string) {
   const serious = result.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical')
   for (const v of serious) {
     failures.push(`${slug} | a11y ${v.impact}: ${v.id} - ${v.help} (${v.nodes.length} node(s))`)
+  }
+  await runContrast(slug)
+}
+
+type ContrastResult = { violations: { nodes: { target: string[]; any: { data?: { fgColor: string; bgColor: string; contrastRatio: number } }[] }[] }[] }
+
+/**
+ * WCAG 1.4.3 text contrast, on the gallery cells only - every variant and
+ * state of the component, none of the docs chrome around it. axe samples the
+ * pixels behind each node, so the viewport is stretched to the whole page
+ * first: a node scrolled out of view comes back unsampled and passes unseen.
+ */
+async function runContrast(slug: string) {
+  const height = await page.evaluate(() => document.documentElement.scrollHeight)
+  await page.setViewportSize({ width: 1440, height: Math.min(height, 30000) })
+  await page.waitForTimeout(100)
+  const result = (await page.evaluate(async () => {
+    // axe skips an icon glyph only once the icon font has loaded; before that,
+    // a chevron is the text "chevron_right" and fails at random.
+    await document.fonts.ready
+    // Disabled cells are left out: WCAG 1.4.3 exempts inactive controls, but
+    // axe only knows that of the disabled element itself, not of a value or
+    // unit beside it that fades with it.
+    // @ts-expect-error - axe is attached to window by the injected script.
+    return await window.axe.run({ include: [['[data-gallery-cell]']], exclude: [['[data-gallery-cell*="Disabled"] > *']] }, {
+      runOnly: { type: 'rule', values: ['color-contrast'] },
+      resultTypes: ['violations'],
+    })
+  })) as ContrastResult
+  await page.setViewportSize({ width: 1440, height: 1000 })
+  for (const node of result.violations.flatMap((v) => v.nodes)) {
+    const d = node.any[0]?.data
+    const pair = d ? `${d.fgColor} on ${d.bgColor} is ${d.contrastRatio}:1` : 'insufficient contrast'
+    failures.push(`${slug} | contrast: ${node.target.join(' ')} - ${pair}`)
   }
 }
 
@@ -110,6 +144,10 @@ const interactions: Record<string, (page: Page) => Promise<void>> = {
 
 for (const slug of slugs) {
   await page.goto(`${BASE}/#/component/${slug}`, { waitUntil: 'networkidle' })
+  await page.waitForTimeout(150)
+  // Open the collapsed sections, so axe also checks every variant, state and prop.
+  await page.getByRole('button', { name: 'Variants & states', exact: true }).click()
+  await page.getByRole('button', { name: 'Props API', exact: true }).click()
   await page.waitForTimeout(150)
   await runAxe(slug)
   const interaction = interactions[slug]

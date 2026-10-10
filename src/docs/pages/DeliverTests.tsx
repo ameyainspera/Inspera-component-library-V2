@@ -11,8 +11,9 @@ import { AssessorNav } from '../../imports/pasted_text/global-nav'
  */
 
 // The product's CTA orange, matching the Test setup page. Kept as a page-local
-// constant until the design system ships a canonical CTA token.
-const CTA = '#d9432c'
+// constant until the design system ships a canonical CTA token. 4% darker
+// than the product's #d9432c, which is 4.38:1 under white text.
+const CTA = '#d0402a'
 
 interface TestRow {
   title: string

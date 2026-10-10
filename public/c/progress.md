@@ -64,15 +64,26 @@ import { Progress } from '@inspera/components'
 | `value` | `number` | `0` | Completion percentage 0-100. Required unless indeterminate. |
 | `indeterminate` | `boolean` | `false` | Unknown-duration animation. |
 | `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Bar height / ring diameter. |
-| `intent` | `'Primary' \| 'Success' \| 'Warning' \| 'Error'` | `'Primary'` | Fill color. |
+| `intent` | `'Primary' \| 'Success' \| 'Warning' \| 'Error'` | `'Primary'` | Fill colour. |
 | `showValue` | `boolean` | `false` | Render the percentage. |
 
 Also accepts any native `<span>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<span>`. `className` and `style` go on the outermost element.
 
 **Accessibility** - role `progressbar`. Use role="progressbar" with aria-valuenow / min / max; Omit aria-valuenow when indeterminate; Provide an accessible label for the task.
 
-**Do:** Use determinate progress when completion is known; Use indeterminate for unknown-duration waits; Match intent color to context.
+**Do:** Show a value when you know how far along the task is; Use indeterminate when you do not know how long it will take; Match the intent colour to the context.
 **Don't:** Do not use for very short operations; Do not fake progress values.
+
+**Choosing a variant:**
+- `variant="Circular"`: A compact place such as a dashboard tile, where a bar would not fit beside the figure.
+- `intent="Primary"`: Work that is under way, such as marking. The default.
+- `intent="Success"`: The work is done, such as every response marked.
+- `intent="Warning"`: The work is behind, such as marking due tomorrow with most of it left.
+- `intent="Error"`: The work has failed or is overdue. Say what to do next.
+- `size="Small"`: Inside table rows and list items, with the count beside it.
+- `size="Large"`: One task that is the focus of the screen, such as an import.
+- `indeterminate`: How long it will take is not known yet, such as preparing an export.
+- `showValue`: People need the exact percentage. Prefer a count in words beside the bar, such as 12 of 40.
 
 **Deprecated aliases** (do not use): `Progress bar`, `Loading bar`, `Meter`
 

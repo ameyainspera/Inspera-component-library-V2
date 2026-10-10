@@ -1,7 +1,7 @@
 import type { CSSProperties } from 'react'
 import {
   brandColors, semanticColors, brandAccents, palette,
-  spacing, radius, shadows, typeScale, systemTokens,
+  spacing, controlHeights, radius, shadows, typeScale, systemTokens,
   effects, motion, zIndex, breakpoints, borderWidths, focusRing,
 } from '../data/tokens'
 import { radiusUsage } from '../data/radius-usage.generated'
@@ -84,7 +84,7 @@ function TokenGroup({ title, description, children }: { title: string; descripti
 function EffectsSection() {
   return (
     <Panel>
-      <SectionTitle sub="Focus rings, validation rings, the button highlight and link underlines. Apply as box-shadow; the colours resolve to palette tokens.">
+      <SectionTitle sub="Focus rings, validation rings, the button highlight and link underlines. Apply them as box-shadow.">
         Effects
       </SectionTitle>
       <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -182,7 +182,7 @@ function BreakpointsSection() {
   const max = Math.max(...breakpoints.map((b) => b.value))
   return (
     <Panel>
-      <SectionTitle sub="Shared layout thresholds, not device names. Components should respond to the space they are given rather than to a user-agent guess.">
+      <SectionTitle sub="Shared layout thresholds, not device names. Respond to the space available, not to the device.">
         Breakpoints
       </SectionTitle>
       {breakpoints.map((b) => (
@@ -231,8 +231,8 @@ export const FOUNDATION_SECTIONS: FoundationSection[] = [
     render: () => (
 
       <Panel>
-        <SectionTitle sub="The reusable palette every component draws from. These carry no meaning on their own - they are the full range of shades each family offers.">
-          Foundation colour shades
+        <SectionTitle sub="Shades carry no meaning on their own. For colour that means something, such as an error, use the semantic colours.">
+          Colour shades
         </SectionTitle>
 
         {[{ family: 'white', shades: { default: '#FFFFFF' } }, ...Object.entries(palette).map(([family, shades]) => ({ family, shades }))].map(({ family, shades }) => (
@@ -259,7 +259,7 @@ export const FOUNDATION_SECTIONS: FoundationSection[] = [
     description: 'Purpose-driven tokens for brand, status and interaction.',
     render: () => (
       <Panel>
-        <SectionTitle sub="Purpose-driven tokens for brand, status feedback and interaction. Separate from the foundation shades - these carry meaning, so use them for that meaning and nothing else.">
+        <SectionTitle sub="Each of these carries a meaning. Use it only for that meaning.">
           Semantic &amp; brand tokens
         </SectionTitle>
 
@@ -275,7 +275,7 @@ export const FOUNDATION_SECTIONS: FoundationSection[] = [
           ))}
         </TokenGroup>
 
-        <TokenGroup title="Brand accent" description="Used sparingly, only where product design calls for it.">
+        <TokenGroup title="Brand accent" description="Use sparingly, only where the product design calls for it.">
           {brandAccents.map((c) => (
             <TokenRow key={c.name} name={`accent.${c.name}`} value={c.value} cssVar={`var(--accent-${c.name})`} />
           ))}
@@ -304,10 +304,10 @@ export const FOUNDATION_SECTIONS: FoundationSection[] = [
   {
     slug: 'typography',
     label: 'Typography',
-    description: 'The 28 Figma text styles, their metrics and ready-made classes.',
+    description: `The ${typeScale.length} Figma text styles, their metrics and ready-made classes.`,
     render: () => (
       <Panel>
-        <SectionTitle sub="The 28 Figma text styles. Sizes are exact; Figma exports font-size only, so rows marked ° have a line height or weight inferred rather than measured.">
+        <SectionTitle sub="Sizes match Figma exactly. Figma only exports font size, so rows marked ° have an inferred line height or weight.">
           Typography
         </SectionTitle>
         {[
@@ -362,7 +362,7 @@ export const FOUNDATION_SECTIONS: FoundationSection[] = [
   {
     slug: 'spacing',
     label: 'Spacing',
-    description: 'The spacing scale every gap and padding comes from.',
+    description: 'The spacing scale every gap and padding comes from, and the heights of sized controls.',
     render: () => (
       <Panel>
         <SectionTitle>Spacing</SectionTitle>
@@ -375,6 +375,21 @@ export const FOUNDATION_SECTIONS: FoundationSection[] = [
             </div>
           ))}
         </div>
+
+        <h3 style={{ margin: '24px 0 8px', fontSize: 15, fontWeight: 600 }}>Control height</h3>
+        <p style={{ margin: '0 0 8px', fontSize: 13, color: 'var(--gray-700)', lineHeight: 1.5 }}>
+          Small, Medium and Large mean these heights wherever a control offers them.
+        </p>
+        {controlHeights.map((c) => (
+          <div key={c.token} style={tokenRow('10px 0')}>
+            <code style={{ fontFamily: 'var(--font-mono)', fontSize: 13, fontWeight: 600, ...col(44) }}>{c.token}</code>
+            <code style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--primary)', ...col(220) }}>var(--control-height-{c.token})</code>
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--muted-foreground)', ...col(44) }}>{c.value}px</span>
+            {/* Drawn at actual height, so the three can be compared by eye. */}
+            <span style={{ height: c.value, width: 24, flex: 'none', background: 'var(--blue-300)', borderRadius: 'var(--radius-sm)' }} />
+            <span style={note}>{c.note}</span>
+          </div>
+        ))}
       </Panel>
     ),
   },
@@ -384,7 +399,7 @@ export const FOUNDATION_SECTIONS: FoundationSection[] = [
     description: 'Corner rounding, what each value is for, and which components use it.',
     render: () => (
       <Panel>
-        <SectionTitle sub="Corner rounding. Each row shows the shape at true size, the value, the variable to reference, and which components actually use it - read from the component source, not asserted here.">
+        <SectionTitle sub="Each row shows the shape at actual size, what it is for and which components use it.">
           Radius
         </SectionTitle>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -473,7 +488,7 @@ export default function FoundationsPage({ section = 'colors' }: { section?: stri
         </div>
         <h1 style={{ margin: '6px 0 8px', fontSize: 32, fontWeight: 600, letterSpacing: -0.5 }}>{current.label}</h1>
         <p style={{ margin: 0, fontSize: 16, color: 'var(--muted-foreground)', maxWidth: 640 }}>
-          {current.description} Source of truth: src/data/tokens.ts
+          {current.description}
         </p>
       </header>
       {current.render()}

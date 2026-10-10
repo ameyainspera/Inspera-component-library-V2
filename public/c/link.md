@@ -62,9 +62,9 @@ import { Link } from '@inspera/components'
 | `href` **(required)** | `string` | - | Destination URL. Always a real one - use a Button for actions. |
 | `children` | `ReactNode` | - | Link text. |
 | `label` | `string` | - | Link text, when not passing children. |
-| `intent` | `'Default' \| 'Muted'` | `'Default'` | Color emphasis. |
+| `intent` | `'Default' \| 'Muted'` | `'Default'` | Colour emphasis. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Text size. |
-| `underline` | `'Always' \| 'Hover' \| 'None'` | `'Hover'` | Underline behavior. |
+| `underline` | `'Always' \| 'Hover' \| 'None'` | `'Hover'` | Underline behaviour. |
 | `external` | `boolean` | `false` | Open in a new tab, with an icon and a spoken "opens in a new tab". |
 | `disabled` | `boolean` | `false` | Non-interactive state. |
 | `leadingIcon` | `string` | - | Material Symbols name shown before the text. |
@@ -77,6 +77,15 @@ Also accepts any native `<a>` attribute (`id`, `name`, `aria-*`, `data-*`, event
 
 **Do:** Use for navigation, not actions; Signal external links with an icon; Keep link text descriptive.
 **Don't:** Do not use links to trigger actions - use Button; Do not use "click here" as link text.
+
+**Choosing a variant:**
+- `intent="Muted"`: Secondary links that should not compete, such as the links at the foot of a page.
+- `size="Small"`: Tables, captions and other 14px text, such as test titles in a roster.
+- `underline="Hover"`: Links that stand apart from other text, such as one under a card. The underline appears on hover. The default.
+- `underline="Always"`: Links inside a sentence, where colour alone would not set them apart from the words around them.
+- `underline="None"`: Only where the layout already says it is a link, such as the items of a side navigation.
+- `external`: Opens another site in a new tab, such as a download from a supplier. The icon says so.
+- `disabled`: The page isn't available yet, such as results before marking ends. Say when it will be.
 
 **Deprecated aliases** (do not use): `Hyperlink`, `Text link`, `Anchor`
 
@@ -123,8 +132,9 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 /* Tokens this component needs. Paste once, at `:root`. */
 :root {
   --primary:            #004080;
-  --gray-600:           #7A7A7A;
+  --gray-700:           #595959;
   --action-disabled:    rgba(0, 0, 0, 0.38);
+  --text-secondary:     var(--gray-700);
   --radius-xs:          2px;
   --focus-ring-width:   2px;
   --focus-ring-offset:  2px;
@@ -152,7 +162,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 .inspera-link--small { font-size: 14px; }
 
-.inspera-link--muted { color: var(--gray-600); }
+.inspera-link--muted { color: var(--text-secondary); }
 
 /* Underline behaviour. Hover is the default; the other two are explicit. */
 .inspera-link:hover { text-decoration: underline; }

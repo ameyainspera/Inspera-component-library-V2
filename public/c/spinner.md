@@ -59,15 +59,22 @@ import { Spinner } from '@inspera/components'
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Diameter 16 / 24 / 40. |
-| `intent` | `'Primary' \| 'Neutral' \| 'Inverse'` | `'Primary'` | Arc color. |
+| `intent` | `'Primary' \| 'Neutral' \| 'Inverse'` | `'Primary'` | Arc colour. |
 | `label` | `string` | `'Loading'` | What is loading, announced to screen readers. |
 
 Also accepts any native `<span>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<span>`. `className` and `style` go on the outermost element.
 
-**Accessibility** - role `status`. Use role="status" with aria-live="polite"; Provide an accessible label via aria-label; Include visually-hidden loading text.
+**Accessibility** - role `status`. Use role="status" with aria-live="polite"; Provide an accessible label via aria-label; Include visually hidden loading text.
 
-**Do:** Use for short, indeterminate waits; Use Inverse on dark surfaces; Pair with context describing what is loading.
-**Don't:** Do not use where determinate Progress is possible; Do not show multiple competing spinners.
+**Do:** Use for short waits of unknown length; Use Inverse on dark surfaces; Say what is loading.
+**Don't:** Do not use when you can show how far along it is - use Progress; Do not show several spinners at once.
+
+**Choosing a variant:**
+- `size="Small"`: Inline, beside the text it is about, such as Updating next to a roster's count.
+- `size="Medium"`: Inside a card or panel that is updating. The default size.
+- `size="Large"`: A whole panel people are waiting on, such as a preview being built.
+- `intent="Neutral"`: Loading that should not pull the eye, such as more of a list loading at its end.
+- `intent="Inverse"`: Dark surfaces, such as a video player.
 
 **Deprecated aliases** (do not use): `Loader`, `Loading indicator`, `Activity indicator`
 

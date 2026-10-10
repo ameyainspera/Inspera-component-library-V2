@@ -84,7 +84,7 @@ export default function Combobox({
 
   const [query, setQuery] = useState(committedText)
   const [openState, setOpen] = useState(false)
-  const frozenOpen = forceState === 'Open'
+  const frozenOpen = forceState === 'Open' && !disabled
   const open = frozenOpen || openState
   const [active, setActive] = useState(0)
 
@@ -173,7 +173,7 @@ export default function Combobox({
     alignItems: 'center',
     gap: 8,
     padding: '0 12px',
-    borderRadius: 'var(--radius-md)',
+    borderRadius: 'var(--radius-sm)',
     borderWidth: 'var(--border-width-default)',
     borderStyle: 'solid',
     background: disabled ? 'var(--surface-disabled)' : 'var(--white)',
@@ -246,7 +246,7 @@ export default function Combobox({
     <div
       ref={root}
       className={cx('inspera', className)}
-      style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: 6, width: '100%', fontFamily: 'var(--font-sans)', ...style }}
+      style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: 'var(--space-1)', width: '100%', fontFamily: 'var(--font-sans)', ...style }}
     >
       {field.ownLabel && (
         <label id={field.labelId} htmlFor={field.id} style={labelStyle}>{label}</label>
@@ -254,7 +254,7 @@ export default function Combobox({
         <div
           ref={box}
           className="inspera-interactive inspera-field"
-          data-force-state={open ? 'Open' : forceState}
+          data-force-state={open ? 'Open' : disabled ? undefined : forceState}
           data-invalid={field.invalid || undefined}
           data-disabled={disabled || undefined}
           style={{ ...fieldBox, position: 'relative' }}

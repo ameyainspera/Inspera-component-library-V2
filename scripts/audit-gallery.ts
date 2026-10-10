@@ -65,6 +65,10 @@ for (const slug of slugs) {
     problems.push(`${slug} | playground preview overflows by ${playground.overflowX}px`)
   }
 
+  // The gallery starts collapsed; open it before measuring.
+  await page.getByRole('button', { name: 'Variants & states', exact: true }).click()
+  await page.waitForTimeout(120)
+
   // Every cell of "Variants & states" - sections and the matrix alike - is
   // tagged with data-gallery-cell, so the check does not depend on layout.
   const result = await page.evaluate(() => {

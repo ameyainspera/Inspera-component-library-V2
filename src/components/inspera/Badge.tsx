@@ -7,7 +7,7 @@ export type BadgeSize = 'Small' | 'Medium'
 export interface BadgeProps {
   /** The badge text. One or two words. */
   label: string
-  /** Semantic color. */
+  /** Semantic colour. */
   intent?: BadgeIntent
   /** Height 20 / 24. */
   size?: BadgeSize
@@ -19,10 +19,10 @@ export interface BadgeProps {
 
 const intentMap: Record<BadgeIntent, { bg: string; fg: string; icon: string }> = {
   Neutral: { bg: 'var(--surface-neutral)', fg: 'var(--gray-900)', icon: 'circle' },
-  Info: { bg: 'var(--info-surface)', fg: 'var(--info)', icon: 'info' },
-  Success: { bg: 'var(--success-surface)', fg: 'var(--success)', icon: 'check_circle' },
-  Warning: { bg: 'var(--warning-surface)', fg: 'var(--warning)', icon: 'warning' },
-  Error: { bg: 'var(--error-surface)', fg: 'var(--error)', icon: 'error' },
+  Info: { bg: 'var(--info-surface)', fg: 'var(--info-text)', icon: 'info' },
+  Success: { bg: 'var(--success-surface)', fg: 'var(--success-text)', icon: 'check_circle' },
+  Warning: { bg: 'var(--warning-surface)', fg: 'var(--warning-text)', icon: 'warning' },
+  Error: { bg: 'var(--error-surface)', fg: 'var(--error-text)', icon: 'error' },
 }
 
 export default function Badge({

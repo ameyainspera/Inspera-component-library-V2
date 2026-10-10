@@ -8,7 +8,7 @@ import { useModalBehavior } from '../components/inspera/useModalBehavior'
 import { CodeBlock, CopyButton } from './primitives'
 
 /**
- * The guide behind "How to use & contribute" on the Prototyping Kits gallery: a
+ * The guide behind "How to use & contribute" on the Screen templates gallery: a
  * short presentation for anyone at Inspera who wants a starting point for an
  * idea: why the pages exist, how to turn one into a mockup, and how to add
  * to them.
@@ -24,11 +24,8 @@ const CONTRIBUTE_TO = 'the Design System team'
 // Shared styles and small pieces
 // ---------------------------------------------------------------------------
 
-/**
- * Secondary text. Not --muted-foreground: its gray-600 is 4.3:1 on white and
- * 4.0:1 on gray-100, short of AA for text this small. Gray-700 is 7:1.
- */
-const SECONDARY = 'var(--gray-700)'
+/** Secondary text: gray-700, 7:1 on white and 6.5:1 on gray-100. */
+const SECONDARY = 'var(--text-secondary)'
 
 const TITLE: CSSProperties = {
   margin: 0, fontSize: 28, fontWeight: 600, lineHeight: 1.2, letterSpacing: -0.3, color: 'var(--gray-900)',
@@ -309,7 +306,7 @@ const EFFORT: { label: string; parts: { share: number; idea: boolean; label?: st
     ],
   },
   {
-    label: 'From a prototyping kit',
+    label: 'From a screen template',
     parts: [
       { share: 10, idea: false },
       { share: 90, idea: true, label: 'Your idea' },
@@ -499,7 +496,7 @@ function Fix() {
 }
 
 const STEPS = [
-  { icon: 'grid_view', title: 'Pick the closest screen', text: 'Open the prototyping kit your feature would live on.' },
+  { icon: 'grid_view', title: 'Pick the closest screen', text: 'Open the screen template your feature would live on.' },
   { icon: 'download', title: 'Download its file', text: 'One .md file: the page, its components and the Inspera styles.' },
   { icon: 'auto_awesome', title: 'Have your AI build it', text: 'Attach the file and ask for the page exactly as it is. No changes yet.' },
   { icon: 'edit_note', title: 'Describe your change', text: 'Once the copy matches the original, ask for one change.' },
@@ -691,7 +688,7 @@ function Bundle() {
 
 // Plain ASCII: it gets pasted into chat windows that guess encodings. Lines
 // stay under 55 characters so the block shows them whole, without scrolling.
-const PROMPT_BUILD = `I'm attaching an Inspera prototyping kit: <file name>.md
+const PROMPT_BUILD = `I'm attaching an Inspera screen template: <file name>.md
 
 Rebuild the page exactly as the file describes.
 Use only the components, icons and design tokens
@@ -772,7 +769,7 @@ const CONTRIBUTIONS: {
     send: ['A screenshot of the live screen', 'Where it lives, e.g. Grade > Marking'],
     outcome: 'We rebuild it from library components and add it to the gallery.',
     template: [
-      'Prototyping Kits - new screen request',
+      'Screen templates - new screen request',
       'Screen: <name, e.g. Marking>',
       'Where it lives: <menu path, e.g. Grade > Marking>',
       'Why I need it: <the feature or customer question>',
@@ -786,8 +783,8 @@ const CONTRIBUTIONS: {
     send: ['A screenshot of that state', 'What differs: empty, error, filled in or another role'],
     outcome: 'We add the variant to that page.',
     template: [
-      'Prototyping Kits - new variant request',
-      'Page: <prototyping kit, e.g. Monitor>',
+      'Screen templates - new variant request',
+      'Page: <screen template, e.g. Monitor>',
       'Variant: <empty / error / filled in / another role - describe it>',
       'Why I need it: <the feature or customer question>',
       SCREENSHOT_LINE,
@@ -801,9 +798,9 @@ const CONTRIBUTIONS: {
     outcome: 'It goes into the Community section, credited to you.',
     soon: true,
     template: [
-      'Prototyping Kits - community mockup',
+      'Screen templates - community mockup',
       'Title: <e.g. Extra time column in Monitor>',
-      'Based on: <prototyping kit>',
+      'Based on: <screen template>',
       'What changed: <one or two lines>',
       'Why: <the problem it explores>',
       'Status: <idea / in discovery / planned / shipped>',
@@ -818,9 +815,9 @@ const CONTRIBUTIONS: {
     send: ['The prompt, or a screenshot of the difference'],
     outcome: 'We add it to this guide, or fix the page.',
     template: [
-      'Prototyping Kits - feedback',
+      'Screen templates - feedback',
       'Type: <a prompt that worked / a page that is out of date>',
-      'Page: <prototyping kit>',
+      'Page: <screen template>',
       'Details: <the prompt, or what differs from the live product>',
       'Screenshot: <optional - real names, IDs and grades replaced>',
     ].join('\n'),
@@ -874,7 +871,7 @@ function Contribute() {
         intent="Warning"
         role="note"
         title="Using a screenshot from a live system?"
-        message="Replace real candidate names, IDs, grades and customer names before you send it. Prototyping kits only ever show made-up data."
+        message="Replace real candidate names, IDs, grades and customer names before you send it. Screen templates only ever show made-up data."
       />
     </div>
   )
@@ -918,7 +915,7 @@ const LANES: {
     steps: [
       { icon: 'send', title: 'You request it', text: 'Tell us which screen, or what to change.' },
       { icon: 'construction', title: 'The team builds it', text: 'From library components.' },
-      { icon: 'verified', title: 'It joins Prototyping Kits', text: 'Everyone can use it.', accent: true },
+      { icon: 'verified', title: 'It joins the screen templates', text: 'Everyone can use it.', accent: true },
     ],
   },
   {
@@ -986,7 +983,7 @@ const SLIDES: Slide[] = [
     chapter: 'why',
     nav: 'The fix',
     title: 'Start from the real screen. Describe only what is new.',
-    lede: 'Each prototyping kit is a working copy of a real Inspera screen. Give it to your AI and everything that already exists stays as it is - you only describe the change.',
+    lede: 'Each screen template is a working copy of a real Inspera screen. Give it to your AI and everything that already exists stays as it is - you only describe the change.',
     Body: Fix,
   },
   {
@@ -1039,7 +1036,7 @@ const RAIL = (['start', 'why', 'use', 'contribute'] as const).map((id) => ({
 
 interface PagesGuideProps {
   onClose: () => void
-  /** App routing, for the links to prototyping kits. The guide closes first. */
+  /** App routing, for the links to screen templates. The guide closes first. */
   onNavigate: (hash: string) => void
 }
 
@@ -1133,7 +1130,7 @@ export default function PagesGuide({ onClose, onNavigate }: PagesGuideProps) {
               <IconTile name="co_present" size={36} />
               <div style={{ display: 'flex', flexDirection: 'column', minWidth: 0 }}>
                 <h2 id={dialogTitle} style={{ margin: 0, fontSize: 17, fontWeight: 600, color: 'var(--gray-900)' }}>
-                  Prototyping Kits guide
+                  Screen templates guide
                 </h2>
                 <span
                   style={{

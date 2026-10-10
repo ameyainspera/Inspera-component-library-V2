@@ -18,7 +18,7 @@ export interface SliderProps {
   defaultValue?: number
   /** Fired as the value changes, by drag or arrow key. */
   onChange?: (value: number) => void
-  /** Formats the shown value and what assistive tech announces, e.g. `(v) => `${v}%``. */
+  /** Formats the shown value and what assistive tech announces, e.g. `(v) => v + '%'`. */
   formatValue?: (value: number) => string
   /** Show the current value. */
   showValue?: boolean
@@ -96,7 +96,7 @@ export default function Slider({
       )}
       <div
         className="inspera-control"
-        data-force-state={forceState}
+        data-force-state={disabled ? undefined : forceState}
         data-disabled={disabled || undefined}
         style={{ position: 'relative', height: 20, display: 'flex', alignItems: 'center' }}
       >

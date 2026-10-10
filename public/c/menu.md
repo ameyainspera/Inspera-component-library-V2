@@ -66,9 +66,12 @@ import { Menu } from '@inspera/components'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` **(required)** | `string` | - | Trigger text. Pass `aria-label` too when the text alone is ambiguous, e.g. per-row "Actions". |
+| `label` **(required)** | `string` | - | Trigger text. With `iconOnly` it is not shown but names the trigger and the menu, so make it specific: "Actions for Algebra Quiz", not "Actions". |
 | `items` **(required)** | `MenuItem[]` | - | Menu items, in order. |
 | `placement` | `'BottomStart' \| 'BottomEnd'` | `'BottomStart'` | Aligns the menu to the trigger's start or end edge. |
+| `size` | `'Small' \| 'Medium'` | `'Medium'` | Trigger height 32 / 40 (`--control-height-sm/md`). Small also steps down to 14px text and a 16px icon. |
+| `iconOnly` | `boolean` | `false` | Show only an icon - a Text icon-only Button. The overflow trigger for table rows, card headers and toolbars. |
+| `icon` | `string` | `'more_vert'` | Material Symbols name for the icon-only trigger. |
 | `open` | `boolean` | - | Open state. Controlled - pair with onOpenChange. |
 | `defaultOpen` | `boolean` | `false` | Open on mount, when uncontrolled. |
 | `onOpenChange` | `(open: boolean) => void` | - | Fired when the menu opens or closes. |
@@ -92,10 +95,16 @@ export interface MenuItem {
 }
 ```
 
-**Accessibility** - role `menu`, keyboard operable. Trigger uses aria-haspopup="menu" and aria-expanded; Items use role="menuitem"; Arrow keys move, Enter selects, Escape closes; Outside click closes the menu.
+**Accessibility** - role `menu`, keyboard operable. Trigger uses aria-haspopup="menu" and aria-expanded; An icon-only trigger is named by label, which says what it acts on: "Actions for Ada Lovelace"; Items use role="menuitem"; Arrow keys move, Enter selects, Escape closes; Outside click closes the menu.
 
-**Do:** Use for grouped actions and overflow; Separate destructive actions with a divider; Keep item labels action-oriented.
+**Do:** Use for grouped actions and overflow; Separate destructive actions with a divider; Start item labels with a verb.
 **Don't:** Do not use for selecting a value - use Select; Do not nest menus more than one level.
+
+**Choosing a variant:**
+- `placement="BottomStart"`: A trigger at the left of a toolbar, such as the actions for selected candidates. The menu lines up with its left edge.
+- `placement="BottomEnd"`: A trigger at the right edge, such as More in a page header or the actions on a table row, so the menu opens inward.
+- `iconOnly`: The actions for one table row or one card, where a labelled trigger repeated on every row would crowd it. Name it for its row.
+- `size="Small"`: Table rows and dense toolbars, beside Small buttons and inputs.
 
 **Deprecated aliases** (do not use): `Dropdown menu`, `Action menu`, `Context menu`, `Overflow menu`
 
@@ -136,29 +145,145 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 - Focus stays on the trigger and the arrows move a highlight, so hover and the keyboard cursor must drive the same `--active` state.
 - Separators are `role="separator"` and `aria-hidden`, 1px of `--border` with a 4px margin.
 - Destructive items are `--error` text, never a red fill - a filled row reads as selected.
-- Panel is `--radius-md` on `--surface` with `--shadow-200` and a 180px floor, anchored 4px under the trigger. Bottom End flips it to `right: 0` for menus near the viewport edge.
+- The trigger is `--radius-sm`, like the buttons and fields beside it: 40px, or 32px with 14px text for Small. The panel is `--radius-md` on `--surface` with `--shadow-200` and a 180px floor, anchored 4px under the trigger. Bottom End flips it to `right: 0` for menus near the viewport edge.
+- For row and card actions, use the icon-only trigger: a Text icon-only button with `more_vert`, keeping its hover fill while open. It shows no text, so its `aria-label` names the thing it acts on ("Actions for Ada Lovelace").
 - Escape closes and returns focus to the trigger; an outside click closes without moving focus.
 
 ```css
 /* Tokens this component needs. Paste once, at `:root`. */
 :root {
-  --error:               #D32F2F;
-  --white:               #ffffff;
-  --gray-200:            #EDEDED;
-  --gray-300:            #D9D9D9;
-  --primary-focus-ring:  rgba(0, 64, 128, 0.3);
-  --action-hover:        rgba(0, 0, 0, 0.04);
-  --action-disabled:     rgba(0, 0, 0, 0.38);
-  --text-primary:        rgba(0, 0, 0, 0.87);
-  --surface:             var(--white);
-  --border:              var(--gray-200);
-  --border-strong:       var(--gray-300);
-  --radius-sm:           4px;
-  --radius-md:           8px;
-  --shadow-200:          0px 8px 8px rgba(39, 39, 39, 0.08), 0px 4px 6px rgba(39, 39, 39, 0.12);
-  --z-dropdown:          300;
-  --font-sans:           'Inter', system-ui, -apple-system, sans-serif;
+  --primary:                #004080;
+  --error:                  #D32F2F;
+  --success:                #2E7D32;
+  --white:                  #ffffff;
+  --gray-100:               #F7F7F7;
+  --gray-200:               #EDEDED;
+  --gray-300:               #D9D9D9;
+  --gray-700:               #595959;
+  --gray-900:               #272727;
+  --orange-600:             #F2A202;
+  --primary-focus-ring:     rgba(0, 64, 128, 0.3);
+  --action-hover:           rgba(0, 0, 0, 0.04);
+  --action-disabled:        rgba(0, 0, 0, 0.38);
+  --text-primary:           rgba(0, 0, 0, 0.87);
+  --surface:                var(--white);
+  --border:                 var(--gray-200);
+  --border-strong:          var(--gray-300);
+  --control-height-sm:      32px;
+  --control-height-md:      40px;
+  --control-height-lg:      44px;
+  --radius-sm:              4px;
+  --radius-md:              8px;
+  --shadow-200:             0px 8px 8px rgba(39, 39, 39, 0.08), 0px 4px 6px rgba(39, 39, 39, 0.12);
+  --effect-button-shadow:   inset 0px -1px 0px rgba(0, 0, 0, 0.2), 0px 1px 0px rgba(0, 0, 0, 0.08);
+  --border-width-default:   1px;
+  --focus-ring-width:       2px;
+  --focus-ring-offset:      2px;
+  --focus-ring-color:       var(--primary);
+  --duration-fast:          100ms;
+  --easing-standard:        cubic-bezier(0.2, 0, 0, 1);
+  --z-dropdown:             300;
+  --font-sans:              'Inter', system-ui, -apple-system, sans-serif;
+  --medium-14-size:         14px;
+  --medium-14-line-height:  1.4;
 }
+
+.inspera-btn {
+  /* Fill, text and border come from the intent modifier below. */
+  --btn-bg: var(--primary);
+  --btn-fg: var(--white);
+  --btn-border: transparent;
+  --btn-shadow: var(--effect-button-shadow);
+  --btn-bg-hover: color-mix(in srgb, var(--btn-bg) 90%, black);
+  --btn-bg-active: color-mix(in srgb, var(--btn-bg) 82%, black);
+  --btn-shadow-hover: inset 0 -1px 0 rgba(0, 0, 0, 0.2), 0 2px 6px rgba(0, 64, 128, 0.24);
+  --btn-shadow-active: inset 0 1px 2px rgba(0, 0, 0, 0.24);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: var(--control-height-md);
+  min-width: 80px;
+  padding: 0 16px;
+  border-radius: var(--radius-sm);
+  border: var(--border-width-default) solid var(--btn-border);
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  box-shadow: var(--btn-shadow);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background var(--duration-fast) var(--easing-standard),
+    border-color var(--duration-fast) var(--easing-standard),
+    box-shadow var(--duration-fast) var(--easing-standard),
+    transform var(--duration-fast) var(--easing-standard);
+}
+
+/* Sizes change height and padding. Small also steps down to 14px type and a
+   16px icon (see the end of this block). */
+.inspera-btn--small {
+  height: var(--control-height-sm);
+  padding: 0 12px;
+  gap: 4px;
+  font-size: var(--medium-14-size);
+  line-height: var(--medium-14-line-height);
+}
+.inspera-btn--large { height: var(--control-height-lg); padding: 0 20px; }
+
+/* Icon only: a square the height of the button. It still needs aria-label. */
+.inspera-btn--icon-only { width: var(--control-height-md); min-width: 0; padding: 0; }
+.inspera-btn--small.inspera-btn--icon-only { width: var(--control-height-sm); }
+.inspera-btn--large.inspera-btn--icon-only { width: var(--control-height-lg); }
+
+/* Solid intents differ only in fill; hover and pressed derive from it. */
+.inspera-btn--primary     { --btn-bg: var(--primary); }
+.inspera-btn--success     { --btn-bg: var(--success); }
+/* Warning takes dark text on orange-600: white on --warning is 3.08:1. */
+.inspera-btn--warning     { --btn-bg: var(--orange-600); --btn-fg: var(--gray-900); }
+.inspera-btn--destructive { --btn-bg: var(--error); }
+.inspera-btn--secondary {
+  --btn-bg: var(--gray-100);
+  --btn-fg: var(--gray-900);
+  --btn-border: var(--gray-700);
+}
+
+/* Outline and Text carry no fill and no shadow; they tint on interaction. */
+.inspera-btn--outline,
+.inspera-btn--text {
+  --btn-bg: transparent;
+  --btn-fg: var(--primary);
+  --btn-shadow: none;
+  --btn-shadow-hover: none;
+  --btn-shadow-active: none;
+  --btn-bg-hover: color-mix(in srgb, var(--primary) 8%, transparent);
+  --btn-bg-active: color-mix(in srgb, var(--primary) 12%, transparent);
+}
+.inspera-btn--outline { --btn-border: var(--primary); }
+
+.inspera-btn:hover:not(:disabled) {
+  background: var(--btn-bg-hover);
+  box-shadow: var(--btn-shadow-hover);
+}
+/* A button that opens a menu keeps its hover fill while the menu is open. */
+.inspera-btn[aria-expanded='true'] { background: var(--btn-bg-hover); }
+.inspera-btn:active:not(:disabled) {
+  background: var(--btn-bg-active);
+  box-shadow: var(--btn-shadow-active);
+  transform: translateY(1px);
+}
+.inspera-btn:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+.inspera-btn:disabled { opacity: 0.38; cursor: not-allowed; }
+
+.inspera-btn .material-symbols-outlined { font-size: 20px; }
+.inspera-btn--small .material-symbols-outlined { font-size: 16px; }
 
 .inspera-menu {
   position: relative;
@@ -167,12 +292,12 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 }
 
 .inspera-menu__trigger {
-  height: 40px;
+  height: var(--control-height-md);
   display: inline-flex;
   align-items: center;
   gap: 6px;
   padding: 0 12px;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   border: 1px solid var(--border-strong);
   background: var(--white);
   color: var(--text-primary);
@@ -193,6 +318,18 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   transition: transform 140ms ease;
 }
 .inspera-menu__trigger[aria-expanded='true'] .material-symbols-outlined { transform: rotate(180deg); }
+
+/* Small: 32px, with 14px text and a 16px chevron, as a Small button. */
+.inspera-menu__trigger--small {
+  height: var(--control-height-sm);
+  gap: 4px;
+  padding: 0 8px;
+  font-size: 14px;
+}
+.inspera-menu__trigger--small .material-symbols-outlined { font-size: 16px; }
+
+/* Icon only (table rows, card headers, toolbars): the trigger is the canonical
+   Text icon-only button with more_vert, and the menu sits beside it as usual. */
 
 .inspera-menu__list {
   position: absolute;
@@ -268,6 +405,14 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
       <span class="material-symbols-outlined" aria-hidden="true">delete</span>Delete
     </button>
   </div>
+</div>
+
+<!-- Icon only, for a table row or a card: the trigger is named for what it acts on. -->
+<div class="inspera-menu">
+  <button type="button" class="inspera-btn inspera-btn--text inspera-btn--small inspera-btn--icon-only"
+          aria-haspopup="menu" aria-expanded="false" aria-label="Actions for Ada Lovelace">
+    <span class="material-symbols-outlined" aria-hidden="true">more_vert</span>
+  </button>
 </div>
 ```
 

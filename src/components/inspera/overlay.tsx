@@ -1,6 +1,6 @@
 import {
   type CSSProperties, type MouseEvent as ReactMouseEvent, type ReactNode, type RefObject,
-  useEffect, useLayoutEffect, useRef, useState,
+  createContext, useContext, useEffect, useLayoutEffect, useRef, useState,
 } from 'react'
 import { createPortal } from 'react-dom'
 
@@ -14,13 +14,36 @@ import { createPortal } from 'react-dom'
 // ---------------------------------------------------------------------------
 
 /**
- * Renders children into document.body. Synchronous on the client, so a panel
- * exists in the same commit as its owner's effects (focus, measuring); server
- * rendering gets nothing.
+ * The overlay element of the open Dialog or Drawer. A floating panel inside a
+ * modal renders into it, not into <body>: in <body> a Select list sat at
+ * --z-dropdown, under the modal's --z-modal scrim, so its options showed
+ * behind the dialog and could not be clicked. Inside the overlay it shares the
+ * modal's stacking context, where its own z-index puts it above the panel.
  */
-export function Portal({ children }: { children: ReactNode }) {
+export const ModalLayer = createContext<HTMLElement | null>(null)
+
+/**
+ * The element a floating panel must stay inside, in place of the window. Unset
+ * in an application, where the window is the bound. The documentation's
+ * in-context scenes set it to their screen, so a menu or a pinned tooltip near
+ * the edge of a scene flips and shifts as it would at the edge of a real
+ * window, instead of being cut off by the scene.
+ */
+export const OverlayBoundary = createContext<HTMLElement | null>(null)
+
+/**
+ * Renders children into document.body - or, for a floating panel inside a
+ * modal, into that modal's layer. Synchronous on the client, so a panel exists
+ * in the same commit as its owner's effects (focus, measuring); server
+ * rendering gets nothing.
+ *
+ * `modal` is for Dialog, Drawer and Command Palette themselves. They always go
+ * to <body>, so making everything outside them inert still covers the page.
+ */
+export function Portal({ children, modal = false }: { children: ReactNode; modal?: boolean }) {
+  const layer = useContext(ModalLayer)
   if (typeof document === 'undefined') return null
-  return createPortal(children, document.body)
+  return createPortal(children, (!modal && layer) || document.body)
 }
 
 // ---------------------------------------------------------------------------
@@ -44,8 +67,9 @@ const EDGE = 8
 /**
  * Places a panel against an anchor with `position: fixed`, flipping to the
  * opposite side when the preferred one would run off the viewport and
- * clamping so it never leaves the screen. Re-measures on scroll (any scroll
- * container, via capture), resize, and size changes of either element.
+ * clamping so it never leaves the screen. Inside an `OverlayBoundary` the
+ * bound is that element, where it is in view. Re-measures on scroll (any
+ * scroll container, via capture), resize, and size changes of either element.
  */
 export function useAnchoredPosition(
   open: boolean,
@@ -55,6 +79,7 @@ export function useAnchoredPosition(
     { side?: Side; align?: Align; offset?: number; matchWidth?: boolean } = {},
 ): AnchoredPosition {
   const [pos, setPos] = useState<{ top: number; left: number; side: Side; arrow: number; width?: number } | null>(null)
+  const boundary = useContext(OverlayBoundary)
 
   useLayoutEffect(() => {
     if (!open) {
@@ -67,15 +92,19 @@ export function useAnchoredPosition(
       if (!a || !f) return
       const fw = matchWidth ? a.width : f.offsetWidth
       const fh = f.offsetHeight
-      const vw = window.innerWidth
-      const vh = window.innerHeight
+      // The area the panel may use: the window, or the part of the boundary in view.
+      const b = boundary?.getBoundingClientRect()
+      const minX = b ? Math.max(b.left, 0) : 0
+      const minY = b ? Math.max(b.top, 0) : 0
+      const maxX = b ? Math.min(b.right, window.innerWidth) : window.innerWidth
+      const maxY = b ? Math.min(b.bottom, window.innerHeight) : window.innerHeight
 
       let s = side
       const room = {
-        top: a.top - offset - EDGE,
-        bottom: vh - a.bottom - offset - EDGE,
-        left: a.left - offset - EDGE,
-        right: vw - a.right - offset - EDGE,
+        top: a.top - minY - offset - EDGE,
+        bottom: maxY - a.bottom - offset - EDGE,
+        left: a.left - minX - offset - EDGE,
+        right: maxX - a.right - offset - EDGE,
       }
       const opposite: Record<Side, Side> = { top: 'bottom', bottom: 'top', left: 'right', right: 'left' }
       const need = s === 'top' || s === 'bottom' ? fh : fw
@@ -90,8 +119,8 @@ export function useAnchoredPosition(
         left = s === 'right' ? a.right + offset : a.left - offset - fw
         top = align === 'start' ? a.top : align === 'end' ? a.bottom - fh : a.top + a.height / 2 - fh / 2
       }
-      left = Math.max(EDGE, Math.min(left, vw - EDGE - fw))
-      top = Math.max(EDGE, Math.min(top, vh - EDGE - fh))
+      left = Math.max(minX + EDGE, Math.min(left, maxX - EDGE - fw))
+      top = Math.max(minY + EDGE, Math.min(top, maxY - EDGE - fh))
 
       const arrow = s === 'top' || s === 'bottom'
         ? a.left + a.width / 2 - left
@@ -110,7 +139,7 @@ export function useAnchoredPosition(
       window.removeEventListener('resize', update)
       ro.disconnect()
     }
-  }, [open, anchor, floating, side, align, offset, matchWidth])
+  }, [open, anchor, floating, side, align, offset, matchWidth, boundary])
 
   return {
     style: pos

@@ -8,7 +8,7 @@ export type ToastPosition =
   | 'BottomLeft' | 'BottomCenter' | 'BottomRight'
 
 export interface ToastOptions {
-  /** Accent icon color. */
+  /** Accent icon colour. */
   intent?: ToastIntent
   /** Auto-dismiss delay in ms. Pass 0 to keep it until dismissed. Paused while hovered or focused. */
   duration?: number

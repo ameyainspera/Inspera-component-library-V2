@@ -31,4 +31,4 @@ The in-sandbox CLI can only *consume/reconcile* kits, not publish them. Publishi
 
 ## Limits
 
-Kit enforcement is **Figma-Make-only**. For other AI builders, use `@inspera/components` (npm) or the portable spec at `public/llms.txt`.
+The kit only works **inside Figma Make**. For other AI builders, use the portable spec at `public/llms.txt`, or `@inspera/components` once it is published to npm.

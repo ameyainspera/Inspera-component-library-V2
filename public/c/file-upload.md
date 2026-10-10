@@ -75,7 +75,13 @@ Also accepts any native `<input>` attribute (`id`, `name`, `aria-*`, `data-*`, e
 **Accessibility** - role `button`, keyboard operable. Dropzone uses role="button" and is keyboard focusable; Enter / Space open the file browser; Provide an accessible label describing the action.
 
 **Do:** Support both drag-and-drop and click-to-browse; State accepted file types and size limits; Give visible drag feedback.
-**Don't:** Do not hide the browse affordance; Do not omit constraint help text.
+**Don't:** Do not hide the option to browse; Do not leave out the accepted file types and size limit.
+
+**Choosing a variant:**
+- `multiple="false"`: One file, which a new upload replaces, such as invigilator instructions.
+- `multiple`: Several files that go together, such as resources for a question set. List the files under the drop zone.
+- `error`: The file can't be used. Say why and what to upload instead.
+- `disabled`: Uploading isn't possible here, such as for someone who doesn't own the test. Say why.
 
 **Deprecated aliases** (do not use): `Dropzone`, `File dropzone`, `Uploader`
 
@@ -114,9 +120,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 - The zone is a `<label>` around a visually hidden `<input type="file">`. Clicking the zone opens the picker natively, and the input is the one focusable control, named by `aria-label` and described by the help text. Do not use a `<div role="button">` with the input inside it - that nests one control in another.
 - Filter dropped files by the same `accept` and `multiple` rules as the picker, and reset the input value after each choice so picking the same file twice still fires.
-- Border is 2px dashed `--gray-400`; a 1px dash reads as a table rule at this size.
-- The drag state and hover share one look: `--primary` border on a `--blue-100` wash. Handle `dragover`, `dragleave` and `drop`, and `preventDefault` on dragover or the browser opens the file instead.
+- Border is 2px dashed `--border-control`; a 1px dash reads as a table rule at this size.
+- The drag state and hover share one look: `--primary` border on a `--blue-100` wash. A drag shows it even in error, because the zone is about to take a new file; hover keeps the error red. Handle `dragover`, `dragleave` and `drop`, and `preventDefault` on dragover or the browser opens the file instead.
 - Always state the constraint ("PNG, JPG or PDF up to 10MB") - a bare drop zone gives no way to know what will be rejected.
+- Disabled dims the icon and the prompt to 0.6 and drops the link look from "browse", but not the help text: say there why uploading is not possible, and keep it readable.
 
 ```css
 /* Tokens this component needs. Paste once, at `:root`. */
@@ -124,12 +131,13 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   --primary:            #004080;
   --error:              #D32F2F;
   --white:              #ffffff;
-  --gray-400:           #BCBCBC;
   --gray-600:           #7A7A7A;
+  --gray-700:           #595959;
   --blue-100:           #F0F7FF;
   --text-primary:       rgba(0, 0, 0, 0.87);
+  --border-control:     var(--gray-600);
   --surface:            var(--white);
-  --muted-foreground:   var(--gray-600);
+  --muted-foreground:   var(--gray-700);
   --radius-md:          8px;
   --focus-ring-width:   2px;
   --focus-ring-offset:  2px;
@@ -150,20 +158,13 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   width: 100%;
   padding: 32px 24px;
   /* Dashed, and 2px - a 1px dashed border reads as a table rule at this size. */
-  border: 2px dashed var(--gray-400);
+  border: 2px dashed var(--border-control);
   border-radius: var(--radius-md);
   background: var(--surface);
   cursor: pointer;
   text-align: center;
   font-family: var(--font-sans);
   transition: all var(--duration-fast) var(--easing-standard);
-}
-
-/* Both the real drag state and the pointer share one look. */
-.inspera-upload:hover,
-.inspera-upload--dragging {
-  border-color: var(--primary);
-  background: var(--blue-100);
 }
 
 /* The input inside has the focus; the zone draws the ring for it. */
@@ -208,10 +209,24 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 .inspera-upload--error .inspera-upload__icon,
 .inspera-upload--error .inspera-upload__help { color: var(--error); }
 
+/* The pointer and a drag share one look. A drag shows even in error - the
+   zone is about to take a new file - while hover keeps an error's red. */
+.inspera-upload:not(.inspera-upload--disabled):not(.inspera-upload--error):hover,
+.inspera-upload--dragging {
+  border-color: var(--primary);
+  background: var(--blue-100);
+}
+.inspera-upload--dragging .inspera-upload__icon { color: var(--primary); }
+
 .inspera-upload--disabled {
   cursor: not-allowed;
-  opacity: 0.6;
 }
+/* Disabled dims the icon and the prompt, not the help text: it usually says
+   why uploading is not possible, so it stays readable. "browse" stops looking
+   like a link. */
+.inspera-upload--disabled .inspera-upload__icon,
+.inspera-upload--disabled .inspera-upload__prompt { opacity: 0.6; }
+.inspera-upload--disabled .inspera-upload__browse { color: inherit; font-weight: inherit; }
 ```
 
 ```html

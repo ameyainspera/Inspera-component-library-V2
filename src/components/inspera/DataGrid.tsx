@@ -48,7 +48,7 @@ export interface DataGridProps {
   size?: DataGridSize
   /** Zebra-stripe rows. */
   striped?: boolean
-  /** Highlight rows on hover and reveal row actions on hover. */
+  /** Highlight rows on hover, and bring row actions to full strength on hover. */
   hoverable?: boolean
   /** Describes the grid for screen readers. */
   caption?: string
@@ -71,14 +71,22 @@ export interface DataGridProps {
   /** Rows arrive already sorted (server-side), so the grid only shows the state. */
   manualSorting?: boolean
 
-  /** Trailing per-row actions. Revealed on hover and focus when `hoverable`. */
+  /**
+   * Trailing per-row actions. Always visible; quieter at rest, full strength on row hover and focus when `hoverable`.
+   * Use an icon-only Small Menu named for its row: `<Menu iconOnly size="Small"
+   * label={`Actions for ${row.name}`} ... />`.
+   */
   rowActions?: (row: DataGridRow, index: number) => ReactNode
   /** Makes rows clickable and keyboard-operable (Enter / Space). */
   onRowClick?: (row: DataGridRow, index: number) => void
 
   /** Show the footer with the range summary, pager and page-size select. */
   footer?: boolean
-  /** Total row count across all pages. Defaults to the rendered row count. */
+  /**
+   * Total row count across all pages, when `rows` is one page of a larger set
+   * fetched page by page. The range then reads from the page and page size
+   * ("21 - 40 of 179"). Defaults to the rendered row count.
+   */
   total?: number
   /** Total number of pages. */
   pageCount?: number
@@ -196,7 +204,9 @@ export default function DataGrid({
 
   const totalRows = total ?? sortedRows.length
   const rangeStart = totalRows === 0 ? 0 : (page - 1) * pageSize + 1
-  const rangeEnd = Math.min(totalRows, rangeStart + sortedRows.length - 1)
+  // With a total, the rows are one page of a larger set: every page but the
+  // last is full, as in MUI's and Carbon's paginators.
+  const rangeEnd = total !== undefined ? Math.min(total, page * pageSize) : Math.min(totalRows, rangeStart + sortedRows.length - 1)
 
   const onRowKey = (e: KeyboardEvent, row: DataGridRow, i: number) => {
     if (e.target !== e.currentTarget || (e.key !== 'Enter' && e.key !== ' ')) return
@@ -287,7 +297,8 @@ export default function DataGrid({
               )
             })}
             {rowActions && (
-              <th scope="col" style={{ ...head, position: 'relative', width: 96 }}>
+              // Width 1 shrinks the column to its trigger.
+              <th scope="col" style={{ ...head, position: 'relative', width: 1 }}>
                 <span style={srOnly}>Actions</span>
               </th>
             )}

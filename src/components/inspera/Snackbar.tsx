@@ -6,7 +6,7 @@ export type SnackbarIntent = 'Neutral' | 'Info' | 'Success' | 'Warning' | 'Error
 export interface SnackbarProps {
   /** What happened. One short sentence. */
   message: string
-  /** Accent icon color. */
+  /** Accent icon colour. */
   intent?: SnackbarIntent
   /** Label for an inline action, typically "Undo". Shown when set. */
   actionLabel?: string

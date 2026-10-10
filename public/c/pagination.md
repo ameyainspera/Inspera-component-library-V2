@@ -71,10 +71,16 @@ import { Pagination } from '@inspera/components'
 
 Also accepts any native `<nav>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<nav>`. `className` and `style` go on the outermost element.
 
-**Accessibility** - role `navigation`, keyboard operable. Wrap in nav with aria-label="Pagination"; Mark the current page with aria-current="page"; Disable and aria-disable prev/next at the bounds.
+**Accessibility** - role `navigation`, keyboard operable. Wrap in nav with aria-label="Pagination"; Mark the current page with aria-current="page"; Disable Previous on the first page and Next on the last.
 
 **Do:** Use for long, paged result sets; Show current, first, and last pages; Collapse large gaps with an ellipsis.
 **Don't:** Do not use for a handful of items; Do not hide the current page indicator.
+
+**Choosing a variant:**
+- `size="Medium"`: Under a long list that fills the page, such as all tests. The default size.
+- `size="Small"`: Dense or narrow places, such as stepping through responses while marking.
+- `showEdges`: Many pages, where jumping to the first or last one saves clicks.
+- `showEdges="false"`: Up to about 7 pages, when every page number is already shown.
 
 **Deprecated aliases** (do not use): `Pager`, `Page navigation`
 
@@ -122,12 +128,12 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 :root {
   --primary:           #004080;
   --white:             #ffffff;
-  --gray-600:          #7A7A7A;
+  --gray-700:          #595959;
   --action-hover:      rgba(0, 0, 0, 0.04);
   --action-disabled:   rgba(0, 0, 0, 0.38);
   --text-primary:      rgba(0, 0, 0, 0.87);
-  --muted-foreground:  var(--gray-600);
-  --radius-md:         8px;
+  --muted-foreground:  var(--gray-700);
+  --radius-sm:         4px;
   --font-sans:         'Inter', system-ui, -apple-system, sans-serif;
 }
 
@@ -151,7 +157,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   border: none;
   background: transparent;
   color: var(--text-primary);

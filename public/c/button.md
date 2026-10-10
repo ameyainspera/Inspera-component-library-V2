@@ -60,7 +60,7 @@ import { Button } from '@inspera/components'
 | --- | --- | --- | --- |
 | `label` **(required)** | `string` | - | The button text. Start with a verb - "Save", not "OK". With `iconOnly` it is not shown but becomes the accessible name, so it is still required. |
 | `intent` | `'Primary' \| 'Secondary' \| 'Outline' \| 'Text' \| 'Success' \| 'Warning' \| 'Destructive'` | `'Primary'` | Visual role / semantic weight. |
-| `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Height 32 / 40 / 48. |
+| `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Height 32 / 40 / 44 (`--control-height-sm/md/lg`). Small also steps down to 14px text and a 16px icon. |
 | `leadingIcon` | `string` | - | Material Symbols name shown before the label. |
 | `trailingIcon` | `string` | - | Material Symbols name shown after the label. Use `expand_more` for a menu trigger. |
 | `iconOnly` | `boolean` | `false` | Show only the icon (`leadingIcon`, else `trailingIcon`); `label` becomes the accessible name. |
@@ -72,8 +72,19 @@ Also accepts any native `<button>` attribute (`id`, `name`, `aria-*`, `data-*`, 
 
 **Accessibility** - role `button`, keyboard operable. Icon-only buttons must have an accessible label.
 
-**Do:** Use Primary for main actions; Use Secondary for alternative actions; Use Destructive only for destructive flows.
-**Don't:** Do not create separate component files per intent; Do not use deprecated alias names.
+**Do:** Use Primary for the main action; Use Secondary for an alternative to the main action; Use Destructive only for actions that delete data or cannot be undone.
+**Don't:** Do not create a separate component for each intent - set the intent prop; Do not use deprecated alias names.
+
+**Choosing a variant:**
+- `intent="Primary"`: The one main action of a page, form or dialog, such as New test or Publish. Use one per view.
+- `intent="Secondary"`: An alternative to the main action, placed next to it, such as Save draft beside Next or Publish.
+- `intent="Outline"`: A standalone action on the content around it, such as Export in a table toolbar.
+- `intent="Text"`: A low-emphasis action: Cancel in a form footer, View all in a card header.
+- `intent="Success"`: A positive decision, such as approving a candidate's request for more time. Keep the way to decline beside it.
+- `intent="Warning"`: An action with consequences that can be undone, such as pausing a candidate's test.
+- `intent="Destructive"`: An action that deletes data or cannot be undone, such as deleting a test. Say what will be lost next to it.
+- `size="Small"`: Dense areas such as table rows, toolbars and filter bars, next to Small inputs.
+- `size="Large"`: One prominent call to action, such as Start test, or a touch-first screen. Not a whole row of buttons.
 
 **Deprecated aliases** (do not use): `Primary button`, `Secondary button`, `Outline button`, `Text button`, `Success button`, `Warning button`
 
@@ -120,23 +131,28 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 ```css
 /* Tokens this component needs. Paste once, at `:root`. */
 :root {
-  --primary:               #004080;
-  --error:                 #D32F2F;
-  --warning:               #EF6C00;
-  --success:               #2E7D32;
-  --white:                 #ffffff;
-  --gray-100:              #F7F7F7;
-  --gray-700:              #595959;
-  --gray-900:              #272727;
-  --radius-sm:             4px;
-  --effect-button-shadow:  inset 0px -1px 0px rgba(0, 0, 0, 0.2), 0px 1px 0px rgba(0, 0, 0, 0.08);
-  --border-width-default:  1px;
-  --focus-ring-width:      2px;
-  --focus-ring-offset:     2px;
-  --focus-ring-color:      var(--primary);
-  --duration-fast:         100ms;
-  --easing-standard:       cubic-bezier(0.2, 0, 0, 1);
-  --font-sans:             'Inter', system-ui, -apple-system, sans-serif;
+  --primary:                #004080;
+  --error:                  #D32F2F;
+  --success:                #2E7D32;
+  --white:                  #ffffff;
+  --gray-100:               #F7F7F7;
+  --gray-700:               #595959;
+  --gray-900:               #272727;
+  --orange-600:             #F2A202;
+  --control-height-sm:      32px;
+  --control-height-md:      40px;
+  --control-height-lg:      44px;
+  --radius-sm:              4px;
+  --effect-button-shadow:   inset 0px -1px 0px rgba(0, 0, 0, 0.2), 0px 1px 0px rgba(0, 0, 0, 0.08);
+  --border-width-default:   1px;
+  --focus-ring-width:       2px;
+  --focus-ring-offset:      2px;
+  --focus-ring-color:       var(--primary);
+  --duration-fast:          100ms;
+  --easing-standard:        cubic-bezier(0.2, 0, 0, 1);
+  --font-sans:              'Inter', system-ui, -apple-system, sans-serif;
+  --medium-14-size:         14px;
+  --medium-14-line-height:  1.4;
 }
 
 .inspera-btn {
@@ -154,7 +170,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   align-items: center;
   justify-content: center;
   gap: 8px;
-  height: 40px;
+  height: var(--control-height-md);
   min-width: 80px;
   padding: 0 16px;
   border-radius: var(--radius-sm);
@@ -175,19 +191,27 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
     transform var(--duration-fast) var(--easing-standard);
 }
 
-/* Sizes change height, padding and gap only - never the 16px type. */
-.inspera-btn--small { height: 32px; padding: 0 12px; gap: 6px; }
-.inspera-btn--large { height: 48px; padding: 0 24px; gap: 10px; }
+/* Sizes change height and padding. Small also steps down to 14px type and a
+   16px icon (see the end of this block). */
+.inspera-btn--small {
+  height: var(--control-height-sm);
+  padding: 0 12px;
+  gap: 4px;
+  font-size: var(--medium-14-size);
+  line-height: var(--medium-14-line-height);
+}
+.inspera-btn--large { height: var(--control-height-lg); padding: 0 20px; }
 
 /* Icon only: a square the height of the button. It still needs aria-label. */
-.inspera-btn--icon-only { width: 40px; min-width: 0; padding: 0; }
-.inspera-btn--small.inspera-btn--icon-only { width: 32px; }
-.inspera-btn--large.inspera-btn--icon-only { width: 48px; }
+.inspera-btn--icon-only { width: var(--control-height-md); min-width: 0; padding: 0; }
+.inspera-btn--small.inspera-btn--icon-only { width: var(--control-height-sm); }
+.inspera-btn--large.inspera-btn--icon-only { width: var(--control-height-lg); }
 
 /* Solid intents differ only in fill; hover and pressed derive from it. */
 .inspera-btn--primary     { --btn-bg: var(--primary); }
 .inspera-btn--success     { --btn-bg: var(--success); }
-.inspera-btn--warning     { --btn-bg: var(--warning); }
+/* Warning takes dark text on orange-600: white on --warning is 3.08:1. */
+.inspera-btn--warning     { --btn-bg: var(--orange-600); --btn-fg: var(--gray-900); }
 .inspera-btn--destructive { --btn-bg: var(--error); }
 .inspera-btn--secondary {
   --btn-bg: var(--gray-100);
@@ -212,6 +236,8 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   background: var(--btn-bg-hover);
   box-shadow: var(--btn-shadow-hover);
 }
+/* A button that opens a menu keeps its hover fill while the menu is open. */
+.inspera-btn[aria-expanded='true'] { background: var(--btn-bg-hover); }
 .inspera-btn:active:not(:disabled) {
   background: var(--btn-bg-active);
   box-shadow: var(--btn-shadow-active);
@@ -224,6 +250,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 .inspera-btn:disabled { opacity: 0.38; cursor: not-allowed; }
 
 .inspera-btn .material-symbols-outlined { font-size: 20px; }
+.inspera-btn--small .material-symbols-outlined { font-size: 16px; }
 ```
 
 ```html

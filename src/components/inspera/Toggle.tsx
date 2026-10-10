@@ -1,4 +1,5 @@
-import { type CSSProperties, useId } from 'react'
+import { type CSSProperties, type ReactNode, useId } from 'react'
+import { ControlMessage } from './FormField'
 import { cx, type ForceState, type NativeAttrs } from './types'
 import { useControllableState } from './useControllableState'
 
@@ -19,6 +20,11 @@ export interface ToggleProps {
   withLabel?: boolean
   /** Blocks interaction and dims the control. */
   disabled?: boolean
+  /**
+   * A line under the label: what the setting does, or why it is locked. Shown
+   * with a visible label, and linked to the switch with `aria-describedby`.
+   */
+  description?: ReactNode
   /** @internal Freezes a hover or focus look for the docs gallery. */
   forceState?: ForceState
 }
@@ -31,14 +37,20 @@ export default function Toggle({
   size = 'Medium',
   withLabel = true,
   disabled = false,
+  description,
   forceState,
   className,
   style,
   id,
+  'aria-describedby': describedByProp,
   ...rest
 }: ToggleProps & NativeAttrs<'input', ToggleProps>) {
   const generated = useId()
   const inputId = id ?? generated
+  // The line under the label, only beside a visible label it can line up with.
+  const withMessage = withLabel && description !== undefined && description !== null && description !== ''
+  const messageId = `${inputId}-msg`
+  const describedBy = [describedByProp, withMessage ? messageId : undefined].filter(Boolean).join(' ') || undefined
   const [isOn, setOn] = useControllableState(checked, defaultChecked, onChange)
 
   const trackW = size === 'Small' ? 36 : 44
@@ -72,11 +84,12 @@ export default function Toggle({
     transition: 'transform var(--duration-normal) var(--easing-standard), box-shadow var(--duration-fast) var(--easing-standard)',
   }
 
-  return (
+  const control = (
     <label
       htmlFor={inputId}
-      className={cx('inspera inspera-control', className)}
-      data-force-state={forceState}
+      // With a description, the outer wrapper takes the consumer's class and style.
+      className={cx('inspera inspera-control', withMessage ? undefined : className)}
+      data-force-state={disabled ? undefined : forceState}
       data-disabled={disabled || undefined}
       style={{
         display: 'inline-flex',
@@ -87,7 +100,7 @@ export default function Toggle({
         color: 'var(--text-primary)',
         fontFamily: 'var(--font-sans)',
         fontSize: 16,
-        ...style,
+        ...(withMessage ? null : style),
       }}
     >
       <input
@@ -97,6 +110,7 @@ export default function Toggle({
         checked={isOn}
         disabled={disabled}
         aria-label={withLabel ? undefined : label}
+        aria-describedby={describedBy}
         onChange={(e) => setOn(e.target.checked)}
         style={{ position: 'absolute', opacity: 0, width: 0, height: 0 }}
         {...rest}
@@ -106,5 +120,15 @@ export default function Toggle({
       </span>
       {withLabel && <span>{label}</span>}
     </label>
+  )
+
+  if (!withMessage) return control
+  return (
+    <div className={cx('inspera', className)} style={{ display: 'inline-flex', flexDirection: 'column', fontFamily: 'var(--font-sans)', ...style }}>
+      {control}
+      {/* The toggle row has no padding of its own, so the 4px gap is a plain
+          margin. The indent is the track plus its 8px gap. */}
+      <ControlMessage id={messageId} error={false} indent={trackW + 8} offset={4}>{description}</ControlMessage>
+    </div>
   )
 }

@@ -15,12 +15,14 @@ import { AssessorNav } from '../../imports/pasted_text/global-nav'
 
 /* --- Small building blocks --------------------------------------------- */
 
-// The real product's palette, reproduced verbatim from the reference screenshot.
+// The real product's palette, reproduced from the reference screenshot.
 // These CTAs and links are deliberately off the design-system tokens for now -
 // the user wants an exact rebuild first, reconciliation with the system later.
-const GREEN = '#2e9e5b' // "Add candidates to test" affordance
+// GREEN and CTA are darkened just enough for 4.5:1: the product's #2e9e5b is
+// 3.18:1 on gray-100 and #d9432c is 4.38:1 under white text.
+const GREEN = '#25804a' // "Add candidates to test" affordance
 const LINK = '#1a6fd4' // inline "Learn more" links
-const CTA = '#d9432c' // primary red action buttons (Manage / Add / Next)
+const CTA = '#d0402a' // primary red action buttons (Manage / Add / Next)
 
 /** Red primary action button matching the reference (Manage / Add / Next). */
 function CtaButton({
@@ -179,7 +181,7 @@ function CheckRow({
   const [checked, setChecked] = useState(defaultChecked)
   return (
     <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
-      <Checkbox label={label} checked={checked} onChange={setChecked} withLabel={false} size="Small" />
+      <Checkbox label={label} checked={checked} onChange={setChecked} withLabel={false} />
       <div style={{ display: 'flex', flexDirection: 'column', gap: 2, minWidth: 0, paddingTop: 7 }}>
         <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
           <span style={{ fontSize: 14, color: 'var(--text-primary)' }}>{label}</span>
@@ -235,7 +237,7 @@ function GeneralSettings() {
 
       <div style={stack(8)}>
         <SubHeading>Marking 2.0 <LearnMore /></SubHeading>
-        <Checkbox label="Enable Marking 2.0 on this test" checked={marking} onChange={setMarking} size="Small" />
+        <Checkbox label="Enable Marking 2.0 on this test" checked={marking} onChange={setMarking} />
       </div>
 
       <div style={stack(8)}>
@@ -243,7 +245,7 @@ function GeneralSettings() {
         <span style={{ fontSize: 13, color: 'var(--muted-foreground)' }}>
           Allow candidates to review the candidate report. <LearnMore />
         </span>
-        <Checkbox label="Enable Candidate Report" checked={candidateReport} onChange={setCandidateReport} size="Small" />
+        <Checkbox label="Enable Candidate Report" checked={candidateReport} onChange={setCandidateReport} />
       </div>
 
       <SectionDivider />
@@ -939,9 +941,9 @@ export default function TestSetup() {
             </div>
 
             <div style={stack(10)}>
-              <Checkbox label="Enable late submissions" checked={lateSubmissions} onChange={setLateSubmissions} size="Small" />
+              <Checkbox label="Enable late submissions" checked={lateSubmissions} onChange={setLateSubmissions} />
               <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-                <Checkbox label="Enable Multiple Attempts" checked={multipleAttempts} onChange={setMultipleAttempts} size="Small" />
+                <Checkbox label="Enable Multiple Attempts" checked={multipleAttempts} onChange={setMultipleAttempts} />
                 <LearnMore />
                 <span className="material-symbols-outlined" style={{ fontSize: 15, color: 'var(--muted-foreground)' }} aria-hidden>info</span>
               </span>

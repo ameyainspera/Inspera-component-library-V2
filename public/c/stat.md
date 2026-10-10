@@ -71,10 +71,15 @@ import { Stat } from '@inspera/components'
 
 Also accepts any native `<div>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<div>`. `className` and `style` go on the outermost element.
 
-**Accessibility** - role `group`. Associate the value with its label for screen readers; Convey trend with text, not color alone; Use aria-label to summarize the metric and change.
+**Accessibility** - role `group`. Associate the value with its label for screen readers; Convey the trend with text, not colour alone; Use aria-label to summarise the metric and change.
 
 **Do:** Use for dashboard summaries; Pair a value with a clear label; Indicate trend direction with an icon and text.
-**Don't:** Do not rely on color alone for the delta; Do not crowd many stats without spacing.
+**Don't:** Do not rely on colour alone for the change; Do not crowd many stats together without spacing.
+
+**Choosing a variant:**
+- `deltaIntent="Up"`: The figure rose and that is good, such as a higher pass rate than last sitting. The arrow is green.
+- `deltaIntent="Down"`: The figure fell and that needs attention, such as fewer submissions on time. The arrow is red.
+- `deltaIntent="Neutral"`: No real change, or a change that is neither good nor bad. Still say it in words, such as Same as last sitting.
 
 **Deprecated aliases** (do not use): `Metric`, `KPI`, `Stat card`
 
@@ -123,10 +128,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   --success:           #2E7D32;
   --white:             #ffffff;
   --gray-200:          #EDEDED;
-  --gray-600:          #7A7A7A;
+  --gray-700:          #595959;
   --text-primary:      rgba(0, 0, 0, 0.87);
   --border:            var(--gray-200);
-  --muted-foreground:  var(--gray-600);
+  --muted-foreground:  var(--gray-700);
   --radius-lg:         12px;
   --font-sans:         'Inter', system-ui, -apple-system, sans-serif;
 }

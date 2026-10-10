@@ -6,7 +6,7 @@ export type SpinnerIntent = 'Primary' | 'Neutral' | 'Inverse'
 export interface SpinnerProps {
   /** Diameter 16 / 24 / 40. */
   size?: SpinnerSize
-  /** Arc color. */
+  /** Arc colour. */
   intent?: SpinnerIntent
   /** What is loading, announced to screen readers. */
   label?: string

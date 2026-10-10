@@ -5,6 +5,7 @@ import DeliverTests from './DeliverTests'
 import QuestionSets from './QuestionSets'
 import NewAuthor from './NewAuthor'
 import MonitorCandidates from './MonitorCandidates'
+import DataRichList from './DataRichList'
 
 export interface ExamplePage {
   /** URL slug: #/pages/<slug> */
@@ -102,6 +103,19 @@ export const examplePages: ExamplePage[] = [
     component: TestSetup,
     entry: '/src/docs/pages/TestSetup.tsx',
     extras: ['/src/imports/pasted_text/global-nav.tsx'],
+  },
+  {
+    slug: 'data-rich-list',
+    name: 'Data-rich list',
+    description: 'A starting point for any list of records, not a product screen: search, a status filter, an advanced search dialog, a sortable data grid with three sets of figures, and a card view.',
+    // No location: it is a starting point, not a screen in the product.
+    uses: [
+      'Badge', 'Breadcrumb', 'Button', 'Card', 'Checkbox', 'DataGrid', 'DatePicker', 'Dialog',
+      'EmptyState', 'NumberInput', 'Progress', 'SegmentedControl', 'Select', 'Tag', 'TextInput',
+    ],
+    status: 'ready',
+    component: DataRichList,
+    entry: '/src/docs/pages/DataRichList.tsx',
   },
   // Coming-soon kits go last; the gallery lists them after the ready ones wherever they sit here.
   {

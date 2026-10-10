@@ -59,7 +59,7 @@ import { Badge } from '@inspera/components'
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `label` **(required)** | `string` | - | The badge text. One or two words. |
-| `intent` | `'Neutral' \| 'Info' \| 'Success' \| 'Warning' \| 'Error'` | `'Neutral'` | Semantic color. |
+| `intent` | `'Neutral' \| 'Info' \| 'Success' \| 'Warning' \| 'Error'` | `'Neutral'` | Semantic colour. |
 | `size` | `'Small' \| 'Medium'` | `'Medium'` | Height 20 / 24. |
 | `withIcon` | `boolean` | `false` | Show a leading status icon. |
 | `icon` | `string` | - | Material Symbols name shown before the label when withIcon is set. |
@@ -68,8 +68,17 @@ Also accepts any native `<span>` attribute (`id`, `name`, `aria-*`, `data-*`, ev
 
 **Accessibility** - role `status`. Use aria-label for icon-only badges; Use role="status" for dynamic count badges.
 
-**Do:** Use for status indicators and counts; Keep labels short - 1 to 2 words; Use intent colors consistently.
-**Don't:** Do not use for long text content; Do not make badges interactive without clear affordance.
+**Do:** Use for status indicators and counts; Keep labels short - 1 to 2 words; Use each intent for the same meaning everywhere.
+**Don't:** Do not use for long text; Do not make badges interactive - use Tag or Button.
+
+**Choosing a variant:**
+- `intent="Neutral"`: A status with no judgement, such as Draft or Archived.
+- `intent="Info"`: Something upcoming or for information, such as Scheduled.
+- `intent="Success"`: A good or finished state, such as Live or Graded.
+- `intent="Warning"`: Needs attention soon, such as Needs grading.
+- `intent="Error"`: Something has gone wrong, such as Overdue or Failed.
+- `size="Medium"`: Next to a page or card title.
+- `size="Small"`: Inside dense rows, such as the status column of a table.
 
 **Deprecated aliases** (do not use): `Status Badge`, `Tag`, `Chip`
 
@@ -111,19 +120,24 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 - Neutral is `--surface-neutral` with `--gray-900` text, not a grey chip with white text.
 - Every intent pairs a `*-surface` tint with the matching solid as the text colour.
 - The icon is Material Symbols Outlined with `FILL 1`, at 16px (14px small).
+- Static text, not a live region: `role="status"` on every badge makes a table of 50 rows announce 50 times. Announce a status change once, from where it happened.
 
 ```css
 /* Tokens this component needs. Paste once, at `:root`. */
 :root {
-  --error:            #D32F2F;
-  --warning:          #EF6C00;
-  --info:             #0288D1;
-  --success:          #2E7D32;
   --gray-900:         #272727;
+  --blue-800:         #004080;
+  --green-800:        #106542;
+  --red-700:          #A50D0D;
+  --orange-800:       #7E5501;
   --info-surface:     #E1F5FE;
   --success-surface:  #E8F5E9;
   --warning-surface:  #FFF3E0;
   --error-surface:    #FFEBEE;
+  --info-text:        var(--blue-800);
+  --success-text:     var(--green-800);
+  --warning-text:     var(--orange-800);
+  --error-text:       var(--red-700);
   --surface-neutral:  #F0F0F0;
   --radius-pill:      9999px;
   --font-sans:        'Inter', system-ui, -apple-system, sans-serif;
@@ -155,10 +169,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 /* Neutral is written out even though it matches the base, so the class name
    stays correct if the default ever moves. */
 .inspera-badge--neutral { --badge-bg: var(--surface-neutral); --badge-fg: var(--gray-900); }
-.inspera-badge--info    { --badge-bg: var(--info-surface);    --badge-fg: var(--info); }
-.inspera-badge--success { --badge-bg: var(--success-surface); --badge-fg: var(--success); }
-.inspera-badge--warning { --badge-bg: var(--warning-surface); --badge-fg: var(--warning); }
-.inspera-badge--error   { --badge-bg: var(--error-surface);   --badge-fg: var(--error); }
+.inspera-badge--info    { --badge-bg: var(--info-surface);    --badge-fg: var(--info-text); }
+.inspera-badge--success { --badge-bg: var(--success-surface); --badge-fg: var(--success-text); }
+.inspera-badge--warning { --badge-bg: var(--warning-surface); --badge-fg: var(--warning-text); }
+.inspera-badge--error   { --badge-bg: var(--error-surface);   --badge-fg: var(--error-text); }
 
 /* The icon is filled, not outlined, at 16px (14px in a small badge). */
 .inspera-badge .material-symbols-outlined {
@@ -169,12 +183,12 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 ```
 
 ```html
-<span class="inspera-badge inspera-badge--success" role="status">Live</span>
+<span class="inspera-badge inspera-badge--success">Live</span>
 
-<span class="inspera-badge inspera-badge--neutral inspera-badge--small" role="status">Draft</span>
+<span class="inspera-badge inspera-badge--neutral inspera-badge--small">Draft</span>
 
 <!-- With an icon. Material Symbols Outlined, filled - never another set. -->
-<span class="inspera-badge inspera-badge--error" role="status">
+<span class="inspera-badge inspera-badge--error">
   <span class="material-symbols-outlined" aria-hidden="true">error</span>
   Failed
 </span>

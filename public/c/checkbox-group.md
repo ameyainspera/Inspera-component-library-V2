@@ -70,7 +70,6 @@ import { CheckboxGroup } from '@inspera/components'
 | `defaultValue` | `string[]` | `[]` | Starting selection when uncontrolled. |
 | `onChange` | `(value: string[]) => void` | - | Fired with the full array of selected values. |
 | `orientation` | `'Vertical' \| 'Horizontal'` | `'Vertical'` | Layout direction. |
-| `size` | `CheckboxSize` | `'Medium'` | Size of every checkbox in the group. |
 | `helpText` | `string` | - | Guidance shown below the options. Replaced by errorText when `error` is set. |
 | `errorText` | `string` | - | Validation message, shown while `error` is true. |
 | `error` | `boolean` | `false` | Marks every option invalid and shows errorText. |
@@ -89,6 +88,12 @@ export interface CheckboxOption {
 
 **Do:** Use for selecting multiple related options; Provide a group label; Keep options parallel and concise.
 **Don't:** Do not use for mutually exclusive options - use Radio Group; Do not omit the group label.
+
+**Choosing a variant:**
+- `orientation="Vertical"`: Most groups. One option per line is the easiest to scan.
+- `orientation="Horizontal"`: Two or three short options that read as one line, such as Marks, Grades and Comments.
+- `error`: At least one option is required. Say so in errorText.
+- `disabled`: The choice depends on another setting that is off. Put the group under that setting and say how to turn it on.
 
 **Deprecated aliases** (do not use): `Checkbox list`, `Multi-select group`
 
@@ -133,16 +138,20 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 ```css
 /* Tokens this component needs. Paste once, at `:root`. */
 :root {
-  --primary:                #004080;
-  --error:                  #D32F2F;
-  --white:                  #ffffff;
-  --text-primary:           rgba(0, 0, 0, 0.87);
-  --border-control-strong:  #8C8C8C;
-  --radius-xs:              2px;
-  --focus-ring-width:       2px;
-  --focus-ring-offset:      2px;
-  --focus-ring-color:       var(--primary);
-  --font-sans:              'Inter', system-ui, -apple-system, sans-serif;
+  --primary:            #004080;
+  --error:              #D32F2F;
+  --white:              #ffffff;
+  --gray-600:           #7A7A7A;
+  --gray-700:           #595959;
+  --text-primary:       rgba(0, 0, 0, 0.87);
+  --error-surface:      #FFEBEE;
+  --border-control:     var(--gray-600);
+  --muted-foreground:   var(--gray-700);
+  --radius-xs:          2px;
+  --focus-ring-width:   2px;
+  --focus-ring-offset:  2px;
+  --focus-ring-color:   var(--primary);
+  --font-sans:          'Inter', system-ui, -apple-system, sans-serif;
 }
 
 .inspera-checkbox {
@@ -166,10 +175,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 }
 
 .inspera-checkbox__box {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   border-radius: var(--radius-xs);
-  border: 2px solid var(--border-control-strong);
+  border: 2px solid var(--border-control);
   background: var(--white);
   display: inline-flex;
   align-items: center;
@@ -179,14 +188,11 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   transition: all 120ms ease;
 }
 
-.inspera-checkbox--small .inspera-checkbox__box { width: 16px; height: 16px; }
-
 /* The tick is a Material Symbol at the box size minus 4. */
 .inspera-checkbox__box .material-symbols-outlined {
-  font-size: 16px;
+  font-size: 14px;
   font-variation-settings: 'wght' 600;
 }
-.inspera-checkbox--small .inspera-checkbox__box .material-symbols-outlined { font-size: 12px; }
 
 .inspera-checkbox__input:checked + .inspera-checkbox__box,
 .inspera-checkbox__input:indeterminate + .inspera-checkbox__box,
@@ -215,17 +221,48 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 
 .inspera-checkbox:active .inspera-checkbox__box { transform: scale(0.92); }
 
+/* In error the border is red whether or not the box is checked, so a group
+   in error reads as one. A checked box keeps its blue fill, and only an
+   unchecked one takes the red hover tint. */
 .inspera-checkbox--error .inspera-checkbox__box { border-color: var(--error); }
-.inspera-checkbox--error:hover .inspera-checkbox__box { border-color: var(--error); }
+.inspera-checkbox--error:hover .inspera-checkbox__box { border-color: var(--error); background: var(--error-surface); }
+.inspera-checkbox--error .inspera-checkbox__input:checked + .inspera-checkbox__box,
+.inspera-checkbox--error .inspera-checkbox__input:indeterminate + .inspera-checkbox__box,
+.inspera-checkbox--error.inspera-checkbox--mixed .inspera-checkbox__box,
+.inspera-checkbox--error:hover .inspera-checkbox__input:checked + .inspera-checkbox__box,
+.inspera-checkbox--error:hover .inspera-checkbox__input:indeterminate + .inspera-checkbox__box,
+.inspera-checkbox--error.inspera-checkbox--mixed:hover .inspera-checkbox__box {
+  border-color: var(--error);
+  background: var(--primary);
+}
 
 .inspera-checkbox--disabled {
   cursor: not-allowed;
   opacity: 0.38;
 }
 .inspera-checkbox--disabled:hover .inspera-checkbox__box {
-  border-color: var(--border-control-strong);
+  border-color: var(--border-control);
   background: var(--white);
 }
+
+/* A line under the label: a description, or the error in its place. The
+   field stacks the row and the line. The line starts under the label text
+   (the 18px box plus its 8px gap) and sits 4px under it, pulled up into the
+   row's 8px padding. It is not dimmed with a disabled box: it often says why
+   the option is unavailable. */
+.inspera-checkbox-field {
+  display: inline-flex;
+  flex-direction: column;
+  font-family: var(--font-sans);
+}
+.inspera-checkbox__message {
+  margin-top: -4px;
+  padding-left: 26px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--muted-foreground);
+}
+.inspera-checkbox__message--error { color: var(--error); }
 
 .inspera-checkbox-group {
   display: flex;

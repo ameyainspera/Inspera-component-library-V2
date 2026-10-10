@@ -53,7 +53,7 @@ import { Card } from '@inspera/components'
 
 <Card
   title="Algebra Quiz"
-  body="24 questions | 45 minutes. Group related content in a contained surface."
+  body="24 questions, 45 minutes. Covers linear equations and inequalities."
 />
 ```
 
@@ -63,16 +63,28 @@ import { Card } from '@inspera/components'
 | `body` | `string` | - | Short body copy. For anything richer, pass children instead. |
 | `elevation` | `'Flat' \| 'Raised' \| 'Outlined'` | `'Raised'` | Surface treatment. |
 | `padding` | `'Compact' \| 'Default' \| 'Spacious'` | `'Default'` | Internal padding (12 / 16 / 24). |
-| `interactive` | `boolean` | `false` | The whole card becomes one click target, with hover elevation and a focus ring. |
+| `interactive` | `boolean` | `false` | The whole card becomes one click target: it lifts on hover, sinks when pressed and takes a focus ring. |
+| `selected` | `boolean` | - | Selected state. Controlled - pair with onSelectedChange. Setting it makes the card a toggle: interactive, and selected or not with each click. |
+| `defaultSelected` | `boolean` | - | Starting selection when uncontrolled. Also makes the card a toggle. |
+| `onSelectedChange` | `(selected: boolean) => void` | - | Fired with the new selection when the card is clicked. |
 | `children` | `ReactNode` | - | Card contents. Replaces title and body. |
 | `onClick` | `MouseEventHandler<HTMLButtonElement>` | - | Fired when an interactive card is activated. |
 
 Also accepts any native `<article>` attribute (`id`, `name`, `aria-*`, `data-*`, event handlers, `ref`), forwarded to the `<article>`. `className` and `style` go on the outermost element.
 
-**Accessibility** - role `article`, keyboard operable. Interactive cards should use role="button" or be wrapped in an anchor; Non-interactive cards use role="article" or a semantic section.
+**Accessibility** - role `article`, keyboard operable. An interactive card is an article with one button stretched over it, named by the title; A selectable card is a toggle: its button carries aria-pressed, and the selected tick is a second cue besides the border colour; Non-interactive cards use role="article" or a semantic section.
 
 **Do:** Use to group related content; Maintain consistent padding within a view; Use raised elevation for primary content cards.
-**Don't:** Do not nest cards inside other cards; Do not use cards for layout-only purposes without content.
+**Don't:** Do not nest cards inside other cards; Do not use an empty card just for layout.
+
+**Choosing a variant:**
+- `elevation="Raised"`: Cards that lead a page on the grey canvas, such as what to continue on the home page.
+- `elevation="Flat"`: Page content on the grey canvas, such as the summaries on a test's overview. No shadow, so it stays quiet.
+- `elevation="Outlined"`: Cards on a white page, where a shadow would be heavy, such as tests in the Cards view.
+- `padding="Compact"`: Dense grids and side panels, where many cards share the space.
+- `padding="Spacious"`: A card with one main message that needs room to read, such as a summary before publishing.
+- `interactive`: The whole card opens one thing, such as a question type to start from. Put no other buttons or links inside it.
+- `selected`: People pick options laid out as cards, such as the question types to add to a set. Each click selects or clears the card.
 
 #### One-time setup
 
@@ -111,6 +123,8 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 - Flat has neither border nor shadow, Raised adds `--shadow-200`, Outlined adds a 1px `--border-strong`. Never both a shadow and a strong border.
 - The transparent 1px border at rest is deliberate: without it, Outlined would be 2px wider than Flat.
 - An interactive card stays an `<article>` with one transparent `<button class="inspera-card__link">` stretched over it, named by the title. Never wrap the card in a `<button>` (headings inside a button are invalid) and never put a click handler on a `<div>`.
+- Interactive states: hover and keyboard focus lift to `--shadow-300`; pressed sinks to `--shadow-100` with the `--action-hover` wash over the white; keyboard focus also draws the standard focus ring around the whole card.
+- A selectable card is a toggle: the button carries `aria-pressed`. Selected is a 2px `--primary` edge (border plus a 1px outline inset by 2px) and a `check_circle` tick at the top right; the right padding keeps room for the tick at all times.
 - Title 16px/500, body 16px/1.4 in `--gray-700` - the body is not smaller than the title.
 
 ```css
@@ -120,9 +134,11 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   --white:              #ffffff;
   --gray-300:           #D9D9D9;
   --gray-700:           #595959;
+  --action-hover:       rgba(0, 0, 0, 0.04);
   --text-primary:       rgba(0, 0, 0, 0.87);
   --border-strong:      var(--gray-300);
   --radius-lg:          12px;
+  --shadow-100:         0px 4px 4px rgba(39, 39, 39, 0.08), 0px 2px 4px rgba(39, 39, 39, 0.12);
   --shadow-200:         0px 8px 8px rgba(39, 39, 39, 0.08), 0px 4px 6px rgba(39, 39, 39, 0.12);
   --shadow-300:         0px 8px 16px rgba(39, 39, 39, 0.08), 0px 6px 8px rgba(39, 39, 39, 0.12);
   --focus-ring-width:   2px;
@@ -141,8 +157,6 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   border-radius: var(--radius-lg);
   background: var(--white);
   color: var(--text-primary);
-  /* Stated, not inherited. An interactive card is a <button>, and a button
-     falls back to the UA font rather than the page's. */
   font-family: var(--font-sans);
   /* A transparent border at rest, so switching to Outlined does not resize the
      card. Dropping it and adding a border only on the modifier shifts layout. */
@@ -175,11 +189,38 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   outline: var(--focus-ring-width) solid var(--focus-ring-color);
   outline-offset: var(--focus-ring-offset);
 }
+
+/* Hover and keyboard focus lift the card; pressing sinks it below its rest
+   and lays the neutral --action-hover wash over the white. */
 .inspera-card--interactive:hover,
 .inspera-card--interactive:has(:focus-visible) { box-shadow: var(--shadow-300); }
+.inspera-card--interactive:active {
+  background: linear-gradient(var(--action-hover), var(--action-hover)), var(--white);
+  box-shadow: var(--shadow-100);
+}
 
-/* Interactive cards are <button>, so they are focusable and operable by
-   keyboard for free. A div with onclick is not. */
+/* Selectable: the link toggles aria-pressed. The right padding keeps room for
+   the tick whether or not the card is selected, so selecting never reflows. */
+.inspera-card--selectable { padding-right: 44px; }
+.inspera-card--compact.inspera-card--selectable  { padding-right: 40px; }
+.inspera-card--spacious.inspera-card--selectable { padding-right: 52px; }
+
+/* Selected: a 2px primary edge - the border plus an outline just inside it,
+   so the card keeps its size - and a tick, so colour is not the only cue. */
+.inspera-card--selected {
+  border-color: var(--primary);
+  outline: 1px solid var(--primary);
+  outline-offset: -2px;
+}
+.inspera-card__tick {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  font-size: 20px;
+  color: var(--primary);
+}
+.inspera-card--compact  .inspera-card__tick { top: 12px; right: 12px; }
+.inspera-card--spacious .inspera-card__tick { top: 24px; right: 24px; }
 
 .inspera-card__title {
   margin: 0;
@@ -198,14 +239,23 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 ```html
 <article class="inspera-card inspera-card--raised">
   <h3 class="inspera-card__title">Algebra Quiz</h3>
-  <p class="inspera-card__body">24 questions | 45 minutes.</p>
+  <p class="inspera-card__body">24 questions, 45 minutes.</p>
 </article>
 
-<!-- Interactive: a real button, never a div with a click handler. -->
-<button type="button" class="inspera-card inspera-card--outlined inspera-card--interactive">
+<!-- Interactive: the card stays an <article>; one button stretched over it, named by the title. -->
+<article class="inspera-card inspera-card--outlined inspera-card--interactive">
   <h3 class="inspera-card__title">History Midterm</h3>
   <p class="inspera-card__body">Open the assessment.</p>
-</button>
+  <button type="button" class="inspera-card__link" aria-label="History Midterm"></button>
+</article>
+
+<!-- Selected: a toggle. Flip aria-pressed and the --selected class together, and show the tick. -->
+<article class="inspera-card inspera-card--outlined inspera-card--interactive inspera-card--selectable inspera-card--selected">
+  <h3 class="inspera-card__title">Multiple choice</h3>
+  <p class="inspera-card__body">One or more correct answers.</p>
+  <span class="material-symbols-outlined inspera-card__tick" aria-hidden="true">check_circle</span>
+  <button type="button" class="inspera-card__link" aria-label="Multiple choice" aria-pressed="true"></button>
+</article>
 ```
 
 

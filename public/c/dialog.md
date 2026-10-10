@@ -67,11 +67,13 @@ import { Dialog } from '@inspera/components'
 | `open` **(required)** | `boolean` | - | Whether the dialog is shown. Controlled - pair with onClose. |
 | `title` **(required)** | `string` | - | Dialog heading. Also the accessible name. |
 | `children` | `ReactNode` | - | Dialog content. |
-| `size` | `'Small' \| 'Medium' \| 'Large'` | `'Medium'` | Panel width 400 / 480 / 560. |
+| `size` | `'Medium' \| 'Large'` | `'Medium'` | Panel width 480 / 640. Medium for a question or confirmation, Large for a summary or short form to check first. |
 | `hasCloseButton` | `boolean` | `true` | Show the header close button. |
 | `hasActions` | `boolean` | `true` | Show the footer action buttons. |
 | `confirmLabel` | `string` | `'Continue'` | Label for the confirming action. Name the action - "Delete", not "OK". |
+| `confirmIntent` | `'Primary' \| 'Destructive'` | `'Primary'` | The confirming button's intent. Destructive when the action deletes something or cannot be undone. |
 | `cancelLabel` | `string` | `'Cancel'` | Label for the dismissing action. |
+| `footerStart` | `ReactNode` | - | Short text at the start of the footer, before the actions - what confirming will do, such as "2 filters set". Not for a second action. |
 | `onClose` | `() => void` | - | Fired on the close button, Cancel, the scrim, and Escape. |
 | `onConfirm` | `() => void` | - | Fired when the confirming action is activated. |
 
@@ -79,8 +81,15 @@ Also accepts any native `<div>` attribute (`id`, `name`, `aria-*`, `data-*`, eve
 
 **Accessibility** - role `dialog`, keyboard operable. Use role="dialog" with aria-modal="true"; Set aria-labelledby to the dialog title; Trap focus inside the dialog when open; Return focus to trigger element on close; Escape key closes the dialog.
 
-**Do:** Use for confirmations and critical decisions; Always provide a way to close the dialog; Keep dialog content focused and concise.
-**Don't:** Do not open dialogs from other dialogs; Do not use for non-blocking information - use Alert instead.
+**Do:** Use for confirmations and critical decisions; Always provide a way to close the dialog; Keep dialog content focused and concise; Set confirmIntent="Destructive" when confirming deletes something or cannot be undone, and name the action: "Delete assessment"; Use footerStart for a short status of what confirming will do, such as "2 filters set".
+**Don't:** Do not open dialogs from other dialogs; Do not put a second action in footerStart - it is for text only; Do not use for non-blocking information - use Alert instead.
+
+**Choosing a variant:**
+- `size="Medium"`: A question or a confirmation, such as releasing results or pausing a test. The default.
+- `size="Large"`: A confirmation with a summary or a short form to check first, such as the settings before publishing.
+- `confirmIntent="Primary"`: Confirming moves something forward, such as releasing results. Name the action on the button.
+- `confirmIntent="Destructive"`: Confirming deletes something or can't be undone, such as deleting a test. Name the object and say what will be lost.
+- `hasActions="false"`: The dialog only shows information, such as keyboard shortcuts. The close button is the way out.
 
 **Deprecated aliases** (do not use): `Modal`, `Popup`
 
@@ -117,9 +126,10 @@ Use this whenever `@inspera/components` is not installed. It is the same
 component, and it is complete: do not substitute a radius, colour, spacing or
 font weight of your own, and do not restyle it with a UI kit's defaults.
 
-- Widths are exactly 400 / 480 / 560 with `max-width: 100%`, `--radius-lg` and `--shadow-500`.
+- Widths are exactly 480 (Medium) and 640 (Large) with `max-width: 100%`, `--radius-lg` and `--shadow-500`.
 - Wrap the panel in the scrim: `--scrim`, fixed, full-viewport, at `--z-modal`. Without it the page behind stays clickable and this is a floating card, not a modal.
-- The footer actions are the canonical Button - `inspera-btn--text` to cancel, `inspera-btn--primary` (or `--destructive`) to confirm. Do not style dialog buttons separately.
+- The footer actions are the canonical Button - `inspera-btn--text` to cancel, `inspera-btn--primary` to confirm, or `inspera-btn--destructive` when confirming deletes something or cannot be undone (`confirmIntent="Destructive"`). Do not style dialog buttons separately.
+- A short status can lead the footer (`footerStart`, `inspera-dialog__footer-start`): what confirming will do, such as "2 filters set". It is text, never a second action - extra actions belong in the body.
 - `role="dialog"` with `aria-modal="true"` and `aria-labelledby` pointing at the title id. Generate a unique id - a hardcoded one collides the moment two dialogs exist on a page.
 - Behaviour the markup cannot express, and that you must add: move focus into the panel on open, trap Tab inside it, return focus to the trigger on close, close on Escape and on a scrim click, and lock body scroll while open.
 - The title uses the `--h2-*` type tokens (22.78px/500) - an exact export from Figma, not a rounded 24.
@@ -128,34 +138,40 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 ```css
 /* Tokens this component needs. Paste once, at `:root`. */
 :root {
-  --primary:               #004080;
-  --error:                 #D32F2F;
-  --warning:               #EF6C00;
-  --success:               #2E7D32;
-  --white:                 #ffffff;
-  --gray-100:              #F7F7F7;
-  --gray-200:              #EDEDED;
-  --gray-700:              #595959;
-  --gray-900:              #272727;
-  --text-primary:          rgba(0, 0, 0, 0.87);
-  --border:                var(--gray-200);
-  --scrim:                 rgba(39, 39, 39, 0.48);
-  --radius-sm:             4px;
-  --radius-lg:             12px;
-  --radius-pill:           9999px;
-  --shadow-500:            0px 10px 32px rgba(39, 39, 39, 0.1), 0px 6px 14px rgba(39, 39, 39, 0.12);
-  --effect-button-shadow:  inset 0px -1px 0px rgba(0, 0, 0, 0.2), 0px 1px 0px rgba(0, 0, 0, 0.08);
-  --border-width-default:  1px;
-  --focus-ring-width:      2px;
-  --focus-ring-offset:     2px;
-  --focus-ring-color:      var(--primary);
-  --duration-fast:         100ms;
-  --easing-standard:       cubic-bezier(0.2, 0, 0, 1);
-  --z-modal:               600;
-  --font-sans:             'Inter', system-ui, -apple-system, sans-serif;
-  --h2-size:               22.78px;
-  --h2-weight:             500;
-  --h2-line-height:        1.12;
+  --primary:                #004080;
+  --error:                  #D32F2F;
+  --success:                #2E7D32;
+  --white:                  #ffffff;
+  --gray-100:               #F7F7F7;
+  --gray-200:               #EDEDED;
+  --gray-700:               #595959;
+  --gray-900:               #272727;
+  --orange-600:             #F2A202;
+  --text-primary:           rgba(0, 0, 0, 0.87);
+  --text-secondary:         var(--gray-700);
+  --border:                 var(--gray-200);
+  --scrim:                  rgba(39, 39, 39, 0.48);
+  --control-height-sm:      32px;
+  --control-height-md:      40px;
+  --control-height-lg:      44px;
+  --radius-sm:              4px;
+  --radius-lg:              12px;
+  --radius-pill:            9999px;
+  --shadow-500:             0px 10px 32px rgba(39, 39, 39, 0.1), 0px 6px 14px rgba(39, 39, 39, 0.12);
+  --effect-button-shadow:   inset 0px -1px 0px rgba(0, 0, 0, 0.2), 0px 1px 0px rgba(0, 0, 0, 0.08);
+  --border-width-default:   1px;
+  --focus-ring-width:       2px;
+  --focus-ring-offset:      2px;
+  --focus-ring-color:       var(--primary);
+  --duration-fast:          100ms;
+  --easing-standard:        cubic-bezier(0.2, 0, 0, 1);
+  --z-modal:                600;
+  --font-sans:              'Inter', system-ui, -apple-system, sans-serif;
+  --medium-14-size:         14px;
+  --medium-14-line-height:  1.4;
+  --h2-size:                22.78px;
+  --h2-weight:              500;
+  --h2-line-height:         1.12;
 }
 
 .inspera-btn {
@@ -173,7 +189,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   align-items: center;
   justify-content: center;
   gap: 8px;
-  height: 40px;
+  height: var(--control-height-md);
   min-width: 80px;
   padding: 0 16px;
   border-radius: var(--radius-sm);
@@ -194,19 +210,27 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
     transform var(--duration-fast) var(--easing-standard);
 }
 
-/* Sizes change height, padding and gap only - never the 16px type. */
-.inspera-btn--small { height: 32px; padding: 0 12px; gap: 6px; }
-.inspera-btn--large { height: 48px; padding: 0 24px; gap: 10px; }
+/* Sizes change height and padding. Small also steps down to 14px type and a
+   16px icon (see the end of this block). */
+.inspera-btn--small {
+  height: var(--control-height-sm);
+  padding: 0 12px;
+  gap: 4px;
+  font-size: var(--medium-14-size);
+  line-height: var(--medium-14-line-height);
+}
+.inspera-btn--large { height: var(--control-height-lg); padding: 0 20px; }
 
 /* Icon only: a square the height of the button. It still needs aria-label. */
-.inspera-btn--icon-only { width: 40px; min-width: 0; padding: 0; }
-.inspera-btn--small.inspera-btn--icon-only { width: 32px; }
-.inspera-btn--large.inspera-btn--icon-only { width: 48px; }
+.inspera-btn--icon-only { width: var(--control-height-md); min-width: 0; padding: 0; }
+.inspera-btn--small.inspera-btn--icon-only { width: var(--control-height-sm); }
+.inspera-btn--large.inspera-btn--icon-only { width: var(--control-height-lg); }
 
 /* Solid intents differ only in fill; hover and pressed derive from it. */
 .inspera-btn--primary     { --btn-bg: var(--primary); }
 .inspera-btn--success     { --btn-bg: var(--success); }
-.inspera-btn--warning     { --btn-bg: var(--warning); }
+/* Warning takes dark text on orange-600: white on --warning is 3.08:1. */
+.inspera-btn--warning     { --btn-bg: var(--orange-600); --btn-fg: var(--gray-900); }
 .inspera-btn--destructive { --btn-bg: var(--error); }
 .inspera-btn--secondary {
   --btn-bg: var(--gray-100);
@@ -231,6 +255,8 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   background: var(--btn-bg-hover);
   box-shadow: var(--btn-shadow-hover);
 }
+/* A button that opens a menu keeps its hover fill while the menu is open. */
+.inspera-btn[aria-expanded='true'] { background: var(--btn-bg-hover); }
 .inspera-btn:active:not(:disabled) {
   background: var(--btn-bg-active);
   box-shadow: var(--btn-shadow-active);
@@ -243,6 +269,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 .inspera-btn:disabled { opacity: 0.38; cursor: not-allowed; }
 
 .inspera-btn .material-symbols-outlined { font-size: 20px; }
+.inspera-btn--small .material-symbols-outlined { font-size: 16px; }
 
 /* The scrim. Fixed, full-viewport, and it closes the dialog when clicked. */
 .inspera-dialog-overlay {
@@ -270,8 +297,7 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   font-family: var(--font-sans);
 }
 
-.inspera-dialog--small { width: 400px; }
-.inspera-dialog--large { width: 560px; }
+.inspera-dialog--large { width: 640px; }
 
 .inspera-dialog__header {
   display: flex;
@@ -329,6 +355,15 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
   border-top: 1px solid var(--border);
   flex-wrap: wrap;
   flex-shrink: 0;
+}
+
+/* Optional status before the actions. The auto margin keeps the actions at
+   the end, wherever the row wraps. */
+.inspera-dialog__footer-start {
+  margin-right: auto;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--text-secondary);
 }
 ```
 

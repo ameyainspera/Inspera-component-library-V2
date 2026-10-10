@@ -54,13 +54,8 @@ export default function FileUpload({
   // Counted, not a boolean: dragleave fires every time the pointer crosses
   // into a child element, which made the highlight flicker.
   const [depth, setDepth] = useState(0)
-  const isDragging = forceDragging || depth > 0
+  const isDragging = !disabled && (forceDragging || depth > 0)
   const message = error && errorText ? errorText : helpText
-
-  let border = 'var(--gray-400)'
-  let background = 'var(--surface)'
-  if (error) border = 'var(--error)'
-  else if (isDragging) { border = 'var(--primary)'; background = 'var(--blue-100)' }
 
   const zone: CSSProperties = {
     // Anchors the visually hidden input, so focusing it never scrolls the page.
@@ -72,11 +67,10 @@ export default function FileUpload({
     gap: 8,
     width: '100%',
     padding: '32px 24px',
-    border: `2px dashed ${border}`,
+    // The 2px dashed border and the wash come from runtime.css (.inspera-dropzone),
+    // so hover and a drag can change them: a drag shows even in error.
     borderRadius: 'var(--radius-md)',
-    background,
     cursor: disabled ? 'not-allowed' : 'pointer',
-    opacity: disabled ? 0.6 : 1,
     textAlign: 'center',
     fontFamily: 'var(--font-sans)',
     transition: 'all var(--duration-fast) var(--easing-standard)',
@@ -103,6 +97,8 @@ export default function FileUpload({
       htmlFor={inputId}
       className={cx('inspera inspera-dropzone', className)}
       data-disabled={disabled || undefined}
+      data-error={error || undefined}
+      data-dragging={isDragging || undefined}
       style={zone}
       onDragEnter={drag(1)}
       onDragOver={(e) => { if (!disabled) e.preventDefault() }}
@@ -114,10 +110,13 @@ export default function FileUpload({
         emit(e.dataTransfer.files)
       }}
     >
-      <span className="material-symbols-outlined" style={{ fontSize: 40, color: error ? 'var(--error)' : 'var(--primary)' }} aria-hidden>upload_file</span>
-      <span style={{ fontSize: 16, color: 'var(--text-primary)' }} aria-hidden>
+      {/* Disabled dims the icon and the prompt, not the message: it usually
+          says why uploading is not possible, so it stays readable. */}
+      <span className="material-symbols-outlined" style={{ fontSize: 40, color: error && !isDragging ? 'var(--error)' : 'var(--primary)', opacity: disabled ? 0.6 : 1 }} aria-hidden>upload_file</span>
+      <span style={{ fontSize: 16, color: 'var(--text-primary)', opacity: disabled ? 0.6 : 1 }} aria-hidden>
         Drag &amp; drop or{' '}
-        <span style={{ color: 'var(--primary)', fontWeight: 600 }}>browse</span>
+        {/* "browse" only looks like a link when it does something. */}
+        <span style={disabled ? undefined : { color: 'var(--primary)', fontWeight: 600 }}>browse</span>
       </span>
       {message && (
         <span id={messageId} style={{ fontSize: 12, color: error ? 'var(--error)' : 'var(--muted-foreground)' }}>{message}</span>

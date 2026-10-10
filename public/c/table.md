@@ -111,6 +111,13 @@ export type TableRow = Record<string, ReactNode>
 **Do:** Use for comparable, structured records; Right-align numeric columns; Keep headers concise.
 **Don't:** Do not use tables for page layout; Do not overload rows with unrelated actions.
 
+**Choosing a variant:**
+- `size="Default"`: Short tables people read row by row, such as the questions of a test. The default size.
+- `size="Compact"`: Long rosters people scan, such as all tests in Deliver.
+- `striped`: Wide rows that people read across, such as a roster with many columns.
+- `selectable`: People act on several rows at once, such as messaging candidates. Show what they can do once rows are selected.
+- `hoverable="false"`: Rows that open nothing, such as a summary of results. Without the hover, nothing suggests they can be clicked.
+
 **Deprecated aliases** (do not use): `Data table`, `Grid`, `Datagrid`
 
 #### One-time setup
@@ -157,25 +164,28 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 /* Tokens this component needs. Paste once, at `:root`. */
 :root {
   --primary:           #004080;
-  --error:             #D32F2F;
-  --warning:           #EF6C00;
-  --info:              #0288D1;
-  --success:           #2E7D32;
   --white:             #ffffff;
   --gray-100:          #F7F7F7;
   --gray-200:          #EDEDED;
-  --gray-600:          #7A7A7A;
   --gray-700:          #595959;
   --gray-900:          #272727;
+  --blue-800:          #004080;
+  --green-800:         #106542;
+  --red-700:           #A50D0D;
+  --orange-800:        #7E5501;
   --action-hover:      rgba(0, 0, 0, 0.04);
   --text-primary:      rgba(0, 0, 0, 0.87);
   --info-surface:      #E1F5FE;
   --success-surface:   #E8F5E9;
   --warning-surface:   #FFF3E0;
   --error-surface:     #FFEBEE;
+  --info-text:         var(--blue-800);
+  --success-text:      var(--green-800);
+  --warning-text:      var(--orange-800);
+  --error-text:        var(--red-700);
   --surface-neutral:   #F0F0F0;
   --border:            var(--gray-200);
-  --muted-foreground:  var(--gray-600);
+  --muted-foreground:  var(--gray-700);
   --radius-md:         8px;
   --radius-pill:       9999px;
   --duration-fast:     100ms;
@@ -209,10 +219,10 @@ font weight of your own, and do not restyle it with a UI kit's defaults.
 /* Neutral is written out even though it matches the base, so the class name
    stays correct if the default ever moves. */
 .inspera-badge--neutral { --badge-bg: var(--surface-neutral); --badge-fg: var(--gray-900); }
-.inspera-badge--info    { --badge-bg: var(--info-surface);    --badge-fg: var(--info); }
-.inspera-badge--success { --badge-bg: var(--success-surface); --badge-fg: var(--success); }
-.inspera-badge--warning { --badge-bg: var(--warning-surface); --badge-fg: var(--warning); }
-.inspera-badge--error   { --badge-bg: var(--error-surface);   --badge-fg: var(--error); }
+.inspera-badge--info    { --badge-bg: var(--info-surface);    --badge-fg: var(--info-text); }
+.inspera-badge--success { --badge-bg: var(--success-surface); --badge-fg: var(--success-text); }
+.inspera-badge--warning { --badge-bg: var(--warning-surface); --badge-fg: var(--warning-text); }
+.inspera-badge--error   { --badge-bg: var(--error-surface);   --badge-fg: var(--error-text); }
 
 /* The icon is filled, not outlined, at 16px (14px in a small badge). */
 .inspera-badge .material-symbols-outlined {

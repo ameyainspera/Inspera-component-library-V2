@@ -1,4 +1,4 @@
-import { type CSSProperties, Fragment } from 'react'
+import { type CSSProperties } from 'react'
 import { cx, type NativeAttrs } from './types'
 
 export type BreadcrumbSeparator = 'Slash' | 'Chevron'
@@ -38,7 +38,7 @@ export default function Breadcrumb({
   const crumbs = items.map((it) => (typeof it === 'string' ? { label: it } : it))
   const linkStyle: CSSProperties = {
     background: 'none', border: 'none', padding: 0, cursor: 'pointer',
-    fontSize, color: 'var(--primary)', fontFamily: 'var(--font-sans)', textDecoration: 'none',
+    fontSize, color: 'var(--primary)', fontFamily: 'var(--font-sans)',
   }
 
   return (
@@ -47,30 +47,30 @@ export default function Breadcrumb({
         {crumbs.map((item, i) => {
           const last = i === crumbs.length - 1
           return (
-            <Fragment key={`${item.label}-${i}`}>
-              <li>
-                {last ? (
-                  <span aria-current="page" style={{ fontSize, fontWeight: 500, color: 'var(--text-primary)' }}>{item.label}</span>
-                ) : item.href ? (
-                  // Hover underline is CSS (.inspera-underline-hover), so
-                  // keyboard focus gets it too - JS mouse handlers did not.
-                  <a href={item.href} className="inspera-interactive inspera-underline-hover" style={linkStyle}>{item.label}</a>
-                ) : (
-                  <button type="button" className="inspera-interactive inspera-underline-hover" onClick={() => onNavigate?.(i)} style={linkStyle}>
-                    {item.label}
-                  </button>
-                )}
-              </li>
+            // Each separator sits in the same item as the crumb before it, so a
+            // wrapped trail breaks after a separator and never starts a line with one.
+            <li key={`${item.label}-${i}`} style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+              {last ? (
+                <span aria-current="page" style={{ fontSize, fontWeight: 500, color: 'var(--text-primary)' }}>{item.label}</span>
+              ) : item.href ? (
+                // Hover underline is CSS (.inspera-underline-hover), so
+                // keyboard focus gets it too - JS mouse handlers did not.
+                <a href={item.href} className="inspera-interactive inspera-underline-hover" style={linkStyle}>{item.label}</a>
+              ) : (
+                <button type="button" className="inspera-interactive inspera-underline-hover" onClick={() => onNavigate?.(i)} style={linkStyle}>
+                  {item.label}
+                </button>
+              )}
               {!last && (
-                <li aria-hidden style={sep}>
+                <span aria-hidden style={sep}>
                   {separator === 'Chevron' ? (
                     <span className="material-symbols-outlined" style={{ fontSize: fontSize + 2 }}>chevron_right</span>
                   ) : (
                     <span style={{ fontSize }}>/</span>
                   )}
-                </li>
+                </span>
               )}
-            </Fragment>
+            </li>
           )
         })}
       </ol>

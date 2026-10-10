@@ -77,6 +77,14 @@ Also accepts any native `<div>` attribute (`id`, `name`, `aria-*`, `data-*`, eve
 **Do:** Use for secondary tasks and detail panels; Provide a clear close control; Return focus to the trigger on close.
 **Don't:** Do not use for critical confirmations - use Dialog; Do not open multiple drawers at once.
 
+**Choosing a variant:**
+- `side="Right"`: Details of one row while the list stays in view, such as a question from the bank. The default.
+- `side="Left"`: Navigation and filters that belong at the left, such as a roster's saved views on a narrow screen.
+- `side="Bottom"`: Short actions on a touch screen, such as an invigilator on an iPad acting on one candidate.
+- `size="Small"`: A few facts or actions.
+- `size="Large"`: Richer detail that still belongs beside the list, such as a question preview. Never a table wider than 5 columns.
+- `hasCloseButton="false"`: The drawer has its own way out, such as Close beside its actions, or a list where choosing an item closes it.
+
 **Deprecated aliases** (do not use): `Sheet`, `Side panel`, `Off-canvas`
 
 #### One-time setup

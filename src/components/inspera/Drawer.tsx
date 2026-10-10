@@ -1,5 +1,5 @@
-import { type CSSProperties, type ReactNode, useId } from 'react'
-import { Portal, useEscapeLayer, useScrimDismiss } from './overlay'
+import { type CSSProperties, type ReactNode, useId, useState } from 'react'
+import { ModalLayer, Portal, useEscapeLayer, useScrimDismiss } from './overlay'
 import { cx, type NativeAttrs } from './types'
 import { useModalBehavior } from './useModalBehavior'
 
@@ -45,6 +45,8 @@ export default function Drawer({
   const panel = useModalBehavior(modal)
   const scrim = useScrimDismiss(onClose)
   useEscapeLayer(modal, () => onClose?.())
+  // The scrim element, handed to the panels inside so they open above the drawer.
+  const [layer, setLayer] = useState<HTMLDivElement | null>(null)
 
   if (!embedded && !open) return null
 
@@ -116,13 +118,14 @@ export default function Drawer({
   if (embedded) return content
 
   return (
-    <Portal>
+    <Portal modal>
       <div
+        ref={setLayer}
         {...scrim}
         className="inspera"
         style={{ position: 'fixed', inset: 0, background: 'var(--scrim)', zIndex: 'var(--z-modal)' }}
       >
-        {content}
+        <ModalLayer.Provider value={layer}>{content}</ModalLayer.Provider>
       </div>
     </Portal>
   )

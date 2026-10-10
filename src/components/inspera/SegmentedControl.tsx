@@ -48,7 +48,10 @@ export default function SegmentedControl({
   const segments = items.map(normalise)
   const [active, setActive] = useControllableState(value, defaultValue ?? segments[0]?.value ?? '', onChange)
   const buttons = useRef<(HTMLButtonElement | null)[]>([])
-  const height = size === 'Small' ? 32 : 40
+  // Button's heights and type at each size - Text Input's heights too - so the
+  // control lines up with them in a toolbar.
+  const height = size === 'Small' ? 'var(--control-height-sm)' : 'var(--control-height-md)'
+  const type = size === 'Small' ? 'medium-14' : 'default-16-regular'
   const index = Math.max(0, segments.findIndex((s) => s.value === active))
 
   // Arrow keys move the selection *and* the focus. Moving only the selection
@@ -64,16 +67,15 @@ export default function SegmentedControl({
     buttons.current[next]?.focus()
   }
 
-  const track: CSSProperties = {
+  const group: CSSProperties = {
     display: 'inline-flex',
-    gap: 2,
-    padding: 4,
-    background: 'var(--gray-100)',
-    borderRadius: 'var(--radius-md)',
     width: fullWidth ? '100%' : undefined,
     opacity: disabled ? 0.38 : 1,
     ...style,
   }
+
+  const last = segments.length - 1
+  const r = 'var(--radius-sm)'
 
   return (
     <div
@@ -81,26 +83,41 @@ export default function SegmentedControl({
       aria-label={label}
       aria-disabled={disabled || undefined}
       className={cx('inspera', className)}
-      style={track}
+      style={group}
       onKeyDown={onKeyDown}
       {...rest}
     >
       {segments.map((seg, i) => {
         const isActive = i === index
-        const segment: CSSProperties = {
+        // Joined, outlined segments, the look of the product's own switches.
+        // Neighbours overlap by one border so each join is a single line, and
+        // the selected segment sits above them so its blue border shows on
+        // all four sides. Fills and colours go through runtime.css
+        // (.inspera-segment), where an unselected segment's hover can win.
+        const segment: CSSProperties & Record<`--${string}`, string> = {
+          '--inspera-bg': isActive ? 'var(--blue-100)' : 'var(--surface)',
+          '--inspera-fg': isActive ? 'var(--primary)' : 'var(--gray-800)',
+          '--inspera-border': isActive ? 'var(--blue-700)' : 'var(--border-control)',
+          position: 'relative',
+          zIndex: isActive ? 1 : undefined,
           flex: fullWidth ? 1 : undefined,
+          display: 'inline-flex',
+          alignItems: 'center',
+          justifyContent: 'center',
           height,
-          padding: '0 16px',
-          border: 'none',
-          borderRadius: 'var(--radius-sm)',
-          background: isActive ? 'var(--surface)' : 'transparent',
-          boxShadow: isActive ? 'var(--shadow-100)' : 'none',
-          color: isActive ? 'var(--primary)' : 'var(--muted-foreground)',
+          padding: '0 12px',
+          marginLeft: i === 0 ? 0 : 'calc(var(--border-width-default) * -1)',
+          borderWidth: 'var(--border-width-default)',
+          borderStyle: 'solid',
+          borderRadius: `${i === 0 ? r : 0} ${i === last ? r : 0} ${i === last ? r : 0} ${i === 0 ? r : 0}`,
           fontFamily: 'var(--font-sans)',
-          fontSize: 14,
-          fontWeight: isActive ? 600 : 500,
+          fontSize: `var(--${type}-size)`,
+          lineHeight: `var(--${type}-line-height)`,
+          // Weight as well as colour marks the selection: blue against gray
+          // text alone would leave it to colour (WCAG 1.4.1).
+          fontWeight: isActive ? 600 : 400,
+          whiteSpace: 'nowrap',
           cursor: disabled ? 'not-allowed' : 'pointer',
-          transition: 'all var(--duration-fast) var(--easing-standard)',
         }
         return (
           <button
@@ -108,14 +125,14 @@ export default function SegmentedControl({
             ref={(node) => { buttons.current[i] = node }}
             type="button"
             role="radio"
-            className="inspera-interactive"
+            className="inspera-interactive inspera-segment"
             aria-checked={isActive}
             tabIndex={isActive ? 0 : -1}
             disabled={disabled}
             style={segment}
             onClick={() => setActive(seg.value)}
           >
-            {seg.label}
+            <span className="inspera-segment__label" data-label={seg.label}>{seg.label}</span>
           </button>
         )
       })}
